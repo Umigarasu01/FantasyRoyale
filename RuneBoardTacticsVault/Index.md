@@ -1,0 +1,21 @@
+# FantasyRoyale Vault Index
+
+この Vault は、ファンタジー2Dパーティバトロワの企画、仕様、実装方針を整理するための正本置き場。
+
+## Game Design
+
+- [[GameDesign/FantasyRoyaleConcept|FantasyRoyale 企画メモ]]
+
+## Architecture
+
+- [[Architecture/SceneClassStructure|Scene とクラス構成]]
+- [[Architecture/Scenes/PrototypeSoloScene|PrototypeSoloScene]]
+
+## Dev
+
+- [[Dev/Scripts/Index|C# スクリプト解説 Index]]
+
+## Roadmap
+
+- [[Roadmap/CurrentWork|進行中作業]]
+- [[Roadmap/ImplementationStatus|実装状況]]
