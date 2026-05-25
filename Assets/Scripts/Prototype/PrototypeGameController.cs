@@ -111,6 +111,30 @@ namespace FantasyRoyale.Prototype
             hud?.ShowMessage(latestMessage, latestItemName);
         }
 
+        /// <summary>
+        /// 商人から買ったアイテムを、宝箱とは違う出来事としてHUDへ表示する。
+        /// </summary>
+        public void NotifyMerchantPurchase(PrototypeItem item, int price)
+        {
+            latestItemName = item.DisplayName;
+            latestMessage = item.Rarity == PrototypeItemRarity.Legendary
+                ? $"Merchant sold a LEGEND! {item.DisplayName}"
+                : $"Bought {item.DisplayName} for {price} Coins";
+
+            RefreshHud();
+            hud?.ShowMessage(latestMessage, latestItemName);
+        }
+
+        /// <summary>
+        /// コイン不足で買えなかったことをHUDへ表示する。
+        /// </summary>
+        public void NotifyMerchantNeedsCoins(int price)
+        {
+            latestMessage = $"Need {price} Coins to buy";
+            RefreshHud();
+            hud?.ShowMessage(latestMessage, latestItemName);
+        }
+
         private void RefreshHud()
         {
             if (player == null || hud == null)

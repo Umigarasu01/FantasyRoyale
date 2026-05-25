@@ -11,6 +11,8 @@
 - [[Prototype/PrototypeHud|PrototypeHud]]
 - [[Prototype/PrototypeSpriteAnimator|PrototypeSpriteAnimator]]
 - [[Prototype/PrototypeAttackEffect|PrototypeAttackEffect]]
+- [[Prototype/PrototypeMerchant|PrototypeMerchant]]
+- [[Prototype/PrototypeCameraFollow|PrototypeCameraFollow]]
 - [[Prototype/IPrototypeInteractable|IPrototypeInteractable]]
 
 ## Editor

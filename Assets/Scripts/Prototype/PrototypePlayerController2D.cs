@@ -246,6 +246,21 @@ namespace FantasyRoyale.Prototype
         }
 
         /// <summary>
+        /// 購入などでコインを支払えるかを確認し、足りていれば消費する。
+        /// </summary>
+        public bool TrySpendCoins(int amount)
+        {
+            var cost = Mathf.Max(0, amount);
+            if (coins < cost)
+            {
+                return false;
+            }
+
+            coins -= cost;
+            return true;
+        }
+
+        /// <summary>
         /// ゲームオーバー時など、移動と入力を止めたい場面で使う。
         /// </summary>
         public void SetInputLocked(bool locked)

@@ -1,6 +1,6 @@
 # FantasyRoyale Vault Index
 
-この Vault は、ファンタジー2Dパーティバトロワの企画、仕様、実装方針を整理するための正本置き場。
+このVaultは、ファンタジー2Dパーティバトロワの企画、仕様、実装方針を整理するための正本置き場。
 
 ## Game Design
 
@@ -14,6 +14,7 @@
 ## Dev
 
 - [[Dev/Scripts/Index|C# スクリプト解説 Index]]
+- [[Dev/Assets/ExternalAssets|外部素材候補]]
 
 ## Roadmap
 

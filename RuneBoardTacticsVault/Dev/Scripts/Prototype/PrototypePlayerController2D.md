@@ -15,6 +15,7 @@
 - `ConfigureAttackEffect(PrototypeAttackEffect prefab)`: 攻撃時に出す仮エフェクトを設定する。
 - `ApplyItem(PrototypeItem item)`: アイテム効果を反映する。
 - `AddCoins(int amount)`: 敵撃破報酬を加算する。
+- `TrySpendCoins(int amount)`: 商人購入などでコインを支払えるか判定し、足りていれば消費する。
 - `SetInputLocked(bool locked)`: ゲームオーバー時などに入力を止める。
 
 ## 関連仕様

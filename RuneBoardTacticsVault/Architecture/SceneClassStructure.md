@@ -20,6 +20,8 @@ flowchart TD
     Hud["PrototypeHud"]
     Anim["PrototypeSpriteAnimator"]
     AttackFx["PrototypeAttackEffect"]
+    Merchant["PrototypeMerchant"]
+    Camera["PrototypeCameraFollow"]
 
     Builder --> Scene
     Scene --> Game
@@ -37,6 +39,9 @@ flowchart TD
     Player --> Anim
     Enemy --> Anim
     Player --> AttackFx
+    Player --> Merchant
+    Merchant --> Game
+    Camera --> Player
 ```
 
 ## 入力経路
@@ -58,6 +63,8 @@ flowchart TD
 - `PrototypeHud`: 画面表示を受け持つ。
 - `PrototypeSpriteAnimator`: プレイヤーと敵の仮スプライトを、移動状態に応じて差し替える。
 - `PrototypeAttackEffect`: 攻撃時の斬撃表示を短時間だけ再生する。
+- `PrototypeMerchant`: コインを支払ってランダム商品を買う仮商人。
+- `PrototypeCameraFollow`: 広域マップ探索用にプレイヤーを追従する。
 
 ## 要検討
 
