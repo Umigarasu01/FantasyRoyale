@@ -1,73 +1,37 @@
-# Scene とクラス構成
+# Scene / Class Structure
 
-## 現在の方針
+## Milestone 1 Exploration
 
-Step 1 は一人用の最小プロトタイプとして、`PrototypeSoloScene` に仮実装を集約する。
-将来的な本番構成とは分け、クラス名に `Prototype` を含めて本番用と混同しないようにする。
-
-## 構成
+Scene: `Assets/Scenes/Milestone1ExplorationScene.unity`
 
 ```mermaid
 flowchart TD
-    Scene["PrototypeSoloScene"]
-    Builder["PrototypeSceneBuilder"]
-    Game["PrototypeGameController"]
-    Player["PrototypePlayerController2D"]
-    Health["PrototypeHealth"]
-    Enemy["PrototypeEnemy"]
-    Chest["PrototypeChest"]
-    Item["PrototypeItem"]
-    Hud["PrototypeHud"]
-    Anim["PrototypeSpriteAnimator"]
-    AttackFx["PrototypeAttackEffect"]
-    Merchant["PrototypeMerchant"]
-    Camera["PrototypeCameraFollow"]
+    Scene["Milestone1ExplorationScene"]
+    Builder["ExplorationMapBuilder"]
+    MapAsset["MapDefinitionAsset"]
+    Palette["MapTilePaletteAsset"]
+    SpawnTable["MapObjectSpawnTableAsset"]
+    Resolver["FR_MapPlacementResolver"]
+    Tilemaps["Ground / Detail / Collision Tilemaps"]
+    Objects["GeneratedObjects"]
+    Player["Player: KeyboardPlayerInput + PlayerMotor2D"]
+    Camera["CameraFollow2D"]
 
-    Builder --> Scene
-    Scene --> Game
+    Scene --> Builder
+    Builder --> MapAsset
+    Builder --> Palette
+    Builder --> SpawnTable
+    Builder --> Resolver
+    Builder --> Tilemaps
+    Builder --> Objects
     Scene --> Player
-    Scene --> Enemy
-    Scene --> Chest
-    Scene --> Hud
-    Game --> Item
-    Game --> Hud
-    Player --> Health
-    Enemy --> Health
-    Player --> Enemy
-    Player --> Chest
-    Chest --> Game
-    Player --> Anim
-    Enemy --> Anim
-    Player --> AttackFx
-    Player --> Merchant
-    Merchant --> Game
+    Scene --> Camera
     Camera --> Player
 ```
 
-## 入力経路
+## 責務
 
-- `PrototypePlayerController2D` が Unity Input System の `Keyboard.current` を直接読む。
-- 一旦キーボードのみ。将来、入力抽象化またはInput Actionsへ置き換える。
-- 移動は `WASD` / 矢印キー。
-- 攻撃は `Space`。
-- 宝箱などの操作は `E`。
-
-## 責務分担
-
-- `PrototypeSceneBuilder`: 仮素材、固定小マップ、敵、宝箱、HUD、Build Settings登録をEditor上で生成する。
-- `PrototypeGameController`: アイテム抽選、HUD更新、ゲームオーバー表示を受け持つ。
-- `PrototypePlayerController2D`: プレイヤーの入力、移動、攻撃、インタラクト、報酬保持を受け持つ。
-- `PrototypeEnemy`: プレイヤー追跡、接触ダメージ、撃破報酬を受け持つ。
-- `PrototypeChest`: 宝箱の開封状態とアイテム抽選の起動を受け持つ。
-- `PrototypeHealth`: HPの増減と死亡通知を受け持つ。
-- `PrototypeHud`: 画面表示を受け持つ。
-- `PrototypeSpriteAnimator`: プレイヤーと敵の仮スプライトを、移動状態に応じて差し替える。
-- `PrototypeAttackEffect`: 攻撃時の斬撃表示を短時間だけ再生する。
-- `PrototypeMerchant`: コインを支払ってランダム商品を買う仮商人。
-- `PrototypeCameraFollow`: 広域マップ探索用にプレイヤーを追従する。
-
-## 要検討
-
-- 本番実装では、HP、アイテム、戦闘、報酬計算を純C# Coreへ寄せる。
-- プレイヤー入力はキーボード以外に対応する前に、Input Actionsへ集約する。
-- Scene生成ツールで作った仮配置を、後でPrefab/Tilemap/正式Sceneへ移行する。
+- Coreの `FR_` 型は、スロット抽選と配置結果の決定だけを担当する。
+- Unity側Assetは、Tilemap表示、Prefab参照、Inspector編集用のデータを担当する。
+- `ExplorationMapBuilder` はCore結果をTilemap/Prefab生成へ変換する。
+- `PlayerMotor2D` は本番想定の移動処理として扱い、入力取得は `KeyboardPlayerInput` に分ける。

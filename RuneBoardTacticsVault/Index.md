@@ -5,6 +5,15 @@
 ## Game Design
 
 - [[GameDesign/FantasyRoyaleConcept|FantasyRoyale 企画メモ]]
+- [[GameDesign/PrototypeDirection|Prototype Direction]]
+
+## Art
+
+- [[Art/ArtDirection|Art Direction]]
+- [[Art/TilesetPlan|Tileset Plan]]
+- [[Art/ObjectPlan|Object Plan]]
+- [[Art/MapPlan|Map Plan]]
+- [[Art/BiomeTilemapAtlasPlan|Biome Tilemap Atlas Plan]]
 
 ## Architecture
 
@@ -20,3 +29,4 @@
 
 - [[Roadmap/CurrentWork|進行中作業]]
 - [[Roadmap/ImplementationStatus|実装状況]]
+- [[Roadmap/PrototypeMilestones|Prototype Milestones]]

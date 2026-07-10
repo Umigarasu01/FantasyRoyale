@@ -1,46 +1,148 @@
-# 実装状況
+# Implementation Status
 
-## 概要
+## 2026-06-05 旧マップ生成物削除
 
-現時点では Unity プロジェクトの初期状態。
-ゲーム仕様と実装方針は企画メモとして整理を開始した段階。
+状態: 削除済み
 
-## Game Design
+削除内容:
+- 旧Milestone 1マップ生成用Editorメニュー。
+- 旧Milestone 1 / Organic生成アセット、Prefab、Scene。
+- 対応するEditorスクリプト解説リンク。
 
-| 項目 | 状況 | メモ |
-| --- | --- | --- |
-| 初期コンセプト | 整理中 | [[../GameDesign/FantasyRoyaleConcept|FantasyRoyale 企画メモ]] を作成。 |
-| 1試合の基本ループ | 仮実装中 | Step 1では固定小マップの探索、敵撃破、宝箱開封まで。 |
-| 強化ルート | 仮実装中 | 敵撃破によるコイン、宝箱アイテムによる攻撃力/回復/コインを実装。 |
-| 伝説級アイテム | 仮実装中 | 宝箱から低確率で伝説級アイテムが出る仮抽選を実装。 |
+目的:
+- 参考画像の方向性に合わないフラットな生成マップを残さず、まず1枚のコンセプト画像で見た目を固め直す。
 
-## Unity Implementation
+## 2026-06-05 有機的ピクセルマップ生成器
 
-| 項目 | 状況 | メモ |
-| --- | --- | --- |
-| Core ロジック | 仮実装 | `PrototypeItem` と `PrototypeHealth` を追加。将来のCore分離候補。 |
-| プレイヤー操作 | 仮実装 | `PrototypePlayerController2D` でキーボード移動、近接攻撃、Eキー操作を実装。 |
-| マップ | 仮実装 | 5-6人規模のバトロワを想定した広域マップへ拡張。草原、雪原、火山地帯、溶岩、中央街道を仮配置。 |
-| 戦闘 | 仮実装 | 前方範囲攻撃、敵の追跡、接触ダメージを実装。斬撃の見た目に合わせて根元と先端を判定する。 |
-| アイテム | 仮実装 | 宝箱抽選で通常、レア、伝説級アイテムを取得。 |
-| UI | 仮実装 | `PrototypeHud` でHP、コイン、攻撃力、直近アイテム、ログを表示。 |
-| 仮ビジュアル | 仮実装 | Editor生成のピクセル風スプライトと `PrototypeSpriteAnimator` による簡易アニメーションを追加。 |
-| 攻撃エフェクト | 仮実装 | `PrototypeAttackEffect` で攻撃時に斬撃スプライトを短時間表示。既存Sceneでも1発撃破になるよう、敵起動時にプロトタイプHPを上書きする。 |
-| 商人 | 仮実装 | `PrototypeMerchant` で10コイン購入、コイン不足表示、ランダム商品入手を実装。生成Sceneでは設置物を商人のみにして複数配置。 |
-| カメラ | 仮実装 | `PrototypeCameraFollow` で広域マップ探索用のプレイヤー追従を実装。 |
+状態: 実装更新済み / 修正後のUnity生成確認待ち
 
-## 確認状況
+追加内容:
+- `Milestone1OrganicSceneBuilder`
+- メニュー: `FantasyRoyale/Build Milestone 1 Organic Pixel Map`
+- 生成先:
+  - `Assets/Art/Generated/Milestone1Organic/`
+  - `Assets/Data/Milestone1Organic/`
+  - `Assets/Prefabs/Milestone1Organic/`
+  - `Assets/Scenes/Milestone1OrganicMapScene.unity`
 
-| 項目 | 状況 | メモ |
-| --- | --- | --- |
-| C# コンパイル | 確認済み | `dotnet build Assembly-CSharp.csproj --no-restore` と `dotnet build Assembly-CSharp-Editor.csproj --no-restore` が警告0、エラー0で成功。 |
-| Scene生成 | 未確認 | Unityがプロジェクトを開いていたためbatchmode生成は未実行。Unity Editor上で `FantasyRoyale/Build Solo Prototype Scene` を実行する。 |
-| 実プレイ | 未確認 | Unity上で再生確認が必要。 |
-## 2026-05-24 追記
+確認結果:
+- `dotnet build Assembly-CSharp.csproj --no-restore`: 成功。既存の `System.Net.Http` 競合警告あり。
+- `dotnet build Assembly-CSharp-Editor.csproj --no-restore`: 成功。既存の `System.Net.Http` 競合警告あり。
+- 初回MCP生成後にTilemapが空であることを確認。
+- Tile/PrefabをAssetDatabaseからロードし直して描画するよう修正。
+- 修正後のUnity生成は、MCP接続断とEditor起動中のbatchmode不可により未確認。
 
-- 地形当たり判定: 仮実装。木、岩、溶岩、外周壁に `BoxCollider2D` を付け、広域マップで障害物を避けて移動する確認ができる。
-- 仮素材管理: コード生成PNGを `Assets/Art/Prototype/Generated/` に隔離。外部素材候補は `RuneBoardTacticsVault/Dev/Assets/ExternalAssets.md` に記録。
-- 仮グラフィック刷新: 参考画像の方向性に合わせ、オリジナルのトップダウン・ピクセル素材を36点作成。キャラ、敵、商人、建物、複数ロケーション用タイルと装飾を含む。
-- 複雑マップ: `PrototypeSceneBuilder` に森林集落、雪原拠点、火山キャンプ、遺跡、水辺、石畳道の配置を追加。Unityが起動中のためScene再生成はUnityメニュー実行待ち。
-- 仮素材細密化: 36点の仮PNGを32px基準へ更新。UnityインポートPPUも32へ変更し、表示サイズを維持しながらドット密度を上げた。
-- ビジュアル方向調整: 参考画像の世界観と見下ろし角度を反映し、キャラの頭身、接地影、建物の屋根/前面、樹冠、地面装飾を再調整した。
+未確認:
+- 修正後の `Milestone1OrganicMapScene` の実表示。
+- Play Modeでの移動感、当たり判定、探索密度。
+
+## 2026-06-05 森・草原マップ再設計
+
+状態: 実装更新済み / Unity Editor反映は未実行
+
+更新内容:
+- `Milestone1SceneBuilder` を採用済みアート方針に合わせて更新。
+- Milestone 1 のマップ構成を、森・草原ベースの 96x72 固定マップに変更。
+- 中央石畳広場、土道/石畳の通路、西側草むら、北側回遊路、北東の池、崖/樹木による進路区切りを追加。
+- 生成タイルを簡易ピクセルアート風に変更。
+- 生成オブジェクトに木、低木、岩、商人屋台、キノコ、切り株、倒木、花、看板、宝箱、祭壇、葦を追加。
+- 通行不可: 低木、木、岩、倒木、池、崖。
+- 通行可能: 草むら、花、キノコ、葦などの軽装飾。
+
+確認結果:
+- `dotnet build Assembly-CSharp.csproj --no-restore`: 成功。既存の `System.Net.Http` 競合警告あり。
+- `dotnet build Assembly-CSharp-Editor.csproj --no-restore`: 成功。既存の `System.Net.Http` 競合警告あり。
+- Unity batchmode: 同じプロジェクトをUnity Editorが開いていたため未実行。
+- `unity-mcp-fantasyroyale`: `Unity not detected` のため未実行。
+
+未確認:
+- Editor上の実際の見た目。
+- Play Modeでの移動感、当たり判定、探索密度。
+
+## Milestone 1: ビジュアル・探索マップ基盤
+
+状態: 実装済み / Unity batch生成確認済み
+
+実装内容:
+- Core配置抽選
+  - `FR_MapDefinition`
+  - `FR_MapSlot`
+  - `FR_MapObjectDefinition`
+  - `FR_MapPlacementResolver`
+  - `FR_PlacementResult`
+- Unity探索基盤
+  - `MapDefinitionAsset`
+  - `MapObjectDefinitionAsset`
+  - `MapObjectSpawnTableAsset`
+  - `MapTilePaletteAsset`
+  - `ExplorationMapBuilder`
+  - `PlayerMotor2D`
+  - `KeyboardPlayerInput`
+  - `CameraFollow2D`
+- Editor生成
+  - `Milestone1SceneBuilder`
+  - `Assets/Scenes/Milestone1ExplorationScene.unity`
+  - `Assets/Art/Generated/Milestone1/`
+  - `Assets/Data/Milestone1/`
+  - `Assets/Prefabs/Milestone1/`
+
+確認結果:
+- `dotnet build Assembly-CSharp.csproj --no-restore`: 成功。既存の `System.Net.Http` バージョン競合警告あり。
+- `dotnet build Assembly-CSharp-Editor.csproj --no-restore`: 成功。既存の `System.Net.Http` バージョン競合警告あり。
+- Unity batchmodeで `FantasyRoyale.Editor.Milestone1SceneBuilder.BuildScene` 実行済み。
+- Unity batchmodeで `FantasyRoyale.Editor.Milestone1SceneBuilder.RebuildGeneratedMap` 実行済み。
+- Scene YAML上でTilemapデータとランダム配置オブジェクト生成を確認済み。
+
+未確認:
+- Editor画面上での実プレイ操作感。
+- 実機Play Modeでの当たり判定の体感。
+## 2026-06-05 森構造ベースの火山/雪バイオーム画像生成とTilemap分解案
+
+状態: 設計ノート作成済み / 火山画像は生成済み / 雪画像は `$imagegen` レート制限により待機
+
+追加内容:
+- `Art/BiomeTilemapAtlasPlan.md` を追加。
+- 森サンプルマップの構図を維持した火山/雪バイオーム展開方針を整理。
+- Unity Tilemap 用の共通タイルID、森/火山/雪の差し替え対応、オブジェクトアトラス案を整理。
+- `Dev/Assets/GeneratedAssets.md` に火山/雪画像の生成予定と保存予定先を記録。
+- `Assets/Art/Concept/volcano-biome-sample-map.png` を保存。
+
+未完了:
+- `$imagegen` による `snow-biome-sample-map.png` の生成。
+- 生成結果を見た上でのタイルセット案/オブジェクトアトラス案の微修正。
+
+## 2026-06-05 バイオーム仮アトラス作成
+
+状態: 生成・保存済み
+
+追加内容:
+- `Assets/Art/Generated/BiomeAtlas/biome-tile-object-atlas.png` を追加。
+- 森・火山・雪の地形タイル候補とオブジェクト候補を1枚の仮アトラスに整理。
+- `Art/BiomeTilemapAtlasPlan.md` に生成済みアトラスの保存先、サイズ、扱いを追記。
+- `Dev/Assets/GeneratedAssets.md` に生成方法、保存先、プロンプト概要を記録。
+
+注意:
+- 生成画像は 1254x1254 で、完全な32x32自動グリッドスライス用ではない。
+- 次段ではこの仮アトラスを切り出し元として、Unity用の正規グリッド版タイルアトラスと透明PNGオブジェクトアトラスに再整形する。
+## 2026-06-05 バイオームアトラス探索マップ生成導線
+
+状態: Editorビルダー実装済み / C#ビルド成功 / Unity Editor実行は環境接続待ち
+
+追加内容:
+- `Assets/Editor/BiomeAtlasMapSceneBuilder.cs` を追加。
+- 仮アトラスから森・火山・雪の地形タイル、オブジェクトSprite、Prefab、探索Sceneを生成する導線を追加。
+- 生成予定Scene: `Assets/Scenes/BiomeAtlasExplorationMapScene.unity`
+- 生成予定メニュー: `FantasyRoyale/Build Biome Atlas Exploration Map`
+- 地形タイルはセル外周を少し落として切り出し、Tilemap上のグリッド感を軽減する。
+- プレビュー用マップ画像 `Assets/Art/Generated/BiomeAtlas/PreviewMaps/biome-atlas-generated-map-preview.png` を生成。
+
+確認結果:
+- `dotnet build Assembly-CSharp.csproj --no-restore`: 成功。既存の `System.Net.Http` 警告あり。
+- `dotnet build Assembly-CSharp-Editor.csproj --no-restore`: 成功。既存の `System.Net.Http` 警告あり。
+- Unity batchmode: 同じプロジェクトをUnity Editorが開いているため実行不可。
+- `unity-mcp-fantasyroyale`: `Unity not detected (no fresh discovery files found)` のため実行不可。
+
+未完了:
+- Unity Editor上でのメニュー実行。
+- 実Sceneの2Dキャプチャ確認。
+- 当たり判定と移動感のPlay Mode確認。

@@ -74,3 +74,9 @@
 - 進行中作業メモは `RuneBoardTacticsVault/Roadmap/CurrentWork.md` に、細かい実装ログではなくマイルストーン単位の方針として記述する。
 - 実装状況は `RuneBoardTacticsVault/Roadmap/ImplementationStatus.md` に記録し、実装・テスト・確認状況が進んだら必要に応じて更新する。
 - 実装状況を更新した場合は、変更した項目と理由を作業報告に含める。
+
+## FantasyRoyale UnityMCP 作業ルール
+
+- この作業では `unity-mcp-fantasyroyale` の UnityMCP だけを使い、他のUnityMCPは使わない。
+- FantasyRoyale のUnity Editor確認、Scene確認、スクリーンショット取得、Editor内修正は `unity-mcp-fantasyroyale` のUnityMCP経由で行う。
+- `unity-mcp-fantasyroyale` が利用できない場合は、他のUnityMCPへ切り替えず、通常のファイル編集やUnity batchmodeで確認する。
