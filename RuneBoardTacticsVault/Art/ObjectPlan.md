@@ -11,14 +11,55 @@
 
 ## 共通カテゴリ
 
-| カテゴリ | 用途 | Collider方針 | 優先度 |
+| カテゴリ | 用途 | v4.3配置・判定方針 | 優先度 |
 | --- | --- | --- | --- |
-| 大型障害物 | 外周、区画分け、森壁 | 足元中心のBox/Capsule | High |
-| 中型障害物 | 通路縁取り、戦闘広場の外周 | BoxCollider | High |
-| 小型障害物 | ルート制限、小さな遮蔽 | 小さめBoxCollider | Medium |
-| 通行可能装飾 | 密度、雰囲気 | Colliderなし | High |
-| インタラクト | 宝箱、看板、商人、祭壇 | 小Collider + Interaction | Medium |
-| 危険装飾 | 溶岩、薄氷、毒など | TriggerまたはTile判定 | Low |
+| 大型障害物 | 外周、区画分け、森壁 | ObstacleVisualsへ自由配置。森は前縁CollisionBody、崖はCollisionTilemap | High |
+| 中型障害物 | 通路縁取り、戦闘広場の外周 | ObstacleVisualsへ自由配置。幹・根元・接地点CollisionBody | High |
+| 小型障害物 | ルート制限、小さな遮蔽 | ObstacleVisualsへ自由配置。接地点CollisionBody | Medium |
+| 通行可能装飾 | 密度、雰囲気 | Decorationsへ1px単位で自由配置。Collisionなし | High |
+| インタラクト候補 | 宝箱、看板、商人、祭壇 | Propsへ表示だけを配置。Interactionは別設計 | Medium |
+| 危険装飾 | 溶岩、薄氷、毒など | 表示PrefabはTriggerなし。判定は別のTile / Gameplay実装 | Low |
+
+## 森Production v4.3のPrefab契約
+
+状態: **v4.3 Prefab・Sceneへ反映、描画順を含め検証済み**
+
+v4.3 Production Atlas 205 Spriteのうち、5 Obstacle Visual、Props系10点、Decoration Sprite 4点から、計19の表示Prefabを作る。Dirt / Stoneの道路端差分増加によってPrefab数と分類は変更しない。
+
+### ObstacleVisuals配下: 12点
+
+- `obstacle_forest_mass_wide`
+- `obstacle_forest_mass_deep`
+- `obstacle_forest_front_strip`
+- `obstacle_cliff_straight_wide`
+- `obstacle_cliff_outer_corner`
+- TreeMedium01 / TreeMedium02 / TreeMedium03
+- BlockingBush / MossyRock / Stump / FallenLog
+
+### Props配下: 3点
+
+- MushroomPatch
+- Chest
+- Signpost
+
+### Decorations配下: 4点
+
+- TallGrass
+- FlowerPatch
+- Wildflowers
+- Reeds
+
+全表示PrefabのRootはDefault Physics Layer、Collider2Dなし、Rigidbody2Dなしとする。Positionは1 / 32 unitへSnapし、Rotation 0、Scale 1で自由配置する。Decorations / ObstacleVisuals / PropsはGridを持たないplain Transformとし、GameObject Brushは使わない。
+
+奥行きを持つObstacleVisuals、Props、TallGrass、Reedsは`WorldObjects` / Order 0 / 足元Pivotへ揃え、world Yが低いものほど手前に描画する。FlowerPatchとWildflowersは背丈のない平面装飾なので`MapDetail` / Order 0へ固定し、立体表示との前後入れ替えを行わない。Playerも同じ`WorldObjects`契約へ参加する。
+
+Decoration Prefabは背景芝を含まない透過素材とし、足元中央Pivotを使う。地面の正方形をSpriteへ含めず、Cellの中央や境界に拘束されない重ね方を可能にする。Ground grassは装飾なしAI Surface 8枚を参照する`GroundVariationTile`としてTilemapへ残し、花、背高草、明瞭な石などをGrass Surfaceへ焼き込まない。
+
+必要なObstacle Visual Prefabだけ`MapObstacleVisualMarker`を持てる。DecorationsへMarkerを付けない。Markerは自動配置・間隔確保に使う広めのFootprintと、物理判定方式・足元形状を別々に保持する。RuntimeはMarkerから判定を復元せず、Scene保存済みのMapCollisionを使う。
+
+森3種、Tree 3種、BlockingBush、MossyRock、Stump、FallenLogは、Prefab直下の`CollisionBody`へBoxまたはCapsuleを一つ持つ。判定は樹冠や表示矩形全体へ広げず、幹、根元、岩の接地点、倒木の接地軸へ寄せる。崖2種だけはTilemap Footprint方式を維持する。
+
+AI生成素材は初期素材として扱い、正式素材へ差し替える余地を残す。差し替え時もSprite名、足元Pivot、左上光源、Prefab分類を維持する。
 
 ## 森・草原オブジェクト
 
@@ -26,8 +67,11 @@
 | --- | --- | --- | --- |
 | BroadleafTree | 複数の葉房、濃い影、幹、根元を持つ通常木 | 大型障害物 | High |
 | BroadleafTree_Large | 2x2以上の大きな樹冠。森壁にも混ぜる | 外周、ランドマーク | High |
-| ForestWall_Canopy | 連続した樹冠パーツ | 通行不能な森壁 | High |
-| ForestWall_Trunk | 幹、根、暗い足元 | 森壁の下段 | High |
+| ForestMass_Wide | 樹冠、幹、根元影を一体化した横長モジュール | 通行不能な森壁 | High |
+| ForestMass_Deep | 奥行きのある密な森塊 | 外周、区画分け | High |
+| ForestFront_Strip | 手前側の森縁と足元影 | 継ぎ目隠し、前縁 | High |
+| Cliff_StraightWide | 草付き上面、岩面、下端影 | 直線崖 | High |
+| Cliff_OuterCorner | 外角の上面、岩面、下端影 | 崖の折れ | High |
 | LowBush_Blocking | 横に広い低木。葉の房と影 | 通路縁取り | High |
 | Bush_Round | 丸く密な茂み。単純な円ではなく葉房で構成 | 中型障害物 | High |
 | TallGrass_Walkable | 細い草線が重なった草むら | 通行可能装飾 | High |
@@ -87,3 +131,18 @@
 - 低木と草むらの通行可否が見た目で分かるか。
 - 宝箱や看板は画面内で小さくても読めるか。
 - 通行可能装飾が移動ルートを塞いでいるように見えないか。
+- 花、背高草、水草などの独立した装飾がGrass Surfaceへ焼き込まれず、Decorationsへ自由配置されているか。
+- 同じ木Prefabだけが規則的に反復していないか。
+- 個別木と森・崖の大型モジュールの役割が見た目と配置方法の両方で分かれているか。
+- 表示Root、Decorations、PropsにCollider2D / Rigidbody2Dが混入していないか。Obstacleは規定のCollisionBody以外に物理Componentがないか。
+- 木、崖、Props、TallGrass、Reedsがカテゴリ別Orderではなく、足元YでPlayerと正しく前後するか。
+- FlowerPatchとWildflowersがPlayerより前へせり出さず、平面装飾として地面側に留まるか。
+- 崖のFootprintがCollisionTilemapへ明示Paintされ、森・木・低木・岩・切株・倒木のCollisionBodyが幹・接地点へ一致しているか。
+
+## 旧方式の履歴
+
+- v3は10 Prop PrefabをProps Gridへ1Cell GameObject Brushで配置し、用途別Collider / TriggerをPrefabへ持たせていた。森壁は個別PrefabではなくForestWall Blob-47が担当した。
+- v4はObstacleVisuals / Propsを自由配置へ移したが、TallGrass、FlowerPatch、Wildflowers、ReedsはDetail Tileのままだった。
+- v4.1では4 Decorationもplain Decorationsへ移し、表示Prefab 19点をObstacleVisuals / Decorations / Propsへ分類した。Grassは4つの標準Tileであった。
+- v4.2では表示Prefab 19点と自由配置方針を継続し、Groundだけを装飾なしGrass 8差分の`GroundVariationTile`へ置換する。旧方式は現行契約として使わない。
+- v4.3では表示Prefab 19点を維持し、Dirt / Stone全Maskの道路端差分だけを増やした。表示・判定分離と自由配置方針は現行契約として継続する。

@@ -1,0 +1,637 @@
+fileFormatVersion: 2
+guid: bc19ef135d80e374cb013427975859b1
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 2152663459627652118
+    second: forest-gba-production-atlas-v4-3_0
+  - first:
+      213: 3461609038092534457
+    second: forest-gba-production-atlas-v4-3_1
+  - first:
+      213: 8035440934569348149
+    second: forest-gba-production-atlas-v4-3_2
+  - first:
+      213: -880603797662591185
+    second: forest-gba-production-atlas-v4-3_3
+  - first:
+      213: 4177090289558692523
+    second: forest-gba-production-atlas-v4-3_4
+  - first:
+      213: 2394876615406654137
+    second: forest-gba-production-atlas-v4-3_5
+  - first:
+      213: -569749993105119620
+    second: forest-gba-production-atlas-v4-3_6
+  - first:
+      213: 7351286156877887737
+    second: forest-gba-production-atlas-v4-3_7
+  - first:
+      213: -8818484178407299361
+    second: forest-gba-production-atlas-v4-3_8
+  - first:
+      213: -4792564506641931089
+    second: forest-gba-production-atlas-v4-3_9
+  - first:
+      213: -695959546519119662
+    second: forest-gba-production-atlas-v4-3_10
+  - first:
+      213: -3524571147529127819
+    second: forest-gba-production-atlas-v4-3_11
+  - first:
+      213: 3574153019829515112
+    second: forest-gba-production-atlas-v4-3_12
+  - first:
+      213: -4057798295400327506
+    second: forest-gba-production-atlas-v4-3_13
+  - first:
+      213: -510666204670289402
+    second: forest-gba-production-atlas-v4-3_14
+  - first:
+      213: 2343269677837059650
+    second: forest-gba-production-atlas-v4-3_15
+  - first:
+      213: -7060661565871555585
+    second: forest-gba-production-atlas-v4-3_16
+  - first:
+      213: -3617675034704431397
+    second: forest-gba-production-atlas-v4-3_17
+  - first:
+      213: 8893199809316242588
+    second: forest-gba-production-atlas-v4-3_18
+  - first:
+      213: -2008412368166973265
+    second: forest-gba-production-atlas-v4-3_19
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: forest-gba-production-atlas-v4-3_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1663
+        width: 2048
+        height: 385
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 614d110e20ccfdd10800000000000000
+      internalID: 2152663459627652118
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: forest-gba-production-atlas-v4-3_1
+      rect:
+        serializedVersion: 2
+        x: 3
+        y: 1535
+        width: 92
+        height: 54
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9b289ca641b1a0030800000000000000
+      internalID: 3461609038092534457
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: forest-gba-production-atlas-v4-3_2
+      rect:
+        serializedVersion: 2
+        x: 97
+        y: 1535
+        width: 94
+        height: 40
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 53c83a6d4fe938f60800000000000000
+      internalID: 8035440934569348149
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: forest-gba-production-atlas-v4-3_3
+      rect:
+        serializedVersion: 2
+        x: 193
+        y: 1535
+        width: 62
+        height: 46
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f27167cf28777c3f0800000000000000
+      internalID: -880603797662591185
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: forest-gba-production-atlas-v4-3_4
+      rect:
+        serializedVersion: 2
+        x: 257
+        y: 1503
+        width: 62
+        height: 92
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ba221e7bc7108f930800000000000000
+      internalID: 4177090289558692523
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: forest-gba-production-atlas-v4-3_5
+      rect:
+        serializedVersion: 2
+        x: 331
+        y: 1471
+        width: 106
+        height: 126
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9b21436d79f4c3120800000000000000
+      internalID: 2394876615406654137
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: forest-gba-production-atlas-v4-3_6
+      rect:
+        serializedVersion: 2
+        x: 451
+        y: 1471
+        width: 120
+        height: 126
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c7620326667d718f0800000000000000
+      internalID: -569749993105119620
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: forest-gba-production-atlas-v4-3_7
+      rect:
+        serializedVersion: 2
+        x: 591
+        y: 1471
+        width: 96
+        height: 126
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9f8f3f69fc3050660800000000000000
+      internalID: 7351286156877887737
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: forest-gba-production-atlas-v4-3_8
+      rect:
+        serializedVersion: 2
+        x: 715
+        y: 1535
+        width: 74
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fd661a0bc537e9580800000000000000
+      internalID: -8818484178407299361
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: forest-gba-production-atlas-v4-3_9
+      rect:
+        serializedVersion: 2
+        x: 811
+        y: 1535
+        width: 74
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fa4667a29f36d7db0800000000000000
+      internalID: -4792564506641931089
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: forest-gba-production-atlas-v4-3_10
+      rect:
+        serializedVersion: 2
+        x: 897
+        y: 1535
+        width: 62
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2d89fa3da747756f0800000000000000
+      internalID: -695959546519119662
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: forest-gba-production-atlas-v4-3_11
+      rect:
+        serializedVersion: 2
+        x: 975
+        y: 1535
+        width: 66
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5787fed1735361fc0800000000000000
+      internalID: -3524571147529127819
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: forest-gba-production-atlas-v4-3_12
+      rect:
+        serializedVersion: 2
+        x: 1059
+        y: 1535
+        width: 56
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 863f3df1c31f99130800000000000000
+      internalID: 3574153019829515112
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: forest-gba-production-atlas-v4-3_13
+      rect:
+        serializedVersion: 2
+        x: 1125
+        y: 1535
+        width: 54
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ea65a7013fdcfa7c0800000000000000
+      internalID: -4057798295400327506
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: forest-gba-production-atlas-v4-3_14
+      rect:
+        serializedVersion: 2
+        x: 1195
+        y: 1535
+        width: 42
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 60a94dfdacfb9e8f0800000000000000
+      internalID: -510666204670289402
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: forest-gba-production-atlas-v4-3_15
+      rect:
+        serializedVersion: 2
+        x: 1249
+        y: 1343
+        width: 382
+        height: 212
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2460c685b57f48020800000000000000
+      internalID: 2343269677837059650
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: forest-gba-production-atlas-v4-3_16
+      rect:
+        serializedVersion: 2
+        x: 1633
+        y: 1343
+        width: 318
+        height: 248
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ffbf8fef6bd730e90800000000000000
+      internalID: -7060661565871555585
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: forest-gba-production-atlas-v4-3_17
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 1151
+        width: 446
+        height: 122
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bd6b4a329bf6bcdc0800000000000000
+      internalID: -3617675034704431397
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: forest-gba-production-atlas-v4-3_18
+      rect:
+        serializedVersion: 2
+        x: 449
+        y: 1151
+        width: 382
+        height: 78
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c94cddebb1efa6b70800000000000000
+      internalID: 8893199809316242588
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: forest-gba-production-atlas-v4-3_19
+      rect:
+        serializedVersion: 2
+        x: 833
+        y: 1087
+        width: 254
+        height: 218
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fa018e8979fa024e0800000000000000
+      internalID: -2008412368166973265
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      forest-gba-production-atlas-v4-3_0: 2152663459627652118
+      forest-gba-production-atlas-v4-3_1: 3461609038092534457
+      forest-gba-production-atlas-v4-3_10: -695959546519119662
+      forest-gba-production-atlas-v4-3_11: -3524571147529127819
+      forest-gba-production-atlas-v4-3_12: 3574153019829515112
+      forest-gba-production-atlas-v4-3_13: -4057798295400327506
+      forest-gba-production-atlas-v4-3_14: -510666204670289402
+      forest-gba-production-atlas-v4-3_15: 2343269677837059650
+      forest-gba-production-atlas-v4-3_16: -7060661565871555585
+      forest-gba-production-atlas-v4-3_17: -3617675034704431397
+      forest-gba-production-atlas-v4-3_18: 8893199809316242588
+      forest-gba-production-atlas-v4-3_19: -2008412368166973265
+      forest-gba-production-atlas-v4-3_2: 8035440934569348149
+      forest-gba-production-atlas-v4-3_3: -880603797662591185
+      forest-gba-production-atlas-v4-3_4: 4177090289558692523
+      forest-gba-production-atlas-v4-3_5: 2394876615406654137
+      forest-gba-production-atlas-v4-3_6: -569749993105119620
+      forest-gba-production-atlas-v4-3_7: 7351286156877887737
+      forest-gba-production-atlas-v4-3_8: -8818484178407299361
+      forest-gba-production-atlas-v4-3_9: -4792564506641931089
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

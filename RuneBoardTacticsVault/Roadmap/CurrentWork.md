@@ -1,140 +1,238 @@
 # Current Work
 
-## 2026-06-05 追記: 旧マップ生成物の削除
+## 2026-08-06 EventSocket操作と回復の泉 Step 2
 
-参考画像の方向性に合わない旧マップ生成物とEditor上のビルド窓口を削除した。
+状態: **実装・Unity再生成・EditMode / PlayMode検証完了**
 
-削除対象:
-- `Assets/Editor/Milestone1SceneBuilder.cs`
-- `Assets/Editor/Milestone1OrganicSceneBuilder.cs`
-- `Assets/Art/Generated/Milestone1/`
-- `Assets/Art/Generated/Milestone1Organic/`
-- `Assets/Data/Milestone1/`
-- `Assets/Data/Milestone1Organic/`
-- `Assets/Prefabs/Milestone1/`
-- `Assets/Prefabs/Milestone1Organic/`
-- `Assets/Scenes/Milestone1ExplorationScene.unity`
-- `Assets/Scenes/Milestone1OrganicMapScene.unity`
+今回の設計:
 
-次は `$imagegen` で森バイオームのトップダウン2Dピクセルアート風サンプルマップ画像を1枚だけ生成し、見た目の方向性を確認する。
+- EventSocket中心はScene上のGameObject Transformを正本とし、Cell中心へ固定しない。定義の標準半径とSocket単位の上書き半径を位置とは別に扱う。
+- Scene ViewでSocket ID、Event名、実効半径を表示し、Transform移動とRadius Handleを別々に操作する。接近円はCollider / Triggerではない。
+- Event中心が水や障害物上でも、接近円内にPlayerが立てるGroundがあれば有効とする。
+- Reference Mapの6 EventSocketは`Event_01`〜`Event_06`を配置固有IDとして維持し、同じ`healing-fountain-basic`定義を共有する。
+- PlaytestはPlayer足元とSocket Transformの距離で最寄り候補を選び、Eで回復する。成功後だけSocket ID単位のRuntime DictionaryへOneShot状態を保存し、HP満タンでは消費しない。
 
-## 2026-06-05 追記: 高密度ピクセルアート方針への再整理
+実装済み:
 
-前回生成されたマップがフラットな図形素材に見え、参考画像の方向性と大きく異なっていたため、実装前のアート設計を再整理した。
+- `HealingFountainEventDefinition`と回復量30の`HealingFountainBasic.asset`。
+- `MapSocketMarker`のCatalog解決、実効半径解決、半径更新API、Event接近円Gizmo。
+- `MapSocketMarkerEditor`のScene Label、Radius Handle、標準半径へ戻す操作。
+- ValidatorのEvent接近範囲内Ground / MapCollision足元Clearance検査。
+- Reference Builderの共有泉定義と、再生成前後でSocket IDにより手動Event位置・半径を維持する処理。
+- Exploration PreviewのCatalog解決、仮HP 50 / 100、E操作、回復、使用済みDictionary、HUD。
+- EditMode 3件、PlayMode 1件の回帰Test追加。
 
-今回更新した成果物:
-- `Art/ArtDirection.md`
-- `Art/TilesetPlan.md`
-- `Art/ObjectPlan.md`
-- `Art/MapPlan.md`
+確認済み:
 
-新しい方針:
-- 単色地面、円/四角の記号的オブジェクト、巨大な長方形道、四角いエリア分けは禁止。
-- 草地、土道、石畳、水、森壁、崖には境界タイルを必須にする。
-- 森・草原、火山、雪は同じマップ構造を保ち、素材役割を差し替える。
-- まずはテキスト設計を更新し、その後に仮素材とサンプルマップを作り直す。
+- dotnet Runtime / Editor / Editor.Tests / Playtest.Runtime / PlayModeTests / Assembly-CSharp-Editor: **0 warning / 0 error**。
+- 96x72 Reference MapとExploration Preview Debug SceneのUnity再生成: 成功。
+- Unity EditMode Test: **61 passed / 0 failed / 0 skipped**。
+- Unity PlayMode Test: **4 passed / 0 failed / 0 skipped**。実Scene上で移動、Collision、足元Y描画順、幹判定、E操作、回復、OneShot状態を確認。
 
-## 2026-06-05 追記: 有機的サンプルマップ生成器
+## 2026-08-05 Event定義とSocket契約 Step 1
 
-高密度ピクセルアート方針を実装へ移すため、`Milestone1OrganicSceneBuilder` を追加。
+状態: **実装・Unity再生成・EditMode検証完了 / 近接判定・E操作は未着手**
 
-今回の実装内容:
-- `FantasyRoyale/Build Milestone 1 Organic Pixel Map` メニューを追加。
-- `Assets/Art/Generated/Milestone1Organic/` に森・草原用タイルと共通オブジェクトを生成する構成を追加。
-- 既存の矩形MapDefinitionではなく、曲線状の道、池、森壁、崖、草むらをマスクで描く生成方式を追加。
-- 96x72 の有機的な森・草原サンプルマップ `Assets/Scenes/Milestone1OrganicMapScene.unity` を生成対象にした。
-- 初回MCP生成でTilemapが空になる問題を確認し、Tile/Prefab保存後にロードし直してから描画するよう修正。
+今回の設計:
 
-確認状況:
-- `dotnet build Assembly-CSharp.csproj --no-restore` 成功。
-- `dotnet build Assembly-CSharp-Editor.csproj --no-restore` 成功。
-- 初回MCP実行は成功したが、Tilemapが空だったため生成順を修正。
-- 修正後は `unity-mcp-fantasyroyale` が `Unity not detected`、Unity batchmodeはEditor起動中のため未実行。
+- `EventSocket`は泉、祠、罠、会話地点などの汎用配置ポイントとする。Event処理本体やRuntime状態は持たせない。
+- Map SceneのEvent配置は、配置固有の`SocketId`、EventDefinition参照または`EventDefinitionId`、必要ならSocket単位の接近半径上書きを持つ。
+- Eventの不変設定は`MapEventDefinition` ScriptableObjectへ保存し、対戦中の使用済み状態はSocket ID単位のRuntimeデータへ分離する。
+- `MapEventCatalog`はInspector編集用の`List<MapEventDefinition>`を保存の正本とし、実行時だけ`Dictionary<string, MapEventDefinition>`を検索索引として構築する。ID重複、空ID、未設定、半径不正はErrorとする。
 
-次の確認:
-- Unity Editorで `FantasyRoyale/Build Milestone 1 Organic Pixel Map` を実行し、Tilemapの地面、道、水辺、森壁、当たり判定を確認する。
+実装済み:
 
-## 2026-06-05 追記: 森・草原マップ再設計
+- `MapEventDefinition`、`MapEventCatalog`、`MapSocketMarker`のEvent項目、BuilderのEvent ID / 初期半径書き込み。
+- `MapAuthoringValidator`のSocket ID一意性、Event定義、参照ID、接近半径、非Event混入の検査。
+- Catalog検索、重複ID、EventSocket最小契約、定義欠落のEditMode回帰Test。
 
-採用したアート方針に合わせて、Milestone 1 の生成器を森・草原ベースの探索マップへ作り直す方針で更新。
+今回のStepではScriptableObject Assetの具体的な泉処理、近接UI、`E`操作、イベント発火は実装しない。次Stepで泉の定義AssetとRuntime接近処理を接続する。
 
-今回の実装内容:
-- `Milestone1SceneBuilder` の生成対象を、雪/火山混在マップから森・草原のベースマップへ変更。
-- 草地、草むら、土道、石畳、水、崖などのタイルを、矩形ベタ塗りではなく簡易ピクセルアート風の生成素材へ変更。
-- 木、低木、岩、商人屋台、キノコ、切り株、倒木、花、看板、宝箱、祭壇、葦などの仮オブジェクトを追加。
-- 外周、池、崖、大きめの樹木/低木/岩には当たり判定を残し、草むらや花などは通行可能な装飾として扱う。
-- 中央広場、南の主道、西の草むら通路、北側の回遊路、北東の池を持つ 96x72 の探索確認用マップに変更。
+確認結果:
 
-確認状況:
-- `dotnet build Assembly-CSharp.csproj --no-restore` 成功。
-- `dotnet build Assembly-CSharp-Editor.csproj --no-restore` 成功。
-- 既存警告として `System.Net.Http` のバージョン競合あり。
-- Unity batchmode は同じプロジェクトがEditorで開かれていたため実行できず。
-- `unity-mcp-fantasyroyale` は `Unity not detected` で接続できず。
+- dotnet Runtime / Editor / Editor.Tests / Assembly-CSharp-Editor: **0 warning / 0 error**。
+- Complete Kit再構築と96x72 Reference Map再生成: 成功。Event Socket 6点へSocket ID、`event-01`〜`event-06`、接近半径1.25を保存。
+- Unity EditMode Test: **58 passed / 0 failed / 0 skipped**。
+- Unity PlayMode Test: **3 passed / 0 failed / 0 skipped**。既存の探索移動、足元Y描画順、幹Collisionを再確認。
 
-次の確認:
-- Unity Editor上で `FantasyRoyale/Build Milestone 1 Exploration Scene` を実行し、`Milestone1ExplorationScene` の見た目と当たり判定を確認する。
+## 2026-08-04 幹・接地点へ寄せた障害物判定
 
-## 2026-05-31
+状態: **実装・Unity再構築・EditMode / PlayMode検証完了**
 
-Milestone 1「ビジュアル・探索マップ基盤」を実装中。
+今回整理した原因:
+
+- 従来は木の足元Pivotを整数座標へ置き、同じ整数を左下とする1x1 Collision Cellを塗っていた。このため判定中心が見た目より右上へ0.5 unitずれ、幹だけでなく樹冠側まで塞いでいた。
+- 自動配置で必要な「木同士や道路を離す範囲」と、Playerを止める実際のPhysics形状を同じFootprintで扱っていた。
+
+今回確定・実装した判断:
+
+- 表示Rootと判定を分離したまま、Obstacle Prefab直下へ非表示`CollisionBody`を置く。表示RootはDefault Layer、Colliderなし。CollisionBodyはMapCollision Layer、Renderer / Rigidbody2D / Triggerなし、Collider一つ。
+- 森3種は前縁の細いBox、Tree 3種・BlockingBush・MossyRock・Stumpは幹または接地点の水平Capsule、FallenLogは接地軸へ沿う回転Capsuleとする。
+- 崖2種、水、外周はCell地形なのでCollisionTilemapを維持する。
+- 論理Footprintは道路、Socket、Decoration、他Obstacleとの間隔確保と到達性計画へ残し、Physics Collisionとは分ける。
+- PlaytestのSpawn確認とTestの空き地点探索は、CollisionTilemap一つではなくMapCollision Layer全体を調べる。
+
+完成したもの:
+
+- 10 Obstacle Prefabの素材別CollisionBody profileと、崖2種のTilemapFootprint mode。
+- Mode、Shape、Size、Offset、Rotation、Capsule Directionを保持する`MapObstacleVisualMarker`契約。
+- Mode別にScene保存判定を検査するValidatorと回帰Test。
+- 30x20 Sampleと96x72 Reference Mapの再生成。Reference MapのCollisionTilemapは1,927 Cellから684 Cellへ減り、木・森・岩などはPrefab内CollisionBodyへ移行した。
+- 実Reference Mapで「幹中央は衝突、樹冠側は同Collider外」を確認するPlayMode Test。
+
+確認結果:
+
+- dotnet Runtime / Editor / EditModeTests / PlayModeTests: **0 warning / 0 error**。
+- Rebuild Complete Kitと96x72 Battle Royale Reference Map再生成: 成功。
+- Unity EditMode Test: **53 passed / 0 failed / 0 skipped**。
+- Unity PlayMode Test: **3 passed / 0 failed / 0 skipped**。
+
+この判定修正Stepは完了。Event Socket近接とE操作は未着手のまま次Stepへ残す。
+
+## 2026-08-04 足元Yによる描画順整理
+
+状態: **実装・Unity再構築・EditMode / PlayMode検証完了**
+
+今回確定・実装した判断:
+
+- 下側にあるものを手前とし、同じ描画層ではSprite Pivotのworld Yが低いものほど前へ描画する。
+- URP 2Dの正本を`Assets/Settings/Renderer2D.asset`とし、Transparency Sort ModeをCustom Axis、軸を`Vector3.up`へ設定する。
+- 旧`Characters` Sorting Layerはunique IDを維持したまま`WorldObjects`へ改名する。
+- Player、ObstacleVisuals、Props、TallGrass、Reedsは`WorldObjects` / Order 0 / `SpriteSortPoint.Pivot`へ統一する。
+- FlowerPatch / Wildflowersは平面装飾として`MapDetail`固定背面、Ground / Terrainは`MapGround`固定背面、Foregroundは`MapForeground`固定前面とする。
+
+完成したもの:
+
+- Kit再構築時にRenderer2D Dataと19表示Prefabの描画契約を揃える処理。
+- Scene ValidatorによるRenderer2D設定、Sorting Layer、Order、Sort Pointの検査。
+- EditModeのAsset Contract 2件、Validator 3件、PlayMode 1件の回帰検査追加。
+- 仮PlayerとReference Map内の立体表示を同じ足元Yソートへ接続。
+
+確認結果:
+
+- dotnet Runtime / Editor / EditModeTests / PlayModeTests: **0 warning / 0 error**。
+- Rebuild Complete Kitと96x72 Battle Royale Reference Map再生成: 成功。
+- Unity EditMode Test: **48 passed / 0 failed / 0 skipped**。
+- Unity PlayMode Test: **2 passed / 0 failed / 0 skipped**。
+
+描画順Stepは完了。次はEvent Socket近接とE操作の確認Stepへ進められる。
+
+## 2026-08-04 Exploration Preview Debug Step 1
+
+状態: **移動・地形判定・Camera追従を実装、PlayMode検証完了**
 
 今回の範囲:
-- 固定マップを `MapDefinitionAsset` で管理する。
-- Core側は `FR_` 接頭辞の純C#型で、スロット抽選と配置結果を扱う。
-- マップはTilemapで構成し、草原、雪原、火山、湖、遺跡、道を持つ探索用サイズにする。
-- オブジェクト用スロットはサイズ分類とグリッドサイズを持ち、大スロットに小物を複数配置できる。
-- 仮素材は `Assets/Art/Generated/Milestone1/` に隔離する。
-- 低木や水・溶岩・崖は通行不可、草むらは通行可能。
 
-次の確認:
-- Unity Editorで `Assets/Scenes/Milestone1ExplorationScene.unity` を開き、探索感、マップ密度、当たり判定の感触を確認する。
+- 96x72 Reference Mapを変更せず、別Playtest SceneからAdditive読込する。
+- 単一`PlayerStart`へ確認専用Playerを生成し、WASD / Arrow Keysで移動する。
+- MapCollision Layer上のCollisionTilemapとCollisionBodyで、崖、水際、木の幹などの不可侵領域で停止する。初回StepではCollisionTilemapだけだったが、後続の接地点判定Stepで更新した。
+- Reference Sceneの単一Cameraを再利用し、Player追従、Map端Clamp、1 / 32 unit Snapを行う。
 
-## 2026-06-05
+完成したもの:
 
-参考画像のコピーではなく、雰囲気、構図、密度、色の方向性をもとにした素材設計を先に整理する。
+- `Assets/Scenes/Playtest/GbaForestBattleRoyaleExplorationPreviewDebug.unity`。
+- `BattleRoyaleExplorationPreviewDebug`と再生成用Scene Builder。
+- 実Scene、実Input Action、実CollisionTilemapを通すPlayMode Test。
+- Reference MapとPlaytest SceneのBuild Settings登録。
 
-今回作成するテキスト成果物:
-- `Art/ArtDirection.md`
-- `Art/TilesetPlan.md`
-- `Art/ObjectPlan.md`
-- `Art/MapPlan.md`
+確認結果:
 
-この段階では画像生成やUnity実装は行わない。
-## 2026-06-05 追記: 森マップ構造ベースの火山/雪バイオーム展開
+- PlayMode Test: **1 passed / 0 failed / 0 skipped**。
+- 既存EditMode Test: **43 passed / 0 failed / 0 skipped**。
+- dotnet Runtime / Editor / PlayModeTests: **0 warning / 0 error**。
 
-`Assets/Art/Concept/forest-biome-sample-map.png` を基準画像として、同じ構図・通路・広場・障害物配置を保った火山バイオーム版と雪バイオーム版を `$imagegen` で生成する方針。
+このPlayer表示と直接移動は`PreviewDebug`の一時足場。本番Character、戦闘、HP、CPU、試合進行、エリア収縮は未実装であり、完成扱いにしない。
 
-生成画像を Unity Tilemap で再構成するため、専用ノート `Art/BiomeTilemapAtlasPlan.md` を追加した。
+次の候補Step:
 
-今回の分解方針:
-- 森・火山・雪で同じタイルID構造を使い、Sprite差し替えでバイオーム化する。
-- 中央石畳、左の曲がるサブ通路、右の水辺/溶岩/凍結池、崖、森壁相当、複数の小広場を共通骨格にする。
-- 地形タイルは `Ground`、`Path`、`Stone`、`Liquid`、`Cliff`、`Wall` に分ける。
-- 木、低木、岩、キノコ、切り株、倒木、看板、宝箱、祭壇は透明PNGのオブジェクトアトラスとして扱う。
-- `$imagegen` は現在レート制限により火山/雪の生成待ち。
-## 2026-06-05 追記: バイオーム仮アトラス作成
+- Event Socketへの接近を検出し、範囲内表示とE操作で一度だけ確認イベントを発火する。
+- Socket選定やイベント内容は未確定。次のStep開始前に範囲を確認する。
 
-`$imagegen` で森・火山・雪を同一シートにまとめた仮アトラスを生成し、`Assets/Art/Generated/BiomeAtlas/biome-tile-object-atlas.png` に保存した。
+## 2026-08-03 96x72 Battle Royale Reference Map
 
-扱い:
-- 左側は Tilemap 用地形タイル候補。
-- 右側は SpriteRenderer/Prefab 用オブジェクト候補。
-- 画像サイズは 1254x1254 で、完全な32x32自動グリッドスライス用ではない。
-- 次段では、この仮アトラスから必要タイルとオブジェクトを切り出し、Unity用の正規グリッド版に再整形する。
-## 2026-06-05 追記: バイオームアトラス探索マップ生成導線
+状態: **基準Scene実装・Unity生成・Validator・撮影・目視QA・回帰テスト完了**
 
-`Assets/Editor/BiomeAtlasMapSceneBuilder.cs` を追加し、仮アトラスから探索用Tilemap Sceneを生成する導線を作成した。
+既存資料に合わせた作業条件:
 
-生成予定:
-- `Assets/Art/Generated/BiomeAtlas/Runtime/Tiles/`
-- `Assets/Art/Generated/BiomeAtlas/Runtime/Objects/`
-- `Assets/Data/BiomeAtlas/Tiles/`
-- `Assets/Prefabs/BiomeAtlas/`
-- `Assets/Scenes/BiomeAtlasExplorationMapScene.unity`
+- 森・草原を完成基準とし、バトロワ探索検証サイズは96x72 Cell、参加者はPlayer 1 + CPU 5の計6開始地点とする。
+- Map配置の正本はUnity Scene、移動Physicsの正本はMapCollision Layer上の不可視`CollisionTilemap`と`CollisionBody`とする。
+- 地形、主要ルート、ロケーションを固定し、Enemy / Loot / Merchant / Eventは60 Socketの候補からゲーム側が抽選できる構造にする。
+- 中央石畳、南の森壁、西の草むら回廊、東の池、北の木陰、南広場、東水辺広場の役割を維持する。
 
-現在の状態:
-- C#ビルドは成功。
-- Unity batchmodeは、同じプロジェクトをUnity Editorが開いているため実行不可。
-- `unity-mcp-fantasyroyale` は `Unity not detected` で実行不可。
-- Editor接続が復旧したら `FantasyRoyale/Build Biome Atlas Exploration Map` を実行してScene生成する。
+完成したもの:
+
+- `Assets/Scenes/MapAuthoring/GbaForestBattleRoyaleReference.unity`。
+- 96x72 Ground 6,912 Cell、単一Componentの3 Cell幅Road 1,479 Cell、Blob-47 Water 352 Cell、CollisionTilemap 684 Cell。森・木・岩などはPrefab内CollisionBody。
+- 6参加者開始地点、7 Landmark、16 Enemy、22 Loot、3 Merchant、6 Eventの計60 Socket。
+- Obstacle Visual 232 Instance、通行可能Decoration 115 Instance、Props 16 Instance。全て既存v4.3 Production Atlas由来のPrefabだけを使用する。
+- 全景、中央広場、東水辺のUnity Camera QA画像3点。
+
+確認結果:
+
+- 生成前検査: Map範囲、道路と水の非重複、道路の4近傍連結、SocketのCollision非重複、開始地点間隔18 Cell以上、全開始地点・Landmark・Merchantへの歩行到達性を確認済み。
+- `MapAuthoringValidator`: Errorなし。
+- `Assembly-CSharp-Editor`: 0 warning / 0 error。
+- Unity EditMode Test: **43 passed / 0 failed / 0 skipped**。
+- 目視QA: 初版の長い矩形Loopと等間隔の森林壁を廃止し、短い段差を連ねた道路、密度差のある森林島、不規則な東の湖へ修正済み。
+
+次に行う場合:
+
+- 実ゲームの移動速度、Camera、収縮進行を接続し、約20分の試合尺として横断時間・初接敵時間・終盤収束をPlayModeで計測する。
+- 基準Mapのプレイ結果が良好なら、固定配置計画から道路Graph、水域Row Span、POI保護領域、森林密度、Socket制約を抽出してSeed生成へ移す。
+
+## 2026-08-03 Map Authoring Kit v4.3
+
+状態: **実装・自動テスト・Unity再構築・撮影・目視QA完了**
+
+今回整理した原因:
+
+- v4.2のDirt / Stone境界Maskは一つの輪郭を反復し、Tile内に焼き込まれた旧GrassがGroundの地面差分を上書きしていたため、道端へ32px単位の格子感が残っていた。
+- 接続辺を32px全幅で塗ると直線に周期的な出っ張りが残る一方、中央Socketだけにすると太い道路の内角へGroundの芝が穴として露出する。接続と角埋めを別の条件にする必要があった。
+- 標準RuleTileのPerlin差分は局所的に偏り、同じ輪郭が長く連続する可能性を契約上排除できなかった。
+
+今回確定・実装した判断:
+
+- Map配置の正本はUnity Scene、移動Physicsの正本はMapCollision Layer上の不可視`CollisionTilemap`と`CollisionBody`とする。表示と判定の分離、4 Tilemap、自由配置のDecorations / ObstacleVisuals / Propsは継続する。
+- Dirt / StoneのRoad Edge Sourceを各4差分作成し、Cardinal-16の全16 Maskを4 Spriteずつへ展開する。
+- 非全面Maskの路面外は透明にして`GroundTilemap`を見せる。各接続辺の中央`[6,26)`を20px固定Socketとし、両端6pxはその辺と直交する2方向のbitが両方とも接続する場合に限り埋める。直線Mask `05` / `0a`は20px Socketだけとし、周期的なタブを付けない。
+- 太い道路の内角は直交bitのAND条件でのみ埋め、接続部の芝穴と直線辺の格子感を同時に防ぐ。露出辺にだけ1〜3pxの不規則輪郭を残す。
+- `RoadConnectionRuleTile`は横4 Cell内で4差分を一度ずつ使い、座標・Rule ID・SeedのHashで24順列から選ぶ。同一輪郭の横連続は区間境界を含め最大2 Cellとする。
+- Dirt / Stoneは共通`road`接続Group、道路形状はRadius 1の3 Cell幅Rasterizerを継続し、Water非重複と4近傍単一Componentを一括検証してから配置する。
+
+完成したもの:
+
+- `fantasyroyale.map-authoring-atlas.v4.3` Catalogと205 named Sub-Spriteの単一Production Atlas。
+- Grass 8、Dirt 64、Stone 64、Water 50、Detail 4、Props 10、Obstacle Visual 5。
+- Road Edge Source 2点、Surface Source 4点、19表示Prefab、10 CollisionBody、4 TilemapのScene Templateと30x20 Sample。
+- v4.3 Importer、Builder、Validator、Road Rasterizer、Road Connection RuleTile、Asset Contract Test、Validator Test。
+
+確認結果:
+
+- Unity Rebuild / Sample再構築 / Camera Capture / 目視QA: 成功。
+- EditMode Test: **43 passed / 0 failed / 0 skipped**。
+- Dirt / Stoneの全16 Maskが各4差分を参照し、負Xを含む各4 Cell区間で4差分を一度ずつ使用、同一差分の横連続最大2 Cellを自動検査済み。
+- 道路内部のGrass穴がなく、Dirt / Stone材質境界を含む全道路が単一Componentとして接続することを確認済み。
+- Production Atlas SHA-256: `412C63A03CD84472A9928DA5BF687903DB47AD3FF75DAECD246222EDD50D5FF4`。
+- Sprite Catalog SHA-256: `EA6A6D111FF41DE5081D7537C5A20D0F74F2854D1C492D747FF94F9070B68600`。
+- Production Atlas QA v4.3 SHA-256: `34923AEC3E2721EA1D2491D18A8CE15C6AAF65E5FF2799001367080838B848F1`。
+- Unity Sample QA SHA-256: `DD256066AC7DBD5C5A4BC798F750908A8C44D54A8DFE1483A01D9E3DE1E4275E`。
+
+現行設計:
+
+- [[../Architecture/MapAuthoringKit|Map Authoring Kit]]
+- [[../Architecture/ForestProductionAtlasContract|Forest Production Atlas Contract]]
+- [[../Architecture/Scenes/GbaForestMapAuthoringScene|GBA Forest Map Authoring Scene]]
+
+次に行う場合:
+
+- Scene Templateを複製し、実ゲーム用レイアウトをUnity標準機能で制作する。
+- 実制作で繰り返し負荷が確認された操作だけを、小さなEditor補助として検討する。
+
+## 履歴
+
+- v4.2は115 Sprite、GroundVariationTile、全面Maskだけの4差分を導入した。道端の焼き込みGrassと境界Maskの輪郭反復が残ったため、v4.3へ置換済み。
+- v4.1は102 Sprite、4 Tilemap、自由配置Decoration / Obstacle Visual、3 Cell幅の道路を導入した。一方でGrass装飾混入、16 Cell完全周期、Dirt / Water全面Maskの単一Sprite反復が残ったため、v4.2へ置換済み。
+- v4は5 Tilemap、Detail Tile / Palette、15表示Prefab、手書き1 Cell道路を使っていた。v4.1を経て置換済み。
+- v3は191 Sprite、ForestWall / Cliff Blob-47、6 Tilemap、Props Grid、GameObject Brush、Prefab Colliderを使っていた。v4を経て置換済み。
+- v2は366 Loose PNGとRandom差分、v1は71 Loose PNGを使用していた。いずれも置換済み。
+- 旧独自ツール案と旧Map Data Formatは廃案・保留。旧Biome Atlas、FR_Map、Exploration実装は削除済み。

@@ -1,17 +1,17 @@
-# 外部素材候補
+# 外部素材
 
-## Free - Pixel Art Asset Pack - Topdown Tileset - 16x16 Sprites
+## 現在のMap Authoring Kit
 
-- 状態: 候補。未取り込み。
-- 用途: 将来的なプレイヤー、敵、地形タイル、武器などの仮ビジュアル差し替え候補。
-- 提供元: Anokolisa / itch.io
-- 参照URL: https://anokolisa.itch.io/free-pixel-art-asset-pack-topdown-tileset-rpg-16x16-sprites
-- 確認できた内容: ページ上では `Pixel Crawler - Free Pack 2.0.4.zip`、無料、トップダウン16x16、500 sprites、3 heroes、8 enemies、50 weapons と説明されている。
-- ライセンス注意: この環境ではZIP本体の取得がHTMLに差し替わり、同梱ライセンスや利用条件を確認できていない。正式に取り込む前に、ユーザー側でZIPを取得し、同梱文書と配布ページの利用条件を確認する。
-- 生成AI注意: 配布ページ上では生成AI不使用の表示を確認。
+外部配布素材は使用していない。
 
-## 配置ルール
+- 森Themeの候補AtlasはCodex imagegenで生成。
+- Production PNGは候補Atlasからローカル変換。
+- Tile、RuleTile、Palette、Prefab、SceneはUnity Editor APIで生成。
 
-- 正式に取り込む外部素材は `Assets/Art/External/AnokolisaPixelCrawler/` 配下に隔離する。
-- 自作・コード生成の仮素材は `Assets/Art/Prototype/Generated/` 配下に隔離する。
-- 仮素材と外部素材を同じフォルダに混ぜない。
+したがって、現在のMap Authoring Kitに第三者Asset Packのライセンス依存はない。
+
+## 旧候補
+
+Anokolisaの Free Pixel Art Asset Pack は過去の差し替え候補だったが、配布ZIP内のライセンスを確認できておらず、現行実装には取り込んでいない。旧候補フォルダも2026-07-10に削除した。
+
+今後、外部素材を導入する場合は、素材名、用途、提供元、利用条件を事前に確認し、Assets/Art/External配下へ提供元単位で隔離する。

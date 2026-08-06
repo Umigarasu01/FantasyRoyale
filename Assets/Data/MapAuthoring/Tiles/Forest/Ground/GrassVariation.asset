@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0a53fedf6f803d4296a39323d87dfb5, type: 3}
+  m_Name: GrassVariation
+  m_EditorClassIdentifier: FantasyRoyale.MapAuthoringKit.Runtime::FantasyRoyale.MapAuthoringKit.GroundVariationTile
+  variants:
+  - {fileID: 1681859939, guid: 5502b5375f0e721449e2e58f8184836a, type: 3}
+  - {fileID: 271578751, guid: 5502b5375f0e721449e2e58f8184836a, type: 3}
+  - {fileID: -962873400, guid: 5502b5375f0e721449e2e58f8184836a, type: 3}
+  - {fileID: 8459361, guid: 5502b5375f0e721449e2e58f8184836a, type: 3}
+  - {fileID: -348090518, guid: 5502b5375f0e721449e2e58f8184836a, type: 3}
+  - {fileID: 2106417271, guid: 5502b5375f0e721449e2e58f8184836a, type: 3}
+  - {fileID: -673650094, guid: 5502b5375f0e721449e2e58f8184836a, type: 3}
+  - {fileID: -1446744922, guid: 5502b5375f0e721449e2e58f8184836a, type: 3}
+  seed: 0

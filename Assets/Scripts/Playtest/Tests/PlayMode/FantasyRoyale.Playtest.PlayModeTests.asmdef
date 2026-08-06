@@ -1,0 +1,13 @@
+{
+  "name": "FantasyRoyale.Playtest.PlayModeTests",
+  "rootNamespace": "FantasyRoyale.Playtest.Tests.PlayMode",
+  "references": [
+    "FantasyRoyale.Playtest.Runtime",
+    "FantasyRoyale.MapAuthoringKit.Runtime",
+    "Unity.InputSystem",
+    "Unity.InputSystem.TestFramework"
+  ],
+  "optionalUnityReferences": [
+    "TestAssemblies"
+  ]
+}

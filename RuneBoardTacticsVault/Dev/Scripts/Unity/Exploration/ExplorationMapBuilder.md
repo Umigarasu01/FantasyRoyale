@@ -1,3 +1,0 @@
-# ExplorationMapBuilder
-
-Milestone 1探索SceneのTilemap描画とランダム配置Prefab生成を行うMonoBehaviour。抽選判断はCoreの `FR_MapPlacementResolver` に委譲し、Unity側ではTilemapとPrefab配置だけを担当する。

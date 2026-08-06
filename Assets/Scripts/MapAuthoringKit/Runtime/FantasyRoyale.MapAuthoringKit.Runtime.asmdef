@@ -1,0 +1,7 @@
+{
+  "name": "FantasyRoyale.MapAuthoringKit.Runtime",
+  "rootNamespace": "FantasyRoyale.MapAuthoringKit",
+  "references": [
+    "Unity.2D.Tilemap.Extras"
+  ]
+}

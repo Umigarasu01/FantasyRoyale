@@ -1,0 +1,11 @@
+{
+  "name": "FantasyRoyale.MapAuthoringKit.Editor",
+  "rootNamespace": "FantasyRoyale.MapAuthoringKit.Editor",
+  "references": [
+    "FantasyRoyale.MapAuthoringKit.Runtime",
+    "Unity.2D.Sprite.Editor"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ]
+}

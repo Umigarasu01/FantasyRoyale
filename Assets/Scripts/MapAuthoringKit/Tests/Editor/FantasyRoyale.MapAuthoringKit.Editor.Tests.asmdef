@@ -1,0 +1,16 @@
+{
+  "name": "FantasyRoyale.MapAuthoringKit.Editor.Tests",
+  "rootNamespace": "FantasyRoyale.MapAuthoringKit.Tests.Editor",
+  "references": [
+    "FantasyRoyale.MapAuthoringKit.Runtime",
+    "FantasyRoyale.MapAuthoringKit.Editor",
+    "Unity.2D.Tilemap.Extras",
+    "Unity.2D.Tilemap.Extras.Editor"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ],
+  "optionalUnityReferences": [
+    "TestAssemblies"
+  ]
+}

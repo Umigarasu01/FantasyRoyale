@@ -1,0 +1,8 @@
+{
+  "name": "FantasyRoyale.Playtest.Runtime",
+  "rootNamespace": "FantasyRoyale.Playtest",
+  "references": [
+    "FantasyRoyale.MapAuthoringKit.Runtime",
+    "Unity.InputSystem"
+  ]
+}

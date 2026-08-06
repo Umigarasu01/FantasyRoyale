@@ -13,8 +13,8 @@ TagManager:
   - UI
   - 
   - 
-  - 
-  - 
+  - MapCollision
+  - MapInteraction
   - 
   - 
   - 
@@ -40,4 +40,22 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: MapGround
+    uniqueID: 2100000101
+    locked: 0
+  - name: MapDetail
+    uniqueID: 2100000102
+    locked: 0
+  - name: WorldObjects
+    uniqueID: 2100000103
+    locked: 0
+  - name: MapForeground
+    uniqueID: 2100000104
+    locked: 0
+  - name: Effects
+    uniqueID: 2100000105
+    locked: 0
+  - name: UI
+    uniqueID: 2100000106
     locked: 0

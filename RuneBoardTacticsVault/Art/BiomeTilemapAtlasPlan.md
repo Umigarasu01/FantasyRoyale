@@ -1,5 +1,9 @@
 # Biome Tilemap Atlas Plan
 
+> [!warning] 旧案
+> 2026-07-10にBiome Atlas実装を削除し、森ThemeのMap Authoring Kitへ置き換えた。
+> 現行設計は [[../Architecture/MapAuthoringKit|Map Authoring Kit]] を正とする。
+
 ## 目的
 
 `Assets/Art/Concept/forest-biome-sample-map.png` の構図を基準に、森・火山・雪の3バイオームを同じゲーム内の差し替え素材として扱うための Tilemap 用タイルセット案と、配置オブジェクト用アトラス案をまとめる。

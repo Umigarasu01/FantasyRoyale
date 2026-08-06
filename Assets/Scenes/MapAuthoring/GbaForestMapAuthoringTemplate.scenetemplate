@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 13966, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: GbaForestMapAuthoringTemplate
+  m_EditorClassIdentifier: UnityEditor.dll::UnityEditor.SceneTemplate.SceneTemplateAsset
+  templateScene: {fileID: 102900000, guid: 0f79b669402fc0d49828150fc9fefe24, type: 3}
+  templateName: GBA Forest Map
+  description: "FantasyRoyale\u306EGBA\u98A8\u68EE\u6797\u30DE\u30C3\u30D7\u7528\u3002\u6A19\u6E96Tilemap\u968E\u5C64\u3001\u63CF\u753B\u9806\u3001Collision\u3001Sockets\u3092\u542B\u307F\u307E\u3059\u3002"
+  preview: {fileID: 0}
+  dependencies:
+  - dependency: {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+    instantiationMode: 0
+  templatePipeline: {fileID: 0}
+  badge: {fileID: 0}
+  addToDefaults: 1

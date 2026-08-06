@@ -1,3 +1,0 @@
-# FR_MapDefinition
-
-固定マップのID、グリッドサイズ、ランダム配置スロット配列を持つCore定義。Tilemap描画情報はUnity側Assetへ置き、Coreでは配置抽選に必要な情報だけに絞る。
