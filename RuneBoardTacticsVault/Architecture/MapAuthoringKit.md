@@ -29,14 +29,16 @@ Sceneには次をUnity標準形式で保存する。
 | 森、崖、木、低木、岩、切株、倒木の見た目 | ObstacleVisuals配下のPrefab InstanceとTransform |
 | Mushroom、Chest、Sign | Props配下のPrefab InstanceとTransform |
 | Player Start・Enemy・Loot・Merchant・Landmark候補 | Sockets配下のMapSocketMarker |
-| Eventの配置 | Sockets配下のMapSocketMarker（Socket ID、自由なTransform位置、Event定義参照 / ID、個別半径） |
+| Eventの配置 | Sockets配下のMapSocketMarker（Socket ID、自由なTransform位置、`PoolCandidate` / `FixedDefinition`、個別半径） |
 | Eventの不変設定 | `MapEventDefinition` Assetと`MapEventCatalog`のList |
 | Eventの使用済み・Cooldown状態 | ゲーム実行中のSocket ID単位Runtimeデータ |
 | 描画順 | Renderer2Dの透明描画設定、Sorting Layer、Order in Layer、Sprite Pivot |
 
 `.frmap` やJSON Mapを別途同期しない。将来、Unity外から同じデータを読む必要が生じた時点でSceneからExportする。
 
-Event定義のCatalogはMap配置の正本ではなく、Event処理が参照する設定Assetの索引である。InspectorではListを編集し、ゲーム実行時だけID検索用Dictionaryを構築する。EventSocketは配置固有の`SocketId`と、手動配置では直接参照、生成データでは`EventDefinitionId`で同じ定義へ到達できる。Socket中心はScene上のTransformを正本とし、Cell中心へ固定しない。接近円は論理距離で、MapCollisionや表示とは独立する。
+Event定義のCatalogはMap配置の正本ではなく、Event処理が参照する設定Assetの索引である。InspectorではListを編集し、ゲーム実行時だけID検索用Dictionaryを構築する。`PoolCandidate` EventSocketは固定定義を持たず、配置固有の`SocketId`、Transform位置、正の個別半径だけを保存する。`FixedDefinition`だけが直接参照または`EventDefinitionId`で定義へ到達する。Socket中心はScene上のTransformを正本とし、Cell中心へ固定しない。接近円は論理距離で、MapCollisionや表示とは独立する。
+
+Event種類、整数重み、有効Socket数は`MapEventPoolDefinition`のInspector Listへ保存する。Seedと配置結果は対戦状態であり、Map SceneやPool Assetへ書き戻さない。
 
 ## Scene構造 v4.3
 
@@ -235,7 +237,7 @@ PaletteはGround / Collisionの2点だけとする。旧Detail Paletteを削除�
 - Shader、回転、反転による地面差分を使わない。
 - Unity Rebuild、Validator、Camera Captureに成功。
 - 最新のUnity Sample QA: `Assets/Art/Generated/MapAuthoring/QA/gba-forest-sample-unity.png`。
-- EditMode Test: **61 passed / 0 failed / 0 skipped**。
+- Map Authoring EditMode Test: **63 passed / 0 failed / 0 skipped**。Gameplay Character / Eventを含む全Suiteは83 passed。
 - PlayMode Test: **4 passed / 0 failed / 0 skipped**。
 - Production Atlas SHA-256: `412C63A03CD84472A9928DA5BF687903DB47AD3FF75DAECD246222EDD50D5FF4`、Catalog SHA-256: `EA6A6D111FF41DE5081D7537C5A20D0F74F2854D1C492D747FF94F9070B68600`。
 - Production Atlas QA SHA-256: `34923AEC3E2721EA1D2491D18A8CE15C6AAF65E5FF2799001367080838B848F1`、Unity Sample QA SHA-256: `DD256066AC7DBD5C5A4BC798F750908A8C44D54A8DFE1483A01D9E3DE1E4275E`。

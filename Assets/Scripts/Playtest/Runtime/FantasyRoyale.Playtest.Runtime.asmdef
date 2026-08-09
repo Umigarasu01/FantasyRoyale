@@ -2,7 +2,10 @@
   "name": "FantasyRoyale.Playtest.Runtime",
   "rootNamespace": "FantasyRoyale.Playtest",
   "references": [
+    "FantasyRoyale.Gameplay.Characters.Core",
+    "FantasyRoyale.Gameplay.Characters.Unity",
     "FantasyRoyale.MapAuthoringKit.Runtime",
+    "FantasyRoyale.Gameplay.Events.Runtime",
     "Unity.InputSystem"
   ]
 }

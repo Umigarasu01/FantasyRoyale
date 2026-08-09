@@ -29,6 +29,15 @@ namespace FantasyRoyale.MapAuthoringKit
     }
 
     /// <summary>
+    /// EventSocketへEventを割り当てる方法を表す。固定配置と対戦開始時のPool抽選を明示的に分ける。
+    /// </summary>
+    public enum MapEventPlacementMode
+    {
+        FixedDefinition = 0,
+        PoolCandidate = 1
+    }
+
+    /// <summary>
     /// Map Sceneに候補地点の種別、占有範囲、向き、任意Tagを残すための制作マーカー。
     /// Spawnや抽選を実行せず、ゲーム側が必要なときに読み取れる静的な配置情報だけを持つ。
     /// </summary>
@@ -41,6 +50,8 @@ namespace FantasyRoyale.MapAuthoringKit
         [SerializeField] private Vector2 size = Vector2.one;
         [SerializeField] private MapSocketFacing facing = MapSocketFacing.Any;
         [SerializeField] private string socketTag = string.Empty;
+        [SerializeField] private MapEventPlacementMode eventPlacementMode =
+            MapEventPlacementMode.FixedDefinition;
         [SerializeField] private MapEventDefinition eventDefinition;
         [SerializeField] private string eventDefinitionId = string.Empty;
         [SerializeField] [Min(0f)] private float interactionRadiusOverride;
@@ -50,6 +61,7 @@ namespace FantasyRoyale.MapAuthoringKit
         public Vector2 Size => size;
         public MapSocketFacing Facing => facing;
         public string SocketTag => socketTag;
+        public MapEventPlacementMode EventPlacementMode => eventPlacementMode;
         public MapEventDefinition EventDefinition => eventDefinition;
         public string SerializedEventDefinitionId => eventDefinitionId;
         public string EventDefinitionId => eventDefinition != null
@@ -67,6 +79,12 @@ namespace FantasyRoyale.MapAuthoringKit
             MapEventCatalog catalog,
             out MapEventDefinition resolvedDefinition)
         {
+            if (eventPlacementMode != MapEventPlacementMode.FixedDefinition)
+            {
+                resolvedDefinition = null;
+                return false;
+            }
+
             if (eventDefinition != null)
             {
                 resolvedDefinition = eventDefinition;
@@ -85,11 +103,18 @@ namespace FantasyRoyale.MapAuthoringKit
         /// <summary>
         /// Socket固有値を優先し、未指定なら解決済みEvent定義の標準接近半径を返す。
         /// </summary>
-        public float ResolveInteractionRadius(MapEventCatalog catalog)
+        public float ResolveInteractionRadius(
+            MapEventCatalog catalog,
+            MapEventDefinition assignedDefinition = null)
         {
             if (interactionRadiusOverride > 0f)
             {
                 return interactionRadiusOverride;
+            }
+
+            if (assignedDefinition != null)
+            {
+                return assignedDefinition.DefaultInteractionRadius;
             }
 
             return TryResolveEventDefinition(catalog, out var resolvedDefinition)
@@ -126,7 +151,8 @@ namespace FantasyRoyale.MapAuthoringKit
             string newSocketId = null,
             MapEventDefinition newEventDefinition = null,
             string newEventDefinitionId = null,
-            float newInteractionRadiusOverride = 0f)
+            float newInteractionRadiusOverride = 0f,
+            MapEventPlacementMode newEventPlacementMode = MapEventPlacementMode.FixedDefinition)
         {
             socketId = string.IsNullOrWhiteSpace(newSocketId)
                 ? gameObject.name
@@ -135,8 +161,13 @@ namespace FantasyRoyale.MapAuthoringKit
             size = newSize;
             facing = newFacing;
             socketTag = newSocketTag ?? string.Empty;
-            eventDefinition = newSocketKind == MapSocketKind.Event ? newEventDefinition : null;
-            eventDefinitionId = newSocketKind == MapSocketKind.Event && newEventDefinition == null
+            eventPlacementMode = newSocketKind == MapSocketKind.Event
+                ? newEventPlacementMode
+                : MapEventPlacementMode.FixedDefinition;
+            var usesFixedDefinition = newSocketKind == MapSocketKind.Event
+                                      && eventPlacementMode == MapEventPlacementMode.FixedDefinition;
+            eventDefinition = usesFixedDefinition ? newEventDefinition : null;
+            eventDefinitionId = usesFixedDefinition && newEventDefinition == null
                 ? NormalizeId(newEventDefinitionId)
                 : string.Empty;
             interactionRadiusOverride = newSocketKind == MapSocketKind.Event

@@ -30,7 +30,7 @@ SceneやAssetを自動修正せず、Collisionを生成・更新しない。検�
 - `MapObstacleVisualMarker`のFootprint Size / Offset、Collision Mode / Shape / Size / Offset / Rotation / DirectionとScene保存済み判定の差分。
 - Markerとの不一致は報告だけとし、CollisionTilemapやCollisionBodyを変更しない。
 - `MapSocketMarker`の所属、Socket ID一意性、Size、Ground内包、相互重複。
-- Event Socketの定義Asset / 定義ID、参照IDの一致、直接参照時の接近半径、Event以外へのEvent情報混入。IDだけの生成データはCatalog解決時に定義初期値を適用する。
+- Event Socketの配置方式を検査する。`PoolCandidate`は固定定義を禁止して正の個別半径を必須とし、`FixedDefinition`は定義Asset / 定義ID、参照ID一致、実効半径を検査する。Event以外への配置方式・Event情報混入もErrorとする。
 - Event中心はMapCollision上でも許可する。接近円内のGroundを0.25 unit間隔で調べ、足元中心と周囲8点がMapCollision外になる地点が一つもなければ`SOCKET_EVENT_NO_REACHABLE_POINT` Errorとする。
 
 ## Production Atlas検証
@@ -61,7 +61,7 @@ ValidatorはAtlasのPixelを修正せず、道路SocketのAlpha topologyもこ�
 - Atlas、Catalog、Sceneを修正せず、検査だけを行う。
 - 立体表示はカテゴリ別Orderではなく共通WorldObjects層の足元Yで比較する。平面装飾と固定Tilemapは明示した固定層から動かさない。
 
-v4.3 + Event Socket操作の`MapAuthoringAssetContractTests`と`MapAuthoringValidatorTests`を合わせたEditMode Suiteは**61 passed / 0 failed / 0 skipped**。
+v4.3 + Event Socket操作のMap Authoring系テストは63 passed / 0 failed / 0 skipped。Gameplay Character / Eventを含む全EditMode Suiteは**83 passed / 0 failed / 0 skipped**。
 
 ## 旧構造履歴
 

@@ -24,6 +24,16 @@ namespace FantasyRoyale.MapAuthoringKit.Editor
                 + "Eventの円は物理Colliderではなく論理接近範囲です。",
                 MessageType.Info);
 
+            if (marker.SocketKind == MapSocketKind.Event
+                && marker.EventPlacementMode == MapEventPlacementMode.PoolCandidate)
+            {
+                EditorGUILayout.HelpBox(
+                    "PoolCandidateはEvent定義を直接持ちません。"
+                    + "接近半径はSocket側で設定し、Event種類は対戦開始時にPoolから割り当てます。",
+                    MessageType.Info);
+                return;
+            }
+
             if (marker.SocketKind != MapSocketKind.Event
                 || marker.InteractionRadiusOverride <= 0f)
             {
@@ -56,9 +66,11 @@ namespace FantasyRoyale.MapAuthoringKit.Editor
                 radius = MapEventDefinition.DefaultInteractionRadiusValue;
             }
 
-            var definitionName = marker.EventDefinition != null
-                ? marker.EventDefinition.DisplayName
-                : marker.EventDefinitionId;
+            var definitionName = marker.EventPlacementMode == MapEventPlacementMode.PoolCandidate
+                ? "Event Pool候補"
+                : marker.EventDefinition != null
+                    ? marker.EventDefinition.DisplayName
+                    : marker.EventDefinitionId;
             Handles.Label(
                 marker.transform.position + Vector3.up * 0.3f,
                 $"{marker.SocketId}\n{definitionName}\nRadius {radius:0.00}");

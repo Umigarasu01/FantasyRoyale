@@ -1,0 +1,13 @@
+{
+  "name": "FantasyRoyale.Gameplay.Characters.Editor.Tests",
+  "rootNamespace": "FantasyRoyale.Gameplay.Characters.Tests.Editor",
+  "references": [
+    "FantasyRoyale.Gameplay.Characters.Core"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ],
+  "optionalUnityReferences": [
+    "TestAssemblies"
+  ]
+}

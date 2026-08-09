@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using FantasyRoyale.Gameplay.Events;
 using FantasyRoyale.MapAuthoringKit;
 using FantasyRoyale.Playtest;
 using UnityEditor;
@@ -22,6 +23,9 @@ namespace FantasyRoyale.Editor.Playtest
         public const string InputActionsPath = "Assets/InputSystem_Actions.inputactions";
         public const string EventCatalogPath =
             "Assets/Data/MapAuthoring/Events/MapEventCatalog.asset";
+        public const string EventPoolPath =
+            "Assets/Data/Gameplay/Events/BattleRoyaleReferenceEventPool.asset";
+        public const int PreviewEventSelectionSeed = 20260807;
 
         /// <summary>
         /// 空のPlaytest SceneへBootstrapだけを保存し、PlaytestとReference MapをBuild Settingsへ登録する。
@@ -77,6 +81,8 @@ namespace FantasyRoyale.Editor.Playtest
                     $"MapEventCatalogがありません、または不正です: {EventCatalogPath} / {catalogError}");
             }
 
+            var eventPool = LoadOrCreateEventPool(eventCatalog);
+
             if (inputActions.FindAction(
                     $"{BattleRoyaleExplorationPreviewDebug.PlayerActionMapName}/"
                     + BattleRoyaleExplorationPreviewDebug.MoveActionName,
@@ -107,7 +113,9 @@ namespace FantasyRoyale.Editor.Playtest
                 8f,
                 eventCatalog,
                 50,
-                100);
+                100,
+                eventPool,
+                PreviewEventSelectionSeed);
 
             if (!EditorSceneManager.SaveScene(scene, PlaytestScenePath, false))
             {
@@ -121,6 +129,43 @@ namespace FantasyRoyale.Editor.Playtest
             AssetDatabase.Refresh();
             ValidateGeneratedScene();
             Debug.Log($"Exploration Preview Debug Scene built: {PlaytestScenePath}");
+        }
+
+        /// <summary>
+        /// 初回だけ泉一種・重み1・有効3地点のPool Assetを作り、以後はInspector編集値を正本として検証する。
+        /// </summary>
+        private static MapEventPoolDefinition LoadOrCreateEventPool(MapEventCatalog eventCatalog)
+        {
+            var eventPool = AssetDatabase.LoadAssetAtPath<MapEventPoolDefinition>(EventPoolPath);
+            if (eventPool == null)
+            {
+                if (!eventCatalog.TryGet("healing-fountain-basic", out var fountainDefinition))
+                {
+                    throw new InvalidOperationException(
+                        "MapEventCatalogにhealing-fountain-basicがありません。");
+                }
+
+                EnsureAssetFolder("Assets/Data", "Gameplay");
+                EnsureAssetFolder("Assets/Data/Gameplay", "Events");
+                eventPool = ScriptableObject.CreateInstance<MapEventPoolDefinition>();
+                eventPool.name = "BattleRoyaleReferenceEventPool";
+                eventPool.Configure(
+                    "battle-royale-reference-events",
+                    3,
+                    new[]
+                    {
+                        new MapEventPoolEntry(fountainDefinition, 1)
+                    });
+                AssetDatabase.CreateAsset(eventPool, EventPoolPath);
+            }
+
+            if (!eventPool.Validate(out var poolError))
+            {
+                throw new InvalidOperationException(
+                    $"MapEventPoolDefinitionが不正です: {EventPoolPath} / {poolError}");
+            }
+
+            return eventPool;
         }
 
         /// <summary>
@@ -186,6 +231,8 @@ namespace FantasyRoyale.Editor.Playtest
 
             if (bootstrap.InputActions == null
                 || bootstrap.EventCatalog == null
+                || bootstrap.EventPool == null
+                || bootstrap.EventSelectionSeed != PreviewEventSelectionSeed
                 || !string.Equals(
                     bootstrap.MapScenePath,
                     BattleRoyaleExplorationPreviewDebug.DefaultMapScenePath,

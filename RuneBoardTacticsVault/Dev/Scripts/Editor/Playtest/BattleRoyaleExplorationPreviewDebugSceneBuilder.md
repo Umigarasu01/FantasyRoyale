@@ -17,11 +17,15 @@
 - Reference Map: `Assets/Scenes/MapAuthoring/GbaForestBattleRoyaleReference.unity`
 - Input Actions: `Assets/InputSystem_Actions.inputactions`
 - Event Catalog: `Assets/Data/MapAuthoring/Events/MapEventCatalog.asset`
+- Event Pool: `Assets/Data/Gameplay/Events/BattleRoyaleReferenceEventPool.asset`
+- Preview Event Seed: `20260807`
 - 仮移動速度: 5 unit/s
 - Camera Orthographic Size: 8
-- 仮HP: 50 / 100
+- 本番`CharacterHealth`の確認用初期値: 50 / 100
 
-Reference MapとPlaytest SceneをBuild Settingsへ重複なく追加し、既存Sceneの順序は維持する。保存後にBootstrap、入力Asset、Event Catalog、Map Path、Build Settings登録を再読込検査する。生成前に`Player/Move`と`Player/Interact`の両Actionが存在することも確認する。
+Event Pool Assetがない初回だけ、泉1種・重み1・有効数3で作成する。既存Assetがある場合はInspector編集値を上書きせず、契約検証だけを行う。
+
+Reference MapとPlaytest SceneをBuild Settingsへ重複なく追加し、既存Sceneの順序は維持する。保存後にBootstrap、入力Asset、Event Catalog、Event Pool、Seed、Map Path、Build Settings登録を再読込検査する。生成前に`Player/Move`と`Player/Interact`の両Actionが存在することも確認する。
 
 このBuilderはReference Mapを複製・編集しない。Map制作の正本とGameplay確認の足場を分離するために存在する。
 

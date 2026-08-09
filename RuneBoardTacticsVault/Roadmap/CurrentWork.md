@@ -1,5 +1,131 @@
 # Current Work
 
+## 2026-08-08 本番Character・HP・戦闘基盤 Step 2
+
+状態: **実装・Unity再生成・EditMode / PlayMode検証完了 / Step 3設計相談待ち**
+
+今回の設計:
+
+- 人間、CPU、将来のNetwork入力は、入力機器やUnity型を含まない同じ`CharacterMoveCommand`を生成する。
+- `CharacterActor2D`は入力元を知らず、最新Commandと本番`CharacterHealth`だけを受けて`Rigidbody2D.MovePosition`へ接続する。
+- 人間操作は`HumanCharacterMoveInputAdapter`がUnity Input Systemの`Move` Actionを純C# Commandへ変換する。Preview BootstrapはPhysicsを直接更新しない。
+- 既存Previewで検証済みのDynamic Rigidbody2D、足元Capsule、MapCollision、移動速度、足元Y描画順をそのまま本番Actor経路へ移す。
+- HP 0ではActorが移動Commandを破棄して停止し、死亡後は観戦のみという既存方針と矛盾させない。
+
+実装済み:
+
+- 純C# `CharacterMoveCommand`と`ICharacterMoveCommandTarget`。アナログ量を保持し、単位円外だけをClampする。
+- `FantasyRoyale.Gameplay.Characters.Unity` Assembly、`CharacterActor2D`、`HumanCharacterMoveInputAdapter`。
+- Exploration Previewを「Input System → Human Adapter → Move Command → Character Actor → Rigidbody2D」へ移行。
+- Event Context、Camera追従、Socket距離、Test APIもActorが持つBody / Healthを参照するよう統一。
+- Command単体Test 4件と、実Scene上のActor構成、人間入力変換、Collision移動、撃破時停止のPlayMode回帰。
+
+確認済み:
+
+- 生成済みC# 12 Project: **0 warning / 0 error**。
+- Exploration Preview Debug SceneのUnity再生成: 成功。
+- Unity EditMode Test: **83 passed / 0 failed / 0 skipped**。
+- Unity PlayMode Test: **4 passed / 0 failed / 0 skipped**。
+
+次の相談地点:
+
+- 攻撃方向を4方向、8方向、自由照準のどれにするか。
+- 通常攻撃Commandが持つ情報と、人間 / CPU / Network入力で共有する単位。
+- 攻撃範囲のCore表現と、Unity Physicsによる実命中判定の境界。
+- 発生、持続、硬直、移動可否、割込みなどの最小アクション時間モデル。
+- 装備が通常攻撃 / 特殊アクションを提供するDefinitionとRuntime装備状態の形。
+
+## 2026-08-08 本番Character・HP・戦闘基盤 Step 1
+
+状態: **実装・Unity再生成・EditMode / PlayMode検証完了**
+
+今回の設計:
+
+- CharacterのHP、生死、ダメージ、通常回復を`GameObject`や`Transform`へ依存しない純C# Coreへ置く。
+- HP変更は要求量だけでなく、変更種別、適用・拒否・不正、実適用量、変更前後、撃破遷移を不変の結果として返す。
+- HP 0を撃破状態とし、通常回復は撃破状態を解除しない。将来の復活は通常回復と分けた明示的な処理として追加する。
+- Event RuntimeはPreview専用HP契約を持たず、本番`ICharacterHealthTarget`だけへ依存する。Unity側は結果を表示へ変換する。
+
+実装済み:
+
+- `FantasyRoyale.Gameplay.Characters.Core` Assemblyと`CharacterHealth`、`ICharacterHealthTarget`、HP変更結果。
+- 初期値検証、過剰ダメージ / 回復のClamp、撃破遷移、撃破後の追加ダメージ / 通常回復拒否。
+- 回復の泉HandlerとEvent実行Contextを本番HP契約へ移行。撃破中は専用Message Keyで拒否し、OneShotを消費しない。
+- Exploration PreviewのPreview専用HP実装を削除し、確認用Playerも本番`CharacterHealth`を利用。
+- Scene非依存のCharacter Health Test 5件、撃破中の泉拒否EditMode回帰、実Sceneでの非復活PlayMode回帰。
+
+確認済み:
+
+- 生成済みC# 11 Project: **0 warning / 0 error**。
+- Exploration Preview Debug SceneのUnity再生成: 成功。
+- Unity EditMode Test: **79 passed / 0 failed / 0 skipped**。
+- Unity PlayMode Test: **4 passed / 0 failed / 0 skipped**。
+
+今回含めないもの:
+
+- 本番Character GameObject / Prefab、移動Command、通常攻撃、装備、武器範囲、被弾演出、敵、復活処理。
+
+## 2026-08-07 Event Pool抽選 Step 4
+
+状態: **実装・Unity再生成・EditMode / PlayMode検証完了**
+
+今回の設計:
+
+- EventSocketの配置方式を`PoolCandidate`と`FixedDefinition`へ明示分離する。通常候補は位置、Socket ID、個別接近半径だけを持ち、固定配置だけがEvent定義を直接参照する。
+- `MapEventPoolDefinition`はInspector編集用ListへEvent定義、整数重み、有効Socket数を保存する。Seedと抽選結果は対戦状態なのでAssetへ保存しない。
+- `MapEventPlacementSelector`はSocket ID、Event Definition ID、重み、有効数、Seedだけを受け取る純C#処理とする。入力順をID Sortで正規化し、Xorshift32で再現可能な配置計画を返す。
+- 抽選は一部成功を許さない。ID空値・重複、非正重み、有効数超過を先に検証してから、Socketを重複なしで選び、Event種類を重み付きで割り当てる。
+
+実装済み:
+
+- `MapEventPlacementMode`、Pool候補Socket契約、方式別Validator / Scene View表示。
+- `MapEventPoolDefinition`とRuntime ID Dictionary、`MapEventPlacementSelector`と不変な配置計画。
+- `BattleRoyaleReferenceEventPool.asset`。初期値は泉1種・重み1・有効3地点。
+- Reference Mapの`Event_01`〜`Event_06`をすべて`PoolCandidate`へ移行。直接Event定義参照は削除し、調整済みTransform位置と接近半径は維持。
+- Preview開始時にSeed `20260807`で6候補から3地点を選び、Poolの定義を割り当てる。非選択地点は接近候補へ入れない。
+- 同Seed・入力順非依存、候補数超過、Pool List / Dictionary、Scene契約、実Sceneでの3/6選択と泉操作を検証する回帰Test。
+
+確認済み:
+
+- dotnet 8 Project: **0 warning / 0 error**。
+- Reference MapとExploration Preview Debug SceneのUnity再生成: 成功。
+- Unity EditMode Test: **73 passed / 0 failed / 0 skipped**。
+- Unity PlayMode Test: **4 passed / 0 failed / 0 skipped**。
+
+今回含めないもの:
+
+- 2種類目のEvent、配置間隔制約、地域Tag別Pool、正式Match Seed供給、Cooldown、Save連携。
+
+## 2026-08-07 Event Runtime共通化 Step 3
+
+状態: **実装・Unity再生成・EditMode / PlayMode検証完了**
+
+今回の設計:
+
+- `MapEventHandlerRegistry`は`MapEventDefinition`の実型をKeyとするRuntime DictionaryでHandlerを検索し、Playtest側へイベント種類ごとの条件分岐を増やさない。
+- Handlerはルール対象だけを受け取り、成功・拒否・未対応・不正、適用値、Message / Effect / Audio Cue IDを`MapEventExecutionResult`として返す。GameObject、Transform、UI、Prefab生成、SE再生へ依存しない。
+- `MapEventExecutionService`が既使用検査、Handler実行、成功後だけのOneShot更新を共通順序として保証する。
+- Preview用HPとPresenterは`PreviewDebug`責務に残し、Handlerが返した意味IDを日本語HUDへ変換する。正式Effect / Audio再生は後続Stepとする。
+
+実装済み:
+
+- `FantasyRoyale.Gameplay.Events.Runtime` Assemblyと、実行契約、Registry、ExecutionService。
+- `HealingFountainEventHandler`。HP契約へ回復量を適用し、成功時だけ回復演出Cueを返す。
+- `PreviewDebugMapEventHealthTarget`と`PreviewDebugMapEventPresenter`。
+- `BattleRoyaleExplorationPreviewDebug`をRegistry経由へ移行し、泉型判定、直接HP更新、Handler内UI文言生成を削除。
+- Handler重複、回復成功、満タン拒否、未対応Event、使用済み拒否、非OneShotを検証するEditMode Test 6件。
+
+確認済み:
+
+- dotnet 8 Project: **0 warning / 0 error**。
+- Exploration Preview Debug SceneのUnity再生成: 成功。
+- Unity EditMode Test: **67 passed / 0 failed / 0 skipped**。
+- Unity PlayMode Test: **4 passed / 0 failed / 0 skipped**。実Scene上でRegistry、Handler、Presentation Cue、HUD、成功後OneShotを確認。
+
+今回含めないもの:
+
+- 本番Character HP、正式なEffect / Audio Presenter、Event Pool抽選、2種類目のEvent、Cooldown、Save連携。
+
 ## 2026-08-06 EventSocket操作と回復の泉 Step 2
 
 状態: **実装・Unity再生成・EditMode / PlayMode検証完了**

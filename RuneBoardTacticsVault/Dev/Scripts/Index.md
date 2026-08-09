@@ -1,5 +1,12 @@
 # C# スクリプト解説 Index
 
+## Runtime / Gameplay Characters
+
+- [CharacterHealth](Unity/Gameplay/Characters/CharacterHealth.md)
+- [CharacterMoveCommand](Unity/Gameplay/Characters/CharacterMoveCommand.md)
+- [CharacterActor2D](Unity/Gameplay/Characters/CharacterActor2D.md)
+- [HumanCharacterMoveInputAdapter](Unity/Gameplay/Characters/HumanCharacterMoveInputAdapter.md)
+
 ## Runtime / Map Authoring Kit
 
 - [MapSocketMarker](Unity/MapAuthoringKit/MapSocketMarker.md)
@@ -10,9 +17,17 @@
 - [RoadConnectionRuleTile](Unity/MapAuthoringKit/RoadConnectionRuleTile.md)
 - [GroundVariationTile](Unity/MapAuthoringKit/GroundVariationTile.md)
 
+## Runtime / Gameplay Events
+
+- [MapEventRuntime](Unity/Gameplay/Events/MapEventRuntime.md)
+- [HealingFountainEventHandler](Unity/Gameplay/Events/HealingFountainEventHandler.md)
+- [MapEventPoolDefinition](Unity/Gameplay/Events/MapEventPoolDefinition.md)
+- [MapEventPlacementSelector](Unity/Gameplay/Events/MapEventPlacementSelector.md)
+
 ## Runtime / Playtest
 
 - [BattleRoyaleExplorationPreviewDebug](Unity/Playtest/BattleRoyaleExplorationPreviewDebug.md)
+- [PreviewDebugMapEventPresentation](Unity/Playtest/PreviewDebugMapEventPresentation.md)
 
 ## Editor / Map Authoring Kit
 
@@ -28,16 +43,25 @@ v4.3実装・検証済み。単一Production Atlas、v4.3 Catalog、205 named Su
 - [MapAuthoringAssetContractTests](Editor/MapAuthoringKit/MapAuthoringAssetContractTests.md)
 - [MapAuthoringValidatorTests](Editor/MapAuthoringKit/MapAuthoringValidatorTests.md)
 
+## Editor / Gameplay Events
+
+- [MapEventRuntimeTests](Editor/Gameplay/Events/MapEventRuntimeTests.md)
+
+## Editor / Gameplay Characters
+
+- [CharacterHealthTests](Editor/Gameplay/Characters/CharacterHealthTests.md)
+- [CharacterMoveCommandTests](Editor/Gameplay/Characters/CharacterMoveCommandTests.md)
+
 ## Editor / Playtest
 
 - [BattleRoyaleExplorationPreviewDebugSceneBuilder](Editor/Playtest/BattleRoyaleExplorationPreviewDebugSceneBuilder.md)
 - [BattleRoyaleExplorationPreviewDebugPlayModeTests](Editor/Playtest/BattleRoyaleExplorationPreviewDebugPlayModeTests.md)
 
-探索確認用PlayMode Suite: 4 passed / 0 failed / 0 skipped。Reference Map加算読込、WASD入力、移動、実MapCollision衝突、Camera追従、足元Y描画順、幹中央と樹冠側の判定分離、E操作による回復とOneShot状態を検証する。
+探索確認用PlayMode Suite: 4 passed / 0 failed / 0 skipped。Reference Map加算読込、人間入力Adapterから共通Move Command、本番Character Actorによる移動、実MapCollision衝突、撃破時停止、Camera追従、足元Y描画順、幹中央と樹冠側の判定分離、本番Character Healthを使うRegistry経由の回復、撃破中の通常回復拒否、Presentation Cue、OneShot状態を検証する。
 
-v4.3 / Event Socket操作 / Battle Royale Reference EditMode Suite: 61 passed / 0 failed / 0 skipped。
+EditMode全Suite: 83 passed / 0 failed / 0 skipped。Character Healthの初期化、Clamp、撃破、通常回復非復活、Move Commandのアナログ保持・斜めClamp・不正値拒否と、Event Poolの純C#抽選、Pool Asset、PoolCandidate Socket契約を含む。
 
-dotnet `Assembly-CSharp-Editor` / `Editor.Tests`: 0 warning / 0 error。
+dotnet生成済みC# 12 Project: 0 warning / 0 error。Gameplay Characters 3 Project、Map Authoring、Gameplay Events、Playtest、既定Assemblyを含む。
 
 履歴: v3の最終EditMode Suiteは18 passed、v4は23 passed、v4.1は39 passed、v4.2は41 passed。いずれも現行v4.3の検証結果として流用しない。
 

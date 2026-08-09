@@ -55,7 +55,7 @@ Atlas build処理はGrass、Dirt、Stone、Waterの4 Surface Source Sheetに加�
 
 Canvas Size、Pixel内容、半透明Pixelは自動変更しない。Import後のAtlas、Catalog、Sub-Sprite一致確認は`MapAuthoringValidator`が担当する。
 
-v4.3 + Event Socket操作の`MapAuthoringAssetContractTests`と`MapAuthoringValidatorTests`を合わせたEditMode Suiteは**61 passed / 0 failed / 0 skipped**。
+v4.3 + Event Socket操作の`MapAuthoringAssetContractTests`と`MapAuthoringValidatorTests`を合わせたMap Authoring EditMode Suiteは**63 passed / 0 failed / 0 skipped**。
 
 ## 旧方式の履歴
 

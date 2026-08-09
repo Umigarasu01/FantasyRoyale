@@ -4,7 +4,7 @@
 
 `MapSocketMarker` は、Map Scene上にPlayer Start、Enemy、Loot、Merchant、汎用Eventなどの候補地点を置くための制作マーカー。
 
-Spawn、抽選、ゲーム進行は実装しない。種別、配置固有ID、占有範囲、向き、任意Tagを保持する。Eventの場合だけ、定義Assetまたは定義IDと接近半径上書きを保持する。Socket中心はGameObjectの`Transform Position`そのもので、Cell中心へ固定しない。
+Spawn、抽選、ゲーム進行は実装しない。種別、配置固有ID、占有範囲、向き、任意Tagを保持する。Eventの場合は`PoolCandidate`または`FixedDefinition`を明示し、配置方式に応じて接近半径または固定定義を保持する。Socket中心はGameObjectの`Transform Position`そのもので、Cell中心へ固定しない。
 
 ## 配置先
 
@@ -18,13 +18,14 @@ Spawn、抽選、ゲーム進行は実装しない。種別、配置固有ID、�
 - `Size`: ローカル座標での占有範囲。
 - `Facing`: 正面。向きを限定しない場合は `Any`。
 - `SocketTag`: ゲーム側が必要に応じて解釈する任意文字列。
-- `EventDefinition`: Eventだけが参照するScriptableObject。手動配置で利用する。
+- `EventPlacementMode`: `PoolCandidate`は対戦開始時抽選、`FixedDefinition`は固定Event配置。
+- `EventDefinition`: `FixedDefinition`だけが参照するScriptableObject。
 - `SerializedEventDefinitionId`: Event定義のID。自動生成や外部データから解決する場合に利用する。
-- `InteractionRadiusOverride`: Eventの接近判定半径をSocket単位で上書きする値。0は定義の初期値を使う。
+- `InteractionRadiusOverride`: Eventの接近判定半径をSocket単位で保存する値。`FixedDefinition`の0は定義初期値を使うが、`PoolCandidate`は正値必須。
 - `EventDefinitionId`: 参照Assetがある場合はAssetのID、参照がない場合は保存済みIDを返す。
 - `InteractionRadius`: Socket上書きまたは直接参照した定義から解決した接近判定半径。IDだけを持つ生成データはCatalog解決時に定義の初期値を適用する。
-- `TryResolveEventDefinition(...)`: 直接参照を優先し、なければCatalogからID解決する。
-- `ResolveInteractionRadius(...)`: 個別上書きまたはCatalog解決済み定義から実効半径を返す。
+- `TryResolveEventDefinition(...)`: `FixedDefinition`だけを直接参照またはCatalog IDから解決する。Pool候補はfalseを返す。
+- `ResolveInteractionRadius(...)`: 個別値、抽選済み定義、固定定義の順で実効半径を返す。
 - `SetInteractionRadiusOverride(...)`: Scene View Handleなどから個別半径だけを更新する。
 - `WorldBounds`: Transformを反映したWorld AABB。
 - `GetWorldCorners()`: 回転とScaleを反映したWorld四隅。
@@ -34,7 +35,8 @@ Spawn、抽選、ゲーム進行は実装しない。種別、配置固有ID、�
 
 - `Size` は両軸とも0より大きい値にする。
 - `SocketId`はScene内で重複させない。
-- Eventは定義Assetまたは定義IDを持つ。直接参照時は実効接近半径が0以下にならないようにし、IDだけの生成データはCatalog解決時に定義の初期値を適用する。
+- `PoolCandidate`は固定Event定義を持たず、配置固有の正の接近半径を持つ。
+- `FixedDefinition`は定義Assetまたは定義IDを持つ。直接参照時は実効接近半径が0以下にならないようにし、IDだけの生成データはCatalog解決時に定義の初期値を適用する。
 - Event以外へEvent定義情報を設定しない。
 - EventのTransform位置、接近半径、表示物、MapCollisionは別契約として扱う。接近円はColliderではない。
 - Event中心が障害物上にあってもよいが、接近範囲内にPlayerが立てるGroundが必要。

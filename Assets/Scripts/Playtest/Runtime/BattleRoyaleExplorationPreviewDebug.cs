@@ -1,6 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using FantasyRoyale.Gameplay.Characters;
+using FantasyRoyale.Gameplay.Characters.Unity;
+using FantasyRoyale.Gameplay.Events;
 using FantasyRoyale.MapAuthoringKit;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -27,7 +30,7 @@ namespace FantasyRoyale.Playtest
     /// Socket IDをKeyとしてPreview中の使用済み状態を管理する一時Runtime索引。
     /// 定義AssetとScene配置を不変に保ち、Match終了時にまとめて破棄できるようにする。
     /// </summary>
-    public sealed class PreviewDebugMapEventRuntimeStateStore
+    public sealed class PreviewDebugMapEventRuntimeStateStore : IMapEventRuntimeStateStore
     {
         private readonly Dictionary<string, PreviewDebugMapEventSocketState> states =
             new Dictionary<string, PreviewDebugMapEventSocketState>(StringComparer.Ordinal);
@@ -58,6 +61,20 @@ namespace FantasyRoyale.Playtest
 
             states[normalizedId] = new PreviewDebugMapEventSocketState(true);
             return true;
+        }
+
+        /// <summary>
+        /// 共通Event実行サービスが効果成功後にだけ呼び、Socketを冪等に使用済みへ更新する。
+        /// </summary>
+        public void MarkUsed(string socketId)
+        {
+            var normalizedId = NormalizeSocketId(socketId);
+            if (normalizedId.Length == 0)
+            {
+                throw new ArgumentException("Socket IDが空です。", nameof(socketId));
+            }
+
+            states[normalizedId] = new PreviewDebugMapEventSocketState(true);
         }
 
         /// <summary>
@@ -92,6 +109,8 @@ namespace FantasyRoyale.Playtest
         [SerializeField] private string mapScenePath = DefaultMapScenePath;
         [SerializeField] private InputActionAsset inputActions;
         [SerializeField] private MapEventCatalog eventCatalog;
+        [SerializeField] private MapEventPoolDefinition eventPool;
+        [SerializeField] private int previewEventSelectionSeed = 20260807;
         [SerializeField, Min(0.1f)] private float moveSpeed = 5f;
         [SerializeField, Min(1f)] private float cameraOrthographicSize = 8f;
         [SerializeField, Min(1)] private int previewMaximumHealth = 100;
@@ -99,57 +118,85 @@ namespace FantasyRoyale.Playtest
 
         private readonly List<MapSocketMarker> socketBuffer = new List<MapSocketMarker>();
         private readonly List<MapSocketMarker> eventSocketBuffer = new List<MapSocketMarker>();
+        private readonly List<MapSocketMarker> poolCandidateSocketBuffer = new List<MapSocketMarker>();
         private readonly Dictionary<MapSocketMarker, MapEventDefinition> resolvedEventDefinitions =
             new Dictionary<MapSocketMarker, MapEventDefinition>();
         private readonly List<Collider2D> spawnOverlapBuffer = new List<Collider2D>();
         private readonly PreviewDebugMapEventRuntimeStateStore eventRuntimeState =
             new PreviewDebugMapEventRuntimeStateStore();
+        private readonly PreviewDebugMapEventPresenter eventPresenter =
+            new PreviewDebugMapEventPresenter();
         private Scene mapScene;
         private Camera gameplayCamera;
         private GameObject playerObject;
+        private CharacterActor2D playerActor;
         private Rigidbody2D playerBody;
         private CapsuleCollider2D playerCollider;
         private InputActionAsset runtimeInputActions;
-        private InputAction moveAction;
+        private HumanCharacterMoveInputAdapter humanMoveInput;
         private InputAction interactAction;
         private Tilemap groundTilemap;
         private Tilemap collisionTilemap;
         private Bounds mapWorldBounds;
         private Texture2D previewTexture;
         private Sprite previewSprite;
-        private Vector2 latestMoveInput;
+        private CharacterMoveCommand latestMoveCommand;
         private bool hasTestMoveOverride;
-        private Vector2 testMoveOverride;
+        private CharacterMoveCommand testMoveCommand;
         private float readyAtTime;
-        private int currentHealth;
+        private MapEventExecutionService eventExecutionService;
         private MapSocketMarker currentEventSocket;
         private string lastEventFeedback = string.Empty;
+        private MapEventExecutionResult lastEventExecutionResult;
+        private MapEventPlacementPlan eventPlacementPlan =
+            new MapEventPlacementPlan(Array.Empty<MapEventPlacementAssignment>());
+        private int allEventSocketCount;
 
         public bool IsReady { get; private set; }
         public string FailureMessage { get; private set; } = string.Empty;
         public string MapScenePath => mapScenePath;
         public InputActionAsset InputActions => inputActions;
         public MapEventCatalog EventCatalog => eventCatalog;
+        public MapEventPoolDefinition EventPool => eventPool;
+        public int EventSelectionSeed => previewEventSelectionSeed;
         public float MoveSpeed => moveSpeed;
         public float CameraOrthographicSize => cameraOrthographicSize;
         public Scene LoadedMapScene => mapScene;
         public Camera GameplayCamera => gameplayCamera;
         public GameObject PlayerObject => playerObject;
+        public CharacterActor2D PlayerActor => playerActor;
         public Rigidbody2D PlayerBody => playerBody;
         public CapsuleCollider2D PlayerCollider => playerCollider;
         public InputActionAsset RuntimeInputActions => runtimeInputActions;
         public Tilemap CollisionTilemap => collisionTilemap;
         public Bounds MapWorldBounds => mapWorldBounds;
-        public Vector2 LatestMoveInput => latestMoveInput;
-        public int CurrentHealth => currentHealth;
-        public int MaximumHealth => previewMaximumHealth;
+        public CharacterMoveCommand LatestMoveCommand => latestMoveCommand;
+        public Vector2 LatestMoveInput => new Vector2(
+            latestMoveCommand.Horizontal,
+            latestMoveCommand.Vertical);
+        public int CurrentHealth => playerActor == null || playerActor.Health == null
+            ? 0
+            : playerActor.Health.CurrentHealth;
+        public int MaximumHealth => playerActor == null || playerActor.Health == null
+            ? previewMaximumHealth
+            : playerActor.Health.MaximumHealth;
         public MapSocketMarker CurrentEventSocket => currentEventSocket;
         public string CurrentEventPrompt => currentEventSocket != null
             && resolvedEventDefinitions.TryGetValue(currentEventSocket, out var definition)
                 ? definition.PromptText
                 : string.Empty;
         public string LastEventFeedback => lastEventFeedback;
+        public MapEventExecutionResult LastEventExecutionResult => lastEventExecutionResult;
+        public MapEventPresentationRequest LastEventPresentationRequest => eventPresenter.LastRequest;
+        public int RegisteredEventHandlerCount => eventExecutionService == null
+            ? 0
+            : eventExecutionService.RegisteredHandlerCount;
         public PreviewDebugMapEventRuntimeStateStore EventRuntimeState => eventRuntimeState;
+        public int AllEventSocketCount => allEventSocketCount;
+        public int ActiveEventSocketCount => eventSocketBuffer.Count;
+        public MapEventPlacementPlan EventPlacementPlan => eventPlacementPlan;
+        public IReadOnlyDictionary<MapSocketMarker, MapEventDefinition> ResolvedEventDefinitions =>
+            resolvedEventDefinitions;
 
         /// <summary>
         /// Editor Builderから、読込Scene、入力Asset、仮移動速度、Camera表示範囲をまとめて設定する。
@@ -161,7 +208,9 @@ namespace FantasyRoyale.Playtest
             float newCameraOrthographicSize,
             MapEventCatalog newEventCatalog = null,
             int newPreviewStartingHealth = 50,
-            int newPreviewMaximumHealth = 100)
+            int newPreviewMaximumHealth = 100,
+            MapEventPoolDefinition newEventPool = null,
+            int newPreviewEventSelectionSeed = 20260807)
         {
             mapScenePath = string.IsNullOrWhiteSpace(newMapScenePath)
                 ? DefaultMapScenePath
@@ -170,6 +219,8 @@ namespace FantasyRoyale.Playtest
             moveSpeed = Mathf.Max(0.1f, newMoveSpeed);
             cameraOrthographicSize = Mathf.Max(1f, newCameraOrthographicSize);
             eventCatalog = newEventCatalog;
+            eventPool = newEventPool;
+            previewEventSelectionSeed = newPreviewEventSelectionSeed;
             previewMaximumHealth = Mathf.Max(1, newPreviewMaximumHealth);
             previewStartingHealth = Mathf.Clamp(
                 newPreviewStartingHealth,
@@ -183,7 +234,11 @@ namespace FantasyRoyale.Playtest
         public void SetMoveInputOverrideForTests(Vector2 moveInput)
         {
             hasTestMoveOverride = true;
-            testMoveOverride = Vector2.ClampMagnitude(moveInput, 1f);
+            testMoveCommand = new CharacterMoveCommand(moveInput.x, moveInput.y);
+            if (playerActor != null)
+            {
+                playerActor.SetMoveCommand(testMoveCommand);
+            }
         }
 
         /// <summary>
@@ -192,7 +247,11 @@ namespace FantasyRoyale.Playtest
         public void ClearMoveInputOverrideForTests()
         {
             hasTestMoveOverride = false;
-            testMoveOverride = Vector2.zero;
+            testMoveCommand = CharacterMoveCommand.None;
+            if (playerActor != null)
+            {
+                playerActor.SetMoveCommand(latestMoveCommand);
+            }
         }
 
         /// <summary>
@@ -204,11 +263,21 @@ namespace FantasyRoyale.Playtest
         }
 
         /// <summary>
-        /// PlayMode Testが回復成功と満タン失敗を同じSceneで確認できるよう、仮HPだけを指定範囲へ設定する。
+        /// PlayMode Testが回復成功、満タン、撃破を同じSceneで確認できるよう、本番HP状態を再注入する。
         /// </summary>
         public void SetPreviewHealthForTests(int health)
         {
-            currentHealth = Mathf.Clamp(health, 0, previewMaximumHealth);
+            if (playerActor == null || playerActor.Health == null)
+            {
+                return;
+            }
+
+            var maximumHealth = playerActor.Health.MaximumHealth;
+            playerActor.Initialize(
+                new CharacterHealth(
+                    maximumHealth,
+                    Mathf.Clamp(health, 0, maximumHealth)),
+                moveSpeed);
         }
 
         /// <summary>
@@ -267,50 +336,43 @@ namespace FantasyRoyale.Playtest
                 yield break;
             }
 
+            InitializeEventRuntime();
             ConfigureGameplayCamera();
-            currentHealth = Mathf.Clamp(previewStartingHealth, 0, previewMaximumHealth);
             IsReady = true;
             readyAtTime = Time.unscaledTime;
             UpdateCurrentEventSocket();
             Debug.Log(
                 $"Exploration Preview Debug ready: player={playerObject.transform.position}, "
-                + $"map={mapScene.path}, speed={moveSpeed:0.##}",
+                + $"map={mapScene.path}, speed={moveSpeed:0.##}, "
+                + $"events={eventSocketBuffer.Count}/{allEventSocketCount}, "
+                + $"seed={previewEventSelectionSeed}",
                 this);
         }
 
         /// <summary>
-        /// Input SystemのMove Actionを毎Frame読み、物理更新で使う最新の移動入力値だけを保持する。
+        /// 人間入力Adapterから共通移動Commandを読み、入力元を知らない本番Actorへ渡す。
         /// </summary>
         private void Update()
         {
-            if (!IsReady || moveAction == null)
+            if (!IsReady || humanMoveInput == null || playerActor == null)
             {
-                latestMoveInput = Vector2.zero;
+                latestMoveCommand = CharacterMoveCommand.None;
+                if (playerActor != null)
+                {
+                    playerActor.SetMoveCommand(CharacterMoveCommand.None);
+                }
+
                 return;
             }
 
-            latestMoveInput = Vector2.ClampMagnitude(moveAction.ReadValue<Vector2>(), 1f);
+            latestMoveCommand = humanMoveInput.ReadMoveCommand();
+            playerActor.SetMoveCommand(
+                hasTestMoveOverride ? testMoveCommand : latestMoveCommand);
             UpdateCurrentEventSocket();
             if (interactAction != null && interactAction.WasPressedThisFrame())
             {
                 TryInteractWithCurrentEvent();
             }
-        }
-
-        /// <summary>
-        /// 最新の移動入力値をDynamic Rigidbody2Dへ適用し、MapCollision層との衝突解決をPhysicsへ委ねる。
-        /// </summary>
-        private void FixedUpdate()
-        {
-            if (!IsReady || playerBody == null)
-            {
-                return;
-            }
-
-            var moveInput = hasTestMoveOverride ? testMoveOverride : latestMoveInput;
-            moveInput = Vector2.ClampMagnitude(moveInput, 1f);
-            playerBody.MovePosition(
-                playerBody.position + moveInput * (moveSpeed * Time.fixedDeltaTime));
         }
 
         /// <summary>
@@ -349,10 +411,10 @@ namespace FantasyRoyale.Playtest
         /// </summary>
         private void OnDestroy()
         {
-            if (moveAction != null)
+            if (humanMoveInput != null)
             {
-                moveAction.Disable();
-                moveAction = null;
+                humanMoveInput.Dispose();
+                humanMoveInput = null;
             }
 
             if (interactAction != null)
@@ -399,7 +461,10 @@ namespace FantasyRoyale.Playtest
                 GUILayout.Label("Move: WASD / Arrow Keys");
                 GUILayout.Label("Interact: E");
                 GUILayout.Label($"Position: {position.x:0.00}, {position.y:0.00}");
-                GUILayout.Label($"HP: {currentHealth} / {previewMaximumHealth}");
+                GUILayout.Label($"HP: {CurrentHealth} / {MaximumHealth}");
+                GUILayout.Label(
+                    $"Events: {ActiveEventSocketCount} / {AllEventSocketCount} "
+                    + $"(Seed {previewEventSelectionSeed})");
                 if (!string.IsNullOrEmpty(CurrentEventPrompt))
                 {
                     GUILayout.Label($"Event: {CurrentEventPrompt}");
@@ -442,6 +507,12 @@ namespace FantasyRoyale.Playtest
             if (!eventCatalog.Validate(out var catalogError))
             {
                 Fail($"MapEventCatalogが不正です: {catalogError}");
+                return false;
+            }
+
+            if (eventPool != null && !eventPool.Validate(out var poolError))
+            {
+                Fail($"MapEventPoolDefinitionが不正です: {poolError}");
                 return false;
             }
 
@@ -543,12 +614,16 @@ namespace FantasyRoyale.Playtest
         }
 
         /// <summary>
-        /// Map Scene内のEventSocketをCatalogへ解決し、位置Transformと半径を実行時候補として登録する。
+        /// 固定Eventを直接解決し、Pool候補はSeed抽選で有効地点とEvent種類を割り当てる。
         /// </summary>
         private bool ResolveEventSockets()
         {
             eventSocketBuffer.Clear();
+            poolCandidateSocketBuffer.Clear();
             resolvedEventDefinitions.Clear();
+            eventPlacementPlan = new MapEventPlacementPlan(
+                Array.Empty<MapEventPlacementAssignment>());
+            allEventSocketCount = 0;
             socketBuffer.Clear();
             socketBuffer.AddRange(FindComponentsInScene<MapSocketMarker>(mapScene));
             for (var index = 0; index < socketBuffer.Count; index++)
@@ -556,6 +631,20 @@ namespace FantasyRoyale.Playtest
                 var marker = socketBuffer[index];
                 if (marker.SocketKind != MapSocketKind.Event)
                 {
+                    continue;
+                }
+
+                allEventSocketCount++;
+
+                if (marker.EventPlacementMode == MapEventPlacementMode.PoolCandidate)
+                {
+                    if (marker.InteractionRadiusOverride <= 0f)
+                    {
+                        Fail($"Pool候補Eventの接近半径がありません: {marker.SocketId}");
+                        return false;
+                    }
+
+                    poolCandidateSocketBuffer.Add(marker);
                     continue;
                 }
 
@@ -576,9 +665,14 @@ namespace FantasyRoyale.Playtest
                 resolvedEventDefinitions.Add(marker, definition);
             }
 
-            if (eventSocketBuffer.Count == 0)
+            if (allEventSocketCount == 0)
             {
                 Fail("Reference MapにEventSocketがありません。");
+                return false;
+            }
+
+            if (!AssignPoolCandidateEvents())
+            {
                 return false;
             }
 
@@ -586,7 +680,102 @@ namespace FantasyRoyale.Playtest
         }
 
         /// <summary>
-        /// PlayerStartへPhysics Body、足元Collider、Input System、確認専用Spriteを持つ仮Playerを生成する。
+        /// Pool候補SocketとPool AssetをIDだけの純C#入力へ変換し、結果をScene参照へ安全に戻す。
+        /// </summary>
+        private bool AssignPoolCandidateEvents()
+        {
+            if (poolCandidateSocketBuffer.Count == 0)
+            {
+                return true;
+            }
+
+            if (eventPool == null)
+            {
+                Fail("Pool候補SocketがありますがMapEventPoolDefinitionが設定されていません。");
+                return false;
+            }
+
+            var socketCandidates = new MapEventSocketCandidate[poolCandidateSocketBuffer.Count];
+            var socketById = new Dictionary<string, MapSocketMarker>(StringComparer.Ordinal);
+            for (var index = 0; index < poolCandidateSocketBuffer.Count; index++)
+            {
+                var marker = poolCandidateSocketBuffer[index];
+                socketCandidates[index] = new MapEventSocketCandidate(marker.SocketId);
+                if (!socketById.TryAdd(marker.SocketId.Trim(), marker))
+                {
+                    Fail($"Pool候補Socket IDが重複しています: {marker.SocketId}");
+                    return false;
+                }
+            }
+
+            if (!eventPool.TryBuildRuntimeCandidates(out var eventCandidates, out var poolError))
+            {
+                Fail($"Event Pool候補を構築できません: {poolError}");
+                return false;
+            }
+
+            if (!MapEventPlacementSelector.TryCreatePlan(
+                    socketCandidates,
+                    eventCandidates,
+                    eventPool.ActiveSocketCount,
+                    previewEventSelectionSeed,
+                    out eventPlacementPlan,
+                    out var selectionError))
+            {
+                Fail($"Event Pool抽選に失敗しました: {selectionError}");
+                return false;
+            }
+
+            for (var index = 0; index < eventPlacementPlan.Assignments.Count; index++)
+            {
+                var assignment = eventPlacementPlan.Assignments[index];
+                if (!socketById.TryGetValue(assignment.SocketId, out var marker)
+                    || !eventPool.TryGetDefinition(
+                        assignment.EventDefinitionId,
+                        out var definition))
+                {
+                    Fail(
+                        $"Event Pool抽選結果を解決できません: "
+                        + $"{assignment.SocketId} / {assignment.EventDefinitionId}");
+                    return false;
+                }
+
+                if (!eventCatalog.TryGet(assignment.EventDefinitionId, out var catalogDefinition)
+                    || catalogDefinition != definition)
+                {
+                    Fail($"Event Pool定義がCatalogと一致しません: {assignment.EventDefinitionId}");
+                    return false;
+                }
+
+                var radius = marker.ResolveInteractionRadius(eventCatalog, definition);
+                if (float.IsNaN(radius) || float.IsInfinity(radius) || radius <= 0f)
+                {
+                    Fail($"抽選済みEvent接近半径が不正です: {marker.SocketId} / {radius}");
+                    return false;
+                }
+
+                eventSocketBuffer.Add(marker);
+                resolvedEventDefinitions.Add(marker, definition);
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// 共通Registryと実行サービスを接続し、MonoBehaviour内のEvent型分岐をなくす。
+        /// </summary>
+        private void InitializeEventRuntime()
+        {
+            var registry = new MapEventHandlerRegistry(
+                new IMapEventHandler[]
+                {
+                    new HealingFountainEventHandler()
+                });
+            eventExecutionService = new MapEventExecutionService(registry);
+        }
+
+        /// <summary>
+        /// PlayerStartへ本番Character Actor、人間入力Adapter、確認専用Spriteを持つ仮表示を生成する。
         /// </summary>
         private void CreatePreviewPlayer(Vector3 spawnPosition)
         {
@@ -596,18 +785,12 @@ namespace FantasyRoyale.Playtest
             playerObject.transform.rotation = Quaternion.identity;
             playerObject.transform.localScale = Vector3.one;
 
-            playerBody = playerObject.AddComponent<Rigidbody2D>();
-            playerBody.bodyType = RigidbodyType2D.Dynamic;
-            playerBody.gravityScale = 0f;
-            playerBody.constraints = RigidbodyConstraints2D.FreezeRotation;
-            playerBody.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
-            playerBody.interpolation = RigidbodyInterpolation2D.Interpolate;
-            playerBody.sleepMode = RigidbodySleepMode2D.NeverSleep;
-
-            playerCollider = playerObject.AddComponent<CapsuleCollider2D>();
-            playerCollider.direction = CapsuleDirection2D.Vertical;
-            playerCollider.size = new Vector2(0.48f, 0.55f);
-            playerCollider.offset = new Vector2(0f, 0.22f);
+            playerActor = playerObject.AddComponent<CharacterActor2D>();
+            playerActor.Initialize(
+                new CharacterHealth(previewMaximumHealth, previewStartingHealth),
+                moveSpeed);
+            playerBody = playerActor.Body;
+            playerCollider = playerActor.FootCollider;
 
             var renderer = playerObject.AddComponent<SpriteRenderer>();
             previewSprite = CreatePreviewPlayerSprite(out previewTexture);
@@ -619,13 +802,14 @@ namespace FantasyRoyale.Playtest
             // 一人用Previewの入力状態をAsset本体へ残さないよう、Runtime複製だけを有効化する。
             runtimeInputActions = Instantiate(inputActions);
             runtimeInputActions.name = "InputSystem_Actions_PreviewDebugRuntime";
-            moveAction = runtimeInputActions.FindAction(
+            var moveAction = runtimeInputActions.FindAction(
                 $"{PlayerActionMapName}/{MoveActionName}",
                 true);
             interactAction = runtimeInputActions.FindAction(
                 $"{PlayerActionMapName}/{InteractActionName}",
                 true);
-            moveAction.Enable();
+            humanMoveInput = new HumanCharacterMoveInputAdapter(moveAction);
+            humanMoveInput.Enable();
             interactAction.Enable();
         }
 
@@ -650,7 +834,7 @@ namespace FantasyRoyale.Playtest
                     continue;
                 }
 
-                var radius = marker.ResolveInteractionRadius(eventCatalog);
+                var radius = marker.ResolveInteractionRadius(eventCatalog, definition);
                 var distanceSquared = ((Vector2)marker.transform.position - playerBody.position).sqrMagnitude;
                 if (distanceSquared > radius * radius
                     || distanceSquared > bestDistanceSquared)
@@ -682,29 +866,14 @@ namespace FantasyRoyale.Playtest
 
             var marker = currentEventSocket;
             var definition = resolvedEventDefinitions[marker];
-            if (!(definition is HealingFountainEventDefinition fountainDefinition))
-            {
-                lastEventFeedback = $"未対応Eventです: {definition.DisplayName}";
-                return false;
-            }
-
-            var previousHealth = currentHealth;
-            currentHealth = Mathf.Min(previewMaximumHealth, currentHealth + fountainDefinition.HealAmount);
-            var healedAmount = currentHealth - previousHealth;
-            if (healedAmount <= 0)
-            {
-                lastEventFeedback = "HPはすでに満タンです。泉は消費されません。";
-                return false;
-            }
-
-            if (definition.OneShot)
-            {
-                eventRuntimeState.TryMarkUsed(marker.SocketId);
-            }
-
-            lastEventFeedback = $"{definition.DisplayName}を使用：HP +{healedAmount}";
+            lastEventExecutionResult = eventExecutionService.Execute(
+                marker.SocketId,
+                definition,
+                new MapEventExecutionContext(playerActor.Health),
+                eventRuntimeState);
+            lastEventFeedback = eventPresenter.Present(definition, lastEventExecutionResult);
             UpdateCurrentEventSocket();
-            return true;
+            return lastEventExecutionResult.IsSuccess;
         }
 
         /// <summary>

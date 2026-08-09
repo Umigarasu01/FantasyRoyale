@@ -1,0 +1,8 @@
+{
+  "name": "FantasyRoyale.Gameplay.Events.Runtime",
+  "rootNamespace": "FantasyRoyale.Gameplay.Events",
+  "references": [
+    "FantasyRoyale.Gameplay.Characters.Core",
+    "FantasyRoyale.MapAuthoringKit.Runtime"
+  ]
+}

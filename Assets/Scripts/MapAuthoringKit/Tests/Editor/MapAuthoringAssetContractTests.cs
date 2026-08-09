@@ -133,13 +133,11 @@ namespace FantasyRoyale.MapAuthoringKit.Tests.Editor
         }
 
         /// <summary>
-        /// Reference Mapの6配置が配置固有Socket IDを保ちつつ、同じ泉定義Assetを共有することを確認する。
+        /// Reference Mapの6配置が固定Eventを持たず、配置固有IDと半径を持つPool候補であることを確認する。
         /// </summary>
         [Test]
-        public void ReferenceScene_EventSocketsShareHealingDefinitionByPlacementId()
+        public void ReferenceScene_EventSocketsArePoolCandidatesByPlacementId()
         {
-            var definition = AssetDatabase.LoadAssetAtPath<HealingFountainEventDefinition>(
-                "Assets/Data/MapAuthoring/Events/HealingFountainBasic.asset");
             var wasLoaded = TryGetLoadedScene(ReferenceScenePath, out var scene);
             if (!wasLoaded)
             {
@@ -162,8 +160,13 @@ namespace FantasyRoyale.MapAuthoringKit.Tests.Editor
 
                     eventCount++;
                     Assert.That(socketIds.Add(marker.SocketId), Is.True, marker.SocketId);
-                    Assert.That(marker.EventDefinition, Is.SameAs(definition), marker.SocketId);
-                    Assert.That(marker.EventDefinitionId, Is.EqualTo("healing-fountain-basic"), marker.SocketId);
+                    Assert.That(
+                        marker.EventPlacementMode,
+                        Is.EqualTo(MapEventPlacementMode.PoolCandidate),
+                        marker.SocketId);
+                    Assert.That(marker.EventDefinition, Is.Null, marker.SocketId);
+                    Assert.That(marker.EventDefinitionId, Is.Empty, marker.SocketId);
+                    Assert.That(marker.InteractionRadiusOverride, Is.GreaterThan(0f), marker.SocketId);
                     Assert.That(marker.InteractionRadius, Is.GreaterThan(0f), marker.SocketId);
                 }
 

@@ -1,5 +1,126 @@
 # Implementation Status
 
+## 2026-08-08 本番Character・HP・戦闘基盤 Step 2
+
+状態: **実装済み / Unity Scene再生成・EditMode・PlayMode検証済み / Step 3設計相談待ち**
+
+### 現行契約
+
+- `CharacterMoveCommand`は純C#の水平・垂直入力値。単位円内のアナログ量を維持し、斜め過速だけを防ぐ。
+- 人間、CPU、Networkは同じCommandを`ICharacterMoveCommandTarget`へ渡す。入力元ごとにActorの移動処理を複製しない。
+- `CharacterActor2D`は本番`CharacterHealth`、Dynamic Rigidbody2D、足元Capsule、移動速度を接続し、入力機器やCameraを参照しない。
+- HP 0では移動Commandを停止する。ColliderによるMapCollision解決はUnity Physics、HPとCommandはGameplay Charactersが担当する。
+- `HumanCharacterMoveInputAdapter`はRuntime複製されたInput Actionを読み、Move Commandへ変換する。
+
+### 実装
+
+- Core: `CharacterMoveCommand`、`ICharacterMoveCommandTarget`、EditMode Test 4件。
+- Unity: `CharacterActor2D`、`HumanCharacterMoveInputAdapter`、専用Assembly。
+- Preview: 直接`FixedUpdate`移動を削除し、本番Actor経路へ移行。
+- PlayMode: Actor / Body / Foot Collider / Health接続、人間入力Command、Collision、Camera、撃破時停止を実Sceneで検証。
+
+### 検証
+
+- C# 12 Project: **0 warning / 0 error**。
+- Exploration Preview Debug Scene再生成: 成功。
+- Unity EditMode Test: **83 passed / 0 failed / 0 skipped**。
+- Unity PlayMode Test: **4 passed / 0 failed / 0 skipped**。
+
+### 未実装・要相談
+
+- 攻撃 / 特殊アクションCommand、向き・照準、命中判定、アクション時間、装備Definition / Runtime装備状態。
+- 正式Character Prefab / Sprite / Animation、CPU / Network入力Adapter、撃破後の観戦Controller。
+
+## 2026-08-08 本番Character・HP・戦闘基盤 Step 1
+
+状態: **実装済み / Unity Scene再生成・EditMode・PlayMode検証済み**
+
+### 現行契約
+
+- `CharacterHealth`は純C#で最大HP、現在HP、生死を管理し、Unity Scene参照を持たない。
+- ダメージと通常回復は`CharacterHealthChangeResult`へ変更種別、結果、要求量、実適用量、変更前後、撃破遷移を返す。
+- HP 0は撃破状態。通常回復は生存中だけ適用し、撃破状態からの復活は行わない。
+- Event RuntimeはGameplay Charactersの`ICharacterHealthTarget`を利用し、Preview固有HPへ依存しない。
+
+### 実装
+
+- `FantasyRoyale.Gameplay.Characters.Core`と`CharacterHealth`一式。
+- `CharacterHealthTests` 5件と専用Editor Test Assembly。
+- Event Context / 回復の泉Handler / Event EditMode Testを本番HPへ移行。
+- Exploration PreviewのHPを本番`CharacterHealth`へ置換し、撃破時の泉拒否HUDとPlayMode回帰を追加。
+
+### 検証
+
+- C# 11 Project: **0 warning / 0 error**。
+- Exploration Preview Debug Scene再生成: 成功。
+- Unity EditMode Test: **79 passed / 0 failed / 0 skipped**。
+- Unity PlayMode Test: **4 passed / 0 failed / 0 skipped**。
+
+### 未実装
+
+- 本番Character Actor / Prefab、移動Command、攻撃、装備、被弾表示、撃破後の観戦接続、復活専用処理。
+
+## 2026-08-07 Event Pool抽選 Step 4
+
+状態: **実装済み / Unity Scene再生成・EditMode・PlayMode検証済み**
+
+### 現行契約
+
+- EventSocketは`PoolCandidate`または`FixedDefinition`を明示する。Pool候補は固定定義を持たず、配置固有ID、Transform位置、正の個別接近半径を保存する。
+- Event Pool ScriptableObjectはEvent定義List、整数重み、有効Socket数を保存する。Seedと配置結果はRuntime状態でありAssetへ書き戻さない。
+- 抽選器はUnity型に依存せず、安定IDで入力順を正規化してからSeedで有効Socketを重複なし選択し、Eventを重み付き割当する。
+- 固定配置はPool抽選を迂回し、従来どおり直接参照またはCatalog ID解決を使う。
+
+### 実装
+
+- `MapEventPlacementMode`、方式別Socket解決・半径・Validator契約。
+- `MapEventPoolDefinition`、`MapEventPoolEntry`、Runtime Definition Dictionary。
+- `MapEventPlacementSelector`、Candidate / Assignment / Plan、安定Xorshift32。
+- 泉1種・重み1・有効数3の`BattleRoyaleReferenceEventPool.asset`。
+- Reference Map 6候補のPoolCandidate化とPreview Seed `20260807`接続。
+- EditMode 6件追加・更新、PlayModeの3/6有効化回帰。
+
+### 検証
+
+- C# 8 Project: **0 warning / 0 error**。
+- Reference Map / Exploration Preview Debug Scene再生成: 成功。
+- Unity EditMode Test: **73 passed / 0 failed / 0 skipped**。
+- Unity PlayMode Test: **4 passed / 0 failed / 0 skipped**。
+
+### 未実装
+
+- 2種類目のEvent、地域・Tag・距離制約を含むPool、正式Match Seed、Cooldown、Save連携。
+
+## 2026-08-07 Event Runtime共通化 Step 3
+
+状態: **実装済み / Unity Scene再生成・EditMode・PlayMode検証済み**
+
+### 現行契約
+
+- Event実行経路は`MapEventExecutionService` → `MapEventHandlerRegistry` → Event固有Handler → `MapEventExecutionResult` → Presenterとする。
+- Handlerは純C#のルール対象だけを扱い、UnityのGameObject、Transform、UI、Effect、Audioを直接操作しない。
+- HandlerはMessage / Effect / Audioの意味IDをPresentation要求として返す。実際の文言生成と演出再生はPresenterが担当する。
+- OneShot状態は効果成功後だけ共通実行サービスが更新する。拒否、未対応、不正では消費しない。
+
+### 実装
+
+- Gameplay Event Runtime Assembly、実行Outcome / Result / Context / Presentation Request。
+- Definition型を一意KeyにするHandler Registryと、OneShot更新を統括するExecution Service。
+- 回復の泉Handlerと最小HP対象契約。
+- Preview専用HP対象、HUD Presenter、既存BootstrapのRegistry経由化。
+- Scene非依存のEditMode Test 6件と、実Scene PlayMode TestのPresentation検査。
+
+### 検証
+
+- C# 8 Project: **0 warning / 0 error**。
+- Exploration Preview Debug SceneのUnity再生成: 成功。
+- Unity EditMode Test: **67 passed / 0 failed / 0 skipped**。
+- Unity PlayMode Test: **4 passed / 0 failed / 0 skipped**。
+
+### 未実装
+
+- 本番Character HP API、正式なEffect / Audio Presenter、Event Pool抽選、2種類目のEvent、Cooldown、Save連携。
+
 ## 2026-08-06 EventSocket操作と回復の泉 Step 2
 
 状態: **実装済み / Unity Scene再生成・EditMode・PlayMode検証済み**

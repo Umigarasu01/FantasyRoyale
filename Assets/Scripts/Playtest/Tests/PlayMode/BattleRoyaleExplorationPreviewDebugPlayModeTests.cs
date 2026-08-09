@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using FantasyRoyale.Gameplay.Characters.Unity;
+using FantasyRoyale.Gameplay.Events;
 using FantasyRoyale.MapAuthoringKit;
 using NUnit.Framework;
 using UnityEngine;
@@ -47,6 +49,14 @@ namespace FantasyRoyale.Playtest.Tests.PlayMode
             Assert.That(bootstrap.IsReady, Is.True);
             Assert.That(bootstrap.LoadedMapScene.isLoaded, Is.True);
             Assert.That(bootstrap.PlayerObject, Is.Not.Null);
+            Assert.That(bootstrap.PlayerActor, Is.Not.Null);
+            Assert.That(
+                bootstrap.PlayerObject.GetComponent<CharacterActor2D>(),
+                Is.SameAs(bootstrap.PlayerActor));
+            Assert.That(bootstrap.PlayerActor.Body, Is.SameAs(bootstrap.PlayerBody));
+            Assert.That(bootstrap.PlayerActor.FootCollider, Is.SameAs(bootstrap.PlayerCollider));
+            Assert.That(bootstrap.PlayerActor.Health, Is.Not.Null);
+            Assert.That(bootstrap.PlayerActor.MovementSpeed, Is.EqualTo(bootstrap.MoveSpeed));
             Assert.That(bootstrap.PlayerBody.bodyType, Is.EqualTo(RigidbodyType2D.Dynamic));
             Assert.That(bootstrap.PlayerBody.gravityScale, Is.EqualTo(0f));
             Assert.That(bootstrap.PlayerCollider, Is.Not.Null);
@@ -95,7 +105,13 @@ namespace FantasyRoyale.Playtest.Tests.PlayMode
             Assert.That(
                 Vector2.Dot(bootstrap.LatestMoveInput, clearDirection),
                 Is.GreaterThan(0.5f),
-                "Updateから物理移動用の入力値へ反映されていません。");
+                "人間入力Adapterから共通移動Commandへ反映されていません。");
+            Assert.That(
+                bootstrap.PlayerActor.MoveCommand.Horizontal,
+                Is.EqualTo(bootstrap.LatestMoveCommand.Horizontal).Within(0.0001f));
+            Assert.That(
+                bootstrap.PlayerActor.MoveCommand.Vertical,
+                Is.EqualTo(bootstrap.LatestMoveCommand.Vertical).Within(0.0001f));
             for (var frame = 0; frame < 12; frame++)
             {
                 yield return new WaitForFixedUpdate();
@@ -378,6 +394,8 @@ namespace FantasyRoyale.Playtest.Tests.PlayMode
             Assert.That(bootstrap.FailureMessage, Is.Empty);
             Assert.That(bootstrap.IsReady, Is.True);
             Assert.That(bootstrap.EventCatalog, Is.Not.Null);
+            Assert.That(bootstrap.EventPool, Is.Not.Null);
+            Assert.That(bootstrap.RegisteredEventHandlerCount, Is.EqualTo(1));
 
             var interactAction = bootstrap.RuntimeInputActions.FindAction(
                 $"{BattleRoyaleExplorationPreviewDebug.PlayerActionMapName}/"
@@ -388,15 +406,39 @@ namespace FantasyRoyale.Playtest.Tests.PlayMode
             var eventSockets = FindComponentsInScene<MapSocketMarker>(bootstrap.LoadedMapScene)
                 .FindAll(marker => marker.SocketKind == MapSocketKind.Event);
             Assert.That(eventSockets, Has.Count.EqualTo(6));
-            var definition = eventSockets[0].EventDefinition as HealingFountainEventDefinition;
-            Assert.That(definition, Is.Not.Null);
+            Assert.That(bootstrap.AllEventSocketCount, Is.EqualTo(6));
+            Assert.That(bootstrap.ActiveEventSocketCount, Is.EqualTo(3));
+            Assert.That(bootstrap.EventPlacementPlan.Assignments.Count, Is.EqualTo(3));
             for (var index = 0; index < eventSockets.Count; index++)
             {
-                Assert.That(eventSockets[index].EventDefinition, Is.SameAs(definition));
-                Assert.That(eventSockets[index].ResolveInteractionRadius(bootstrap.EventCatalog), Is.GreaterThan(0f));
+                Assert.That(
+                    eventSockets[index].EventPlacementMode,
+                    Is.EqualTo(MapEventPlacementMode.PoolCandidate));
+                Assert.That(eventSockets[index].EventDefinition, Is.Null);
+                Assert.That(eventSockets[index].InteractionRadiusOverride, Is.GreaterThan(0f));
             }
 
-            var targetSocket = eventSockets[0];
+            var activeEventSockets = new List<MapSocketMarker>(
+                bootstrap.ResolvedEventDefinitions.Keys);
+            activeEventSockets.Sort((left, right) =>
+                string.CompareOrdinal(left.SocketId, right.SocketId));
+            Assert.That(activeEventSockets, Has.Count.EqualTo(3));
+            var definition = bootstrap.ResolvedEventDefinitions[activeEventSockets[0]]
+                as HealingFountainEventDefinition;
+            Assert.That(definition, Is.Not.Null);
+            for (var index = 0; index < activeEventSockets.Count; index++)
+            {
+                Assert.That(
+                    bootstrap.ResolvedEventDefinitions[activeEventSockets[index]],
+                    Is.SameAs(definition));
+                Assert.That(
+                    activeEventSockets[index].ResolveInteractionRadius(
+                        bootstrap.EventCatalog,
+                        definition),
+                    Is.GreaterThan(0f));
+            }
+
+            var targetSocket = activeEventSockets[0];
             bootstrap.SetMoveInputOverrideForTests(Vector2.zero);
             bootstrap.PlayerBody.position = targetSocket.transform.position;
             bootstrap.PlayerBody.linearVelocity = Vector2.zero;
@@ -411,16 +453,28 @@ namespace FantasyRoyale.Playtest.Tests.PlayMode
 
             Assert.That(bootstrap.TryInteractWithCurrentEventForTests(), Is.True);
             Assert.That(
+                bootstrap.LastEventExecutionResult.Outcome,
+                Is.EqualTo(MapEventExecutionOutcome.Succeeded));
+            Assert.That(
                 bootstrap.CurrentHealth,
                 Is.EqualTo(Mathf.Min(bootstrap.MaximumHealth, healthBefore + definition.HealAmount)));
             Assert.That(bootstrap.EventRuntimeState.IsUsed(targetSocket.SocketId), Is.True);
             Assert.That(bootstrap.LastEventFeedback, Does.Contain($"+{bootstrap.CurrentHealth - healthBefore}"));
+            Assert.That(
+                bootstrap.LastEventPresentationRequest.MessageKey,
+                Is.EqualTo(HealingFountainEventHandler.HealedMessageKey));
+            Assert.That(
+                bootstrap.LastEventPresentationRequest.EffectCueId,
+                Is.EqualTo(HealingFountainEventHandler.HealEffectCueId));
+            Assert.That(
+                bootstrap.LastEventPresentationRequest.AudioCueId,
+                Is.EqualTo(HealingFountainEventHandler.HealAudioCueId));
 
             yield return null;
             Assert.That(bootstrap.CurrentEventSocket, Is.Not.SameAs(targetSocket));
             Assert.That(bootstrap.EventRuntimeState.TryMarkUsed(targetSocket.SocketId), Is.False);
 
-            var fullHealthSocket = eventSockets[1];
+            var fullHealthSocket = activeEventSockets[1];
             bootstrap.SetPreviewHealthForTests(bootstrap.MaximumHealth);
             bootstrap.PlayerBody.position = fullHealthSocket.transform.position;
             bootstrap.PlayerBody.linearVelocity = Vector2.zero;
@@ -430,8 +484,49 @@ namespace FantasyRoyale.Playtest.Tests.PlayMode
 
             Assert.That(bootstrap.CurrentEventSocket, Is.SameAs(fullHealthSocket));
             Assert.That(bootstrap.TryInteractWithCurrentEventForTests(), Is.False);
+            Assert.That(
+                bootstrap.LastEventExecutionResult.Outcome,
+                Is.EqualTo(MapEventExecutionOutcome.Rejected));
             Assert.That(bootstrap.EventRuntimeState.IsUsed(fullHealthSocket.SocketId), Is.False);
             Assert.That(bootstrap.LastEventFeedback, Does.Contain("満タン"));
+            Assert.That(
+                bootstrap.LastEventPresentationRequest.MessageKey,
+                Is.EqualTo(HealingFountainEventHandler.FullHealthMessageKey));
+            Assert.That(bootstrap.LastEventPresentationRequest.EffectCueId, Is.Empty);
+            Assert.That(bootstrap.LastEventPresentationRequest.AudioCueId, Is.Empty);
+
+            var defeatedSocket = activeEventSockets[2];
+            bootstrap.SetPreviewHealthForTests(0);
+            bootstrap.PlayerBody.position = defeatedSocket.transform.position;
+            bootstrap.PlayerBody.linearVelocity = Vector2.zero;
+            Physics2D.SyncTransforms();
+            yield return new WaitForFixedUpdate();
+            yield return null;
+
+            Assert.That(bootstrap.CurrentEventSocket, Is.SameAs(defeatedSocket));
+            Assert.That(bootstrap.TryInteractWithCurrentEventForTests(), Is.False);
+            Assert.That(bootstrap.CurrentHealth, Is.Zero);
+            Assert.That(bootstrap.EventRuntimeState.IsUsed(defeatedSocket.SocketId), Is.False);
+            Assert.That(
+                bootstrap.LastEventExecutionResult.Outcome,
+                Is.EqualTo(MapEventExecutionOutcome.Rejected));
+            Assert.That(
+                bootstrap.LastEventPresentationRequest.MessageKey,
+                Is.EqualTo(HealingFountainEventHandler.DefeatedTargetMessageKey));
+            Assert.That(bootstrap.LastEventFeedback, Does.Contain("倒れて"));
+
+            var defeatedPosition = bootstrap.PlayerBody.position;
+            bootstrap.SetMoveInputOverrideForTests(Vector2.right);
+            for (var frame = 0; frame < 3; frame++)
+            {
+                yield return new WaitForFixedUpdate();
+            }
+
+            Assert.That(
+                Vector2.Distance(bootstrap.PlayerBody.position, defeatedPosition),
+                Is.LessThan(0.001f),
+                "撃破状態の本番Character Actorは移動Commandを適用しません。");
+            Assert.That(bootstrap.PlayerActor.MoveCommand.IsMoving, Is.False);
         }
 
         /// <summary>

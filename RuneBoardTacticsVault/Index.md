@@ -16,7 +16,7 @@
 
 ## Architecture
 
-現行のマップ制作方式はMap Authoring Kit v4.3。指定画像をDesign Masterとし、205 Spriteの単一Production Atlas、4 Tilemap、座標Hashで差分を選ぶ地面Tileと道路端、自由配置Decoration / Obstacle VisualをUnity標準機能で編集する。表示Rootと判定を分離し、水・崖は不可視CollisionTilemap、木・森・岩などは幹・接地点へ寄せたPrefab内CollisionBodyを使う。Shaderや独自Map Editorには依存しない。Sample / 96x72 Reference再構築、自由配置EventSocket、回復の泉まで実装し、61件のEditMode Testで検証済み。別Playtest SceneからのWASD移動、MapCollision、Camera追従、幹と樹冠の判定分離、E操作による回復とOneShot状態を4件のPlayMode Testで検証済み。
+現行のマップ制作方式はMap Authoring Kit v4.3。指定画像をDesign Masterとし、205 Spriteの単一Production Atlas、4 Tilemap、座標Hashで差分を選ぶ地面Tileと道路端、自由配置Decoration / Obstacle VisualをUnity標準機能で編集する。表示Rootと判定を分離し、水・崖は不可視CollisionTilemap、木・森・岩などは幹・接地点へ寄せたPrefab内CollisionBodyを使う。Shaderや独自Map Editorには依存しない。Sample / 96x72 Reference再構築と自由配置EventSocketを実装済み。Event RuntimeはRegistry、Handler、共通実行結果、Presenterへ分離し、回復の泉を最初の縦切りとして接続した。EventSocketはPool候補と固定配置を明示分離し、ScriptableObject Poolと純C#のSeed抽選で6候補から3地点を有効化できる。Milestone 2は純C#の本番`CharacterHealth`と`CharacterMoveCommand`、Unity側`CharacterActor2D`、人間入力Adapterまで実装し、通常回復非復活と撃破時移動停止を含む本番経路へPreviewを移行した。全83件のEditMode Testと4件のPlayMode Testで検証済み。
 
 - [[Architecture/SceneClassStructure|Scene とクラス構成]]
 - [[Architecture/Scenes/PrototypeSoloScene|Exploration Preview Debug Scene]]

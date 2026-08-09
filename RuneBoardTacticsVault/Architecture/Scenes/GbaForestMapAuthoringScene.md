@@ -51,7 +51,7 @@ Tile PaletteはGround / Collisionの2点だけとし、旧Detail Paletteを削�
 - 表示Prefab Root: SpriteRenderer、Default Layer、Collider2Dなし、Rigidbody2Dなし。立体表示はWorldObjects / Order 0 / Pivot、平面装飾はMapDetail / Order 0 / Pivot。
 - CollisionBody: 森、木、低木、岩、切株、倒木Prefab直下の非表示子。MapCollision Layer、Collider2D一つ、Renderer / Rigidbody2D / Triggerなし。幹・接地点へ寄せる。
 - MapObstacleVisualMarker: 必要なObstacle Visual Prefabだけが、生成時の占有FootprintとTilemapFootprint / CollisionBody方式・形状を保持する。RuntimeではColliderを生成しない。
-- MapSocketMarker: 候補地点のSocket ID、用途、占有範囲、向き、Tagを保持する。Event種別だけがEventDefinition参照 / IDと接近半径上書きを持つ。Transform位置と半径は独立し、近接判定はPlaytest側へ分離する。
+- MapSocketMarker: 候補地点のSocket ID、用途、占有範囲、向き、Tagを保持する。Event種別は`PoolCandidate` / `FixedDefinition`を明示し、Pool候補は固定定義なしの正の個別半径、固定配置はEventDefinition参照 / IDと任意半径上書きを持つ。Transform位置と半径は独立し、抽選・近接判定はGameplay / Playtest側へ分離する。
 - MapEventDefinition / MapEventCatalog: Eventの不変設定をScriptableObjectへ保存し、CatalogはListをInspectorの正本、DictionaryをRuntime検索索引として扱う。
 - Main Camera: Orthographic、Transparency Sort Mode Custom Axis、Y軸。URP 2Dの正本はRenderer2D DataのCustom Axis / `Vector3.up`。
 
@@ -93,7 +93,7 @@ Groundは全600 Cellへ同一`GroundVariationTile`を保存し、表示時に8�
 
 Dirt / Stoneは全16 Cardinal Maskそれぞれに4 Spriteを持ち、`RoadConnectionRuleTile`が横4 Cell区間で各差分を1回ずつ使う順列を、XY座標、Seed、Rule IDのhashで決める。各接続辺は中央`[6,26)`の20px固定Socketとし、両端6pxは直交する2方向のbitがともに接続する場合だけ埋める。`05` / `0a`は20pxのみ、太道内角はAND条件で角埋めする。非`0f`の路面外は透過で、GroundTilemapの草地を下地として見せる。Waterは全面Mask `ff`だけ4 SpriteのRandom / Fixed、他MaskはSingle / Fixedとする。
 
-表示PrefabはDetail 4、Obstacle Visual 5、Prop系10の計19点。Unity Rebuild、Sample Validator、Event Socket操作を含む61 passed / 0 failed / 0 skippedのEditMode Test、4 passed / 0 failed / 0 skippedのPlayMode Testで検証済み。最新のSample SSは`Assets/Art/Generated/MapAuthoring/QA/gba-forest-sample-unity.png`。目視QAでDecorationの地面矩形、道路内の草穴、Dirt / Stone境界の閉じた草縁、接続辺の分断、暗いCell格子、規則的なGrass / Road Edge反復がないことを確認済み。Sample QA SHA-256は`DD256066AC7DBD5C5A4BC798F750908A8C44D54A8DFE1483A01D9E3DE1E4275E`。
+表示PrefabはDetail 4、Obstacle Visual 5、Prop系10の計19点。Unity Rebuild、Sample Validator、Event Socket操作を含むMap Authoring EditMode Test 63 passed / 0 failed / 0 skipped、Gameplay Character / Eventを含む全EditMode Suite 83 passed、PlayMode Test 4 passed / 0 failed / 0 skippedで検証済み。最新のSample SSは`Assets/Art/Generated/MapAuthoring/QA/gba-forest-sample-unity.png`。目視QAでDecorationの地面矩形、道路内の草穴、Dirt / Stone境界の閉じた草縁、接続辺の分断、暗いCell格子、規則的なGrass / Road Edge反復がないことを確認済み。Sample QA SHA-256は`DD256066AC7DBD5C5A4BC798F750908A8C44D54A8DFE1483A01D9E3DE1E4275E`。
 
 ## 96x72 Battle Royale Reference Scene
 
@@ -103,8 +103,8 @@ Dirt / Stoneは全16 Cardinal Maskそれぞれに4 Spriteを持ち、`RoadConnec
 - Obstacle Visual 232 Instance、Decoration 115 Instance、Props 16 Instance、Socket 60点。
 - Player 1 + CPU 5を外周へ分散し、中央、北、東水辺、南のStone広場と西草地、北東、南東のLandmarkを複数Loopで接続する。
 - 表示と判定の分離、Prefabの1 / 32 unit Snap、Rotation 0、Scale 1をTemplateと同じまま維持する。表示RootとDecoration / Propsには物理Componentを置かず、規定のCollisionBodyだけを許可する。
-- Builder内の連結・到達性検査、`MapAuthoringValidator`、Event Socket操作を含む61件のEditMode回帰Test、4件のPlayMode Testが成功済み。
-- 6個のEventSocketは配置固有の`Event_01`〜`Event_06`を保ち、同じ`HealingFountainBasic`定義を共有する。Builder再生成時も既存EventSocketのTransform位置と個別半径をSocket IDで復元する。
+- Builder内の連結・到達性検査、`MapAuthoringValidator`、Event Socket操作を含むMap Authoring 63件のEditMode回帰Test、4件のPlayMode Testが成功済み。
+- 6個のEventSocketは配置固有の`Event_01`〜`Event_06`を保ち、すべて固定定義なしの`PoolCandidate`とする。Builder再生成時も既存EventSocketのTransform位置と個別半径をSocket IDで復元する。
 
 QA画像は`Assets/Art/Generated/MapAuthoring/QA/gba-forest-battle-royale-reference-overview.png`、`-central.png`、`-waterfront.png`。
 
@@ -112,7 +112,7 @@ QA画像は`Assets/Art/Generated/MapAuthoring/QA/gba-forest-battle-royale-refere
 
 `GbaForestBattleRoyaleReference`を引き続き96x72 Map配置の正本とする。探索確認は`GbaForestBattleRoyaleExplorationPreviewDebug`からAdditive読込し、Reference SceneへPlayerやGameplay Controllerを保存しない。
 
-Playtest側は`PlayerStart`、EventSocket、Ground範囲、単一Camera、MapCollision Layerを参照する。判定はScene保存済みのCollisionTilemapとCollisionBodyを使用し、Event接近はTransform間距離で求める。RuntimeでObstacle Visual、Decoration、Prop、SocketへCollider / Triggerを追加しない。Reference Builderを再実行してもPlaytest固有Objectを失わない境界とする。
+Playtest側は`PlayerStart`、EventSocket、Ground範囲、単一Camera、MapCollision Layerを参照する。判定はScene保存済みのCollisionTilemapとCollisionBodyを使用し、Event Poolで有効化したSocketへの接近はTransform間距離で求める。RuntimeでObstacle Visual、Decoration、Prop、SocketへCollider / Triggerを追加しない。Reference Builderを再実行してもPlaytest固有Objectを失わない境界とする。
 
 詳細: [[PrototypeSoloScene|Exploration Preview Debug Scene]]
 

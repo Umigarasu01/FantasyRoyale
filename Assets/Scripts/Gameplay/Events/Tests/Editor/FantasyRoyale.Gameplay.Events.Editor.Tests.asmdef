@@ -1,0 +1,15 @@
+{
+  "name": "FantasyRoyale.Gameplay.Events.Editor.Tests",
+  "rootNamespace": "FantasyRoyale.Gameplay.Events.Tests.Editor",
+  "references": [
+    "FantasyRoyale.Gameplay.Characters.Core",
+    "FantasyRoyale.Gameplay.Events.Runtime",
+    "FantasyRoyale.MapAuthoringKit.Runtime"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ],
+  "optionalUnityReferences": [
+    "TestAssemblies"
+  ]
+}

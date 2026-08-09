@@ -8,7 +8,7 @@ Map Authoring Kit v4.3の単一Atlas、GroundVariationTile、道路RuleTileと�
 
 - Script: `Assets/Scripts/MapAuthoringKit/Tests/Editor/MapAuthoringAssetContractTests.cs`
 - Test method: 21件。
-- `MapAuthoringValidatorTests`と合わせたEditMode Suite: **61 passed / 0 failed / 0 skipped**。
+- `MapAuthoringValidatorTests`と合わせたMap Authoring EditMode Suite: **63 passed / 0 failed / 0 skipped**。
 
 ## v4.3確認内容
 
@@ -85,7 +85,7 @@ Map Authoring Kit v4.3の単一Atlas、GroundVariationTile、道路RuleTileと�
 - `HealingFountainBasic.asset`が`HealingFountainEventDefinition`で、ID、OneShot、標準半径、回復量30を持つ。
 - `MapEventCatalog`の保存Listから`healing-fountain-basic`を検索できる。
 - Reference SceneのEventSocketが6点あり、配置固有Socket IDを重複なく持つ。
-- 6点が別々の定義を複製せず、同じ`HealingFountainBasic` Assetを直接参照する。
+- 6点がすべて`PoolCandidate`であり、固定Event定義参照を持たず、正の個別接近半径を持つ。
 
 ### Road Rasterizer
 

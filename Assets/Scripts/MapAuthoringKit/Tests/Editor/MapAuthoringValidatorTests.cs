@@ -621,11 +621,66 @@ namespace FantasyRoyale.MapAuthoringKit.Tests.Editor
             Assert.That(marker.transform.position.x, Is.EqualTo(0.21875f));
             Assert.That(marker.transform.position.y, Is.EqualTo(-0.34375f));
             Assert.That(marker.EventDefinition, Is.SameAs(definition));
+            Assert.That(marker.EventPlacementMode, Is.EqualTo(MapEventPlacementMode.FixedDefinition));
             Assert.That(marker.EventDefinitionId, Is.EqualTo("healing-fountain-basic"));
             Assert.That(marker.InteractionRadius, Is.EqualTo(1.75f));
             marker.SetInteractionRadiusOverride(0f);
             Assert.That(marker.InteractionRadius, Is.EqualTo(1.25f));
             Assert.That(definition.OneShot, Is.True);
+        }
+
+        /// <summary>
+        /// Pool候補が固定定義を持たず、配置固有の正の接近半径だけを保存することを確認する。
+        /// </summary>
+        [Test]
+        public void MapSocketMarker_PoolCandidateStoresPlacementWithoutFixedDefinition()
+        {
+            var socketObject = new GameObject("PoolEventSocket");
+            SceneManager.MoveGameObjectToScene(socketObject, previewScene);
+            var marker = socketObject.AddComponent<MapSocketMarker>();
+            marker.Configure(
+                MapSocketKind.Event,
+                Vector2.one,
+                MapSocketFacing.Any,
+                "event-pool",
+                "event-pool-01",
+                null,
+                null,
+                1.5f,
+                MapEventPlacementMode.PoolCandidate);
+
+            Assert.That(marker.EventPlacementMode, Is.EqualTo(MapEventPlacementMode.PoolCandidate));
+            Assert.That(marker.EventDefinition, Is.Null);
+            Assert.That(marker.EventDefinitionId, Is.Empty);
+            Assert.That(marker.InteractionRadius, Is.EqualTo(1.5f));
+            Assert.That(marker.TryResolveEventDefinition(null, out _), Is.False);
+        }
+
+        /// <summary>
+        /// Pool候補に半径がない場合、Event種類の割当前でも制作上の到達範囲を確定できないためErrorにする。
+        /// </summary>
+        [Test]
+        public void ValidateScene_WhenPoolCandidateRadiusIsMissing_ReportsContractError()
+        {
+            var fixture = CreateCompleteScene();
+            var socketObject = new GameObject("PoolEventWithoutRadius");
+            socketObject.transform.SetParent(fixture.SocketsRoot, false);
+            var marker = socketObject.AddComponent<MapSocketMarker>();
+            marker.Configure(
+                MapSocketKind.Event,
+                Vector2.one,
+                MapSocketFacing.Any,
+                "event-pool",
+                "event-pool-missing-radius",
+                null,
+                null,
+                0f,
+                MapEventPlacementMode.PoolCandidate);
+
+            var report = MapAuthoringValidator.ValidateScene(previewScene, false);
+
+            Assert.That(report.Issues, Has.Some.Matches<MapAuthoringValidationIssue>(issue =>
+                issue.Code == "SOCKET_EVENT_POOL_RADIUS_REQUIRED" && issue.Context == marker));
         }
 
         /// <summary>

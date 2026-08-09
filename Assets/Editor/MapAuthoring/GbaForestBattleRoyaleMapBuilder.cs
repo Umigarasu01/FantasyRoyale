@@ -54,7 +54,6 @@ namespace FantasyRoyale.Editor.MapAuthoring
             public RoadConnectionRuleTile StoneRuleTile;
             public RuleTile WaterRuleTile;
             public Tile CollisionTile;
-            public HealingFountainEventDefinition HealingFountainDefinition;
             public readonly Dictionary<string, GameObject> VisualPrefabs =
                 new Dictionary<string, GameObject>(StringComparer.Ordinal);
         }
@@ -1258,7 +1257,6 @@ namespace FantasyRoyale.Editor.MapAuthoring
                 CreateSocket(
                     socketsRoot,
                     plan.Sockets[index],
-                    assets.HealingFountainDefinition,
                     eventSocketOverrides);
             }
 
@@ -1333,7 +1331,6 @@ namespace FantasyRoyale.Editor.MapAuthoring
         private static void CreateSocket(
             Transform parent,
             SocketPlacement placement,
-            HealingFountainEventDefinition healingFountainDefinition,
             IReadOnlyDictionary<string, EventSocketAuthoringOverride> eventSocketOverrides)
         {
             var socketObject = new GameObject(placement.Name);
@@ -1355,13 +1352,18 @@ namespace FantasyRoyale.Editor.MapAuthoring
                 placement.Facing,
                 placement.Tag,
                 placement.Name,
-                placement.Kind == MapSocketKind.Event ? healingFountainDefinition : null,
+                null,
                 null,
                 placement.Kind == MapSocketKind.Event
                     ? hasAuthoringOverride
-                        ? authoringOverride.InteractionRadiusOverride
-                        : 0f
-                    : 0f);
+                        ? authoringOverride.InteractionRadiusOverride > 0f
+                            ? authoringOverride.InteractionRadiusOverride
+                            : MapEventDefinition.DefaultInteractionRadiusValue
+                        : MapEventDefinition.DefaultInteractionRadiusValue
+                    : 0f,
+                placement.Kind == MapSocketKind.Event
+                    ? MapEventPlacementMode.PoolCandidate
+                    : MapEventPlacementMode.FixedDefinition);
         }
 
         /// <summary>
@@ -1494,9 +1496,7 @@ namespace FantasyRoyale.Editor.MapAuthoring
                 WaterRuleTile = LoadRequired<RuleTile>(
                     $"{MapAuthoringKitBuilder.TileAssetRoot}/Rules/WaterRuleTile.asset"),
                 CollisionTile = LoadRequired<Tile>(
-                    $"{MapAuthoringKitBuilder.TileAssetRoot}/Utility/CollisionTile.asset"),
-                HealingFountainDefinition = LoadRequired<HealingFountainEventDefinition>(
-                    "Assets/Data/MapAuthoring/Events/HealingFountainBasic.asset")
+                    $"{MapAuthoringKitBuilder.TileAssetRoot}/Utility/CollisionTile.asset")
             };
 
             AddPrefab(assets, "tall_grass", "TallGrass");

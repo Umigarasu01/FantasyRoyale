@@ -30,7 +30,7 @@
 2. 東の池と小島をWater Cell集合として確定する。
 3. 複数の直交Waypoint列をRadius 1で3 Cell幅へ変換する。
 4. 中央・北・東水辺・南の不整形Stone広場を道路集合へ統合する。
-5. Start、Landmark、Enemy、Loot、Merchant、Event Socketを定義する。Eventは`Event_01`〜`Event_06`を配置固有Socket IDとし、6点すべてが同じ`HealingFountainBasic`定義Assetを参照する。
+5. Start、Landmark、Enemy、Loot、Merchant、Event Socketを定義する。Eventは`Event_01`〜`Event_06`を配置固有Socket IDとし、6点すべてを固定定義なしの`PoolCandidate`として保存する。
 6. 道路・水域・Socket周辺を障害物禁止領域として確定する。
 7. 大型森林Stamp、崖、単木、低木、岩、切株、倒木のPrefab位置と論理占有Footprintを計画する。物理方式はMarkerのModeから分ける。
 8. 葦と草花のDecoration、Chest、Sign、MushroomのProp位置を計画する。
@@ -51,8 +51,8 @@
 - ObstacleVisuals、Props、TallGrass、Reedsは既存Prefabの`WorldObjects` / Order 0 / Pivotを継承し、FlowerPatch / Wildflowersは`MapDetail`固定背面を継承する。Builder側でカテゴリ別Orderを上書きしない。
 - StartはPlayer 1 + CPU 5。開始地点間隔は18 Cell以上。
 - 全Start、Landmark、MerchantへCollisionを避けて到達できる。
-- Event SocketはRuntime処理を発火せず、共有定義と配置情報だけをSceneへ保存する。近接、E操作、回復、使用済み状態はPlaytest側へ分離する。
-- Reference再生成前に既存EventSocketのTransform位置と個別半径をSocket IDで退避し、同じIDへ復元する。Event種類はBuilderの共有定義へ収束させる。
+- Event SocketはRuntime処理を発火せず、Pool候補の配置情報だけをSceneへ保存する。Event種類の抽選、近接、E操作、回復、使用済み状態はGameplay / Playtest側へ分離する。
+- Reference再生成前に既存EventSocketのTransform位置と個別半径をSocket IDで退避し、同じIDへ復元する。旧固定定義は復元せず、PoolCandidate契約へ収束させる。
 - Sceneへ逐次生成しながら検証せず、計画を完成・検証してから一括反映する。
 
 ## 自動生成へ移す場合

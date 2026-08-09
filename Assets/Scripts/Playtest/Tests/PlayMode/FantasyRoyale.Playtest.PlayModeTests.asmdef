@@ -4,6 +4,9 @@
   "references": [
     "FantasyRoyale.Playtest.Runtime",
     "FantasyRoyale.MapAuthoringKit.Runtime",
+    "FantasyRoyale.Gameplay.Characters.Core",
+    "FantasyRoyale.Gameplay.Characters.Unity",
+    "FantasyRoyale.Gameplay.Events.Runtime",
     "Unity.InputSystem",
     "Unity.InputSystem.TestFramework"
   ],

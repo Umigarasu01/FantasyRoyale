@@ -1,0 +1,8 @@
+{
+  "name": "FantasyRoyale.Gameplay.Characters.Unity",
+  "rootNamespace": "FantasyRoyale.Gameplay.Characters.Unity",
+  "references": [
+    "FantasyRoyale.Gameplay.Characters.Core",
+    "Unity.InputSystem"
+  ]
+}

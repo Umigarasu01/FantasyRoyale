@@ -1616,7 +1616,7 @@ namespace FantasyRoyale.MapAuthoringKit.Editor
         }
 
         /// <summary>
-        /// Eventだけが定義ID・ScriptableObject参照・接近半径を持ち、他種別へ混入しないことを確認する。
+        /// Eventだけが配置方式に応じた固定定義またはPool候補半径を持ち、他種別へ混入しないことを確認する。
         /// </summary>
         private static void ValidateEventSocketContract(
             MapSocketMarker marker,
@@ -1628,12 +1628,38 @@ namespace FantasyRoyale.MapAuthoringKit.Editor
 
             if (marker.SocketKind != MapSocketKind.Event)
             {
-                if (hasDefinitionReference || hasSerializedDefinitionId || hasRadiusOverride)
+                if (hasDefinitionReference
+                    || hasSerializedDefinitionId
+                    || hasRadiusOverride
+                    || marker.EventPlacementMode != MapEventPlacementMode.FixedDefinition)
                 {
                     report.Add(
                         "SOCKET_EVENT_FIELDS_ON_NON_EVENT",
                         MapAuthoringIssueSeverity.Error,
                         $"Event以外のSocket {marker.name} にEvent定義情報を設定しないでください。",
+                        marker);
+                }
+
+                return;
+            }
+
+            if (marker.EventPlacementMode == MapEventPlacementMode.PoolCandidate)
+            {
+                if (hasDefinitionReference || hasSerializedDefinitionId)
+                {
+                    report.Add(
+                        "SOCKET_EVENT_POOL_HAS_FIXED_DEFINITION",
+                        MapAuthoringIssueSeverity.Error,
+                        $"Pool候補Socket {marker.name} に固定Event定義を設定しないでください。",
+                        marker);
+                }
+
+                if (!IsFinitePositive(marker.InteractionRadiusOverride))
+                {
+                    report.Add(
+                        "SOCKET_EVENT_POOL_RADIUS_REQUIRED",
+                        MapAuthoringIssueSeverity.Error,
+                        $"Pool候補Socket {marker.name} には正の接近半径を設定してください。",
                         marker);
                 }
 
