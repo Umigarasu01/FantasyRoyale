@@ -11,7 +11,7 @@
 - 前段階のForestRestartではコンセプトv005基準の素材を制作し、48x32・40 Seed論理Plan / 4 Sceneを検証した。旧素材135 File撤去、EditMode 98件 / PlayMode 4件成功はその時点の結果である。[森林素材再制作Kit](design-docs/map-authoring/forest-restart-kit.md)に履歴を保持する。
 - EventSocket、回復の泉、Event Pool抽選とCharacter基盤は引き継ぐ。
 - Character基盤は`CharacterHealth`、`CharacterMoveCommand`、`CharacterActor2D`、人間入力Adapterまで実装済み。
-- 次のDecision Gateは通常攻撃・装備Action基盤。詳細は[Character・戦闘基盤ExecPlan](exec-plans/active/combat-foundation.md)を参照する。
+- 通常攻撃と装備の差し替えを実装し、探索Previewの的で確認できる。Player同士の被弾は育成中のHP 0の扱いが決まるまで保留する。詳細は[Character・戦闘基盤ExecPlan](exec-plans/active/combat-foundation.md)を参照する。
 
 ## Product Specs
 

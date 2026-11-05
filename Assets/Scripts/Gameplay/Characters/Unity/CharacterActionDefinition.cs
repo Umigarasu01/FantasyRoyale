@@ -1,0 +1,70 @@
+using UnityEngine;
+
+namespace FantasyRoyale.Gameplay.Characters.Unity
+{
+    /// <summary>
+    /// 一つのActionの設定をInspectorで編集するための定義Asset。
+    /// 実行時は純C#の`CharacterActionSpec`へ変換し、対戦状態はAssetへ保存しない。
+    /// </summary>
+    [CreateAssetMenu(
+        fileName = "CharacterAction",
+        menuName = "FantasyRoyale/Gameplay/Character Action")]
+    public sealed class CharacterActionDefinition : ScriptableObject
+    {
+        [SerializeField] private string actionId = string.Empty;
+        [SerializeField] private CharacterActionKind kind = CharacterActionKind.Melee;
+        [SerializeField, Min(1)] private int damage = 1;
+        [SerializeField, Min(0f)] private float windupSeconds = 0.1f;
+        [SerializeField, Min(0f)] private float activeSeconds = 0.1f;
+        [SerializeField, Min(0f)] private float recoverySeconds = 0.2f;
+        [SerializeField, Min(0.01f)] private float range = 1f;
+        [SerializeField, Range(1f, 360f)] private float arcDegrees = 120f;
+        [SerializeField, Min(0.01f)] private float projectileSpeed = 12f;
+
+        public string ActionId => actionId;
+
+        /// <summary>
+        /// Editor Builderから近接Actionの値をまとめて設定する。
+        /// </summary>
+        public void ConfigureMelee(string newActionId, int newDamage, CharacterActionTiming timing, float newRange, float newArcDegrees)
+        {
+            actionId = newActionId;
+            kind = CharacterActionKind.Melee;
+            damage = newDamage;
+            ApplyTiming(timing);
+            range = newRange;
+            arcDegrees = newArcDegrees;
+        }
+
+        /// <summary>
+        /// Editor Builderから遠隔Actionの値をまとめて設定する。
+        /// </summary>
+        public void ConfigureProjectile(string newActionId, int newDamage, CharacterActionTiming timing, float newRange, float newProjectileSpeed)
+        {
+            actionId = newActionId;
+            kind = CharacterActionKind.Projectile;
+            damage = newDamage;
+            ApplyTiming(timing);
+            range = newRange;
+            projectileSpeed = newProjectileSpeed;
+        }
+
+        /// <summary>
+        /// 設定値から実行時に使う不変のActionを作る。不正な値は例外で止める。
+        /// </summary>
+        public CharacterActionSpec CreateSpec()
+        {
+            var timing = new CharacterActionTiming(windupSeconds, activeSeconds, recoverySeconds);
+            return kind == CharacterActionKind.Projectile
+                ? CharacterActionSpec.CreateProjectile(actionId, damage, timing, range, projectileSpeed)
+                : CharacterActionSpec.CreateMelee(actionId, damage, timing, range, arcDegrees);
+        }
+
+        private void ApplyTiming(CharacterActionTiming timing)
+        {
+            windupSeconds = timing.WindupSeconds;
+            activeSeconds = timing.ActiveSeconds;
+            recoverySeconds = timing.RecoverySeconds;
+        }
+    }
+}

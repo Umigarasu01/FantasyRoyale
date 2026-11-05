@@ -163,7 +163,7 @@ flowchart TD
 - Handler結果 → `PreviewDebugMapEventPresenter` → HUD文言。Effect / Audio Cueは保持するが正式再生は未実装。
 - 成功したOneShot → `Dictionary<SocketId, State>`。HP満タン、撃破状態、未対応、不正では更新しない。
 
-Runtime生成Sprite、確認HUD、Test用入力上書き、Event状態Dictionary、Preview SeedはPlaytest Assemblyだけが持つ。HP / Move CommandはGameplay Characters Core、Actor / 人間入力AdapterはGameplay Characters Unity、Event共通実行、泉Handler、純C#抽選はGameplay Eventsへ分離済み。正式Character Prefab / Animation、攻撃、正式Presenter、試合進行は未実装。
+Runtime生成Sprite、確認HUD、Test用入力上書き、Event状態Dictionary、Preview SeedはPlaytest Assemblyだけが持つ。HP / Move CommandはGameplay Characters Core、Actor / 人間入力AdapterはGameplay Characters Unity、Event共通実行、泉Handler、純C#抽選はGameplay Eventsへ分離済み。攻撃は`CharacterCombat2D`で本番経路を通し、確認用の的、仮表示、装備の切り替えだけをPlaytest Assemblyが持つ。正式Character Prefab / Animation、正式Presenter、試合進行は未実装。
 
 詳細: [Exploration Preview Debug Scene](scenes/exploration-preview-debug-scene.md)
 

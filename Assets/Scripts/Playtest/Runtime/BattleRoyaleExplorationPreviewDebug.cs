@@ -100,11 +100,20 @@ namespace FantasyRoyale.Playtest
         public const string PlayerActionMapName = "Player";
         public const string MoveActionName = "Move";
         public const string InteractActionName = "Interact";
+        public const string AttackActionName = "Attack";
+        public const string SpecialActionName = "Special";
+        public const string NextEquipmentActionName = "Next";
+        public const string PreviousEquipmentActionName = "Previous";
         public const string WorldObjectSortingLayerName = "WorldObjects";
+        public const float TargetRestoreSeconds = 2f;
 
         private const float PixelsPerUnit = 32f;
+        private const float TargetDistance = 2.5f;
+        private const float TargetClearanceRadius = 0.7f;
+        private const int TargetMaximumHealth = 100;
         private const string GroundTilemapName = "GroundTilemap";
         private const string CollisionTilemapName = "CollisionTilemap";
+        private const string MapCollisionLayerName = "MapCollision";
 
         [SerializeField] private string mapScenePath = DefaultMapScenePath;
         [SerializeField] private InputActionAsset inputActions;
@@ -115,6 +124,8 @@ namespace FantasyRoyale.Playtest
         [SerializeField, Min(1f)] private float cameraOrthographicSize = 8f;
         [SerializeField, Min(1)] private int previewMaximumHealth = 100;
         [SerializeField, Min(0)] private int previewStartingHealth = 50;
+        [SerializeField] private CharacterEquipmentDefinition[] previewEquipment =
+            Array.Empty<CharacterEquipmentDefinition>();
 
         private readonly List<MapSocketMarker> socketBuffer = new List<MapSocketMarker>();
         private readonly List<MapSocketMarker> eventSocketBuffer = new List<MapSocketMarker>();
@@ -135,6 +146,18 @@ namespace FantasyRoyale.Playtest
         private InputActionAsset runtimeInputActions;
         private HumanCharacterMoveInputAdapter humanMoveInput;
         private InputAction interactAction;
+        private HumanCharacterActionInputAdapter humanActionInput;
+        private InputAction nextEquipmentAction;
+        private InputAction previousEquipmentAction;
+        private CharacterCombat2D playerCombat;
+        private int equipmentIndex;
+        private GameObject previewTargetObject;
+        private CharacterHurtbox2D previewTargetHurtbox;
+        private CharacterHealth previewTargetHealth;
+        private Texture2D previewTargetTexture;
+        private Sprite previewTargetSprite;
+        private PreviewDebugCombatPresenter combatPresenter;
+        private float targetRestoreAt = -1f;
         private Tilemap groundTilemap;
         private Tilemap collisionTilemap;
         private Bounds mapWorldBounds;
@@ -157,6 +180,14 @@ namespace FantasyRoyale.Playtest
         public string MapScenePath => mapScenePath;
         public InputActionAsset InputActions => inputActions;
         public MapEventCatalog EventCatalog => eventCatalog;
+        public IReadOnlyList<CharacterEquipmentDefinition> PreviewEquipment => previewEquipment;
+        public CharacterCombat2D PlayerCombat => playerCombat;
+        public GameObject PreviewTargetObject => previewTargetObject;
+        public CharacterHealth PreviewTargetHealth => previewTargetHealth;
+        public PreviewDebugCombatPresenter CombatPresenter => combatPresenter;
+        public string CurrentEquipmentName => previewEquipment.Length == 0
+            ? string.Empty
+            : previewEquipment[equipmentIndex].DisplayName;
         public MapEventPoolDefinition EventPool => eventPool;
         public int EventSelectionSeed => previewEventSelectionSeed;
         public float MoveSpeed => moveSpeed;
@@ -210,7 +241,8 @@ namespace FantasyRoyale.Playtest
             int newPreviewStartingHealth = 50,
             int newPreviewMaximumHealth = 100,
             MapEventPoolDefinition newEventPool = null,
-            int newPreviewEventSelectionSeed = 20260807)
+            int newPreviewEventSelectionSeed = 20260807,
+            CharacterEquipmentDefinition[] newPreviewEquipment = null)
         {
             mapScenePath = string.IsNullOrWhiteSpace(newMapScenePath)
                 ? DefaultMapScenePath
@@ -226,6 +258,7 @@ namespace FantasyRoyale.Playtest
                 newPreviewStartingHealth,
                 0,
                 previewMaximumHealth);
+            previewEquipment = newPreviewEquipment ?? Array.Empty<CharacterEquipmentDefinition>();
         }
 
         /// <summary>
@@ -331,6 +364,11 @@ namespace FantasyRoyale.Playtest
                 yield break;
             }
 
+            if (!CreatePreviewTarget(playerStart.transform.position))
+            {
+                yield break;
+            }
+
             if (!ResolveEventSockets())
             {
                 yield break;
@@ -373,6 +411,10 @@ namespace FantasyRoyale.Playtest
             {
                 TryInteractWithCurrentEvent();
             }
+
+            PollCombatInput();
+            UpdatePreviewTarget();
+            combatPresenter.Tick(Time.deltaTime);
         }
 
         /// <summary>
@@ -423,6 +465,21 @@ namespace FantasyRoyale.Playtest
                 interactAction = null;
             }
 
+            if (humanActionInput != null)
+            {
+                humanActionInput.Dispose();
+                humanActionInput = null;
+            }
+
+            if (nextEquipmentAction != null)
+            {
+                nextEquipmentAction.Disable();
+                previousEquipmentAction.Disable();
+            }
+
+            combatPresenter?.Dispose();
+            combatPresenter = null;
+
             if (runtimeInputActions != null)
             {
                 Destroy(runtimeInputActions);
@@ -437,6 +494,16 @@ namespace FantasyRoyale.Playtest
             {
                 Destroy(previewTexture);
             }
+
+            if (previewTargetSprite != null)
+            {
+                Destroy(previewTargetSprite);
+            }
+
+            if (previewTargetTexture != null)
+            {
+                Destroy(previewTargetTexture);
+            }
         }
 
         /// <summary>
@@ -444,7 +511,7 @@ namespace FantasyRoyale.Playtest
         /// </summary>
         private void OnGUI()
         {
-            var area = new Rect(12f, 12f, 440f, 190f);
+            var area = new Rect(12f, 12f, 440f, 280f);
             GUILayout.BeginArea(area, GUI.skin.box);
             GUILayout.Label("Exploration Preview Debug");
             if (!string.IsNullOrEmpty(FailureMessage))
@@ -460,6 +527,15 @@ namespace FantasyRoyale.Playtest
                 var position = playerObject.transform.position;
                 GUILayout.Label("Move: WASD / Arrow Keys");
                 GUILayout.Label("Interact: E");
+                GUILayout.Label("Attack: J / Left Click   Special: K / Right Click");
+                GUILayout.Label($"Equipment (1 / 2): {CurrentEquipmentName}");
+                GUILayout.Label($"Action: {playerCombat.ActionState.Phase}");
+                GUILayout.Label($"Target HP: {previewTargetHealth.CurrentHealth} / {previewTargetHealth.MaximumHealth}");
+                if (!string.IsNullOrEmpty(combatPresenter.LastFeedback))
+                {
+                    GUILayout.Label(combatPresenter.LastFeedback);
+                }
+
                 GUILayout.Label($"Position: {position.x:0.00}, {position.y:0.00}");
                 GUILayout.Label($"HP: {CurrentHealth} / {MaximumHealth}");
                 GUILayout.Label(
@@ -532,6 +608,37 @@ namespace FantasyRoyale.Playtest
             {
                 Fail($"Input Actionがありません: {PlayerActionMapName}/{InteractActionName}");
                 return false;
+            }
+
+            var combatActions = new[]
+            {
+                AttackActionName,
+                SpecialActionName,
+                NextEquipmentActionName,
+                PreviousEquipmentActionName
+            };
+            for (var index = 0; index < combatActions.Length; index++)
+            {
+                if (inputActions.FindAction($"{PlayerActionMapName}/{combatActions[index]}", false) == null)
+                {
+                    Fail($"Input Actionがありません: {PlayerActionMapName}/{combatActions[index]}");
+                    return false;
+                }
+            }
+
+            if (previewEquipment == null || previewEquipment.Length == 0)
+            {
+                Fail("確認用の装備が設定されていません。");
+                return false;
+            }
+
+            for (var index = 0; index < previewEquipment.Length; index++)
+            {
+                if (previewEquipment[index] == null)
+                {
+                    Fail($"確認用の装備が空です: {index}");
+                    return false;
+                }
             }
 
             return true;
@@ -811,6 +918,120 @@ namespace FantasyRoyale.Playtest
             humanMoveInput = new HumanCharacterMoveInputAdapter(moveAction);
             humanMoveInput.Enable();
             interactAction.Enable();
+
+            playerCombat = playerObject.AddComponent<CharacterCombat2D>();
+            var loadout = new CharacterLoadout(null, null);
+            previewEquipment[equipmentIndex].ApplyTo(loadout);
+            playerCombat.Initialize(loadout, LayerMask.GetMask(MapCollisionLayerName));
+            humanActionInput = new HumanCharacterActionInputAdapter(
+                runtimeInputActions.FindAction($"{PlayerActionMapName}/{AttackActionName}", true),
+                runtimeInputActions.FindAction($"{PlayerActionMapName}/{SpecialActionName}", true));
+            humanActionInput.Enable();
+            nextEquipmentAction = runtimeInputActions.FindAction(
+                $"{PlayerActionMapName}/{NextEquipmentActionName}",
+                true);
+            previousEquipmentAction = runtimeInputActions.FindAction(
+                $"{PlayerActionMapName}/{PreviousEquipmentActionName}",
+                true);
+            nextEquipmentAction.Enable();
+            previousEquipmentAction.Enable();
+        }
+
+        /// <summary>
+        /// Spawn付近の空いた場所へ攻撃確認用の的を置く。Playerとの間に壁がない方向だけを選ぶ。
+        /// </summary>
+        private bool CreatePreviewTarget(Vector3 spawnPosition)
+        {
+            Physics2D.SyncTransforms();
+            var wallMask = LayerMask.GetMask(MapCollisionLayerName);
+            var directions = new[] { Vector2.right, Vector2.left, Vector2.up, Vector2.down };
+            for (var index = 0; index < directions.Length; index++)
+            {
+                var position = (Vector2)spawnPosition + directions[index] * TargetDistance;
+                if (Physics2D.OverlapCircle(position, TargetClearanceRadius, wallMask) != null
+                    || Physics2D.Linecast(spawnPosition, position, wallMask).collider != null)
+                {
+                    continue;
+                }
+
+                previewTargetObject = new GameObject("TargetPreviewDebug");
+                SceneManager.MoveGameObjectToScene(previewTargetObject, gameObject.scene);
+                previewTargetObject.transform.position = position;
+
+                var targetCollider = previewTargetObject.AddComponent<BoxCollider2D>();
+                targetCollider.isTrigger = true;
+                targetCollider.size = new Vector2(0.8f, 1.1f);
+                targetCollider.offset = new Vector2(0f, 0.55f);
+
+                var renderer = previewTargetObject.AddComponent<SpriteRenderer>();
+                previewTargetSprite = CreatePreviewTargetSprite(out previewTargetTexture);
+                renderer.sprite = previewTargetSprite;
+                renderer.sortingLayerName = WorldObjectSortingLayerName;
+                renderer.sortingOrder = 0;
+                renderer.spriteSortPoint = SpriteSortPoint.Pivot;
+
+                previewTargetHealth = new CharacterHealth(TargetMaximumHealth);
+                previewTargetHurtbox = previewTargetObject.AddComponent<CharacterHurtbox2D>();
+                previewTargetHurtbox.Initialize(previewTargetHealth);
+                combatPresenter = new PreviewDebugCombatPresenter(playerCombat, previewTargetHurtbox, renderer);
+                Physics2D.SyncTransforms();
+                return true;
+            }
+
+            Fail("PlayerStart付近に的を置ける場所がありません。");
+            return false;
+        }
+
+        /// <summary>
+        /// 人間入力を共通Commandへ変換して攻撃を開始し、装備の切り替えを処理する。
+        /// </summary>
+        private void PollCombatInput()
+        {
+            if (humanActionInput.TryReadCommand(playerActor.Facing, out var command))
+            {
+                playerCombat.TryStartAction(command);
+            }
+
+            if (nextEquipmentAction.WasPressedThisFrame())
+            {
+                CycleEquipment(1);
+            }
+            else if (previousEquipmentAction.WasPressedThisFrame())
+            {
+                CycleEquipment(-1);
+            }
+        }
+
+        /// <summary>
+        /// 確認用の装備を順に切り替え、通常攻撃と特殊Actionをまとめて差し替える。
+        /// </summary>
+        private void CycleEquipment(int step)
+        {
+            var count = previewEquipment.Length;
+            equipmentIndex = (equipmentIndex + step + count) % count;
+            previewEquipment[equipmentIndex].ApplyTo(playerCombat.Loadout);
+        }
+
+        /// <summary>
+        /// 倒れた的を一定時間後に戻し、繰り返し攻撃を試せるようにする。
+        /// </summary>
+        private void UpdatePreviewTarget()
+        {
+            if (previewTargetHealth.IsAlive)
+            {
+                targetRestoreAt = -1f;
+                return;
+            }
+
+            if (targetRestoreAt < 0f)
+            {
+                targetRestoreAt = Time.time + TargetRestoreSeconds;
+            }
+            else if (Time.time >= targetRestoreAt)
+            {
+                previewTargetHealth = new CharacterHealth(TargetMaximumHealth);
+                previewTargetHurtbox.Initialize(previewTargetHealth);
+            }
         }
 
         /// <summary>
@@ -883,7 +1104,7 @@ namespace FantasyRoyale.Playtest
         {
             Physics2D.SyncTransforms();
 
-            var mapCollisionLayer = LayerMask.NameToLayer("MapCollision");
+            var mapCollisionLayer = LayerMask.NameToLayer(MapCollisionLayerName);
             if (mapCollisionLayer < 0)
             {
                 Fail("MapCollision LayerがProjectにありません。");
@@ -1021,6 +1242,66 @@ namespace FantasyRoyale.Playtest
                 0,
                 SpriteMeshType.FullRect);
             sprite.name = "PlayerPreviewDebugSprite";
+            return sprite;
+        }
+
+        /// <summary>
+        /// 正式素材を追加せず、攻撃確認用の的を小さなRuntime専用Spriteとして生成する。
+        /// </summary>
+        private static Sprite CreatePreviewTargetSprite(out Texture2D texture)
+        {
+            const int width = 8;
+            const int height = 12;
+            var rows = new[]
+            {
+                "..OOOO..",
+                ".OSSSSO.",
+                ".OSRRSO.",
+                ".OSSSSO.",
+                "..OOOO..",
+                "OOOWWOOO",
+                "OSSWWSSO",
+                "OOOWWOOO",
+                "...WW...",
+                "...WW...",
+                "...WW...",
+                "..OWWO.."
+            };
+            var colors = new Dictionary<char, Color32>
+            {
+                { '.', new Color32(0, 0, 0, 0) },
+                { 'O', new Color32(58, 38, 24, 255) },
+                { 'S', new Color32(214, 178, 104, 255) },
+                { 'R', new Color32(190, 58, 48, 255) },
+                { 'W', new Color32(132, 88, 52, 255) }
+            };
+            var pixels = new Color32[width * height];
+            for (var row = 0; row < height; row++)
+            {
+                var source = rows[height - 1 - row];
+                for (var x = 0; x < width; x++)
+                {
+                    pixels[row * width + x] = colors[source[x]];
+                }
+            }
+
+            texture = new Texture2D(width, height, TextureFormat.RGBA32, false)
+            {
+                name = "TargetPreviewDebugTexture",
+                filterMode = FilterMode.Point,
+                wrapMode = TextureWrapMode.Clamp
+            };
+            texture.SetPixels32(pixels);
+            texture.Apply(false, true);
+
+            var sprite = Sprite.Create(
+                texture,
+                new Rect(0f, 0f, width, height),
+                new Vector2(0.5f, 0.05f),
+                10f,
+                0,
+                SpriteMeshType.FullRect);
+            sprite.name = "TargetPreviewDebugSprite";
             return sprite;
         }
 

@@ -47,12 +47,24 @@ CameraはOrthographic Size 8、Map端Clamp、1 / 32 unit Snap、Transparency Sor
 - HP 0では本番Actorが移動Commandを破棄して停止する。
 - Handlerが返す回復Message Key、Effect Cue ID、Audio Cue IDと、Preview PresenterによるHUD文言。
 
+## 攻撃の確認
+
+PlayerStart付近に確認用の的を置く。HPは100で、倒すと2秒後に戻る。
+
+| 操作 | Keyboard | Mouse |
+| --- | --- | --- |
+| 通常攻撃 | J、Enter | 左Click |
+| 特殊Action | K | 右Click |
+| 装備の切り替え | 1、2 | なし |
+
+剣の装備は通常攻撃が剣で特殊Actionが弓、弓の装備はその逆である。斬撃、矢、的の色の変化はRuntime生成の仮表示である。このSceneは承認済みの森マップではなく、従来のReference Mapを読む。
+
 ## 未実装
 
 - Loot / Enemy / Merchant SocketのRuntime選定と生成。
 - 泉以外のEvent Handler、地域Tag・距離制約付きPool、正式Match Seed、Cooldown、Save連携。
 - Effect / Audio CueをPrefabやAudioSourceへ接続する正式Presenter。
-- 通常攻撃 / 特殊アクション、装備、正式Character Prefab / Animation、CPU / Network入力Adapter、試合開始・終了。
+- 正式Character Prefab / Animation、CPU / Network入力Adapter、試合開始・終了。
 - 2026-10-09に決めた育成中脱落なし・妨害・最終バトルへの移行は未実装。エリア収縮は当面採用なしで、今後の実装目標としない。[Prototype方針](../../product-specs/prototype-direction.md)を参照する。既存PreviewのHP 0死亡・通常回復による非復活の検証履歴は変更しない。
 
 Runtime生成Spriteと確認HUDは探索確認専用。本番HP Core、Move Command、Character Actor、人間入力Adapterは本番Assemblyへ分離済み。攻撃や正式表示の設計を確定した扱いにはしない。

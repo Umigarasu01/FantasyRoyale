@@ -19,12 +19,19 @@ namespace FantasyRoyale.Gameplay.Characters.Unity
         private Rigidbody2D body;
         private CapsuleCollider2D footCollider;
         private CharacterMoveCommand moveCommand;
+        private float movementScale = 1f;
 
         public CharacterHealth Health { get; private set; }
         public Rigidbody2D Body => body;
         public CapsuleCollider2D FootCollider => footCollider;
         public CharacterMoveCommand MoveCommand => moveCommand;
         public float MovementSpeed => movementSpeed;
+        public float MovementScale => movementScale;
+
+        /// <summary>
+        /// 最後に移動した向き。止まっている間の攻撃方向になる。
+        /// </summary>
+        public CharacterDirection8 Facing { get; private set; } = CharacterDirection8.South;
 
         /// <summary>
         /// Spawn時に純C# Healthと移動速度を注入し、同じActorを人間・CPU・Network入力から利用可能にする。
@@ -43,14 +50,25 @@ namespace FantasyRoyale.Gameplay.Characters.Unity
 
             movementSpeed = newMovementSpeed;
             moveCommand = CharacterMoveCommand.None;
+            movementScale = 1f;
         }
 
         /// <summary>
         /// 入力元を区別せず最新Commandを保持し、次のFixedUpdateで一度だけ同じ規則を適用する。
+        /// 攻撃中で動けない間も、入力された向きは記録する。
         /// </summary>
         public void SetMoveCommand(CharacterMoveCommand command)
         {
             moveCommand = command;
+            Facing = CharacterDirections.FromVector(command.Horizontal, command.Vertical, Facing);
+        }
+
+        /// <summary>
+        /// 攻撃の段階などに応じた移動速度の倍率を0から1の範囲で設定する。
+        /// </summary>
+        public void SetMovementScale(float scale)
+        {
+            movementScale = Mathf.Clamp01(scale);
         }
 
         /// <summary>
@@ -86,7 +104,7 @@ namespace FantasyRoyale.Gameplay.Characters.Unity
             }
 
             var direction = new Vector2(moveCommand.Horizontal, moveCommand.Vertical);
-            body.MovePosition(body.position + direction * (movementSpeed * Time.fixedDeltaTime));
+            body.MovePosition(body.position + direction * (movementSpeed * movementScale * Time.fixedDeltaTime));
         }
     }
 }

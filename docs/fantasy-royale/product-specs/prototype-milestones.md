@@ -5,7 +5,7 @@
 プロトタイプ完成までのマイルストーンを大きめに分ける。
 詳細なクラス構成や仕様は、各マイルストーン開始前に相談して決める。
 
-従来のMilestone 1では旧96x72森林Reference Map、移動・地形判定・Camera追従、自由配置EventSocket、回復の泉を通す共通Event Runtime、6候補から3地点を選ぶ再現可能なEvent Pool抽選まで一時`PreviewDebug`足場で検証済み。現在のReference Mapは48x32のForestRestartへ置換済みで、素材・Sceneの現在地は[Map Plan](art/map-plan.md)を参照する。Milestone 2はStep 1で純C# Character Health、Step 2で共通Move Command、本番`CharacterActor2D`、人間入力Adapterを実装し、Previewを本番移動経路へ移行した。攻撃、装備、正式Character Prefabは未着手。
+従来のMilestone 1では旧96x72森林Reference Map、移動・地形判定・Camera追従、自由配置EventSocket、回復の泉を通す共通Event Runtime、6候補から3地点を選ぶ再現可能なEvent Pool抽選まで一時`PreviewDebug`足場で検証済み。現在のReference Mapは48x32のForestRestartへ置換済みで、素材・Sceneの現在地は[Map Plan](art/map-plan.md)を参照する。Milestone 2はStep 1で純C# Character Health、Step 2で共通Move Command、本番`CharacterActor2D`、人間入力Adapterを実装し、Previewを本番移動経路へ移行した。Step 3と4で通常攻撃と装備の差し替えを実装し、確認用の的で検証した。正式Character Prefabは未着手。
 
 ## 2026-10-09 の進行方針
 
@@ -116,13 +116,10 @@
 
 ## 次に相談する対象
 
-2026-11-05に森マップの構成と画作りの基準を承認した。内容は[Map Plan](art/map-plan.md)を参照する。次はMilestone 2 Step 3として、最初の通常攻撃と装備アクション基盤を相談する。
+- 武器の手触りと数値の調整。
+- 育成中のHP 0の扱いと、Player同士の被弾。
+- 近接攻撃を壁で止めるか。
+- 森へ入れるようにするかと、ランダムにするオブジェクトの範囲。
+- 本番のCharacter / Eventを、承認済みの森マップへ接続する時期。
 
-- 攻撃方向を4方向、8方向、自由照準のどれにするか。
-- Attack Commandへ方向、対象、押下 / 保持など何を含めるか。
-- Coreの攻撃範囲・Damage結果と、Unity PhysicsのOverlap / Colliderによる命中候補取得をどう分けるか。
-- 発生、持続、硬直、移動可否、割込みをどこまで最初の時間モデルへ含めるか。
-- 装備DefinitionをScriptableObjectにする場合の通常攻撃 / 特殊アクションSlotと、Runtime装備状態の最小構造。
-- 最初の検証武器を近接一種にするか、近接と遠隔を同時に通して差し替えを実証するか。
-
-正式Character素材、Animation構成、CPU / Network入力Adapter、観戦、復活専用処理はStep 3へ自動的に含めない。
+正式Character素材、Animation構成、CPU / Network入力Adapter、観戦、復活専用処理は自動的に含めない。

@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using FantasyRoyale.Gameplay.Characters;
+using FantasyRoyale.Gameplay.Characters.Unity;
 using FantasyRoyale.Gameplay.Events;
 using FantasyRoyale.MapAuthoringKit;
 using FantasyRoyale.Playtest;
@@ -26,6 +28,10 @@ namespace FantasyRoyale.Editor.Playtest
         public const string EventPoolPath =
             "Assets/Data/Gameplay/Events/BattleRoyaleReferenceEventPool.asset";
         public const int PreviewEventSelectionSeed = 20260807;
+        public const string SwordActionPath = "Assets/Data/Gameplay/Actions/SwordSlash.asset";
+        public const string BowActionPath = "Assets/Data/Gameplay/Actions/BowShot.asset";
+        public const string SwordEquipmentPath = "Assets/Data/Gameplay/Equipment/SwordEquipment.asset";
+        public const string BowEquipmentPath = "Assets/Data/Gameplay/Equipment/BowEquipment.asset";
 
         /// <summary>
         /// 空のPlaytest SceneへBootstrapだけを保存し、PlaytestとReference MapをBuild Settingsへ登録する。
@@ -82,6 +88,7 @@ namespace FantasyRoyale.Editor.Playtest
             }
 
             var eventPool = LoadOrCreateEventPool(eventCatalog);
+            var equipment = LoadOrCreateEquipment();
 
             if (inputActions.FindAction(
                     $"{BattleRoyaleExplorationPreviewDebug.PlayerActionMapName}/"
@@ -115,7 +122,8 @@ namespace FantasyRoyale.Editor.Playtest
                 50,
                 100,
                 eventPool,
-                PreviewEventSelectionSeed);
+                PreviewEventSelectionSeed,
+                equipment);
 
             if (!EditorSceneManager.SaveScene(scene, PlaytestScenePath, false))
             {
@@ -166,6 +174,56 @@ namespace FantasyRoyale.Editor.Playtest
             }
 
             return eventPool;
+        }
+
+        /// <summary>
+        /// 初回だけ剣と弓の定義を作り、以後はInspector編集値を正本として読み込む。
+        /// 検証のため、二つの装備は通常攻撃と特殊Actionを入れ替えた構成にする。
+        /// </summary>
+        private static CharacterEquipmentDefinition[] LoadOrCreateEquipment()
+        {
+            EnsureAssetFolder("Assets/Data", "Gameplay");
+            EnsureAssetFolder("Assets/Data/Gameplay", "Actions");
+            EnsureAssetFolder("Assets/Data/Gameplay", "Equipment");
+
+            var sword = AssetDatabase.LoadAssetAtPath<CharacterActionDefinition>(SwordActionPath);
+            if (sword == null)
+            {
+                sword = ScriptableObject.CreateInstance<CharacterActionDefinition>();
+                sword.ConfigureMelee("sword-slash", 20, new CharacterActionTiming(0.1f, 0.1f, 0.2f), 1.4f, 120f);
+                AssetDatabase.CreateAsset(sword, SwordActionPath);
+            }
+
+            var bow = AssetDatabase.LoadAssetAtPath<CharacterActionDefinition>(BowActionPath);
+            if (bow == null)
+            {
+                bow = ScriptableObject.CreateInstance<CharacterActionDefinition>();
+                bow.ConfigureProjectile("bow-shot", 12, new CharacterActionTiming(0.25f, 0f, 0.3f), 6f, 12f);
+                AssetDatabase.CreateAsset(bow, BowActionPath);
+            }
+
+            return new[]
+            {
+                LoadOrCreateEquipmentDefinition(SwordEquipmentPath, "剣", sword, bow),
+                LoadOrCreateEquipmentDefinition(BowEquipmentPath, "弓", bow, sword)
+            };
+        }
+
+        private static CharacterEquipmentDefinition LoadOrCreateEquipmentDefinition(
+            string path,
+            string displayName,
+            CharacterActionDefinition primary,
+            CharacterActionDefinition special)
+        {
+            var equipment = AssetDatabase.LoadAssetAtPath<CharacterEquipmentDefinition>(path);
+            if (equipment == null)
+            {
+                equipment = ScriptableObject.CreateInstance<CharacterEquipmentDefinition>();
+                equipment.Configure(displayName, primary, special);
+                AssetDatabase.CreateAsset(equipment, path);
+            }
+
+            return equipment;
         }
 
         /// <summary>
@@ -232,6 +290,8 @@ namespace FantasyRoyale.Editor.Playtest
             if (bootstrap.InputActions == null
                 || bootstrap.EventCatalog == null
                 || bootstrap.EventPool == null
+                || bootstrap.PreviewEquipment.Count != 2
+                || bootstrap.PreviewEquipment.Any(equipment => equipment == null)
                 || bootstrap.EventSelectionSeed != PreviewEventSelectionSeed
                 || !string.Equals(
                     bootstrap.MapScenePath,

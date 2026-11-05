@@ -136,6 +136,8 @@ FantasyRoyale.MapAuthoringKit.Editor.ForestRestartAssetBuilder.BuildScene(
 
 ## 現在の基準
 
+2026-11-05、攻撃のVertical Slice実装後のBatchmode実行: EditMode 279 / 279成功、Compile Error 0。PlayMode 9 / 14成功で、Exploration Previewの4件と攻撃の5件は成功した。失敗した5件は`StudyANativeLayoutsPlayPreviewDebugTests`と`StudyANativeFlexibleConnectionsPlayPreviewDebugTests`で、検証の保存先の指定がなくSetUpで止まる。以前の記録と同じ結果で、機能の不具合を示すものではない。C# Project BuildとPlayer Buildは実行していない。以下はそれ以前の記録である。
+
 今回の構成改善は代表Seed20261003〜20261006の論理検査と実Scene Validatorがすべて成功し、実Unity Cameraで各5画像、計20画像を保存した。橋Deckと崖Frontを修正し、各SeedのPhysics検査で橋を除く水域90Cell、橋21Cell、崖、全歩行域、木の接地点を確認してError0。Reference移行後の最終Test RunnerはEditMode113 / 113成功（10.42秒）、PlayMode4 / 4成功（2.2秒）、Failed / Skipped / Inconclusiveは0。平面装飾の回帰Testはbridge / cobblesも対象に加え、`MapDetail` / Order0 / Pivotの検査を維持した。
 
 実Gameplay PreviewはReady、失敗Message空でReferenceを読み、位置(24.5,13.5)から(37.1,13.5)への移動とCamera追従を確認した。Runtime2画面を追加してQAは計22PNG。終了後はPlay停止、元の保存済みTemplate Scene、実行設定へ復元し、Console対象区間のErrorは0。スタンドアロン27論理Test Case、UnityのScene / Physics / Test Runner、実画面確認を区別する。
