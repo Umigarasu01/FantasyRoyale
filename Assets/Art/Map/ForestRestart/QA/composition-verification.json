@@ -1,0 +1,368 @@
+{
+  "schema": "fantasyroyale.forest-composition.verification.v1",
+  "date": "2026-10-03",
+  "project": "C:\\Users\\umiga\\Repository\\FantasyRoyale",
+  "referenceScene": "Assets/Scenes/MapAuthoring/GbaForestBattleRoyaleReference.unity",
+  "referenceSeed": 20261003,
+  "referenceGuid": "2a1e319c53a0a3349bc822390a04f9de",
+  "inputReferencePixelsLocallyVerified": false,
+  "inputReferenceAcquisition": "Official Library materialization failed on Windows extended attribute installation; final local inputs absent. Exact-pixel visual acceptance remains pending.",
+  "originalSpriteAndMetaCountProtected": 152,
+  "editMode": {
+    "total": 113,
+    "passed": 113,
+    "failed": 0,
+    "skipped": 0,
+    "inconclusive": 0
+  },
+  "playMode": {
+    "total": 4,
+    "passed": 4,
+    "failed": 0,
+    "skipped": 0,
+    "inconclusive": 0
+  },
+  "seedScenes": [
+    {
+      "seed": 20261003,
+      "layoutHash": "95E9280C8CEBB01D7B96F28A34EFAC81132769E196D7EA8A9094E4DBC63F0A5A",
+      "logicalValid": true,
+      "reachableCells": 788,
+      "roadCells": 494,
+      "obstacleCount": 133,
+      "waterCells": 111,
+      "bridgeCells": 21,
+      "cliffCells": 66,
+      "landmarkCandidates": 2,
+      "includesLandmarkCandidates": true,
+      "errors": [],
+      "scene": "Assets/Scenes/MapAuthoring/ForestRestart/ForestCompositionSeed20261003.unity",
+      "sceneValidated": true,
+      "sceneValid": true,
+      "sceneIssues": []
+    },
+    {
+      "seed": 20261004,
+      "layoutHash": "09136632863268B3FE5A62891B11715761C92C6E3A0B564F367E2BE267243336",
+      "logicalValid": true,
+      "reachableCells": 837,
+      "roadCells": 502,
+      "obstacleCount": 122,
+      "waterCells": 111,
+      "bridgeCells": 21,
+      "cliffCells": 63,
+      "landmarkCandidates": 2,
+      "includesLandmarkCandidates": true,
+      "errors": [],
+      "scene": "Assets/Scenes/MapAuthoring/ForestRestart/ForestCompositionSeed20261004.unity",
+      "sceneValidated": true,
+      "sceneValid": true,
+      "sceneIssues": []
+    },
+    {
+      "seed": 20261005,
+      "layoutHash": "EB61ED63FE1B16FCD44F8864C3AD085D7530FEA365950F0EFAF918921054121D",
+      "logicalValid": true,
+      "reachableCells": 800,
+      "roadCells": 455,
+      "obstacleCount": 142,
+      "waterCells": 111,
+      "bridgeCells": 21,
+      "cliffCells": 67,
+      "landmarkCandidates": 2,
+      "includesLandmarkCandidates": true,
+      "errors": [],
+      "scene": "Assets/Scenes/MapAuthoring/ForestRestart/ForestCompositionSeed20261005.unity",
+      "sceneValidated": true,
+      "sceneValid": true,
+      "sceneIssues": []
+    },
+    {
+      "seed": 20261006,
+      "layoutHash": "99B342300A16FF888B0FB91D7590DC7755D75C5CEB4036371EE77B1545FBAC17",
+      "logicalValid": true,
+      "reachableCells": 808,
+      "roadCells": 462,
+      "obstacleCount": 128,
+      "waterCells": 111,
+      "bridgeCells": 21,
+      "cliffCells": 63,
+      "landmarkCandidates": 2,
+      "includesLandmarkCandidates": true,
+      "errors": [],
+      "scene": "Assets/Scenes/MapAuthoring/ForestRestart/ForestCompositionSeed20261006.unity",
+      "sceneValidated": true,
+      "sceneValid": true,
+      "sceneIssues": []
+    }
+  ],
+  "actualPhysics": [
+    {
+      "seed": 20261003,
+      "waterChecks": 90,
+      "bridgeChecks": 21,
+      "cliffChecks": 66,
+      "walkableChecks": 788,
+      "objectChecks": 135,
+      "errors": []
+    },
+    {
+      "seed": 20261004,
+      "waterChecks": 90,
+      "bridgeChecks": 21,
+      "cliffChecks": 63,
+      "walkableChecks": 837,
+      "objectChecks": 124,
+      "errors": []
+    },
+    {
+      "seed": 20261005,
+      "waterChecks": 90,
+      "bridgeChecks": 21,
+      "cliffChecks": 67,
+      "walkableChecks": 800,
+      "objectChecks": 144,
+      "errors": []
+    },
+    {
+      "seed": 20261006,
+      "waterChecks": 90,
+      "bridgeChecks": 21,
+      "cliffChecks": 63,
+      "walkableChecks": 808,
+      "objectChecks": 130,
+      "errors": []
+    }
+  ],
+  "images": [
+    {
+      "seed": 20261003,
+      "shot": "overview",
+      "path": "Assets/Art/Map/ForestRestart/QA/composition-seed-20261003-overview.png",
+      "sha256": "ac5d83cc247c6ee3a4c6bb03993345d2fe0feafeeae26932517286b4374a70f3",
+      "bytes": 3082960
+    },
+    {
+      "seed": 20261003,
+      "shot": "focused",
+      "path": "Assets/Art/Map/ForestRestart/QA/composition-seed-20261003-focused.png",
+      "sha256": "c8e451e732305ffa7f294387bb4e1185447f8f60eb6a8250b205e6e2b1305196",
+      "bytes": 1365656
+    },
+    {
+      "seed": 20261003,
+      "shot": "game-scale",
+      "path": "Assets/Art/Map/ForestRestart/QA/composition-seed-20261003-game-scale.png",
+      "sha256": "e70ccae65279cd1120c41e5c0d199f902a33c66aee8032537d89c3f3cf121607",
+      "bytes": 670900
+    },
+    {
+      "seed": 20261003,
+      "shot": "detail",
+      "path": "Assets/Art/Map/ForestRestart/QA/composition-seed-20261003-detail.png",
+      "sha256": "089ee1107c3f218ccf219ec0c54ee6928e9223baafbc8286137a0ce63d0bc332",
+      "bytes": 306679
+    },
+    {
+      "seed": 20261003,
+      "shot": "bridge-standing",
+      "path": "Assets/Art/Map/ForestRestart/QA/composition-seed-20261003-bridge-standing.png",
+      "sha256": "cc7f552081ad478ea24b80324c8a572933278b4d07cbff5a99eceffed272252d",
+      "bytes": 294417
+    },
+    {
+      "seed": 20261004,
+      "shot": "overview",
+      "path": "Assets/Art/Map/ForestRestart/QA/composition-seed-20261004-overview.png",
+      "sha256": "86033aba546d624d551874e630a084751f47c6a9609bb00f93951300d3f4d39b",
+      "bytes": 3043609
+    },
+    {
+      "seed": 20261004,
+      "shot": "focused",
+      "path": "Assets/Art/Map/ForestRestart/QA/composition-seed-20261004-focused.png",
+      "sha256": "44d21f44d7d276a127639a0e94c7ab918d183ba13e5dc9e30fb1f1660abb31da",
+      "bytes": 1314674
+    },
+    {
+      "seed": 20261004,
+      "shot": "game-scale",
+      "path": "Assets/Art/Map/ForestRestart/QA/composition-seed-20261004-game-scale.png",
+      "sha256": "51c67fe1c99fe14e7567701d06e319a197c4337a34c13b8a0e80546912ba3167",
+      "bytes": 638612
+    },
+    {
+      "seed": 20261004,
+      "shot": "detail",
+      "path": "Assets/Art/Map/ForestRestart/QA/composition-seed-20261004-detail.png",
+      "sha256": "01d161211dc55e65ee57400723b1d2a0765846abe57c06cd24e83e05a86bef65",
+      "bytes": 279856
+    },
+    {
+      "seed": 20261004,
+      "shot": "bridge-standing",
+      "path": "Assets/Art/Map/ForestRestart/QA/composition-seed-20261004-bridge-standing.png",
+      "sha256": "921b516a44a9d0edabaa4dca3ed4101384d6fb6535a548f6174cbf0d29e1d920",
+      "bytes": 285337
+    },
+    {
+      "seed": 20261005,
+      "shot": "overview",
+      "path": "Assets/Art/Map/ForestRestart/QA/composition-seed-20261005-overview.png",
+      "sha256": "d5e235e205eef3c0c8b5a263a8a711b168a8ea2c533229c0b19e18360176ce36",
+      "bytes": 3130319
+    },
+    {
+      "seed": 20261005,
+      "shot": "focused",
+      "path": "Assets/Art/Map/ForestRestart/QA/composition-seed-20261005-focused.png",
+      "sha256": "759f3cbf0c4c5b3aff2254e714521c02cd908c280d7e5c7f3a3bf3151bc0f091",
+      "bytes": 1379669
+    },
+    {
+      "seed": 20261005,
+      "shot": "game-scale",
+      "path": "Assets/Art/Map/ForestRestart/QA/composition-seed-20261005-game-scale.png",
+      "sha256": "dc835e74d2ea0cf546aa9cfa95f2a3b26cfd3667b28c00708eb1ab536a8352ba",
+      "bytes": 686914
+    },
+    {
+      "seed": 20261005,
+      "shot": "detail",
+      "path": "Assets/Art/Map/ForestRestart/QA/composition-seed-20261005-detail.png",
+      "sha256": "8704fe23de02cb6d7f4ab74ec79759917ae27c924e84f6d1c03a02a2ccdff247",
+      "bytes": 304344
+    },
+    {
+      "seed": 20261005,
+      "shot": "bridge-standing",
+      "path": "Assets/Art/Map/ForestRestart/QA/composition-seed-20261005-bridge-standing.png",
+      "sha256": "89aabaa3995b49524dfcdad74fe1ff750cc2cb06d331ca455d744a094d6cd42f",
+      "bytes": 299235
+    },
+    {
+      "seed": 20261006,
+      "shot": "overview",
+      "path": "Assets/Art/Map/ForestRestart/QA/composition-seed-20261006-overview.png",
+      "sha256": "8f63a2e183d3026cad933b54e3527cd56e78b18c742224523d605762e157a8a7",
+      "bytes": 3061278
+    },
+    {
+      "seed": 20261006,
+      "shot": "focused",
+      "path": "Assets/Art/Map/ForestRestart/QA/composition-seed-20261006-focused.png",
+      "sha256": "1a522f414e75be23ea90256441b303ea68c226100e538e331cafbcfd349867d5",
+      "bytes": 1338647
+    },
+    {
+      "seed": 20261006,
+      "shot": "game-scale",
+      "path": "Assets/Art/Map/ForestRestart/QA/composition-seed-20261006-game-scale.png",
+      "sha256": "0ce506039f7355b84ba37e7df153c9f534a111922018d7385073a6985001c1e2",
+      "bytes": 700435
+    },
+    {
+      "seed": 20261006,
+      "shot": "detail",
+      "path": "Assets/Art/Map/ForestRestart/QA/composition-seed-20261006-detail.png",
+      "sha256": "163e11a19cd960c4c2c6daef47ae7c603ce2713a8073dc63aeec02e4c9e8dd79",
+      "bytes": 308474
+    },
+    {
+      "seed": 20261006,
+      "shot": "bridge-standing",
+      "path": "Assets/Art/Map/ForestRestart/QA/composition-seed-20261006-bridge-standing.png",
+      "sha256": "23218d6457ea99d6ee93c60b6355715232efb36d6a7d2f2d519b78e26cc5978f",
+      "bytes": 282788
+    },
+    {
+      "shot": "runtime-start",
+      "captureSource": "screen",
+      "path": "Assets/Art/Map/ForestRestart/QA/composition-runtime-start.png",
+      "sha256": "16884206f23871cda3755d8c0d436ea5136c32ab7d84bb0f263adc82c5fc5bb6",
+      "bytes": 2389892
+    },
+    {
+      "shot": "runtime-after-move",
+      "captureSource": "screen",
+      "path": "Assets/Art/Map/ForestRestart/QA/composition-runtime-after-move.png",
+      "sha256": "e954e916222116ace145118b5e48f58047c78138f747bf60832aa5e4df769c55",
+      "bytes": 2506582
+    }
+  ],
+  "livePreview": {
+    "mapScene": "Assets/Scenes/MapAuthoring/GbaForestBattleRoyaleReference.unity",
+    "isReady": true,
+    "failureMessage": "",
+    "frameBefore": 85348,
+    "frameAfter": 88979,
+    "positionBefore": [
+      24.5,
+      13.5
+    ],
+    "positionAfter": [
+      37.1,
+      13.5
+    ],
+    "cameraAfter": [
+      33.78,
+      13.5,
+      -10.0
+    ],
+    "player": "existing cyan debug marker",
+    "comparisonHero": "static concept scale sprite",
+    "cameraSize": 8,
+    "editorRestored": true
+  },
+  "knownVisualLimitations": [
+    "Road and grass outlines still expose coarse cell steps",
+    "River bank transition is thin",
+    "Upper terrace can be masked by forest canopy"
+  ],
+  "libraryPreviewFiles": [
+    {
+      "local_path": "C:\\Users\\umiga\\Repository\\FantasyRoyale\\Assets\\Art\\Map\\ForestRestart\\QA\\composition-seed-20261003-overview.png",
+      "status": "succeeded",
+      "library_file_id": "libfile_5ec81357c9c48191bb2aff13a17b8288",
+      "file_id": "file_00000000cf2881fd94712559866e1faa",
+      "file_name": "composition-seed-20261003-overview.png",
+      "path": "/composition-seed-20261003-overview.png",
+      "current_version_number": 0,
+      "local_metadata_applied": false,
+      "metadata_error": "Windows os.setxattr unavailable"
+    },
+    {
+      "local_path": "C:\\Users\\umiga\\Repository\\FantasyRoyale\\Assets\\Art\\Map\\ForestRestart\\QA\\composition-seed-20261003-game-scale.png",
+      "status": "succeeded",
+      "library_file_id": "libfile_5732f5fb7184819189f4afa4ff7584a0",
+      "file_id": "file_0000000001e482309d88f31395d1a2a9",
+      "file_name": "composition-seed-20261003-game-scale.png",
+      "path": "/composition-seed-20261003-game-scale.png",
+      "current_version_number": 0,
+      "local_metadata_applied": false,
+      "metadata_error": "Windows os.setxattr unavailable"
+    },
+    {
+      "local_path": "C:\\Users\\umiga\\Repository\\FantasyRoyale\\Assets\\Art\\Map\\ForestRestart\\QA\\composition-seed-20261003-bridge-standing.png",
+      "status": "succeeded",
+      "library_file_id": "libfile_df312ddda4a8819186288375a5e9d4ec",
+      "file_id": "file_0000000085048230bb89a2c72881cfbc",
+      "file_name": "composition-seed-20261003-bridge-standing.png",
+      "path": "/composition-seed-20261003-bridge-standing.png",
+      "current_version_number": 0,
+      "local_metadata_applied": false,
+      "metadata_error": "Windows os.setxattr unavailable"
+    }
+  ],
+  "backup": "C:\\Users\\umiga\\Documents\\Codex\\2026-10-03\\task\\backup-before-map-composition\\source-checkpoint.zip",
+  "knowledgeValidation": {
+    "passed": true,
+    "markdownFiles": 66
+  },
+  "preservationAudit": {
+    "protectedFiles": 155,
+    "changedProtectedFiles": 0,
+    "baselineMissingFiles": 0,
+    "unexpectedChanges": 0
+  }
+}

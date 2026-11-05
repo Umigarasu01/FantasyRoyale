@@ -1,0 +1,522 @@
+{
+  "tree-oak": {
+    "file": "tree-oak.png",
+    "size": [
+      157,
+      151
+    ],
+    "pivot": [
+      78,
+      0
+    ],
+    "source": "forest-trees-01.png",
+    "sha256": "8004705497c5d033c50c1ee02b0d08b57bc05927975f433b9f3d9fcf844e2a93"
+  },
+  "tree-upright": {
+    "file": "tree-upright.png",
+    "size": [
+      115,
+      156
+    ],
+    "pivot": [
+      57,
+      0
+    ],
+    "source": "forest-trees-01.png",
+    "sha256": "8a014b5b2001f5fc50b3fb6d736f1e35b292421a9295df705ff125123fdf75ea"
+  },
+  "tree-split": {
+    "file": "tree-split.png",
+    "size": [
+      156,
+      142
+    ],
+    "pivot": [
+      78,
+      0
+    ],
+    "source": "forest-trees-01.png",
+    "sha256": "7fd2600e662e0049b3043d4e8b17f2cf822da62b9163124d936172d5ec6fd304"
+  },
+  "tree-young": {
+    "file": "tree-young.png",
+    "size": [
+      82,
+      109
+    ],
+    "pivot": [
+      41,
+      0
+    ],
+    "source": "forest-trees-01.png",
+    "sha256": "9e83d0e3bee9e53a2332995593d347a9223f91e6003d63767c02a5ceca25bd71"
+  },
+  "tree-wide": {
+    "file": "tree-wide.png",
+    "size": [
+      159,
+      114
+    ],
+    "pivot": [
+      79,
+      0
+    ],
+    "source": "forest-trees-01.png",
+    "sha256": "405e5fbf749896dece5141748a1137e45072ebca3a8e31701eda57893e5c18c7"
+  },
+  "tree-dense": {
+    "file": "tree-dense.png",
+    "size": [
+      153,
+      145
+    ],
+    "pivot": [
+      76,
+      0
+    ],
+    "source": "forest-trees-01.png",
+    "sha256": "975c77ae4db0886a601580d9f506132f6c0b8913c92231b637149f6000206d63"
+  },
+  "feature-spring": {
+    "file": "feature-spring.png",
+    "size": [
+      320,
+      202
+    ],
+    "pivot": [
+      160,
+      0
+    ],
+    "source": "forest-features-01.png",
+    "sha256": "72dbe022e4684b3d96448a5607b0ed5fb7cc7d1e8d87b2c0554e0835a2acfb3c"
+  },
+  "feature-herbs": {
+    "file": "feature-herbs.png",
+    "size": [
+      256,
+      130
+    ],
+    "pivot": [
+      128,
+      0
+    ],
+    "source": "forest-features-01.png",
+    "sha256": "47d52d40aff9c69cc6b02531cd257b920cb3814a8cbaab6b2d9c64ed03932e4c"
+  },
+  "feature-nest": {
+    "file": "feature-nest.png",
+    "size": [
+      256,
+      208
+    ],
+    "pivot": [
+      128,
+      0
+    ],
+    "source": "forest-features-01.png",
+    "sha256": "57258b70b45110430037e4571990438ba53863d98be7c9c74efe5e374d771313"
+  },
+  "feature-cliff": {
+    "file": "feature-cliff.png",
+    "size": [
+      384,
+      288
+    ],
+    "pivot": [
+      192,
+      0
+    ],
+    "source": "forest-features-01.png",
+    "sha256": "43792350ea997ba7e7d0bc117f7230b654793ae3b02a984a81f72b1b05c83bba"
+  },
+  "fern-a": {
+    "file": "fern-a.png",
+    "size": [
+      66,
+      58
+    ],
+    "pivot": [
+      33,
+      0
+    ],
+    "source": "forest-understory-01.png",
+    "sha256": "11dd175e49d867657039daccff70876548136b2f44988323659b7d6ed6253ecb"
+  },
+  "broadleaf-a": {
+    "file": "broadleaf-a.png",
+    "size": [
+      73,
+      52
+    ],
+    "pivot": [
+      36,
+      0
+    ],
+    "source": "forest-understory-01.png",
+    "sha256": "c01828a2f1c02cf9b9e8c5d64aee14f8d13b2239af0f4d080e1d2a9c246c32c6"
+  },
+  "fern-b": {
+    "file": "fern-b.png",
+    "size": [
+      73,
+      57
+    ],
+    "pivot": [
+      36,
+      0
+    ],
+    "source": "forest-understory-01.png",
+    "sha256": "057786d7ce6f21218cbe906c264a94627a9cffe95822c95310c3cbf8207ff595"
+  },
+  "broadleaf-b": {
+    "file": "broadleaf-b.png",
+    "size": [
+      68,
+      56
+    ],
+    "pivot": [
+      34,
+      0
+    ],
+    "source": "forest-understory-01.png",
+    "sha256": "8923a6dcb4b49ac92c0e7803a2868097390cb5b8d44c84bcee9e9a59ed362054"
+  },
+  "bush-a": {
+    "file": "bush-a.png",
+    "size": [
+      83,
+      64
+    ],
+    "pivot": [
+      41,
+      0
+    ],
+    "source": "forest-understory-01.png",
+    "sha256": "172870e6c69b156832add1ef9df6d475d75119e0a3724ffb884618f7f563c489"
+  },
+  "bush-b": {
+    "file": "bush-b.png",
+    "size": [
+      80,
+      70
+    ],
+    "pivot": [
+      40,
+      0
+    ],
+    "source": "forest-understory-01.png",
+    "sha256": "b7b4347b8db0326cd2cac3b9824cc0e158cf1fca4c3e2379a5d8f3c0666c0b70"
+  },
+  "bush-c": {
+    "file": "bush-c.png",
+    "size": [
+      70,
+      66
+    ],
+    "pivot": [
+      35,
+      0
+    ],
+    "source": "forest-understory-01.png",
+    "sha256": "c85fca721131d1fd2e6f682209933b11d39a338f6293bc498c80bb4214d75d33"
+  },
+  "bush-d": {
+    "file": "bush-d.png",
+    "size": [
+      76,
+      64
+    ],
+    "pivot": [
+      38,
+      0
+    ],
+    "source": "forest-understory-01.png",
+    "sha256": "b5792d4c85c49e068c1441d3112a1f4f3420f446f24f2cf45e7c373efe26e017"
+  },
+  "bush-e": {
+    "file": "bush-e.png",
+    "size": [
+      74,
+      61
+    ],
+    "pivot": [
+      37,
+      0
+    ],
+    "source": "forest-understory-01.png",
+    "sha256": "e4ec696aa398193e90043d4de6b4a656157c2df9a2e37886de330d98d14c94bd"
+  },
+  "bush-f": {
+    "file": "bush-f.png",
+    "size": [
+      72,
+      60
+    ],
+    "pivot": [
+      36,
+      0
+    ],
+    "source": "forest-understory-01.png",
+    "sha256": "e3631e3399d92c32a23281ed54a58cc01046df336f0165f17dd8790fc0cacdce"
+  },
+  "bush-g": {
+    "file": "bush-g.png",
+    "size": [
+      77,
+      61
+    ],
+    "pivot": [
+      38,
+      0
+    ],
+    "source": "forest-understory-01.png",
+    "sha256": "32fb4168004cc166e82e7ef0637c1e0d2f4941a0feaee809a7dd51fa3c5d7566"
+  },
+  "bush-h": {
+    "file": "bush-h.png",
+    "size": [
+      70,
+      61
+    ],
+    "pivot": [
+      35,
+      0
+    ],
+    "source": "forest-understory-01.png",
+    "sha256": "9870794a74df95413a872adbfcee5aa00275878cdeba899561b12016f717a367"
+  },
+  "flower-white-a": {
+    "file": "flower-white-a.png",
+    "size": [
+      40,
+      35
+    ],
+    "pivot": [
+      20,
+      0
+    ],
+    "source": "forest-understory-01.png",
+    "sha256": "71513de9975a08ec91ac33a6f5d45da02223b506dfa69a14b2260248d60f52be"
+  },
+  "flower-yellow-a": {
+    "file": "flower-yellow-a.png",
+    "size": [
+      37,
+      31
+    ],
+    "pivot": [
+      18,
+      0
+    ],
+    "source": "forest-understory-01.png",
+    "sha256": "a269ca25e78784b6dcd67c2f55bcc7b8154d0feae4bc9ff497e917f0991af16f"
+  },
+  "flower-pink-a": {
+    "file": "flower-pink-a.png",
+    "size": [
+      38,
+      34
+    ],
+    "pivot": [
+      19,
+      0
+    ],
+    "source": "forest-understory-01.png",
+    "sha256": "b5349d216c39cbe73ef65a4244dad20b3bd89b3794a08088502e4cfd70014797"
+  },
+  "flower-white-b": {
+    "file": "flower-white-b.png",
+    "size": [
+      44,
+      36
+    ],
+    "pivot": [
+      22,
+      0
+    ],
+    "source": "forest-understory-01.png",
+    "sha256": "1fc027d0a72075404ac4c7e335c7b2ec4044d2db4b3e7850850344539b4aabc4"
+  },
+  "flower-yellow-b": {
+    "file": "flower-yellow-b.png",
+    "size": [
+      37,
+      33
+    ],
+    "pivot": [
+      18,
+      0
+    ],
+    "source": "forest-understory-01.png",
+    "sha256": "233cbaa1edbaf4b2926eec9a4d4b04fbd532a0b4b590699cd0575f89c2287b25"
+  },
+  "flower-pink-b": {
+    "file": "flower-pink-b.png",
+    "size": [
+      42,
+      35
+    ],
+    "pivot": [
+      21,
+      0
+    ],
+    "source": "forest-understory-01.png",
+    "sha256": "3313176a56947d9e772be210078ffc9ab71fa803abc4b4a981d3498f99f3f8e7"
+  },
+  "boulder-a": {
+    "file": "boulder-a.png",
+    "size": [
+      66,
+      50
+    ],
+    "pivot": [
+      33,
+      0
+    ],
+    "source": "forest-understory-01.png",
+    "sha256": "88b14c0cce2cfc6ff5315e476829c52cf45213213c5b0d95c74bd542dd41c853"
+  },
+  "boulder-b": {
+    "file": "boulder-b.png",
+    "size": [
+      65,
+      49
+    ],
+    "pivot": [
+      32,
+      0
+    ],
+    "source": "forest-understory-01.png",
+    "sha256": "61f602c95c6e4d54196c3a847f01f2fb6c9190e5fbf322b5919afcca36c77213"
+  },
+  "boulder-c": {
+    "file": "boulder-c.png",
+    "size": [
+      64,
+      58
+    ],
+    "pivot": [
+      32,
+      0
+    ],
+    "source": "forest-understory-01.png",
+    "sha256": "d2c025026df3cb524885c11f1b031aa30323ec92d6b9702c4a6be70f2bcb18d9"
+  },
+  "stones-a": {
+    "file": "stones-a.png",
+    "size": [
+      37,
+      25
+    ],
+    "pivot": [
+      18,
+      0
+    ],
+    "source": "forest-understory-01.png",
+    "sha256": "6a3ff8480633d58d314bdac8f02f9f8af1cd679ee6f8c2936d7468a0ee63f339"
+  },
+  "pebbles-a": {
+    "file": "pebbles-a.png",
+    "size": [
+      34,
+      19
+    ],
+    "pivot": [
+      17,
+      0
+    ],
+    "source": "forest-understory-01.png",
+    "sha256": "11e6c555fa7b538b3a80c5189158d5226f6f211d21c462d753ca73a3f66951be"
+  },
+  "pebbles-b": {
+    "file": "pebbles-b.png",
+    "size": [
+      31,
+      16
+    ],
+    "pivot": [
+      15,
+      0
+    ],
+    "source": "forest-understory-01.png",
+    "sha256": "815037a22493afc3f3890279bda4e837bc3eff668c4ef367d1d0611eea8b3b9f"
+  },
+  "tallgrass-a": {
+    "file": "tallgrass-a.png",
+    "size": [
+      49,
+      54
+    ],
+    "pivot": [
+      24,
+      0
+    ],
+    "source": "forest-understory-01.png",
+    "sha256": "ff7c6f780c4a65d288353c3ac8c591f0f4d88a3024cfcbc60d68f53b4e92bb8a"
+  },
+  "tallgrass-b": {
+    "file": "tallgrass-b.png",
+    "size": [
+      62,
+      56
+    ],
+    "pivot": [
+      31,
+      0
+    ],
+    "source": "forest-understory-01.png",
+    "sha256": "c6fd2f0059728950aa3bbd5d1f9a563383d23856d0984ce402daf8b7d5263dd0"
+  },
+  "tallgrass-c": {
+    "file": "tallgrass-c.png",
+    "size": [
+      42,
+      43
+    ],
+    "pivot": [
+      21,
+      0
+    ],
+    "source": "forest-understory-01.png",
+    "sha256": "53d0053d4a6984f2154751139adfba8601d3e645229c1944fd83abaf258da7f6"
+  },
+  "tuft-a": {
+    "file": "tuft-a.png",
+    "size": [
+      29,
+      22
+    ],
+    "pivot": [
+      14,
+      0
+    ],
+    "source": "forest-understory-01.png",
+    "sha256": "91fb5005b455847d5b2327abcffbbc00fe8a9c53cfcaf87f217947e2a9a28606"
+  },
+  "tuft-b": {
+    "file": "tuft-b.png",
+    "size": [
+      20,
+      17
+    ],
+    "pivot": [
+      10,
+      0
+    ],
+    "source": "forest-understory-01.png",
+    "sha256": "4c32afa145b1b5db32920a5a11768d5b702fcf792bf4a264e0a981ede4300157"
+  },
+  "tuft-c": {
+    "file": "tuft-c.png",
+    "size": [
+      17,
+      14
+    ],
+    "pivot": [
+      8,
+      0
+    ],
+    "source": "forest-understory-01.png",
+    "sha256": "f3e8e5ca0b2ad102aa3d05bc469f3cd33e66d546522e82d62b732442df59cd14"
+  }
+}

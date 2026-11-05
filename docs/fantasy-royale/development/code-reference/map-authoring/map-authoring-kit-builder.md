@@ -1,6 +1,12 @@
 # MapAuthoringKitBuilder
 
-状態: **v4.3実装・Unity Rebuild / Validator / EditMode Test成功**
+現行状態: **ForestRestartへの互換入口**。`RebuildCompleteKit()`と`CaptureSamplePreview()`は`ForestRestartAssetBuilder.BuildCompleteKit()`へ委譲する。素材、Seed付きPlan、Scene、検査の現行契約は[森林素材再制作Kit](../../../design-docs/map-authoring/forest-restart-kit.md)を参照する。旧Atlasと関連生成物は撤去済みで、Renderer2DやProject設定を変更する旧責務は持たない。
+
+## 履歴: 旧v4.3実装
+
+以下は移行前の詳細記録であり、旧Asset path、205Sprite契約、数量、Test結果を現行実装へ適用しない。
+
+旧状態: **v4.3実装・Unity Rebuild / Validator / EditMode Test成功**
 
 ## 役割
 

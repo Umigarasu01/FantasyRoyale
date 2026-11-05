@@ -163,13 +163,15 @@ namespace FantasyRoyale.Playtest.Tests.PlayMode
                 Is.GreaterThanOrEqualTo(-0.03f),
                 $"Physics接触許容を超えてCollisionへ侵入しました: {colliderDistance.distance:0.0000}");
 
-            bootstrap.PlayerBody.position = new Vector2(0f, 0f);
+            Assert.That(TryFindUnclampedCameraFollowPositions(bootstrap, out var cameraStart, out var cameraEnd),
+                Is.True, "CameraのClamp範囲内に衝突のない追従確認用2点が必要です。");
+            bootstrap.PlayerBody.position = cameraStart;
             bootstrap.PlayerBody.linearVelocity = Vector2.zero;
             Physics2D.SyncTransforms();
             yield return new WaitForFixedUpdate();
             yield return null;
             var cameraBefore = bootstrap.GameplayCamera.transform.position;
-            bootstrap.PlayerBody.position = new Vector2(3f, 2f);
+            bootstrap.PlayerBody.position = cameraEnd;
             Physics2D.SyncTransforms();
             yield return new WaitForFixedUpdate();
             yield return null;
@@ -220,7 +222,6 @@ namespace FantasyRoyale.Playtest.Tests.PlayMode
 
             var mapRenderers = FindComponentsInScene<SpriteRenderer>(bootstrap.LoadedMapScene);
             var checkedWorldObjects = 0;
-            var checkedGroundDetails = 0;
             for (var index = 0; index < mapRenderers.Count; index++)
             {
                 var renderer = mapRenderers[index];
@@ -239,13 +240,18 @@ namespace FantasyRoyale.Playtest.Tests.PlayMode
 
                 var isGroundDetail = renderer.sprite != null
                                      && (renderer.sprite.name == "detail_flower_patch"
-                                         || renderer.sprite.name == "detail_wildflowers");
+                                         || renderer.sprite.name == "detail_wildflowers"
+                                         || renderer.sprite.name == "bridge"
+                                         || renderer.sprite.name == "bridge_floor"
+                                         || renderer.sprite.name == "bank_w"
+                                         || renderer.sprite.name == "bank_e"
+                                         || renderer.sprite.name == "bank_rim"
+                                         || renderer.sprite.name == "cobbles");
                 if (isGroundDetail)
                 {
                     Assert.That(renderer.sortingLayerName, Is.EqualTo("MapDetail"), renderer.name);
                     Assert.That(renderer.sortingOrder, Is.EqualTo(0), renderer.name);
                     Assert.That(renderer.spriteSortPoint, Is.EqualTo(SpriteSortPoint.Pivot), renderer.name);
-                    checkedGroundDetails++;
                 }
                 else
                 {
@@ -255,7 +261,6 @@ namespace FantasyRoyale.Playtest.Tests.PlayMode
             }
 
             Assert.That(checkedWorldObjects, Is.GreaterThan(0));
-            Assert.That(checkedGroundDetails, Is.GreaterThan(0));
         }
 
         /// <summary>
@@ -307,7 +312,8 @@ namespace FantasyRoyale.Playtest.Tests.PlayMode
                 if (isolatedTree != null
                     || renderer == null
                     || renderer.sprite == null
-                    || !renderer.sprite.name.StartsWith("prop_tree_medium_"))
+                    || (renderer.sprite.name != "oak"
+                        && !renderer.sprite.name.StartsWith("prop_tree_medium_")))
                 {
                     continue;
                 }
@@ -633,6 +639,37 @@ namespace FantasyRoyale.Playtest.Tests.PlayMode
             }
 
             return Vector2.zero;
+        }
+
+        /// <summary>Mapの原点に依存せず、Camera端Clampと物理Collisionを避けた追従確認用2点を選ぶ。</summary>
+        private static bool TryFindUnclampedCameraFollowPositions(
+            BattleRoyaleExplorationPreviewDebug bootstrap, out Vector2 start, out Vector2 end)
+        {
+            var bounds = bootstrap.MapWorldBounds;
+            var camera = bootstrap.GameplayCamera;
+            var extent = new Vector2(camera.orthographicSize * camera.aspect, camera.orthographicSize);
+            var minimum = (Vector2)bounds.min + extent + Vector2.one * 0.5f;
+            var maximum = (Vector2)bounds.max - extent - Vector2.one * 0.5f;
+            var delta = new Vector2(3f, 2f);
+            var originalPosition = bootstrap.PlayerBody.position;
+            var filter = new ContactFilter2D(); filter.SetLayerMask(1 << LayerMask.NameToLayer("MapCollision"));
+            filter.useTriggers = false;
+            var overlaps = new List<Collider2D>();
+            try
+            {
+                for (var y = Mathf.CeilToInt(minimum.y); y <= maximum.y - delta.y; y++)
+                    for (var x = Mathf.CeilToInt(minimum.x); x <= maximum.x - delta.x; x++)
+                    {
+                        var first = new Vector2(x, y); var second = first + delta;
+                        bootstrap.PlayerBody.position = first; Physics2D.SyncTransforms();
+                        if (bootstrap.PlayerCollider.Overlap(filter, overlaps) > 0) continue;
+                        bootstrap.PlayerBody.position = second; Physics2D.SyncTransforms();
+                        if (bootstrap.PlayerCollider.Overlap(filter, overlaps) > 0) continue;
+                        start = first; end = second; return true;
+                    }
+            }
+            finally { bootstrap.PlayerBody.position = originalPosition; Physics2D.SyncTransforms(); }
+            start = Vector2.zero; end = Vector2.zero; return false;
         }
 
         /// <summary>

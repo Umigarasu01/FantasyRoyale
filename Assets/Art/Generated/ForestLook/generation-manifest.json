@@ -1,0 +1,27 @@
+{
+  "status": "candidate",
+  "generated": "2026-11-05",
+  "file": "river-bank-s-curve-01.png",
+  "sha256": "8a8bd5c9b917adf95048fe93bce03e230958a77b1433aaee623dc92cfe77a65f",
+  "bytes": 2846786,
+  "endpoint": "POST https://api.openai.com/v1/images/edits",
+  "model": "gpt-image-2",
+  "size": "1536x1024",
+  "quality": "high",
+  "n": 1,
+  "reference": "approved-reference.png crop (778,124,1526,520), panel 02 without its label",
+  "usage": {
+    "input_tokens": 937,
+    "input_tokens_details": {
+      "image_tokens": 544,
+      "text_tokens": 393
+    },
+    "output_tokens": 5488,
+    "output_tokens_details": {
+      "image_tokens": 5488,
+      "text_tokens": 0
+    },
+    "total_tokens": 6425
+  },
+  "prompt": "Create ONE NEW pixel-art river asset for a top-down 2D fantasy game. Image 1 is the approved reference. Use it strictly for pixel-art style, scale, palette and lighting. This is a new composition, not a collage of the reference.\n\nSubject: a single river that forms a clear S-curve from the top edge to the bottom edge of the canvas. It starts at the top, bends right, then bends left, and exits at the bottom, so the picture contains a straight stretch, an inner bend and an outer bend on both banks. Keep the river about the same width as in the reference, roughly one fifth of the canvas width, and keep that width consistent.\n\nBanks: match the reference closely. Eroded brown earth with irregular crumbling steps, darker undercut shadow at the waterline, small roots and pebbles, a few low grass clumps hanging over the edge, a few reeds and small mossy rocks placed only on the banks. The bank band should stay narrow and continuous along both sides of the whole river, and its shape must follow the curve naturally, with no repeated stamp pattern.\n\nWater: the same deep saturated blue as the reference, with subtle darker patches and a few tiny white ripple lines.\n\nLand beyond the banks: quiet low olive-green grass only, calm and mostly empty, so the bank can be separated from it later.\n\nSame oblique overhead view, light from the top left, crisp irregular one-pixel steps, connected colour masses. The art must be fully opaque and fill the canvas edge to edge.\n\nDo not include: trees, tree canopies, bridges, buildings, roads, paths, characters, animals, flowers beds, text, labels, panels, borders, margins, watermark, horizon. No soft gradients, airbrush, blur, painterly rendering, post-processed mosaic, mirrored repetition or tiled pattern. Output the single new artwork only."
+}

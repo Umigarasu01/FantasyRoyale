@@ -1,6 +1,12 @@
 # GbaMapSpritePostprocessor
 
-状態: **v4.3実装・Import / Validator / EditMode Test検証済み**
+現行状態: **ForestRestartの表示PNG専用Import**。`Assets/Art/Map/ForestRestart/Sprites/`だけを対象とし、Single Sprite、PPU32、Point、非圧縮、Mipmap Off、整数pixelのFoot Pivotを適用する。Source、Concept、QAは変更しない。現行の素材生成・検査は[森林素材再制作Kit](../../../design-docs/map-authoring/forest-restart-kit.md)を参照する。
+
+## 履歴: 旧v4.3の単一Atlas Import
+
+以下は移行前の記録。旧Atlas/Catalogは撤去済みで、Multiple Spriteと205named Spriteの契約は現行Loose PNGへ適用しない。
+
+旧状態: **v4.3実装・Import / Validator / EditMode Test検証済み**
 
 ## 役割
 

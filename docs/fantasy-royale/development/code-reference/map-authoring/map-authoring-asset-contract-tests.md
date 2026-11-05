@@ -1,6 +1,12 @@
 # MapAuthoringAssetContractTests
 
-状態: **v4.3 + Event Step 2 Test実装 / Unity EditMode検証済み**
+現行状態: **ForestRestartの実PNG / Import / Tile / Scene契約を検証**。76SpriteのImport、Grass対向辺、道路接続と透明穴、ObjectのalphaとFoot Pivot、3Tile / 4Prefab、Scene保存済み判定などを確認する。Seed付きPlanの検査は`ForestRestartLayoutTests`へ分離する。現行範囲と実行入口は[森林素材再制作Kit](../../../design-docs/map-authoring/forest-restart-kit.md)を参照する。
+
+## 履歴: 旧v4.3とEvent Step2のTest
+
+以下は移行前のTest構成・実行結果。旧Atlas契約と旧Test件数を現在のSuiteへ流用しない。
+
+旧状態: **v4.3 + Event Step 2 Test実装 / Unity EditMode検証済み**
 
 ## 役割
 

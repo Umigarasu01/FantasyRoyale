@@ -163,4 +163,27 @@ x86/
 RuneBoardTacticsVault/.obsidian/plugins
 RuneBoardTacticsVault/.obsidian/app.json
 *.json
+!Assets/Art/Concept/style-comparison-2026-10-03/generation-manifest.json
+!Assets/Art/Map/ForestRestart/generation-manifest.json
+!Assets/Art/Map/ForestRestart/QA/*.json
 debug.log
+
+# Forest map inputs and generation records
+!Assets/Art/Generated/ForestLook/*.json
+!Assets/Art/Generated/ForestLook/Parts/parts.json
+!Assets/NemoBlocks/Resources/*.json
+!Tools/MapAuthoring/Inputs/*.json
+
+# Prototype output kept on disk only
+/Assets/NemoBlocks/Scenes/
+/Assets/NemoBlocks/Scenes.meta
+/Assets/NemoBlocks/Generated/
+/Assets/NemoBlocks/Generated.meta
+/Assets/Art/Map/OverheadStudyA/
+/Assets/Art/Map/OverheadStudyA.meta
+/Assets/Scenes/MapAuthoring/OverheadStudyA/
+/Assets/Scenes/MapAuthoring/OverheadStudyA.meta
+/Assets/_Recovery/
+/Assets/_Recovery.meta
+/NemoValidation/
+/NemoValidationV6/

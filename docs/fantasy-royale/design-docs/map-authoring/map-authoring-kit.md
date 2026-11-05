@@ -1,5 +1,7 @@
 # Map Authoring Kit
 
+2026-10-03の仕切り直し依頼により、素材とReference配置は[森林素材再制作Kit](forest-restart-kit.md)へ移行する。以下のv4.3 Asset数・Atlas・旧素材Path・96x72配置は過去の実装記録であり、新Kitへ適用しない。Scene正本、表示と接地判定の分離、Event/Character基盤は引き継ぐ。
+
 ## 結論
 
 FantasyRoyaleの固定マップは、Unity標準のTilemap、Prefab、Scene Templateを使って制作する。v4.3では、地形判定を不可視Grid、木などの接地判定を表示とは別の子Collider、装飾と障害物の見た目を自由配置Prefabへ分離し、地面と道端の反復抑制をTile Asset内の決定的な差分選択へ委ねる。

@@ -1,0 +1,26 @@
+{
+  "status": "candidate",
+  "file": "forest-trees-01.png",
+  "sha256": "8f5a6cf97960e78c3e6b10e378520fd45565e7d7d8435abc92d65f3961cfdd89",
+  "bytes": 1765494,
+  "endpoint": "POST https://api.openai.com/v1/images/edits",
+  "model": "gpt-image-2",
+  "size": "1536x1024",
+  "quality": "high",
+  "n": 1,
+  "reference": "approved-reference.png crop (930, 536, 1526, 800)",
+  "usage": {
+    "input_tokens": 810,
+    "input_tokens_details": {
+      "image_tokens": 480,
+      "text_tokens": 330
+    },
+    "output_tokens": 5488,
+    "output_tokens_details": {
+      "image_tokens": 5488,
+      "text_tokens": 0
+    },
+    "total_tokens": 6298
+  },
+  "prompt": "Create ONE NEW sprite sheet of six separate forest trees for a top-down 2D fantasy game, arranged in two rows of three, using image 1 only as the style reference.\n\nEach tree has a full rounded leafy crown, a visible brown trunk with small roots at its base, and nothing else. Match the size of the trees in the reference: each crown is about 200 pixels wide and each tree about 260 pixels tall. Make the six trees clearly different: a broad round oak, a taller upright tree, a tree with a split double crown, a smaller young tree, a wide low tree, and a dense dark tree. Their crowns use the deep green leaf clusters of the reference with dark teal shadow pockets and small lime highlights on the upper left.\n\nThe background must be one completely flat solid pure magenta colour, RGB 255,0,255, with no shading, no gradient, no ground, no cast shadow and no texture. Keep clear magenta space around every item so that no two items touch, and keep every item fully inside the canvas.\n\nMatch the reference for pixel-art style, palette and lighting: oblique overhead view, light from the top left, crisp irregular one-pixel steps, connected colour masses, dark green-blue shadow clusters, restrained lime highlights. This is a new sprite sheet, not a collage of the reference.\n\nDo not include: text, labels, numbers, grid lines, panels, borders, watermark, characters, animals, buildings, water, roads. No soft gradients, airbrush, blur, painterly rendering, post-processed mosaic or mirrored duplicates."
+}

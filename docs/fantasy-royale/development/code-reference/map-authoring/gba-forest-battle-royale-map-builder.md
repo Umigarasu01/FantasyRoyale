@@ -1,5 +1,11 @@
 # GbaForestBattleRoyaleMapBuilder
 
+現行状態: **ForestRestartへの互換入口**。`BuildReferenceMap()`は新素材の生成後、`ForestRestartAssetBuilder.DefaultSeed`から同じReference Scene path/GUIDへ48x32Mapを保存する。`CaptureReferencePreviews()`は新Kit全体の生成・4Scene撮影へ委譲する。詳細は[森林素材再制作Kit](../../../design-docs/map-authoring/forest-restart-kit.md)を参照する。本番ランダム地形の採用を意味しない。
+
+## 履歴: 旧v4.3の96x72生成
+
+以下は旧固定Mapの実装記録。旧素材・QAは撤去済みで、Waypoint、数量、画像pathを現在のForestRestartへ適用しない。
+
 ## 役割
 
 `GbaForestBattleRoyaleMapBuilder`は、既存のMap Authoring Kitだけを使い、96x72の森・草原バトロワ基準Mapを決定的に再生成するEditor専用Builder。

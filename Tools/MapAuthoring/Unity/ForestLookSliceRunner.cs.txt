@@ -1,0 +1,397 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+using UnityEditor;
+using UnityEditor.SceneManagement;
+using UnityEngine;
+using Debug = UnityEngine.Debug;
+
+/// <summary>
+/// Builds the fixed forest map as a scene, walks a capsule through it with real 2D physics,
+/// and saves screen captures. For the validation project only.
+/// </summary>
+public static class ForestLookSliceRunner
+{
+    const string Root = "Assets/ForestLookSlice";
+    const float Ppu = 64f;
+    const float MoveSpeed = 5f;
+    const float CameraHeight = 8f;
+    const float Step = 0.02f;
+
+    [Serializable] class SliceObject { public string part; public int x; public int y; public int sort; public string kind; }
+    [Serializable] class Tile { public string file; public int x; public int y; }
+    [Serializable] class SpriteInfo { public string name; public float pivotX; public float pivotY; }
+    [Serializable] class BridgeInfo { public float x; public float y; }
+    [Serializable] class View { public string name; public float x; public float y; }
+    [Serializable]
+    class SliceData
+    {
+        public int[] size;
+        public float[] origin;
+        public Tile[] tiles;
+        public SpriteInfo[] sprites;
+        public BridgeInfo[] bridges;
+        public View[] views;
+        public float[] depthTree;
+        public SliceObject[] objects;
+    }
+    [Serializable] class Box { public float x; public float y; public float w; public float h; }
+    [Serializable] class CollisionData { public Box[] rects; }
+    [Serializable] class RouteLine { public string name; public float[] flat; }
+    [Serializable] class BlockTest { public string name; public float[] start; public float[] goal; public float seconds; }
+    [Serializable] class RouteList { public RouteLine[] routes; public BlockTest[] blocked; }
+
+    [Serializable] class Route { public string name; public Vector2 start; public Vector2 target; public Vector2 end; public bool reached; public float distance; public string expected; public bool passed; }
+    [Serializable]
+    class Report
+    {
+        public string unity;
+        public int objects;
+        public int colliders;
+        public int renderers;
+        public float cameraHeight;
+        public int routesPassed;
+        public int routesTotal;
+        public List<Route> routes = new List<Route>();
+        public List<string> captures = new List<string>();
+    }
+
+    static float mapTop;
+    static float mapLeft;
+
+    static Vector2 ToWorld(float px, float py) => new Vector2(mapLeft + px / Ppu, mapTop - py / Ppu);
+
+    public static void Run()
+    {
+        var outDir = Environment.GetEnvironmentVariable("FOREST_LOOK_OUT");
+        Directory.CreateDirectory(outDir);
+        int exitCode = 0;
+        try
+        {
+            Execute(outDir);
+        }
+        catch (Exception error)
+        {
+            File.WriteAllText(Path.Combine(outDir, "failure.txt"), error.ToString());
+            Debug.LogException(error);
+            exitCode = 1;
+        }
+        finally
+        {
+            Physics2D.simulationMode = SimulationMode2D.FixedUpdate;
+            AssetDatabase.SaveAssets();
+        }
+
+        EditorApplication.Exit(exitCode);
+    }
+
+    static void Import(string path, Vector2 pivot)
+    {
+        var importer = (TextureImporter)AssetImporter.GetAtPath(path);
+        importer.textureType = TextureImporterType.Sprite;
+        importer.spriteImportMode = SpriteImportMode.Single;
+        importer.spritePixelsPerUnit = Ppu;
+        importer.filterMode = FilterMode.Point;
+        importer.textureCompression = TextureImporterCompression.Uncompressed;
+        importer.mipmapEnabled = false;
+        importer.maxTextureSize = 4096;
+        importer.alphaIsTransparency = true;
+        var settings = new TextureImporterSettings();
+        importer.ReadTextureSettings(settings);
+        settings.spriteAlignment = (int)SpriteAlignment.Custom;
+        settings.spritePivot = pivot;
+        settings.spriteMeshType = SpriteMeshType.FullRect;
+        importer.SetTextureSettings(settings);
+        importer.SaveAndReimport();
+    }
+
+    static void Execute(string outDir)
+    {
+        AssetDatabase.Refresh();
+        var data = JsonUtility.FromJson<SliceData>(File.ReadAllText(Root + "/objects.json"));
+        var collision = JsonUtility.FromJson<CollisionData>(File.ReadAllText(Root + "/collision.json"));
+        var routeList = JsonUtility.FromJson<RouteList>(File.ReadAllText(Root + "/routes.json"));
+        mapLeft = data.origin[0];
+        mapTop = data.origin[1] + data.size[1] / Ppu;
+
+        var sprites = new Dictionary<string, Sprite>();
+        AssetDatabase.StartAssetEditing();
+        try
+        {
+            foreach (var tile in data.tiles)
+            {
+                Import(Root + "/" + tile.file, new Vector2(0f, 1f));
+            }
+
+            foreach (var info in data.sprites)
+            {
+                Import(Root + "/Parts/" + info.name + ".png", new Vector2(info.pivotX, info.pivotY));
+            }
+        }
+        finally
+        {
+            AssetDatabase.StopAssetEditing();
+        }
+
+        foreach (var info in data.sprites)
+        {
+            sprites[info.name] = AssetDatabase.LoadAssetAtPath<Sprite>(Root + "/Parts/" + info.name + ".png");
+        }
+
+        EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
+        var material = AssetDatabase.GetBuiltinExtraResource<Material>("Sprites-Default.mat");
+        int renderers = 0;
+
+        var baseMap = new GameObject("BaseMap").transform;
+        foreach (var tile in data.tiles)
+        {
+            var ground = new GameObject(tile.file).AddComponent<SpriteRenderer>();
+            ground.transform.SetParent(baseMap, false);
+            ground.sprite = AssetDatabase.LoadAssetAtPath<Sprite>(Root + "/" + tile.file);
+            ground.sharedMaterial = material;
+            ground.sortingOrder = -30000;
+            ground.transform.position = ToWorld(tile.x, tile.y);
+            renderers++;
+        }
+
+        var solid = new GameObject("Collision");
+        int colliders = 0;
+        foreach (var box in collision.rects)
+        {
+            var collider = solid.AddComponent<BoxCollider2D>();
+            collider.offset = ToWorld(box.x + box.w / 2f, box.y + box.h / 2f);
+            collider.size = new Vector2(box.w / Ppu, box.h / Ppu);
+            colliders++;
+        }
+
+        float width = data.size[0] / Ppu, height = data.size[1] / Ppu;
+        foreach (var edge in new[]
+        {
+            new Rect(mapLeft - 1f, mapTop - height, 1f, height), new Rect(mapLeft + width, mapTop - height, 1f, height),
+            new Rect(mapLeft, mapTop, width, 1f), new Rect(mapLeft, mapTop - height - 1f, width, 1f),
+        })
+        {
+            var collider = solid.AddComponent<BoxCollider2D>();
+            collider.offset = edge.center;
+            collider.size = edge.size;
+            colliders++;
+        }
+
+        var objectsRoot = new GameObject("Objects").transform;
+        foreach (var item in data.objects)
+        {
+            if (!sprites.TryGetValue(item.part, out var sprite) || sprite == null)
+            {
+                throw new InvalidOperationException("Missing sprite " + item.part);
+            }
+
+            var renderer = new GameObject(item.part).AddComponent<SpriteRenderer>();
+            renderer.transform.SetParent(objectsRoot, false);
+            renderer.transform.position = ToWorld(item.x, item.y);
+            renderer.sprite = sprite;
+            renderer.sharedMaterial = material;
+            renderer.sortingOrder = item.sort - 8000;
+            renderers++;
+        }
+
+        var hero = new GameObject("Hero");
+        var heroRenderer = hero.AddComponent<SpriteRenderer>();
+        heroRenderer.sprite = sprites["hero_idle"];
+        heroRenderer.sharedMaterial = material;
+        var body = hero.AddComponent<Rigidbody2D>();
+        body.gravityScale = 0f;
+        body.freezeRotation = true;
+        body.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
+        var capsule = hero.AddComponent<CapsuleCollider2D>();
+        capsule.size = new Vector2(0.48f, 0.55f);
+        capsule.offset = new Vector2(0f, 0.22f);
+
+        var cameraObject = new GameObject("Camera");
+        var camera = cameraObject.AddComponent<Camera>();
+        camera.orthographic = true;
+        camera.orthographicSize = CameraHeight / 2f;
+        camera.backgroundColor = Color.black;
+        camera.clearFlags = CameraClearFlags.SolidColor;
+        var target = new RenderTexture(1820, 1024, 24, RenderTextureFormat.ARGB32);
+        camera.targetTexture = target;
+
+        Physics2D.simulationMode = SimulationMode2D.Script;
+        var report = new Report
+        {
+            unity = Application.unityVersion, objects = data.objects.Length, colliders = colliders, renderers = renderers,
+            cameraHeight = CameraHeight,
+        };
+
+        void Place(Vector2 position)
+        {
+            body.position = position;
+            hero.transform.position = position;
+            body.linearVelocity = Vector2.zero;
+            Physics2D.SyncTransforms();
+        }
+
+        void Frame()
+        {
+            heroRenderer.sortingOrder = Mathf.RoundToInt((mapTop - hero.transform.position.y) * Ppu) - 8000;
+            var half = new Vector2(CameraHeight / 2f * 1820f / 1024f, CameraHeight / 2f);
+            var position = (Vector2)hero.transform.position;
+            position.x = Mathf.Clamp(position.x, mapLeft + half.x, mapLeft + width - half.x);
+            position.y = Mathf.Clamp(position.y, mapTop - height + half.y, mapTop - half.y);
+            cameraObject.transform.position = new Vector3(position.x, position.y, -10f);
+        }
+
+        void Capture(string name)
+        {
+            Frame();
+            camera.Render();
+            RenderTexture.active = target;
+            var texture = new Texture2D(target.width, target.height, TextureFormat.RGB24, false);
+            texture.ReadPixels(new Rect(0, 0, target.width, target.height), 0, 0);
+            texture.Apply();
+            RenderTexture.active = null;
+            File.WriteAllBytes(Path.Combine(outDir, name + ".png"), texture.EncodeToPNG());
+            UnityEngine.Object.DestroyImmediate(texture);
+            report.captures.Add(name);
+        }
+
+        void Add(string name, Vector2 start, Vector2 goal, float distance, bool reached, bool expectReach)
+        {
+            report.routes.Add(new Route
+            {
+                name = name, start = start, target = goal, end = body.position, reached = reached, distance = distance,
+                expected = expectReach ? "reach" : "blocked", passed = reached == expectReach,
+            });
+        }
+
+        void Walk(string name, Vector2 start, Vector2 goal, bool expectReach, float seconds = 8f)
+        {
+            Place(start);
+            float travelled = 0f;
+            var last = start;
+            for (float time = 0f; time < seconds; time += Step)
+            {
+                var toGoal = goal - body.position;
+                if (toGoal.magnitude < 0.08f)
+                {
+                    break;
+                }
+
+                body.linearVelocity = toGoal.normalized * MoveSpeed;
+                Physics2D.Simulate(Step);
+                hero.transform.position = body.position;
+                travelled += Vector2.Distance(last, body.position);
+                last = body.position;
+            }
+
+            body.linearVelocity = Vector2.zero;
+            Add(name, start, goal, travelled, Vector2.Distance(body.position, goal) < 0.25f, expectReach);
+        }
+
+        void Follow(string name, List<Vector2> points)
+        {
+            Place(points[0]);
+            int index = 1;
+            float travelled = 0f, stuck = 0f;
+            var last = points[0];
+            float length = 0f;
+            for (int i = 1; i < points.Count; i++)
+            {
+                length += Vector2.Distance(points[i - 1], points[i]);
+            }
+
+            for (float time = 0f; time < length / MoveSpeed * 2f + 4f && index < points.Count; time += Step)
+            {
+                var toPoint = points[index] - body.position;
+                if (toPoint.magnitude < 0.3f)
+                {
+                    index++;
+                    continue;
+                }
+
+                body.linearVelocity = toPoint.normalized * MoveSpeed;
+                Physics2D.Simulate(Step);
+                hero.transform.position = body.position;
+                float moved = Vector2.Distance(last, body.position);
+                travelled += moved;
+                last = body.position;
+                stuck = moved < 0.02f ? stuck + Step : 0f;
+                if (stuck > 0.6f)
+                {
+                    break;
+                }
+            }
+
+            body.linearVelocity = Vector2.zero;
+            Add(name, points[0], points[points.Count - 1], travelled, index >= points.Count, true);
+        }
+
+        // Bridges can be crossed both ways, and the rails hold.
+        for (int i = 0; i < data.bridges.Length; i++)
+        {
+            var bridge = ToWorld(data.bridges[i].x, data.bridges[i].y);
+            Walk("bridge-" + i + "-east", bridge + new Vector2(-6f, 0f), bridge + new Vector2(6f, 0f), true);
+            Walk("bridge-" + i + "-west", bridge + new Vector2(6f, 0f), bridge + new Vector2(-6f, 0f), true);
+            Walk("bridge-" + i + "-north-rail", bridge, bridge + new Vector2(0f, 3f), false, 2f);
+            Walk("bridge-" + i + "-south-rail", bridge, bridge + new Vector2(0f, -3f), false, 2f);
+        }
+
+        // Every road, walked along its centre line.
+        foreach (var route in routeList.routes)
+        {
+            var points = new List<Vector2>();
+            for (int i = 0; i + 1 < route.flat.Length; i += 2)
+            {
+                points.Add(new Vector2(route.flat[i], route.flat[i + 1]));
+            }
+
+            Follow(route.name, points);
+        }
+
+        // River, forest and trunks must stop the player.
+        foreach (var test in routeList.blocked)
+        {
+            Walk(test.name, new Vector2(test.start[0], test.start[1]), new Vector2(test.goal[0], test.goal[1]), false, test.seconds);
+        }
+
+        foreach (var route in report.routes)
+        {
+            report.routesTotal++;
+            report.routesPassed += route.passed ? 1 : 0;
+        }
+
+        // The first renders can run before the large textures are ready.
+        var start = new Vector2(data.views[0].x, data.views[0].y);
+        Place(start);
+        Frame();
+        for (int i = 0; i < 6; i++)
+        {
+            camera.Render();
+        }
+
+        int number = 1;
+        foreach (var view in data.views)
+        {
+            Place(new Vector2(view.x, view.y));
+            Capture(number.ToString("00") + "-" + view.name);
+            number++;
+        }
+
+        var tree = new Vector2(data.depthTree[0], data.depthTree[1]);
+        Place(tree + new Vector2(0f, 0.75f));
+        Capture(number.ToString("00") + "-behind-tree");
+        number++;
+        Place(tree + new Vector2(0f, -0.5f));
+        Capture(number.ToString("00") + "-in-front-of-tree");
+
+        File.WriteAllText(Path.Combine(outDir, "report.json"), JsonUtility.ToJson(report, true));
+        Place(start);
+        Frame();
+        camera.targetTexture = null;
+        cameraObject.tag = "MainCamera";
+        var walker = hero.AddComponent<ForestLookWalker>();
+        walker.view = camera;
+        walker.mapTop = mapTop;
+        walker.bounds = new Rect(mapLeft, mapTop - height, width, height);
+        EditorSceneManager.SaveScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene(), Root + "/ForestLookMap.unity");
+    }
+}

@@ -1,0 +1,110 @@
+[
+  {
+    "id": "watermill",
+    "file": "watermill-original.png",
+    "frame": [
+      37,
+      100,
+      1531,
+      913
+    ],
+    "size": [
+      432,
+      235
+    ],
+    "pivot": [
+      64,
+      0
+    ]
+  },
+  {
+    "id": "broken-house",
+    "file": "broken-house-original.png",
+    "frame": [
+      141,
+      89,
+      1430,
+      941
+    ],
+    "size": [
+      360,
+      238
+    ],
+    "pivot": [
+      180,
+      5
+    ]
+  },
+  {
+    "id": "mine-mouth",
+    "file": "mine-mouth-original.png",
+    "frame": [
+      73,
+      109,
+      1512,
+      919
+    ],
+    "size": [
+      260,
+      146
+    ],
+    "pivot": [
+      130,
+      4
+    ]
+  },
+  {
+    "id": "cliff-face",
+    "file": "cliff-face-original.png",
+    "frame": [
+      31,
+      57,
+      1868,
+      795
+    ],
+    "size": [
+      512,
+      206
+    ],
+    "pivot": [
+      256,
+      4
+    ]
+  },
+  {
+    "id": "cave-mouth",
+    "file": "cave-mouth-original.png",
+    "frame": [
+      42,
+      84,
+      1604,
+      888
+    ],
+    "size": [
+      288,
+      148
+    ],
+    "pivot": [
+      144,
+      4
+    ]
+  },
+  {
+    "id": "wayside-shrine",
+    "file": "wayside-shrine-original.png",
+    "frame": [
+      290,
+      71,
+      1111,
+      1076
+    ],
+    "size": [
+      144,
+      176
+    ],
+    "pivot": [
+      72,
+      4
+    ]
+  }
+]

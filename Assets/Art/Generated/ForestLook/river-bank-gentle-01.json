@@ -1,0 +1,26 @@
+{
+  "status": "candidate",
+  "file": "river-bank-gentle-01.png",
+  "sha256": "5c91b6bd1b81822158e4e4108ebd1f66c40cf840e52f570019efdc729e105e6b",
+  "bytes": 2531128,
+  "endpoint": "POST https://api.openai.com/v1/images/edits",
+  "model": "gpt-image-2",
+  "size": "1536x1024",
+  "quality": "high",
+  "n": 1,
+  "reference": "approved-reference.png crop (778, 124, 1526, 520)",
+  "usage": {
+    "input_tokens": 822,
+    "input_tokens_details": {
+      "image_tokens": 544,
+      "text_tokens": 278
+    },
+    "output_tokens": 5488,
+    "output_tokens_details": {
+      "image_tokens": 5488,
+      "text_tokens": 0
+    },
+    "total_tokens": 6310
+  },
+  "prompt": "Create ONE NEW pixel-art river asset for a top-down 2D fantasy game, using image 1 strictly for pixel-art style, scale, palette and lighting. This is a new composition, not a collage of the reference.\n\nSubject: a single calm river running from the top edge to the bottom edge of the canvas with smooth, wide, gentle curves and no sharp corners. Keep the river width constant, about one fifth of the canvas width. Both banks: eroded brown earth with irregular crumbling steps, a darker undercut at the waterline, small roots and pebbles, low grass clumps hanging over the edge, and a few reeds and small mossy rocks placed only on the banks. The bank band stays narrow and continuous and follows the curve naturally, with no repeated stamp pattern.\n\nWater: the same deep saturated blue as the reference with subtle darker patches and a few tiny white ripple lines. Land beyond the banks: quiet low green grass, the same green as the reference, calm and mostly empty.\n\nThe art must be fully opaque and fill the canvas edge to edge. Do not include: trees, bridges, buildings, roads, characters, animals, text, labels, panels, borders, watermark, horizon. No soft gradients, airbrush, blur, painterly rendering, post-processed mosaic, mirrored repetition or tiled pattern."
+}

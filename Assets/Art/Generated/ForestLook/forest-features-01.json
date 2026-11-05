@@ -1,0 +1,26 @@
+{
+  "status": "candidate",
+  "file": "forest-features-01.png",
+  "sha256": "5c35b49696c84e5c3ee26d3fd614d61a501a2a2c917c68a12144a0b9e65670a9",
+  "bytes": 2086368,
+  "endpoint": "POST https://api.openai.com/v1/images/edits",
+  "model": "gpt-image-2",
+  "size": "1536x1024",
+  "quality": "high",
+  "n": 1,
+  "reference": "approved-reference.png crop (778, 124, 1526, 520)",
+  "usage": {
+    "input_tokens": 906,
+    "input_tokens_details": {
+      "image_tokens": 544,
+      "text_tokens": 362
+    },
+    "output_tokens": 5488,
+    "output_tokens_details": {
+      "image_tokens": 5488,
+      "text_tokens": 0
+    },
+    "total_tokens": 6394
+  },
+  "prompt": "Create ONE NEW sprite sheet of four separate landmarks for a top-down 2D fantasy game, arranged in two rows of two, using image 1 only as the style reference.\n\nTop left: a small natural forest spring, a rounded pond of deep blue water with an organic irregular shoreline of brown earth, mossy rocks, reeds and ferns, about 500 pixels wide.\nTop right: a small herb garden, a low bed of dark soil edged by small stones, with neat rows of leafy herbs and a few tiny flowers, about 440 pixels wide.\nBottom left: a monster nest, a rough ring of dark twigs, roots and earth holding three large speckled eggs, about 440 pixels wide.\nBottom right: a rock cliff outcrop, a steep grey stone wall with an irregular natural outline, cracks and moss, and grass hanging over its top edge, about 560 pixels wide and 440 pixels tall.\n\nThe background must be one completely flat solid pure magenta colour, RGB 255,0,255, with no shading, no gradient, no ground, no cast shadow and no texture. Keep clear magenta space around every item so that no two items touch, and keep every item fully inside the canvas.\n\nMatch the reference for pixel-art style, palette and lighting: oblique overhead view, light from the top left, crisp irregular one-pixel steps, connected colour masses, dark green-blue shadow clusters, restrained lime highlights. This is a new sprite sheet, not a collage of the reference.\n\nDo not include: text, labels, numbers, grid lines, panels, borders, watermark, characters, animals, buildings, roads. No soft gradients, airbrush, blur, painterly rendering, post-processed mosaic or mirrored duplicates."
+}

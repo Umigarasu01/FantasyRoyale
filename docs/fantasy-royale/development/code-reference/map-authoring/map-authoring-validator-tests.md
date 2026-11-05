@@ -1,6 +1,12 @@
 # MapAuthoringValidatorTests
 
-状態: **v4.3 + Event Step 2契約 Test実装 / Unity EditMode検証済み**
+現行状態: **ForestRestart移行後の汎用Scene / Import検査Test**。Preview Sceneで標準Hierarchy、Transform、CollisionBody、描画順、Socket / Event契約を検査し、Postprocessorの対象をForestRestart表示PNGに限定するCaseへ更新した。現行Kitと`ForestRestartLayoutTests`の責務は[森林素材再制作Kit](../../../design-docs/map-authoring/forest-restart-kit.md)を参照する。
+
+## 履歴: 旧v4.3とEvent Step2のTest
+
+以下は移行前の詳細と成功数であり、旧Atlas pathとCase数を現在の検証結果として扱わない。
+
+旧状態: **v4.3 + Event Step 2契約 Test実装 / Unity EditMode検証済み**
 
 ## 役割
 

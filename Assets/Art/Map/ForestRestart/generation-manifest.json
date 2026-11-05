@@ -1,0 +1,82 @@
+{
+  "schema": "fantasyroyale.forest-restart-generation.v1",
+  "date": "2026-10-03",
+  "status": "prototype-validation-assets",
+  "method": "built-in image_gen",
+  "reference": "Assets/Art/Concept/style-comparison-2026-10-03/a-classic-adventure-texture-v005.png",
+  "scope": "Small forest-road-clearing generation proof; no automatic formal adoption",
+  "assets": [
+    {
+      "id": "grass-surface",
+      "prompt": "Use case: stylized-concept. Asset type: production-test sprite for FantasyRoyale forest restart. Input image 1 is ONLY a style reference: preserve its crafted GBA-era material finish, rich purposeful pixel clusters, dark blue-green shadows, warm yellow-green foliage and ochre earth, near-overhead RPG camera with visible front faces and upper-left illumination. Reproduce its visual language and texture quality in the requested isolated asset. Crisp stepped pixel edges, compact shade ramps, restrained charm, no soft mobile-game cartoon, no 3D render, no blur, no antialiasing, no lettering, no UI, no watermark. Create ONE seamless repeating top-down meadow grass ground texture, square full-bleed image, no perspective or horizon. Mostly medium muted yellow-green earth/grass with small purposeful tuft marks and gentle grouped mottling. Quiet enough for character readability. No large leaves, flower clusters, rocks, paths, trees, shadow of trees, objects or vignette. Uniform density at edges and middle. All four edges must tile continuously, no border. Draw at an effective 128x128 pixel grid and enlarge with crisp square pixels; each game pixel is a uniform block. Match the reference's quiet grass immediately beside the dirt path. Entire canvas opaque.",
+      "sourcePath": "C:\\Users\\umiga\\.codex\\generated_images\\01a0fdf3-547e-71e2-b851-62b2ee5429a9\\exec-6a77631f-3451-4658-94cc-9aa0775fadff.png",
+      "path": "Assets/Art/Map/ForestRestart/Source/grass-surface.png",
+      "transparentBackground": false,
+      "sha256": "0AA5FD7816AFBBA7CFE6011824BBD5AFCB6600A2326842974576130EEA7D4697",
+      "refinement": {
+        "prompt": "Use case: stylized-concept. Create a replacement seamless top-down grass ground texture for the supplied FantasyRoyale concept. The concept is the style and color reference. Square full-bleed opaque texture, no objects or terrain edges. Match its QUIET green meadow directly beside the path: medium moss green, subdued olive green, dark green grouped tufts and small warm green highlights. Avoid yellow lawn, high frequency random single-pixel noise or gravel-like speckling. About 75 percent quiet flat grouped areas, 25 percent intentionally drawn 2-6 pixel grass strokes and small tuft clusters, subtle broad mottling, low contrast. This must be readable under a small GBA character. Author at an effective 128x128 game pixel resolution with crisp uniform enlarged pixel blocks, no antialiasing or blur. All four edges seamless, uniform edge density, no vignette, no border, no trees, no flowers, no stones, no shadows or path. Color and coarse clustered marks must match the supplied concept ground, less saturated than the brightest canopy.",
+        "sourcePath": "C:\\Users\\umiga\\.codex\\generated_images\\01a0fdf3-547e-71e2-b851-62b2ee5429a9\\exec-6dc5811b-f0e1-411f-a098-dde51507739d.png",
+        "previousSha256": "E9716710830E28A39AE872276D26FC13CCAEF2EC07842139F2632F739015B5B2",
+        "reason": "Unity visual QA: reduce fine ground noise and match concept palette"
+      }
+    },
+    {
+      "id": "dirt-surface",
+      "prompt": "Use case: stylized-concept. Asset type: production-test sprite for FantasyRoyale forest restart. Input image 1 is ONLY a style reference: preserve its crafted GBA-era material finish, rich purposeful pixel clusters, dark blue-green shadows, warm yellow-green foliage and ochre earth, near-overhead RPG camera with visible front faces and upper-left illumination. Reproduce its visual language and texture quality in the requested isolated asset. Crisp stepped pixel edges, compact shade ramps, restrained charm, no soft mobile-game cartoon, no 3D render, no blur, no antialiasing, no lettering, no UI, no watermark. Create ONE seamless repeating top-down warm ochre dirt path ground texture, square full-bleed image, no perspective. Restrained small earth specks, patches of compacted soil and a few tiny pebble marks; the reference path's warm tawny low-contrast grain and clustered shade detail. No grass border, no path outline, no large stones, no footprints, no flowers or objects, no vignette. All four edges tile continuously at the same average value. Effective 128x128 grid enlarged as crisp square pixel blocks. Entire canvas opaque.",
+      "sourcePath": "C:\\Users\\umiga\\.codex\\generated_images\\01a0fdf3-547e-71e2-b851-62b2ee5429a9\\exec-1e6b132f-3f04-44ff-aa1d-af216c46efd2.png",
+      "path": "Assets/Art/Map/ForestRestart/Source/dirt-surface.png",
+      "transparentBackground": false,
+      "sha256": "6CAE0930406660A3B6762C72DBC61046DD4589CE1D7741C03956B16BC8D33658",
+      "refinement": {
+        "prompt": "Use case: stylized-concept. Create a replacement seamless top-down earth ground texture for the supplied FantasyRoyale concept. Match the quiet warm ochre path in the concept: mostly compacted smooth tawny ochre soil, sparse muted earth clumps and tiny subdued pebble groups. Square full-bleed fully opaque image. No path outline, grass edge, perspective or objects. Ground must contain calm flat patches and grouped 2-5 pixel marks rather than dense random noise. Restrained local contrast; about 85 percent quiet base and 15 percent purposeful grain. Effective authored 128x128 game pixel grid enlarged as uniform crisp square blocks; no blur or antialiasing. Four edges must repeat seamlessly. No large stones, flowers, roots, footprints, borders, vignette, UI, text, watermarks. Preserve the concept's warm earthy palette and coarse GBA-era clusters.",
+        "sourcePath": "C:\\Users\\umiga\\.codex\\generated_images\\01a0fdf3-547e-71e2-b851-62b2ee5429a9\\exec-76c67d5c-343d-424f-a60b-51f5f2118fa7.png",
+        "previousSha256": "51E5C3949884E6DE0EAB2D9E9BCA4A37D1ABB3BC93130FB336ADC22FEAC14E5F",
+        "reason": "Unity visual QA: reduce fine ground noise and match concept palette"
+      }
+    },
+    {
+      "id": "oak",
+      "prompt": "Use case: stylized-concept. Asset type: production-test sprite for FantasyRoyale forest restart. Input image 1 is ONLY a style reference: preserve its crafted GBA-era material finish, rich purposeful pixel clusters, dark blue-green shadows, warm yellow-green foliage and ochre earth, near-overhead RPG camera with visible front faces and upper-left illumination. Reproduce its visual language and texture quality in the requested isolated asset. Crisp stepped pixel edges, compact shade ramps, restrained charm, no soft mobile-game cartoon, no 3D render, no blur, no antialiasing, no lettering, no UI, no watermark. Create ONE complete isolated sturdy forest oak tree sprite on genuine transparent alpha, including small tightly attached foot shadow. Irregular angular lobed canopy, rich fine leaf clusters with readable large sunlit and shadow groups, substantial brown trunk with grooves and spreading tapering roots like the lower-right trees in the reference. This is the medium tree building block; about 3 game cells wide, not enormous. Near-overhead 2D RPG camera, show front trunk under the canopy. Fit the ENTIRE tree inside a square canvas with at least 8 percent transparent margin on all four sides. Roots at lower center, canopy high center. Effective approximately 104x120 pixel authored tree, enlarged with uniform 8px pixel blocks on a 1024 canvas. No ground island or rectangular ground, no other trees, no flowers, no detached props. Preserve true transparency outside tree and compact root shadow.",
+      "sourcePath": "C:\\Users\\umiga\\.codex\\generated_images\\01a0fdf3-547e-71e2-b851-62b2ee5429a9\\exec-521d7aaa-08c1-4c14-bf4e-8cd4661eb237.png",
+      "path": "Assets/Art/Map/ForestRestart/Source/oak.png",
+      "transparentBackground": true,
+      "sha256": "4F6CBEF5E7D9F48A1A81302D8D815D490DD17D6C69E516166A823B8DCFA77EA1"
+    },
+    {
+      "id": "grove",
+      "prompt": "Use case: stylized-concept. Asset type: production-test sprite for FantasyRoyale forest restart. Input image 1 is ONLY a style reference: preserve its crafted GBA-era material finish, rich purposeful pixel clusters, dark blue-green shadows, warm yellow-green foliage and ochre earth, near-overhead RPG camera with visible front faces and upper-left illumination. Reproduce its visual language and texture quality in the requested isolated asset. Crisp stepped pixel edges, compact shade ramps, restrained charm, no soft mobile-game cartoon, no 3D render, no blur, no antialiasing, no lettering, no UI, no watermark. Create ONE complete isolated two-tree forest grove module on genuine transparent alpha. Two sturdy oaks with overlapping dense irregular angular foliage, distinct trunks and roots, the same leaf and bark material language as the reference. A useful asymmetric silhouette with left tree slightly taller and right tree lower; canopy dark pockets, warm lit leaf clusters, small shrubs around roots contained within the module. Landscape 3:2 canvas. Effective 176x112 game pixels authored, enlarged with uniform square pixel blocks. ENTIRE foliage and roots contained with at least 8 percent transparent margin. Foot line near lower edge. No rectangular ground patch, no terrain cliffs, no extra trees outside these two, no roads, no objects or labels. Tight attached foot shadows only. Actual transparent alpha outside silhouettes.",
+      "sourcePath": "C:\\Users\\umiga\\.codex\\generated_images\\01a0fdf3-547e-71e2-b851-62b2ee5429a9\\exec-6068f572-9eed-4e67-b421-111b422d7111.png",
+      "path": "Assets/Art/Map/ForestRestart/Source/grove.png",
+      "transparentBackground": true,
+      "refinement": {
+        "id": "grove",
+        "path": "C:/Users/umiga/Repository/FantasyRoyale/Assets/Art/Map/ForestRestart/Source/grove.png",
+        "prompt": "Use case: background-extraction. Edit target: supplied two-tree grove sprite. Preserve EXACT tree and foliage shapes, roots, shrubs, colors, highlights, texture, arrangement and overall size. Change ONLY the exterior alpha/background: REMOVE the broad green and cyan atmospheric glow surrounding and behind the grove. Every pixel outside the hard stepped tree/leaf/root/shrub silhouette must be fully alpha=0, including all canvas borders. No glow, haze, gradient, black backdrop, dark backdrop, checkered backdrop, colored floor patch or ground island. Keep a very small tight hard-edged shadow attached to root bases only. Maintain full transparent margin around every part of the silhouette. True transparent PNG suitable for layering over a game grass texture. Do not crop or redesign the trees.",
+        "sourcePath": "C:\\Users\\umiga\\.codex\\generated_images\\01a0fdf3-547e-71e2-b851-62b2ee5429a9\\exec-aae2724a-4986-4b9a-abc1-98a9b96b6985.png"
+      },
+      "sha256": "EE370EF5890A84A0B2EF0724F6F893537712EB5ED4DBAC190E99D6AA53E87EF0"
+    },
+    {
+      "id": "undergrowth",
+      "prompt": "Use case: stylized-concept. Asset type: production-test sprite for FantasyRoyale forest restart. Input image 1 is ONLY a style reference: preserve its crafted GBA-era material finish, rich purposeful pixel clusters, dark blue-green shadows, warm yellow-green foliage and ochre earth, near-overhead RPG camera with visible front faces and upper-left illumination. Reproduce its visual language and texture quality in the requested isolated asset. Crisp stepped pixel edges, compact shade ramps, restrained charm, no soft mobile-game cartoon, no 3D render, no blur, no antialiasing, no lettering, no UI, no watermark. Create ONE isolated compact forest-edge rock and undergrowth cluster sprite on genuine transparent alpha. Two faceted grey mossy rocks partly embedded amid dark-green low shrubs, small fern tufts and 2-3 understated tiny white flowers like the reference path borders. It reads as a low irregular obstacle, has a clear compact basal footprint and a stepped organic silhouette. Upper-left lighting; visible tops and front rock faces. Entire group inside square canvas with minimum 10 percent transparent margin. Effective 80x64 game pixels, crisp enlarged uniform square pixel blocks. No tree, no ground rectangle/island, no dirt circle, no huge bloom, no glow, no detached flowers elsewhere. Tight basal shadow with transparent surroundings.",
+      "sourcePath": "C:\\Users\\umiga\\.codex\\generated_images\\01a0fdf3-547e-71e2-b851-62b2ee5429a9\\exec-a6bba185-5c51-4be7-8725-1807f4c90824.png",
+      "path": "Assets/Art/Map/ForestRestart/Source/undergrowth.png",
+      "transparentBackground": true,
+      "sha256": "D6CFE2C5E167068D099483216C6AF89D1D68844C8A0B061A82398DDA3CAA651B"
+    },
+    {
+      "id": "hero",
+      "prompt": "Use case: stylized-concept. Asset type: production-test sprite for FantasyRoyale forest restart. Input image 1 is ONLY a style reference: preserve its crafted GBA-era material finish, rich purposeful pixel clusters, dark blue-green shadows, warm yellow-green foliage and ochre earth, near-overhead RPG camera with visible front faces and upper-left illumination. Reproduce its visual language and texture quality in the requested isolated asset. Crisp stepped pixel edges, compact shade ramps, restrained charm, no soft mobile-game cartoon, no 3D render, no blur, no antialiasing, no lettering, no UI, no watermark. Create ONE isolated front-facing compact adventurer sprite matching the reference center hero: 2.5-3 heads tall, ochre cape, blue outfit, short readable legs, modest sword in one hand and a small steel-edged shield in the other. Preserve the reference's mature handheld-era proportions, small restrained pixel face and hairstyle; no huge cute eyes. Front-facing three-quarter top-down RPG camera. Neutral standing ready pose, complete body and equipment on genuinely transparent alpha, tiny tight foot shadow only. Portrait 2:3 canvas; sprite composed on an effective 32x48 pixel grid and enlarged as exact crisp uniform pixel blocks. Entire silhouette fully contained with transparent margins, feet at lower center. One character only, no landscape, no ground patch, no captions.",
+      "sourcePath": "C:\\Users\\umiga\\.codex\\generated_images\\01a0fdf3-547e-71e2-b851-62b2ee5429a9\\exec-41b25a08-3e7f-4b4f-bd08-38e4a600db53.png",
+      "path": "Assets/Art/Map/ForestRestart/Source/hero.png",
+      "transparentBackground": true,
+      "refinement": {
+        "id": "hero",
+        "path": "C:/Users/umiga/Repository/FantasyRoyale/Assets/Art/Map/ForestRestart/Source/hero.png",
+        "prompt": "Use case: background-extraction. Edit target: supplied standing ochre-cape blue-outfit adventurer sprite. Preserve EXACT body proportions, head size, hairstyle, pixel face, outfit, pose, sword and shield, colors and crisp pixel texture. Change ONLY exterior alpha: remove all surrounding yellow/blue/white blurred aura and all soft ambient haze. All pixels outside the hard stepped character/equipment outline must be fully transparent alpha=0. No glow, no colored halo, no black or solid backdrop, no smooth shadow. Keep at most one tiny hard-edged dark foot shadow immediately beneath feet. Full transparent margin on all sides. True transparent PNG game sprite. Do not redesign, enlarge, crop or soften the character.",
+        "sourcePath": "C:\\Users\\umiga\\.codex\\generated_images\\01a0fdf3-547e-71e2-b851-62b2ee5429a9\\exec-a244e1d7-acbf-4a4a-8fa2-2de654b9bdb0.png"
+      },
+      "sha256": "2366396DEC20E0D0876E8EEC08A25058C20E24B8A8574FAF47DC7EC6EFB52FDE"
+    }
+  ]
+}

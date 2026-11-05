@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0a53fedf6f803d4296a39323d87dfb5, type: 3}
+  m_Name: WaterVariation
+  m_EditorClassIdentifier: FantasyRoyale.MapAuthoringKit.Runtime::FantasyRoyale.MapAuthoringKit.GroundVariationTile
+  variants:
+  - {fileID: 21300000, guid: ad74078ab614f954c9ecfe2993163dd0, type: 3}
+  - {fileID: 21300000, guid: 54b8fa707ff9d7c42a2c560cb5791666, type: 3}
+  - {fileID: 21300000, guid: ec88cf1651b17434c99822595ac054ca, type: 3}
+  - {fileID: 21300000, guid: bb8e66f5ef5096f4e8ae17d3761c748b, type: 3}
+  - {fileID: 21300000, guid: 5bd4ddbe845f01246baf4ea5fd46caf6, type: 3}
+  - {fileID: 21300000, guid: 6429e74a1c02e084aa035ca82ea7c341, type: 3}
+  - {fileID: 21300000, guid: 22009cd014dd2fb46ad837ceed059ac1, type: 3}
+  - {fileID: 21300000, guid: 0e41f173197c39e459f2a86f96d04b63, type: 3}
+  seed: 20261003

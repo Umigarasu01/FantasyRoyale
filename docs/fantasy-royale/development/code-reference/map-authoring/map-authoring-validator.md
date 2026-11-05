@@ -1,6 +1,12 @@
 # MapAuthoringValidator
 
-状態: **v4.3実装・描画順を含むUnity Validator / Test検証済み**
+現行状態: **ForestRestartの素材・Scene契約へ移行済み**。標準4Tilemapと自由配置Root、MapCollision、足元Y描画順、Socketの汎用検査を維持し、素材側は76表示PNG、3Tile、4Prefabと現行Importを検査する。判定の自動修正やRuntime Map Serializerは追加しない。詳細は[森林素材再制作Kit](../../../design-docs/map-authoring/forest-restart-kit.md)を参照する。
+
+## 履歴: 旧v4.3 Validator契約
+
+以下は旧Atlas・Prefab19点・Palette2点などの実装記録。現行素材の数量や成功数として読み替えない。
+
+旧状態: **v4.3実装・描画順を含むUnity Validator / Test検証済み**
 
 ## 役割
 

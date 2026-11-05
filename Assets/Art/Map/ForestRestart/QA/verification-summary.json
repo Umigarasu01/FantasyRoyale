@@ -1,0 +1,79 @@
+{
+  "schema": "fantasyroyale.forest-restart-verification.v1",
+  "date": "2026-10-03",
+  "logicalPlans": 40,
+  "logicalPassed": 40,
+  "distinctLayoutHashes": 40,
+  "scenes": 4,
+  "scenePassed": 4,
+  "editMode": {
+    "passed": 98,
+    "failed": 0,
+    "skipped": 0
+  },
+  "playMode": {
+    "passed": 4,
+    "failed": 0,
+    "skipped": 0
+  },
+  "cleanup": {
+    "deletedAssetFiles": 135,
+    "removedEmptyDirectories": 19,
+    "retainedCompatibilityBuilders": 2,
+    "retainedLegacyToolFiles": 2,
+    "preflightOldGuidReferences": 0,
+    "backup": "Logs/ArtReset/retired-forest-2026-10-03.zip",
+    "backupSha256": "83A677C0AB0A933328F33AB6B3474C031671668AE76FD56FC8047BE0754194BE",
+    "backupEntriesVerified": 135,
+    "explicitlyDeletedAssetFiles": 131,
+    "unityDeletedAssetSidecars": 4,
+    "sidecarBackup": "Logs/ArtReset/retired-forest-sidecars-2026-10-03.zip",
+    "sidecarBackupSha256": "61C0AA546181D427D4A56E9C0FC759C84F819F8523437D99202F0187AF3D8372",
+    "sidecarBackupSource": "Git HEAD blobs; exact pre-deletion working-tree bytes were not inventoried"
+  },
+  "images": [
+    {
+      "path": "Assets/Art/Map/ForestRestart/QA/four-seed-comparison.png",
+      "sha256": "006342F4764CA53BB1A627C6FF1B408F8D87A6F8E482B9FD41F7F7CACB941BC4"
+    },
+    {
+      "path": "Assets/Art/Map/ForestRestart/QA/seed-20261003-detail.png",
+      "sha256": "2E3DA0D34B7BC619112D3DB2A01FB65B711EC870F3BE8BA2BED5C40A0C973746"
+    },
+    {
+      "path": "Assets/Art/Map/ForestRestart/QA/seed-20261003-overview.png",
+      "sha256": "997E1388BF1CAC0EE03247E769B19055929DF6C89658D4378B290DB4EEE5F9C7"
+    },
+    {
+      "path": "Assets/Art/Map/ForestRestart/QA/seed-20261004-detail.png",
+      "sha256": "B2D897491AF62478204D635294A59F434A76E77BB8C5DD56068126F6C36460EC"
+    },
+    {
+      "path": "Assets/Art/Map/ForestRestart/QA/seed-20261004-overview.png",
+      "sha256": "B621D11CD287D6F6804BA717F7B14A6E72D18EA21D89234B34AE3EF5EDC25F1C"
+    },
+    {
+      "path": "Assets/Art/Map/ForestRestart/QA/seed-20261005-detail.png",
+      "sha256": "8AB9766F6096F4B7C776F0D8015030EF4E363BAD6B9AE095761A729987B6A0B1"
+    },
+    {
+      "path": "Assets/Art/Map/ForestRestart/QA/seed-20261005-overview.png",
+      "sha256": "DAA81A055CAF3883F05706C547445B1A86EEDFB8D1DA280A02F919400FA18F34"
+    },
+    {
+      "path": "Assets/Art/Map/ForestRestart/QA/seed-20261006-detail.png",
+      "sha256": "FA2BF73C62251A8B5122DC8FE7A98677C0649FB4812AC3D42991F93B0CE423F5"
+    },
+    {
+      "path": "Assets/Art/Map/ForestRestart/QA/seed-20261006-overview.png",
+      "sha256": "2F837D1B2E5005F93E66E4A4572C4372D3C3E0E644EC6273F3DCE445FA56F022"
+    }
+  ],
+  "formalAdoption": "pending",
+  "limitations": [
+    "Orthogonal road skeleton and repeated forest modules remain",
+    "Water/cliff/bridge/shop/fountain art not included",
+    "Terrain randomization is an Editor validation prototype; production match specification unchanged",
+    "Player build and C# project build not run"
+  ]
+}

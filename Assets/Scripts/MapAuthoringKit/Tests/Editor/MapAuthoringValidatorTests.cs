@@ -793,33 +793,33 @@ namespace FantasyRoyale.MapAuthoringKit.Tests.Editor
         }
 
         /// <summary>
-        /// Postprocessorが唯一のProduction Atlasだけを対象にし、旧loose PNGやSource素材を変更しないことを確認する。
+        /// PostprocessorがForest Restartの生成Spriteだけを対象にし、SourceやQAを変更しないことを確認する。
         /// </summary>
-        [TestCase("Assets/Art/Map/Production/Forest/forest-gba-production-atlas.png", true)]
-        [TestCase("Assets\\Art\\Map\\Production\\Forest\\FOREST-GBA-PRODUCTION-ATLAS.PNG", true)]
-        [TestCase("Assets/Art/Map/Production/Forest/grass.png", false)]
-        [TestCase("Assets/Art/Map/Source/Forest/forest-gba-design-master.png", false)]
+        [TestCase("Assets/Art/Map/ForestRestart/Sprites/oak.png", true)]
+        [TestCase("Assets\\Art\\Map\\ForestRestart\\Sprites\\OAK.PNG", true)]
+        [TestCase("Assets/Art/Map/ForestRestart/Source/grass-surface.png", false)]
+        [TestCase("Assets/Art/Map/ForestRestart/QA/seed-preview.png", false)]
         [TestCase("Assets/Art/Concept/forest.png", false)]
-        [TestCase("Assets/Art/Map/Production/Forest/forest-gba-production-atlas.json", false)]
+        [TestCase("Assets/Art/Map/ForestRestart/Sprites/oak.json", false)]
         public void IsProductionMapPng_WithAssetPath_RestrictsProcessingScope(string path, bool expected)
         {
             Assert.That(GbaMapSpritePostprocessor.IsProductionMapPng(path), Is.EqualTo(expected));
         }
 
         /// <summary>
-        /// 実Projectのv4 Atlasを含めて検証し、Catalog、Import設定、Sub-Sprite分割にErrorがないことを確認する。
+        /// 実ProjectのForest Restart素材を含めて検証し、Import設定とSprite規格にErrorがないことを確認する。
         /// </summary>
         [Test]
-        public void ValidateScene_WithV4ProductionAtlas_HasNoAtlasErrors()
+        public void ValidateScene_WithRestartSprites_HasNoAssetErrors()
         {
             CreateCompleteScene();
 
             var report = MapAuthoringValidator.ValidateScene(previewScene, true);
 
             Assert.That(report.Issues, Has.None.Matches<MapAuthoringValidationIssue>(issue =>
-                issue.Code.StartsWith("PRODUCTION_ATLAS", StringComparison.Ordinal)
+                issue.Code.StartsWith("RESTART_", StringComparison.Ordinal)
                 || issue.Code.StartsWith("SPRITE_IMPORT", StringComparison.Ordinal)
-                || issue.Code.StartsWith("ATLAS_", StringComparison.Ordinal)));
+                ));
         }
 
         /// <summary>

@@ -1,6 +1,57 @@
 # GBA Forest Map Authoring Scene
 
-状態: **v4.3実装・Unity再構築・描画順を含め検証済み**
+状態: **ForestRestart検証用素材へ移行・48x32の4Scene生成・40Seed論理検証済み・正式素材採用は未承認**
+
+## 現行ForestRestart
+
+2026-10-03の仕切り直しにより、コンセプトv005を基準とした少量の森林・道・広場素材を使う。既存のReference Sceneのpath/GUIDとPlaytest接続を維持して内容を置換した。旧SceneTemplate、Sample、旧Forest Atlasと表示Prefabは撤去済み。空のAuthoring Template Sceneは保持する。
+
+| Seed | Scene |
+| --- | --- |
+| 20261003 | `Assets/Scenes/MapAuthoring/GbaForestBattleRoyaleReference.unity` |
+| 20261004 | `Assets/Scenes/MapAuthoring/ForestRestart/ForestRestartSeed20261004.unity` |
+| 20261005 | `Assets/Scenes/MapAuthoring/ForestRestart/ForestRestartSeed20261005.unity` |
+| 20261006 | `Assets/Scenes/MapAuthoring/ForestRestart/ForestRestartSeed20261006.unity` |
+
+各Sceneは48x32Cell。Ground / Terrain / Collision / Foregroundの4Tilemap、Decorations / ObstacleVisuals / Propsのplain Transform、Sockets、単一Cameraという責務を維持する。現在の検証セットには水、橋、商店、泉の完成表示素材は含めない。
+
+## 現行素材と判定
+
+- 元画像6点: Grass Surface、Dirt Surface、oak、grove、undergrowth、比較用hero。保存先は`Assets/Art/Map/ForestRestart/Source/`。
+- 正規化Sprite76点: Grass8、Dirt Cardinal-16 x 4差分の64点、表示Object4点。保存先は`Assets/Art/Map/ForestRestart/Sprites/`。
+- Tile Asset3点: `Assets/Data/MapAuthoring/Tiles/ForestRestart/`のGrassVariation、DirtRoad、不可視Collision。
+- 表示Prefab4点: `Assets/Prefabs/MapAuthoring/ForestRestart/`のoak、grove、undergrowth、hero。
+- 基準は32px / Cell、PPU32、Point Filter、Compression None、Mipmap Off。Spriteと配置Anchorは整数pixelに整列し、Rotation0、Scale1、反転なしを守る。
+- oak / grove / undergrowthの表示Boundsと配置用Footprintを分け、枝葉の通路への張り出しは許容する。CollisionBodyはさらに小さい幹・接地点のBoxCollider2Dとし、MapCollisionへ配置する。heroは縮尺比較用で、Colliderを持たない。
+- CollisionTilemapは入口を除く外周だけを保存し、障害物の表示Footprintを不可視Tileへ焼き込まない。
+- Ground / TerrainはMapGround、ObjectはWorldObjects / Order0 / Pivot。URP 2DはCustom Axis / Vector3.upを維持する。
+
+## 自動生成と検証
+
+`ForestRestartLayout`がEditor内の一時PlanをSeedから作り、検査後に`ForestRestartAssetBuilder`がUnity Sceneへ保存する。独自Runtime Map Serializerは追加しない。
+
+1. 3〜4広場、幅3Cellの曲がる道、四辺の入口、Spawn、6Event目的地を確保する。
+2. 道路と目的地の保護域を除いて森林3種類を散布する。
+3. 配置用Footprintで重複を避け、接地Collisionが交差するCellから全歩行地をBFS検査する。接続を失う候補は採用しない。
+4. SceneにはPrefabとColliderを保存し、`MapAuthoringValidator`で構造・表示・Socket・判定の契約を検査する。
+
+`FantasyRoyale/Map Authoring/Rebuild Forest Restart Kit`は素材を再生成し、Seed20261003〜20261042の40論理Planを検証する。先頭4SeedだけをSceneへ保存し、各SceneのOverview / Detail計8画像を出力する。記録は[generation-validation.json](../../../../Assets/Art/Map/ForestRestart/QA/generation-validation.json)。`sceneValidated=false`の36SeedはScene・Physics・描画を検査した扱いにしない。
+
+初回QAの草の細かすぎる粒・明るさと矩形に見える道端を受けてGrass / Dirtを再生成し、露出辺の起伏を最大4pxへ調整した。接続角の透明穴は修正・実PNG Testで確認済み。撤去後のUnity Test RunnerはEditMode 98件、PlayMode 4件成功。元画像・Prompt・Hashと目視QAの限界は[生成Asset台帳](../../development/assets/generated-assets.md)を参照する。正式採用は別の判断とする。
+
+再生成は保存済みSceneをPlanから組み直す保守操作であり、手編集を維持する日常編集コマンドではない。対象Sceneに未保存変更がある場合は書込みを拒否する。
+
+## 現行Playtestとの境界
+
+Reference Sceneのpath/GUIDは維持し、[Exploration Preview Debug Scene](exploration-preview-debug-scene.md)からAdditiveで読み込む。MapへGameplay Controllerや操作Playerを保存せず、PlayerStart、6PoolCandidate EventSocket、MapCollision、Ground範囲、単一CameraをPlaytestへ渡す。Scene内`ConceptScaleHero`は画面比較用で、Runtime Playerとは別である。
+
+48x32とSeedによる地形差分は素材の自動配置検証用設定であり、本番の固定Map + ランダム配置方針を変更しない。正式な試合ごとの地形生成は別のProduct Decisionとする。
+
+## 履歴: v4.3の旧素材とScene契約
+
+以下は仕切り直し前の記録であり、現行ForestRestartの数量・寸法・Asset契約として扱わない。旧素材・QA・Template・Sampleのpathは整理により存在しなくなる場合がある。過去のTest結果も今回の変更後の成功数へ流用しない。
+
+旧状態: **v4.3実装・Unity再構築・描画順を含め検証済み**
 
 ## 対象
 

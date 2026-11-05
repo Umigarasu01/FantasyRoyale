@@ -1,13 +1,13 @@
 # Exploration Preview Debug Scene
 
-ファイル名`PrototypeSoloScene.md`は既存リンク互換のため残す。旧Prototype実装と未作成の`Milestone1ExplorationScene`への移行案は廃止し、現在の探索確認Sceneをこのノートで扱う。
-
-状態: **探索・足元Y描画順・共通Event Runtime・Event Pool抽選・本番Character Health / 移動経路を検証完了 / 本番Gameplay Sceneではない**
+状態: **ForestRestartの48x32 Reference Mapへ移行・Character/Event基盤を維持・PlayMode 4件回帰成功 / 本番Gameplay Sceneではない**
 
 ## 対象
 
 - Playtest: `Assets/Scenes/Playtest/GbaForestBattleRoyaleExplorationPreviewDebug.unity`
 - Map正本: `Assets/Scenes/MapAuthoring/GbaForestBattleRoyaleReference.unity`
+
+2026-10-03の素材再制作でMap正本の内容をForestRestartのSeed20261003へ置換し、同じpath/GUIDでAdditive読込を維持する。新しいMapは48x32Cellであり、以前の96x72構成を前提にしない。MapScene内の`ConceptScaleHero`は素材縮尺比較用で、Playtestの操作Playerを置き換えた正式Characterではない。Seed差分の追加Scene3点はEditor検証用で、正式Match SeedによるMap抽選機能は追加していない。
 
 ## 保存Hierarchy
 
@@ -32,11 +32,11 @@ Playtest SceneにはBootstrapだけを保存する。Play開始後、Reference M
 
 CameraはOrthographic Size 8、Map端Clamp、1 / 32 unit Snap、Transparency Sort Custom Axis / `Vector3.up`を使う。URP 2Dの正本はRenderer2D Dataとし、追加CameraやSocket用Triggerは作らない。
 
-## 現在確認できること
+## 現在の確認対象
 
-- WASD / Arrow Keysによる96x72 Map内の歩行。
+- WASD / Arrow Keysによる48x32 ForestRestart Map内の歩行。
 - 人間入力Adapter、純C# Move Command、本番Character Actorを通る共通移動経路。
-- 崖、水際、外周のCollisionTilemapと、木・森・岩などの幹・接地点CollisionBodyでの停止。
+- 入口を除く外周のCollisionTilemapと、oak / grove / undergrowthの幹・接地点CollisionBodyでの停止。現行の小規模検証Mapには旧Mapの水域・崖を含めない。
 - 木の幹中央は衝突し、樹冠側は通行できる判定分離。
 - Player追従Cameraと現在座標の確認。
 - Playerが立体表示の上側では背面、下側では前面になる足元Y描画順。
@@ -52,9 +52,16 @@ CameraはOrthographic Size 8、Map端Clamp、1 / 32 unit Snap、Transparency Sor
 - Loot / Enemy / Merchant SocketのRuntime選定と生成。
 - 泉以外のEvent Handler、地域Tag・距離制約付きPool、正式Match Seed、Cooldown、Save連携。
 - Effect / Audio CueをPrefabやAudioSourceへ接続する正式Presenter。
-- 通常攻撃 / 特殊アクション、装備、正式Character Prefab / Animation、CPU / Network入力Adapter、試合開始・終了、エリア収縮。
+- 通常攻撃 / 特殊アクション、装備、正式Character Prefab / Animation、CPU / Network入力Adapter、試合開始・終了。
+- 2026-10-09に決めた育成中脱落なし・妨害・最終バトルへの移行は未実装。エリア収縮は当面採用なしで、今後の実装目標としない。[Prototype方針](../../product-specs/prototype-direction.md)を参照する。既存PreviewのHP 0死亡・通常回復による非復活の検証履歴は変更しない。
 
 Runtime生成Spriteと確認HUDは探索確認専用。本番HP Core、Move Command、Character Actor、人間入力Adapterは本番Assemblyへ分離済み。攻撃や正式表示の設計を確定した扱いにはしない。
+
+## 検証と履歴の境界
+
+2026-10-03の旧素材撤去後、Unity Test RunnerのPlayMode 4件が成功した。実移動、外周と幹の衝突、樹冠側の通行、Camera追従とSnap、Yソート、Event抽選と回復処理を検証した。Camera追従のTestは新Map中央で行い、端Clampと区別する。EditModeは98件成功。素材の正式採用は未承認で、本番の固定Map + ランダム配置方針は維持する。
+
+仕切り直し前の96x72 Reference Mapでは、探索・足元Y描画順・共通Event Runtime・Event Pool抽選・本番Character Health / 移動経路を検証済みだった。旧Mapの崖・水際・表示素材とそのQA画像は撤去済みであり、その検証結果を現在の48x32素材へ自動で引き継がない。旧`PrototypeSoloScene.md`と未作成`Milestone1ExplorationScene`への移行案はLegacyで、現行Sceneはこのノートに記載したpathを参照する。
 
 関連:
 

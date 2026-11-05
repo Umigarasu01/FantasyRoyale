@@ -138,7 +138,13 @@ namespace FantasyRoyale.MapAuthoringKit.Editor
             new HashSet<string>(StringComparer.Ordinal)
             {
                 "detail_flower_patch",
-                "detail_wildflowers"
+                "detail_wildflowers",
+                "cobbles",
+                "bridge",
+                "bridge_floor",
+                "bank_w",
+                "bank_e",
+                "bank_rim"
             };
 
         private static readonly string[] RequiredPhysicsLayers =
@@ -1183,335 +1189,44 @@ namespace FantasyRoyale.MapAuthoringKit.Editor
             return false;
         }
 
-        /// <summary>
-        /// 単一Production AtlasとCatalogについて、Import設定、寸法、Sprite名、矩形、Pivotの逸脱を報告する。
-        /// </summary>
+        /// <summary>新しいForest Restart KitのSingle Sprite、寸法、Pivot、Import設定を検証する。</summary>
         private static void ValidateProductionSprites(MapAuthoringValidationReport report)
         {
-            var atlasPath = GbaMapSpritePostprocessor.ProductionAtlasPath;
-            var atlasTexture = AssetDatabase.LoadAssetAtPath<Texture2D>(atlasPath);
-            if (atlasTexture == null)
+            foreach (var name in ForestRestartAssetBuilder.ExpectedSpriteNames())
             {
-                report.Add(
-                    "PRODUCTION_ATLAS_MISSING",
-                    MapAuthoringIssueSeverity.Error,
-                    $"Production Atlasがありません: {atlasPath}");
-                return;
-            }
-
-            var importer = AssetImporter.GetAtPath(atlasPath) as TextureImporter;
-            if (importer == null)
-            {
-                report.Add(
-                    "SPRITE_IMPORTER_MISSING",
-                    MapAuthoringIssueSeverity.Error,
-                    $"TextureImporterを取得できません: {atlasPath}",
-                    atlasTexture);
-                return;
-            }
-
-            var invalidSettings = new List<string>();
-            if (importer.textureType != TextureImporterType.Sprite)
-            {
-                invalidSettings.Add("Texture Type=Sprite");
-            }
-
-            if (importer.spriteImportMode != SpriteImportMode.Multiple)
-            {
-                invalidSettings.Add("Sprite Mode=Multiple");
-            }
-
-            if (!Mathf.Approximately(importer.spritePixelsPerUnit, GbaMapSpritePostprocessor.RequiredPixelsPerUnit))
-            {
-                invalidSettings.Add("PPU=32");
-            }
-
-            if (importer.filterMode != FilterMode.Point)
-            {
-                invalidSettings.Add("Filter Mode=Point");
-            }
-
-            if (importer.textureCompression != TextureImporterCompression.Uncompressed)
-            {
-                invalidSettings.Add("Compression=None");
-            }
-
-            if (importer.mipmapEnabled)
-            {
-                invalidSettings.Add("Mip Maps=Off");
-            }
-
-            if (importer.wrapMode != TextureWrapMode.Clamp)
-            {
-                invalidSettings.Add("Wrap Mode=Clamp");
-            }
-
-            if (!importer.alphaIsTransparency)
-            {
-                invalidSettings.Add("Alpha Is Transparency=On");
-            }
-
-            if (importer.npotScale != TextureImporterNPOTScale.None)
-            {
-                invalidSettings.Add("NPOT Scale=None");
-            }
-
-            var textureSettings = new TextureImporterSettings();
-            importer.ReadTextureSettings(textureSettings);
-            if (textureSettings.spriteMeshType != SpriteMeshType.FullRect)
-            {
-                invalidSettings.Add("Mesh Type=Full Rect");
-            }
-
-            if (invalidSettings.Count > 0)
-            {
-                report.Add(
-                    "SPRITE_IMPORT_SETTINGS_INVALID",
-                    MapAuthoringIssueSeverity.Error,
-                    $"{atlasPath} のImport設定を修正してください: {string.Join(", ", invalidSettings)}",
-                    atlasTexture);
-            }
-
-            if (!GbaMapSpritePostprocessor.TryLoadCatalog(out var catalog, out var catalogError))
-            {
-                report.Add(
-                    "ATLAS_CATALOG_INVALID",
-                    MapAuthoringIssueSeverity.Error,
-                    $"Production Atlas catalogが不正です: {catalogError}",
-                    atlasTexture);
-                return;
-            }
-
-            if (atlasTexture.width != catalog.atlasWidth || atlasTexture.height != catalog.atlasHeight)
-            {
-                report.Add(
-                    "ATLAS_TEXTURE_SIZE_INVALID",
-                    MapAuthoringIssueSeverity.Error,
-                    $"Atlas画像寸法とCatalogが一致しません: "
-                        + $"image={atlasTexture.width}x{atlasTexture.height}, "
-                        + $"catalog={catalog.atlasWidth}x{catalog.atlasHeight}",
-                    atlasTexture);
-            }
-
-            ValidateAtlasSpriteContract(atlasPath, atlasTexture, catalog, report);
-        }
-
-        /// <summary>
-        /// CatalogのSprite集合をv4命名契約およびImport済みSub-Spriteと照合する。
-        /// </summary>
-        private static void ValidateAtlasSpriteContract(
-            string atlasPath,
-            Texture2D atlasTexture,
-            GbaMapSpritePostprocessor.AtlasCatalog catalog,
-            MapAuthoringValidationReport report)
-        {
-            var expectedNames = BuildExpectedAtlasSpriteNames();
-            var catalogEntries = new Dictionary<string, GbaMapSpritePostprocessor.AtlasSpriteEntry>(StringComparer.Ordinal);
-            for (var i = 0; i < catalog.sprites.Length; i++)
-            {
-                catalogEntries[catalog.sprites[i].name] = catalog.sprites[i];
-            }
-
-            foreach (var expectedName in expectedNames)
-            {
-                if (!catalogEntries.ContainsKey(expectedName))
+                var path = GbaMapSpritePostprocessor.SpriteRoot + "/" + name + ".png";
+                var sprite = AssetDatabase.LoadAssetAtPath<Sprite>(path);
+                var importer = AssetImporter.GetAtPath(path) as TextureImporter;
+                if (sprite == null || importer == null)
                 {
-                    report.Add(
-                        "ATLAS_CATALOG_SPRITE_MISSING",
-                        MapAuthoringIssueSeverity.Error,
-                        $"Catalogに必須Spriteがありません: {expectedName}",
-                        atlasTexture);
-                }
-            }
-
-            foreach (var catalogName in catalogEntries.Keys)
-            {
-                if (!expectedNames.Contains(catalogName))
-                {
-                    report.Add(
-                        "ATLAS_CATALOG_SPRITE_UNEXPECTED",
-                        MapAuthoringIssueSeverity.Error,
-                        $"Catalogに契約外Spriteがあります: {catalogName}",
-                        atlasTexture);
-                }
-            }
-
-            var importedSprites = new Dictionary<string, Sprite>(StringComparer.Ordinal);
-            var atlasAssets = AssetDatabase.LoadAllAssetsAtPath(atlasPath);
-            for (var i = 0; i < atlasAssets.Length; i++)
-            {
-                if (!(atlasAssets[i] is Sprite sprite))
-                {
+                    report.Add("RESTART_SPRITE_MISSING", MapAuthoringIssueSeverity.Error, "検証KitのSpriteがありません: " + path);
                     continue;
                 }
-
-                if (importedSprites.ContainsKey(sprite.name))
-                {
-                    report.Add(
-                        "ATLAS_SPRITE_NAME_DUPLICATE",
-                        MapAuthoringIssueSeverity.Error,
-                        $"Import済みSprite名が重複しています: {sprite.name}",
-                        sprite);
-                    continue;
-                }
-
-                importedSprites.Add(sprite.name, sprite);
-            }
-
-            foreach (var pair in catalogEntries)
-            {
-                if (!importedSprites.TryGetValue(pair.Key, out var sprite))
-                {
-                    report.Add(
-                        "ATLAS_SPRITE_MISSING",
-                        MapAuthoringIssueSeverity.Error,
-                        $"Catalog SpriteがImportされていません: {pair.Key}",
-                        atlasTexture);
-                    continue;
-                }
-
-                var entry = pair.Value;
-                var expectedRect = new Rect(entry.x, entry.y, entry.width, entry.height);
-                if (!RectsApproximatelyEqual(sprite.rect, expectedRect))
-                {
-                    report.Add(
-                        "ATLAS_SPRITE_RECT_INVALID",
-                        MapAuthoringIssueSeverity.Error,
-                        $"Sprite矩形がCatalogと一致しません: {entry.name}",
-                        sprite);
-                }
-
-                var expectedPivot = new Vector2(
-                    entry.width * entry.pivotX,
-                    entry.height * entry.pivotY);
-                if ((sprite.pivot - expectedPivot).sqrMagnitude > 0.0001f)
-                {
-                    report.Add(
-                        "ATLAS_SPRITE_PIVOT_INVALID",
-                        MapAuthoringIssueSeverity.Error,
-                        $"Sprite PivotがCatalogと一致しません: {entry.name}",
-                        sprite);
-                }
-            }
-
-            if (importedSprites.Count != catalogEntries.Count)
-            {
-                report.Add(
-                    "ATLAS_SPRITE_COUNT_INVALID",
-                    MapAuthoringIssueSeverity.Error,
-                    $"Import済みSprite数とCatalogが一致しません: "
-                        + $"imported={importedSprites.Count}, catalog={catalogEntries.Count}",
-                    atlasTexture);
+                var invalid = new List<string>();
+                if (importer.textureType != TextureImporterType.Sprite) invalid.Add("Texture Type=Sprite");
+                if (importer.spriteImportMode != SpriteImportMode.Single) invalid.Add("Sprite Mode=Single");
+                if (!Mathf.Approximately(importer.spritePixelsPerUnit, 32f)) invalid.Add("PPU=32");
+                if (importer.filterMode != FilterMode.Point) invalid.Add("Filter Mode=Point");
+                if (importer.textureCompression != TextureImporterCompression.Uncompressed) invalid.Add("Compression=None");
+                if (importer.mipmapEnabled) invalid.Add("Mipmap=Off");
+                if (importer.wrapMode != TextureWrapMode.Clamp) invalid.Add("Wrap Mode=Clamp");
+                if (!importer.alphaIsTransparency) invalid.Add("Alpha Is Transparency=On");
+                if (importer.npotScale != TextureImporterNPOTScale.None) invalid.Add("NPOT Scale=None");
+                var settings = new TextureImporterSettings();
+                importer.ReadTextureSettings(settings);
+                if (settings.spriteMeshType != SpriteMeshType.FullRect) invalid.Add("Mesh Type=Full Rect");
+                if (invalid.Count > 0) report.Add("SPRITE_IMPORT_SETTINGS_INVALID", MapAuthoringIssueSeverity.Error,
+                    path + ": " + string.Join(", ", invalid), sprite);
+                var tile = name.StartsWith("grass_", StringComparison.Ordinal) || name.StartsWith("road_", StringComparison.Ordinal);
+                var width = tile ? 32 : name == "grove" ? 192 : name == "undergrowth" ? 96 : name == "hero" ? 32 : 128;
+                var height = tile ? 32 : GbaMapSpritePostprocessor.GetSpriteHeight(name);
+                if (sprite.rect.width != width || sprite.rect.height != height)
+                    report.Add("RESTART_SPRITE_SIZE_INVALID", MapAuthoringIssueSeverity.Error, $"{name}は{width}x{height}pxが必要です。", sprite);
+                var pivot = new Vector2(width * 0.5f, height * (tile ? 0.5f : ForestRestartAssetBuilder.GetFootPivot(name)));
+                if ((sprite.pivot - pivot).sqrMagnitude > 0.001f)
+                    report.Add("RESTART_SPRITE_PIVOT_INVALID", MapAuthoringIssueSeverity.Error, "足元Pivotが規格と一致しません: " + name, sprite);
             }
         }
-
-        /// <summary>
-        /// v4.3で許可する地形Tile、道路輪郭差分、表示専用Obstacle、Propの全Sprite名を決定的に構築する。
-        /// </summary>
-        private static HashSet<string> BuildExpectedAtlasSpriteNames()
-        {
-            var names = new HashSet<string>(StringComparer.Ordinal);
-            for (var index = 1; index <= GroundVariationTile.RequiredVariantCount; index++)
-            {
-                names.Add($"ground_grass_{index:00}");
-            }
-
-            for (var mask = 0; mask < 16; mask++)
-            {
-                names.Add($"dirt_{mask:x2}");
-                names.Add($"stone_{mask:x2}");
-                for (var variant = 2; variant <= 4; variant++)
-                {
-                    names.Add($"dirt_{mask:x2}_v{variant:00}");
-                    names.Add($"stone_{mask:x2}_v{variant:00}");
-                }
-            }
-
-            var blobMasks = BuildCanonicalBlobMasksForValidation();
-            for (var i = 0; i < blobMasks.Count; i++)
-            {
-                var mask = blobMasks[i];
-                names.Add($"water_{mask:x2}");
-            }
-
-            for (var variant = 2; variant <= 4; variant++)
-            {
-                names.Add($"water_ff_v{variant:00}");
-            }
-
-            names.Add("detail_tall_grass");
-            names.Add("detail_flower_patch");
-            names.Add("detail_wildflowers");
-            names.Add("detail_reeds");
-            names.Add("prop_tree_medium_01");
-            names.Add("prop_tree_medium_02");
-            names.Add("prop_tree_medium_03");
-            names.Add("prop_blocking_bush");
-            names.Add("prop_mossy_rock");
-            names.Add("prop_stump");
-            names.Add("prop_fallen_log");
-            names.Add("prop_mushroom_patch");
-            names.Add("prop_chest");
-            names.Add("prop_signpost");
-            names.Add("obstacle_forest_mass_wide");
-            names.Add("obstacle_forest_mass_deep");
-            names.Add("obstacle_forest_front_strip");
-            names.Add("obstacle_cliff_straight_wide");
-            names.Add("obstacle_cliff_outer_corner");
-            return names;
-        }
-
-        /// <summary>
-        /// Water用にCardinalが両方接続する角だけ対角を許可し、Blob topologyの47 Maskを再現する。
-        /// </summary>
-        private static List<int> BuildCanonicalBlobMasksForValidation()
-        {
-            var masks = new HashSet<int>();
-            for (var cardinalMask = 0; cardinalMask < 16; cardinalMask++)
-            {
-                var baseMask = 0;
-                if ((cardinalMask & 1) != 0) baseMask |= 1;
-                if ((cardinalMask & 2) != 0) baseMask |= 4;
-                if ((cardinalMask & 4) != 0) baseMask |= 16;
-                if ((cardinalMask & 8) != 0) baseMask |= 64;
-
-                var optionalDiagonals = new List<int>();
-                if ((cardinalMask & 3) == 3) optionalDiagonals.Add(2);
-                if ((cardinalMask & 6) == 6) optionalDiagonals.Add(8);
-                if ((cardinalMask & 12) == 12) optionalDiagonals.Add(32);
-                if ((cardinalMask & 9) == 9) optionalDiagonals.Add(128);
-
-                for (var selection = 0; selection < 1 << optionalDiagonals.Count; selection++)
-                {
-                    var mask = baseMask;
-                    for (var diagonalIndex = 0; diagonalIndex < optionalDiagonals.Count; diagonalIndex++)
-                    {
-                        if ((selection & (1 << diagonalIndex)) != 0)
-                        {
-                            mask |= optionalDiagonals[diagonalIndex];
-                        }
-                    }
-
-                    masks.Add(mask);
-                }
-            }
-
-            var result = new List<int>(masks);
-            result.Sort();
-            return result;
-        }
-
-        /// <summary>
-        /// 浮動小数へ変換された二つのSprite矩形をPixel単位の許容差で比較する。
-        /// </summary>
-        private static bool RectsApproximatelyEqual(Rect first, Rect second)
-        {
-            return Mathf.Abs(first.x - second.x) < 0.001f
-                && Mathf.Abs(first.y - second.y) < 0.001f
-                && Mathf.Abs(first.width - second.width) < 0.001f
-                && Mathf.Abs(first.height - second.height) < 0.001f;
-        }
-
         /// <summary>
         /// Socketの所属、正の範囲、Ground内包、相互重複を検証する。
         /// </summary>

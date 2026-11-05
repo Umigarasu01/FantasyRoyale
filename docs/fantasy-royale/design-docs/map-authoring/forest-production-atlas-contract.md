@@ -1,5 +1,7 @@
 # Forest Production Atlas Contract
 
+2026-10-03: 旧v4.3 Atlas契約を退役し、[森林素材再制作Kit](forest-restart-kit.md)へ移行する。このDocumentの205 Sub-Sprite、旧Design Master、旧Pathは履歴であり、現在の素材制作へは適用しない。
+
 ## 位置づけ
 
 森Themeの画像素材とUnity参照方法を固定する契約。

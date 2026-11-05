@@ -1,6 +1,8 @@
 # GbaForestMapAuthoringSceneBuilder
 
-状態: **v4.1実装・Unity Template再構築 / Test検証済み**
+現行状態: **素材に依存しない既存の空Scene Utilityを保持**。ForestRestartの保存Sceneは`ForestRestartAssetBuilder`が構築し、旧Templateは撤去済み。現在の制作入口と保存契約は[森林素材再制作Kit](../../../design-docs/map-authoring/forest-restart-kit.md)を参照する。以下のTemplate生成手順は旧Kitの履歴である。
+
+旧状態: **v4.1実装・Unity Template再構築 / Test検証済み**
 
 ## 役割
 
@@ -30,7 +32,7 @@ GBA森林マップ用の空Sceneを、素材参照なしで再現可能に構築
 - CollisionTilemapへTilemapCollider2D、CompositeCollider2D、Static Rigidbody2Dを設定し、Rendererを無効化する。
 - TilemapではCollisionTilemapだけをMapCollision Physics Layerへ置く。Obstacle Prefab内の規定CollisionBodyも同Layerを使う。
 - Ground / Terrainを固定背面、Foregroundを固定前面にするSorting LayerとOrthographic Cameraを設定する。
-- CameraへTransparency Sort Custom Axis / `Vector3.up`をFallbackとして設定する。URP 2Dで使うRenderer2D Dataの設定は`MapAuthoringKitBuilder`が正本として統一する。
+- CameraへTransparency Sort Custom Axis / `Vector3.up`をFallbackとして設定する。URP 2Dの正本は既存`Assets/Settings/Renderer2D.asset`のCustom Axis / `Vector3.up`であり、現行ForestRestartはこの設定を維持する。
 
 ## 再実行契約
 
@@ -47,7 +49,7 @@ GBA森林マップ用の空Sceneを、素材参照なしで再現可能に構築
 - Sample Mapの配置。
 - Player、Enemy、ゲーム進行。
 
-制作Kit Assetは`MapAuthoringKitBuilder`が担当する。
+現行の制作Kit Assetは`ForestRestartAssetBuilder`が担当し、`MapAuthoringKitBuilder`は互換入口として委譲する。
 
 ## 旧構造履歴
 

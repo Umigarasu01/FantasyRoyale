@@ -1,0 +1,24 @@
+using System;
+using System.IO;
+using System.Linq;
+using UnityEngine;
+
+public class NemoWalk : MonoBehaviour
+{
+    public const float NormalCameraSize=8f/1.5f;
+    public const float OverviewCameraSize=56f;
+    public NemoMap Map;public Rigidbody2D Actor;public Camera View;public bool Overview;public int Landmark;int bridgeView;public string Status="Ready";string seedText="0";
+    [Serializable] public class Save {public int seed;public bool bridgePresent;public bool[] bridgeStates;public Vector2 actor;}
+    public string SavePath=>Path.GetFullPath(Path.Combine(Application.dataPath,"../UserRuns/NemoBlocks/map-save.json"));
+    void Start(){seedText=Map.Seed.ToString();Application.runInBackground=true;}
+    public Vector2 BodyCenter=>Actor.position+Actor.GetComponent<CapsuleCollider2D>().offset;
+    public void Teleport(Vector2 p){var foot=p-Actor.GetComponent<CapsuleCollider2D>().offset;Actor.transform.position=new Vector3(foot.x,foot.y,-.05f);Actor.position=foot;Actor.linearVelocity=Vector2.zero;Actor.GetComponent<SpriteRenderer>().sortingOrder=10000-Mathf.RoundToInt(p.y*64)+1;Physics2D.SyncTransforms();}
+    public void Regenerate(int seed){Map.Generate(seed);Map.BindSpriteMaterial(Actor.GetComponent<SpriteRenderer>());Teleport(Map.Plan.parcels[0].hub);seedText=seed.ToString();Landmark=0;Status="Generated seed "+seed;}
+    public void SaveNow(){Directory.CreateDirectory(Path.GetDirectoryName(SavePath));File.WriteAllText(SavePath,JsonUtility.ToJson(new Save{seed=Map.Seed,bridgePresent=Map.Bridge.Present,bridgeStates=Map.AllBridges.Select(b=>b.Present).ToArray(),actor=BodyCenter},true));Status="Saved seed, bridge state and position";}
+    public void LoadNow(){if(!File.Exists(SavePath)){Status="No saved map yet";return;}var s=JsonUtility.FromJson<Save>(File.ReadAllText(SavePath));Regenerate(s.seed);if(s.bridgeStates!=null&&s.bridgeStates.Length==Map.AllBridges.Length){for(int i=0;i<s.bridgeStates.Length;i++)Map.AllBridges[i].SetPresent(s.bridgeStates[i]);}else Map.Bridge.SetPresent(s.bridgePresent);Teleport(Map.Boundary.WalkRegion.Contains(s.actor)?s.actor:Map.Plan.parcels[0].hub);Status="Reloaded saved map";}
+    public void ToggleParcels(){Map.Overlay.SetActive(!Map.Overlay.activeSelf);} public void ToggleWalkArea(){Map.Boundary.WalkRegion.Overlay.SetActive(!Map.Boundary.WalkRegion.Overlay.activeSelf);} public void ToggleCamera(){Overview=!Overview;}
+    void Update(){if(NemoInput.Down(KeyCode.F)||NemoInput.Down(KeyCode.C))ToggleCamera();if(NemoInput.Down(KeyCode.G))ToggleParcels();if(NemoInput.Down(KeyCode.H))ToggleWalkArea();if(NemoInput.Down(KeyCode.B)){var bridge=Map.AllBridges.OrderBy(b=>Vector2.Distance((b.West+b.East)/2,BodyCenter)).First();bridge.SetPresent(!bridge.Present);}if(NemoInput.Down(KeyCode.N))Regenerate(Map.Seed+1);if(NemoInput.Down(KeyCode.R))Teleport(Map.Plan.parcels[0].hub);if(NemoInput.Down(KeyCode.F5)||NemoInput.Down(KeyCode.K))SaveNow();if(NemoInput.Down(KeyCode.F9)||NemoInput.Down(KeyCode.L))LoadNow();if(NemoInput.Down(KeyCode.Tab)){var places=Map.Plan.parcels.Where(p=>!p.land).ToArray();Landmark=(Landmark+1)%places.Length;Teleport(places[Landmark].hub);Status=places[Landmark].kind;}}
+    void FixedUpdate(){float x=(NemoInput.Held(KeyCode.D)||NemoInput.Held(KeyCode.RightArrow)?1:0)-(NemoInput.Held(KeyCode.A)||NemoInput.Held(KeyCode.LeftArrow)?1:0);float y=(NemoInput.Held(KeyCode.W)||NemoInput.Held(KeyCode.UpArrow)?1:0)-(NemoInput.Held(KeyCode.S)||NemoInput.Held(KeyCode.DownArrow)?1:0);Actor.linearVelocity=new Vector2(x,y).normalized*5;Actor.GetComponent<SpriteRenderer>().sortingOrder=10000-Mathf.RoundToInt(BodyCenter.y*64)+1;}
+    void LateUpdate(){View.orthographicSize=Overview?OverviewCameraSize:NormalCameraSize;var center=Overview?new Vector2(72,54):BodyCenter;View.transform.position=new Vector3(center.x,center.y,-10);}
+    void OnGUI(){GUI.Box(new Rect(12,12,780,122),"Nemo | Standard | seed "+Map.Seed+" | bridges "+Map.AllBridges.Count(b=>b.Present)+"/"+Map.AllBridges.Length);GUI.Label(new Rect(24,34,750,23),"WASD/arrows move | C camera | G block parcels (blue/yellow) | H walk areas (green)");GUI.Label(new Rect(24,55,750,23),"N next seed | R start | B bridge | Tab next place | K save | L reload | "+Status);seedText=GUI.TextField(new Rect(24,78,70,22),seedText);if(GUI.Button(new Rect(100,78,90,22),"Generate")&&int.TryParse(seedText,out int seed))Regenerate(seed);if(GUI.Button(new Rect(196,78,100,22),"Bridge view")){var bridges=Map.AllBridges;Teleport(bridges[(bridgeView++)%bridges.Length].West);}if(GUI.Button(new Rect(302,78,100,22),"C Camera"))ToggleCamera();if(GUI.Button(new Rect(408,78,115,22),"G Block borders"))ToggleParcels();if(GUI.Button(new Rect(529,78,115,22),"H Walk areas"))ToggleWalkArea();if(GUI.Button(new Rect(650,78,55,22),"Save"))SaveNow();if(GUI.Button(new Rect(711,78,55,22),"Load"))LoadNow();GUI.Label(new Rect(24,104,750,22),"Blue/yellow = block allocation; green = intended walking contour. Both off by default.");}
+}

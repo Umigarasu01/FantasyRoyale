@@ -3,7 +3,10 @@
   "rootNamespace": "FantasyRoyale.MapAuthoringKit.Editor",
   "references": [
     "FantasyRoyale.MapAuthoringKit.Runtime",
-    "Unity.2D.Sprite.Editor"
+    "Unity.2D.Tilemap.Extras",
+    "Unity.2D.Sprite.Editor",
+    "FantasyRoyale.Playtest.Runtime",
+    "Unity.InputSystem"
   ],
   "includePlatforms": [
     "Editor"

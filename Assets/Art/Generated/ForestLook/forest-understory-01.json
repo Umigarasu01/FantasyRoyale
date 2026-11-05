@@ -1,0 +1,26 @@
+{
+  "status": "candidate",
+  "file": "forest-understory-01.png",
+  "sha256": "fe73e488c1d24000f0962b6c1224f311cfc93fac17d9bed5277137431bdee983",
+  "bytes": 1767178,
+  "endpoint": "POST https://api.openai.com/v1/images/edits",
+  "model": "gpt-image-2",
+  "size": "1536x1024",
+  "quality": "high",
+  "n": 1,
+  "reference": "approved-reference.png crop (930, 536, 1526, 800)",
+  "usage": {
+    "input_tokens": 810,
+    "input_tokens_details": {
+      "image_tokens": 480,
+      "text_tokens": 330
+    },
+    "output_tokens": 5488,
+    "output_tokens_details": {
+      "image_tokens": 5488,
+      "text_tokens": 0
+    },
+    "total_tokens": 6298
+  },
+  "prompt": "Create ONE NEW sprite sheet of twenty-four separate small forest-floor plants and stones for a top-down 2D fantasy game, arranged in four rows of six, using image 1 only as the style reference.\n\nInclude this mix, all clearly different from each other: low ferns, broad-leaf shrubs, round leafy bushes, white flower clumps, yellow flower clumps, pink flower clumps, mossy grey boulders, small pebble groups, tall grass tufts and low grass tufts. Match the size used in the reference: the largest shrubs and boulders are about 110 pixels wide, and the small tufts and pebbles about 40 pixels wide. Every item sits on nothing: draw only the plant or stone itself.\n\nThe background must be one completely flat solid pure magenta colour, RGB 255,0,255, with no shading, no gradient, no ground, no cast shadow and no texture. Keep clear magenta space around every item so that no two items touch, and keep every item fully inside the canvas.\n\nMatch the reference for pixel-art style, palette and lighting: oblique overhead view, light from the top left, crisp irregular one-pixel steps, connected colour masses, dark green-blue shadow clusters, restrained lime highlights. This is a new sprite sheet, not a collage of the reference.\n\nDo not include: text, labels, numbers, grid lines, panels, borders, watermark, characters, animals, buildings, water, roads. No soft gradients, airbrush, blur, painterly rendering, post-processed mosaic or mirrored duplicates."
+}

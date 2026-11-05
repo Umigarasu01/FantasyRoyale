@@ -1,0 +1,24 @@
+{
+    "schema": "fantasyroyale.forest-composition.qa.v2",
+    "note": "Editor生成検証。Sceneが配置の正本。店と泉は構図検証候補でGameplay機能を持たない。画像の正式採用は未承認。",
+    "seeds": [
+        {
+            "seed": 20261005,
+            "layoutHash": "1C03E61F5E969BB3D823FB3879D1A4545E6063008FD987F017B55623A9A3E2A2",
+            "logicalValid": true,
+            "reachableCells": 839,
+            "roadCells": 419,
+            "obstacleCount": 115,
+            "waterCells": 111,
+            "bridgeCells": 20,
+            "cliffCells": 69,
+            "landmarkCandidates": 2,
+            "includesLandmarkCandidates": true,
+            "errors": [],
+            "scene": "Assets/Scenes/MapAuthoring/ForestRestart/ForestCompositionSeed20261005.unity",
+            "sceneValidated": true,
+            "sceneValid": true,
+            "sceneIssues": []
+        }
+    ]
+}

@@ -1,0 +1,58 @@
+using UnityEngine;
+using UnityEngine.InputSystem;
+
+/// <summary>
+/// Walks the hero with WASD or the arrow keys and follows with the camera.
+/// A review helper for the validation project, not production character code.
+/// </summary>
+[RequireComponent(typeof(Rigidbody2D))]
+public sealed class ForestLookWalker : MonoBehaviour
+{
+    const float PixelsPerUnit = 64f;
+    const float Speed = 5f;
+
+    public Camera view;
+    public float mapTop;
+    public Rect bounds;
+
+    Rigidbody2D body;
+    SpriteRenderer sprite;
+    Vector2 move;
+
+    void Awake()
+    {
+        body = GetComponent<Rigidbody2D>();
+        sprite = GetComponent<SpriteRenderer>();
+    }
+
+    void Update()
+    {
+        var keys = Keyboard.current;
+        var input = Vector2.zero;
+        if (keys != null)
+        {
+            if (keys.aKey.isPressed || keys.leftArrowKey.isPressed) input.x -= 1f;
+            if (keys.dKey.isPressed || keys.rightArrowKey.isPressed) input.x += 1f;
+            if (keys.sKey.isPressed || keys.downArrowKey.isPressed) input.y -= 1f;
+            if (keys.wKey.isPressed || keys.upArrowKey.isPressed) input.y += 1f;
+        }
+
+        move = input.normalized;
+    }
+
+    void FixedUpdate()
+    {
+        body.linearVelocity = move * Speed;
+    }
+
+    void LateUpdate()
+    {
+        sprite.sortingOrder = Mathf.RoundToInt((mapTop - transform.position.y) * PixelsPerUnit) - 8000;
+        var halfHeight = view.orthographicSize;
+        var halfWidth = halfHeight * view.aspect;
+        var position = (Vector2)transform.position;
+        position.x = Mathf.Clamp(position.x, bounds.xMin + halfWidth, bounds.xMax - halfWidth);
+        position.y = Mathf.Clamp(position.y, bounds.yMin + halfHeight, bounds.yMax - halfHeight);
+        view.transform.position = new Vector3(position.x, position.y, -10f);
+    }
+}
