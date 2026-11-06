@@ -29,7 +29,7 @@ namespace FantasyRoyale.Playtest
         [SerializeField] private Rect mapBounds;
         [SerializeField] private Vector2 spawnPosition;
         [SerializeField, Min(0.1f)] private float moveSpeed = 5f;
-        [SerializeField, Min(1f)] private float cameraHeight = 8f;
+        [SerializeField, Min(1f)] private float cameraHeight = 14f;
         [SerializeField, Min(0f)] private float cameraSmoothSeconds = 0.08f;
         [SerializeField, Min(0f)] private float cameraLookAhead = 0.8f;
 
@@ -138,6 +138,9 @@ namespace FantasyRoyale.Playtest
             var position = (Vector2)PlayerObject.transform.position;
             playerRenderer.sortingOrder =
                 Mathf.RoundToInt((mapBounds.yMax - position.y) * PixelsPerUnit) - SortingOffset;
+
+            // Play中にInspectorで高さを変えて見比べられるよう、毎Frame反映する。
+            gameplayCamera.orthographicSize = cameraHeight * 0.5f;
 
             var lookAhead = new Vector2(latestMoveCommand.Horizontal, latestMoveCommand.Vertical) * cameraLookAhead;
             var target = ClampToMap(position + Vector2.up * CameraTargetHeight + lookAhead);

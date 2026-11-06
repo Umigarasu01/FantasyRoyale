@@ -1,0 +1,13 @@
+{
+  "status": "adopted for the forest run preview",
+  "file": "hero-idle-diagonal-01.png",
+  "sha256": "f7777525cb7b61b82535c2d3251a4e5c3d5bb566dae1a6c02893f5141ea24f13",
+  "bytes": 1343684,
+  "tool": "openai-image skill, edit",
+  "model": "gpt-image-2.5-sunburst",
+  "size": "1536x1024",
+  "quality": "medium",
+  "n": 1,
+  "reference": "hero-idle-01.png, hero-run-01.png",
+  "prompt": "Create ONE NEW pixel-art idle-pose sprite sheet for a top-down 2D fantasy action game. Image 1 shows the character standing still from the front, the side and the back. Image 2 is a run sheet of the same character. This new sheet adds the two diagonal standing views that are missing. Keep exactly the same character, proportions, palette, dark outline and pixel-art style as Image 1.\n\nLayout: exactly 1 row and 2 columns on a completely flat solid pure magenta background, RGB 255,0,255. Both characters are the same size as in Image 1, about 530 pixels tall, standing on the same baseline, each centred in an evenly spaced cell. Keep clear magenta space around the characters.\n\nBoth are the same calm standing idle pose as Image 1. The body is upright and does not lean. Both feet are planted flat on the ground. The legs are straight. No foot is lifted, no knee is raised, and there is no stride. The arms are relaxed and low: the sword points down beside the body and the shield rests at the side.\n\nColumn 1: facing diagonally toward the viewer and to the right, a three-quarter front view. The body is turned halfway between the front view and the right-facing side view of Image 1. The face and the chest are visible at an angle, looking to the lower right.\nColumn 2: facing diagonally away from the viewer and to the right, a three-quarter back view. The body is turned halfway between the back view and the right-facing side view of Image 1. The back of the helmet and the back of the armour are visible at an angle. The face is not visible.\n\nKeep the sword and the shield on the same sides of the body as in Image 1. The helmet, armour, shield and sword keep the same shape, size and colours in both.\n\nDo not include: text, labels, numbers, grid lines, ground, shadows, dust, effects, borders, watermark, or any other object. No soft gradients, blur or painterly rendering."
+}

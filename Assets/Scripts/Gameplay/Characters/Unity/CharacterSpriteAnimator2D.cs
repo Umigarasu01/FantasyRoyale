@@ -12,9 +12,13 @@ namespace FantasyRoyale.Gameplay.Characters.Unity
     [RequireComponent(typeof(CharacterActor2D), typeof(SpriteRenderer))]
     public sealed class CharacterSpriteAnimator2D : MonoBehaviour
     {
+        private const float DiagonalReleaseWaitSeconds = 0.08f;
+
         private CharacterActor2D actor;
         private SpriteRenderer spriteRenderer;
         private CharacterSpriteSetDefinition sprites;
+        private CharacterDirection8 shownFacing = CharacterDirection8.South;
+        private float diagonalReleaseSeconds;
         private float runSeconds;
 
         public bool IsRunning { get; private set; }
@@ -55,25 +59,59 @@ namespace FantasyRoyale.Gameplay.Characters.Unity
                         && actor.Health != null
                         && actor.Health.IsAlive;
 
-            var facing = actor.Facing;
-            var isDown = facing == CharacterDirection8.South;
-            var isUp = facing == CharacterDirection8.North;
+            var facing = UpdateShownFacing(deltaSeconds);
             spriteRenderer.flipX = facing == CharacterDirection8.West
                                    || facing == CharacterDirection8.NorthWest
                                    || facing == CharacterDirection8.SouthWest;
 
-            var frames = isDown ? sprites.RunDown : isUp ? sprites.RunUp : sprites.RunSide;
-            if (IsRunning && frames.Length > 0)
+            var view = sprites.GetView(facing);
+            if (IsRunning && view.Run.Length > 0)
             {
                 // 硬直中などの減速に合わせて、足の動きも遅くする。
                 runSeconds += deltaSeconds * actor.MovementScale;
-                var frame = (int)(runSeconds * sprites.FramesPerSecond) % frames.Length;
-                spriteRenderer.sprite = frames[frame];
+                var frame = (int)(runSeconds * sprites.FramesPerSecond) % view.Run.Length;
+                spriteRenderer.sprite = view.Run[frame];
                 return;
             }
 
             runSeconds = 0f;
-            spriteRenderer.sprite = isDown ? sprites.IdleDown : isUp ? sprites.IdleUp : sprites.IdleSide;
+            spriteRenderer.sprite = view.Idle;
+        }
+
+        /// <summary>
+        /// 斜めの2つのキーは同時には離れないため、斜めから隣の向きへ変わっても少し待つ。
+        /// その間に止まれば、斜めの向きのまま立つ。
+        /// </summary>
+        private CharacterDirection8 UpdateShownFacing(float deltaSeconds)
+        {
+            if (!IsDiagonalRelease(shownFacing, actor.Facing))
+            {
+                shownFacing = actor.Facing;
+                diagonalReleaseSeconds = 0f;
+                return shownFacing;
+            }
+
+            if (actor.MoveCommand.IsMoving)
+            {
+                diagonalReleaseSeconds += deltaSeconds;
+                if (diagonalReleaseSeconds >= DiagonalReleaseWaitSeconds)
+                {
+                    shownFacing = actor.Facing;
+                    diagonalReleaseSeconds = 0f;
+                }
+            }
+
+            return shownFacing;
+        }
+
+        /// <summary>
+        /// 斜めの向きから、片方のキーを離した隣の向きへ変わったかを判定する。
+        /// 8方向は東から順に並ぶので、奇数が斜めで、差が1なら隣である。
+        /// </summary>
+        private static bool IsDiagonalRelease(CharacterDirection8 shown, CharacterDirection8 facing)
+        {
+            var step = ((int)facing - (int)shown + 8) % 8;
+            return (int)shown % 2 == 1 && (step == 1 || step == 7);
         }
     }
 }

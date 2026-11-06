@@ -30,7 +30,7 @@ Unity確認は、Repositoryではなく検証用Project`C:/Users/umiga/Documents
 
 ## 森マップを走るSceneの作り方
 
-1. 騎士のコマ: `Tools/MapAuthoring/`で`python build_hero_frames.py [--preview <gif>]`を実行する。生成シートから走り12コマと立ち姿3枚を書き出す。出力は決まった結果になる。
+1. 騎士のコマ: `Tools/MapAuthoring/`で`python build_hero_frames.py [--preview <gif>]`を実行する。生成シートから走り20コマと立ち姿5枚を書き出す。出力は決まった結果になる。
 2. 地図の配置: 地図出力の地面画像、`objects.json`、`collision.json`、`Parts/`を`Assets/ForestMapPreview/`へ置く。
 3. Scene生成: Unityで`FantasyRoyale/Playtest/Build Forest Map Preview Debug Scene`を実行する。
 

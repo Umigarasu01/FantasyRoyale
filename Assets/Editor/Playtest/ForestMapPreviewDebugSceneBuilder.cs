@@ -185,7 +185,7 @@ namespace FantasyRoyale.Editor.Playtest
         /// </summary>
         private static CharacterSpriteSetDefinition LoadOrCreateHeroSprites()
         {
-            var views = new[] { "down", "side", "up" };
+            var views = new[] { "down", "downside", "side", "upside", "up" };
             AssetDatabase.StartAssetEditing();
             try
             {
@@ -217,22 +217,16 @@ namespace FantasyRoyale.Editor.Playtest
 
             definition.Configure(
                 definition.FramesPerSecond,
-                LoadHeroIdle("down"),
-                LoadHeroIdle("side"),
-                LoadHeroIdle("up"),
-                LoadHeroFrames("down"),
-                LoadHeroFrames("side"),
-                LoadHeroFrames("up"));
+                LoadHeroView("down"),
+                LoadHeroView("downside"),
+                LoadHeroView("side"),
+                LoadHeroView("upside"),
+                LoadHeroView("up"));
             EditorUtility.SetDirty(definition);
             return definition;
         }
 
-        private static Sprite LoadHeroIdle(string view)
-        {
-            return AssetDatabase.LoadAssetAtPath<Sprite>($"{HeroFolder}/hero-idle-{view}.png");
-        }
-
-        private static Sprite[] LoadHeroFrames(string view)
+        private static CharacterSpriteView LoadHeroView(string view)
         {
             var frames = new Sprite[HeroFrameCount];
             for (var frame = 0; frame < HeroFrameCount; frame++)
@@ -240,7 +234,8 @@ namespace FantasyRoyale.Editor.Playtest
                 frames[frame] = AssetDatabase.LoadAssetAtPath<Sprite>($"{HeroFolder}/hero-{view}-{frame}.png");
             }
 
-            return frames;
+            var idle = AssetDatabase.LoadAssetAtPath<Sprite>($"{HeroFolder}/hero-idle-{view}.png");
+            return new CharacterSpriteView(idle, frames);
         }
 
         /// <summary>

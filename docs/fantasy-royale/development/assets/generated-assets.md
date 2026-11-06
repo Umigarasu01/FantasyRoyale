@@ -4,14 +4,16 @@
 
 状態: **[Forest Map Preview Debug Scene](../../design-docs/scenes/forest-map-preview-debug-scene.md)で使用**
 
-地図の騎士`hero_idle.png`を6倍にして参照画像とし、OpenAI Image APIの`gpt-image-2.5-sunburst`（editsのmedium、1536x1024）で正面、横、背面の3行4コマを生成した。立ち姿は同じ設定で、走りのシートも参照に加えて3方向を生成した。
+地図の騎士`hero_idle.png`を6倍にして参照画像とし、OpenAI Image APIの`gpt-image-2.5-sunburst`（editsのmedium、1536x1024）で正面、横、背面の3行4コマを生成した。立ち姿は同じ設定で、走りのシートも参照に加えて3方向を生成した。斜めの2方向は、走りと立ち姿のシートを参照にして別のシートで生成した。
 
 | Source | 保存先 | Prompt概要 | SHA-256 |
 | --- | --- | --- | --- |
 | hero-run-01 | `Assets/Art/Generated/ForestLook/hero-run-01.png` | マゼンタ背景の3方向4コマの走りシート | `1fedd70d882e815c4cce57fe536d223520ded9e6e9654dfcce72633406ed1b18` |
 | hero-idle-01 | 同Directoryの`hero-idle-01.png` | マゼンタ背景の足を揃えた3方向の立ち姿 | `d57f7c8ca12454f98698a19bcfa0e1132681638aa357aa985849e1569396b5b5` |
+| hero-run-diagonal-01 | 同Directoryの`hero-run-diagonal-01.png` | マゼンタ背景の斜め前と斜め後ろの4コマの走りシート | `5c27080d748e636b5f8e34f15b780a45a048318a77e81c02aa60c5391d9b9d7e` |
+| hero-idle-diagonal-01 | 同Directoryの`hero-idle-diagonal-01.png` | マゼンタ背景の斜め前と斜め後ろの立ち姿 | `f7777525cb7b61b82535c2d3251a4e5c3d5bb566dae1a6c02893f5141ea24f13` |
 
-Prompt全文は同名のJSONで確認する。`Tools/MapAuthoring/build_hero_frames.py`が背景を抜いて地図の縮尺へ揃え、`Assets/Art/Generated/ForestLook/Hero/`へ走り12コマと立ち姿3枚を書き出す。横向きは右向きだけを持ち、左向きは表示時に反転する。
+Prompt全文は同名のJSONで確認する。`Tools/MapAuthoring/build_hero_frames.py`が背景を抜いて地図の縮尺へ揃え、`Assets/Art/Generated/ForestLook/Hero/`へ走り20コマと立ち姿5枚を書き出す。横と斜めは右寄りの向きだけを持ち、左寄りの向きは表示時に反転する。
 
 ## 2026-11-05 森マップの画作り部品
 

@@ -1,10 +1,30 @@
+using System;
 using UnityEngine;
 
 namespace FantasyRoyale.Gameplay.Characters.Unity
 {
     /// <summary>
-    /// Characterの向きごとの待機Spriteと走りのコマをまとめる定義Asset。
-    /// 左向きは横向きの反転で表すため、持つのは正面、横、背面の3方向だけである。
+    /// 1方向分の立ち姿と走りのコマ。
+    /// </summary>
+    [Serializable]
+    public sealed class CharacterSpriteView
+    {
+        [SerializeField] private Sprite idle;
+        [SerializeField] private Sprite[] run = new Sprite[0];
+
+        public CharacterSpriteView(Sprite idle, Sprite[] run)
+        {
+            this.idle = idle;
+            this.run = run;
+        }
+
+        public Sprite Idle => idle;
+        public Sprite[] Run => run;
+    }
+
+    /// <summary>
+    /// Characterの向きごとの立ち姿と走りのコマをまとめる定義Asset。
+    /// 左寄りの向きは右寄りの反転で表すため、持つのは正面、斜め前、横、斜め後ろ、背面の5方向だけである。
     /// </summary>
     [CreateAssetMenu(
         fileName = "CharacterSprites",
@@ -12,40 +32,53 @@ namespace FantasyRoyale.Gameplay.Characters.Unity
     public sealed class CharacterSpriteSetDefinition : ScriptableObject
     {
         [SerializeField, Min(1f)] private float framesPerSecond = 11f;
-        [SerializeField] private Sprite idleDown;
-        [SerializeField] private Sprite idleSide;
-        [SerializeField] private Sprite idleUp;
-        [SerializeField] private Sprite[] runDown = new Sprite[0];
-        [SerializeField] private Sprite[] runSide = new Sprite[0];
-        [SerializeField] private Sprite[] runUp = new Sprite[0];
+        [SerializeField] private CharacterSpriteView down;
+        [SerializeField] private CharacterSpriteView downSide;
+        [SerializeField] private CharacterSpriteView side;
+        [SerializeField] private CharacterSpriteView upSide;
+        [SerializeField] private CharacterSpriteView up;
 
         public float FramesPerSecond => framesPerSecond;
-        public Sprite IdleDown => idleDown;
-        public Sprite IdleSide => idleSide;
-        public Sprite IdleUp => idleUp;
-        public Sprite[] RunDown => runDown;
-        public Sprite[] RunSide => runSide;
-        public Sprite[] RunUp => runUp;
 
         /// <summary>
-        /// Editor Builderと確認用Testから、全てのSpriteと再生速度を設定する。
+        /// 8方向の向きに対応する表示を返す。
+        /// </summary>
+        public CharacterSpriteView GetView(CharacterDirection8 facing)
+        {
+            switch (facing)
+            {
+                case CharacterDirection8.South:
+                    return down;
+                case CharacterDirection8.SouthEast:
+                case CharacterDirection8.SouthWest:
+                    return downSide;
+                case CharacterDirection8.NorthEast:
+                case CharacterDirection8.NorthWest:
+                    return upSide;
+                case CharacterDirection8.North:
+                    return up;
+                default:
+                    return side;
+            }
+        }
+
+        /// <summary>
+        /// Editor Builderと確認用Testから、全ての表示と再生速度を設定する。
         /// </summary>
         public void Configure(
             float newFramesPerSecond,
-            Sprite newIdleDown,
-            Sprite newIdleSide,
-            Sprite newIdleUp,
-            Sprite[] newRunDown,
-            Sprite[] newRunSide,
-            Sprite[] newRunUp)
+            CharacterSpriteView newDown,
+            CharacterSpriteView newDownSide,
+            CharacterSpriteView newSide,
+            CharacterSpriteView newUpSide,
+            CharacterSpriteView newUp)
         {
             framesPerSecond = newFramesPerSecond;
-            idleDown = newIdleDown;
-            idleSide = newIdleSide;
-            idleUp = newIdleUp;
-            runDown = newRunDown;
-            runSide = newRunSide;
-            runUp = newRunUp;
+            down = newDown;
+            downSide = newDownSide;
+            side = newSide;
+            upSide = newUpSide;
+            up = newUp;
         }
     }
 }

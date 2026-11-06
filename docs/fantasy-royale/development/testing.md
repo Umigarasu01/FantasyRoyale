@@ -83,7 +83,7 @@ Editorが同じProjectを開いているとBatchmodeは使えない。編集中�
 
 Folderの絶対Pathが長いと、一部のPackageで`DirectoryNotFoundException`が出る。短いPathを選ぶ。
 
-複製先で作ったSceneを本体へ戻すときは、参照が切れないよう新しいAssetと`.meta`を一緒に戻す。本体のEditorがImportした後は`.meta`のGUIDが別になるので、Builderのメニューで作り直す。
+複製先で作ったSceneを本体へ戻すときは、参照が切れないよう新しいAssetと`.meta`を一緒に戻す。本体のEditorは新しいFileを先にImportして別のGUIDを付けることがあるので、戻す前に`.meta`のGUIDを比べ、参照されているFileは複製先の`.meta`で揃える。
 
 ## Forest Compositionの再現
 
@@ -150,7 +150,7 @@ FantasyRoyale.MapAuthoringKit.Editor.ForestRestartAssetBuilder.BuildScene(
 
 ## 現在の基準
 
-2026-11-06、森マップの走行確認の追加後、一時複製のProjectでのBatchmode実行: EditMode 279 / 279成功、PlayMode 13 / 18成功（4回連続で同じ結果）。失敗した5件は従来と同じStudyAのSetUp失敗で、証跡Folderの指定がないため実行されていない。Player Buildと`dotnet build`は未実行。攻撃の5件は時刻による入力の破棄で不安定だったため修正し、単独でも4回連続で全件成功した。
+2026-11-06、森マップの走行確認と斜めの表示の追加後、一時複製のProjectでのBatchmode実行: EditMode 279 / 279成功、PlayMode 14 / 19成功。失敗した5件は従来と同じStudyAのSetUp失敗で、証跡Folderの指定がないため実行されていない。Player Buildと`dotnet build`は未実行。攻撃の5件は時刻による入力の破棄で不安定だったため修正し、単独でも4回連続で全件成功した。
 
 2026-11-05、攻撃のVertical Slice実装後のBatchmode実行: EditMode 279 / 279成功、Compile Error 0。PlayMode 9 / 14成功で、Exploration Previewの4件と攻撃の5件は成功した。失敗した5件は`StudyANativeLayoutsPlayPreviewDebugTests`と`StudyANativeFlexibleConnectionsPlayPreviewDebugTests`で、検証の保存先の指定がなくSetUpで止まる。以前の記録と同じ結果で、機能の不具合を示すものではない。C# Project BuildとPlayer Buildは実行していない。以下はそれ以前の記録である。
 

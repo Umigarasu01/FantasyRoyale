@@ -25,13 +25,14 @@ namespace FantasyRoyale.Playtest.Tests.PlayMode
         [TearDown]
         public void TearDown()
         {
+            Time.captureDeltaTime = 0f;
             Object.Destroy(character);
             Object.Destroy(sprites);
             Object.Destroy(texture);
         }
 
         /// <summary>
-        /// 走る向きに応じて正面、横、背面のコマを使い、左向きは横向きの反転になることを確認する。
+        /// 走る向きに応じて5方向のコマを使い、左寄りの向きは右寄りの反転になることを確認する。
         /// </summary>
         [UnityTest]
         public IEnumerator Animator_UsesFramesForFacing()
@@ -41,22 +42,56 @@ namespace FantasyRoyale.Playtest.Tests.PlayMode
             actor.SetMoveCommand(new CharacterMoveCommand(1f, 0f));
             yield return null;
             Assert.That(animator.IsRunning, Is.True);
-            Assert.That(sprites.RunSide, Does.Contain(renderer.sprite));
+            Assert.That(Frames(CharacterDirection8.East), Does.Contain(renderer.sprite));
             Assert.That(renderer.flipX, Is.False);
 
             actor.SetMoveCommand(new CharacterMoveCommand(-1f, -1f));
             yield return null;
-            Assert.That(sprites.RunSide, Does.Contain(renderer.sprite));
-            Assert.That(renderer.flipX, Is.True, "斜め左は横向きの反転で表します。");
+            Assert.That(Frames(CharacterDirection8.SouthEast), Does.Contain(renderer.sprite));
+            Assert.That(renderer.flipX, Is.True, "左斜め前は右斜め前の反転で表します。");
 
-            actor.SetMoveCommand(new CharacterMoveCommand(0f, 1f));
+            actor.SetMoveCommand(new CharacterMoveCommand(1f, 1f));
             yield return null;
-            Assert.That(sprites.RunUp, Does.Contain(renderer.sprite));
+            Assert.That(Frames(CharacterDirection8.NorthEast), Does.Contain(renderer.sprite));
             Assert.That(renderer.flipX, Is.False);
 
             actor.SetMoveCommand(new CharacterMoveCommand(0f, -1f));
             yield return null;
-            Assert.That(sprites.RunDown, Does.Contain(renderer.sprite));
+            Assert.That(Frames(CharacterDirection8.South), Does.Contain(renderer.sprite));
+
+            actor.SetMoveCommand(new CharacterMoveCommand(0f, 1f));
+            yield return null;
+            Assert.That(Frames(CharacterDirection8.North), Does.Contain(renderer.sprite));
+            Assert.That(renderer.flipX, Is.False);
+        }
+
+        /// <summary>
+        /// 斜めの2つのキーが少しずれて離れても斜めの立ち姿で止まり、
+        /// 片方のキーを押し続ければ隣の向きへ変わることを確認する。
+        /// </summary>
+        [UnityTest]
+        public IEnumerator Animator_KeepsDiagonalWhenKeysReleaseApart()
+        {
+            var actor = CreateCharacter(out var renderer, out _);
+            Time.captureDeltaTime = 1f / 60f;
+
+            actor.SetMoveCommand(new CharacterMoveCommand(1f, 1f));
+            yield return null;
+            actor.SetMoveCommand(new CharacterMoveCommand(1f, 0f));
+            yield return null;
+            actor.SetMoveCommand(CharacterMoveCommand.None);
+            yield return null;
+            Assert.That(renderer.sprite, Is.SameAs(View(CharacterDirection8.NorthEast).Idle));
+
+            actor.SetMoveCommand(new CharacterMoveCommand(1f, 1f));
+            yield return null;
+            actor.SetMoveCommand(new CharacterMoveCommand(1f, 0f));
+            for (var frame = 0; frame < 8; frame++)
+            {
+                yield return null;
+            }
+
+            Assert.That(Frames(CharacterDirection8.East), Does.Contain(renderer.sprite));
         }
 
         /// <summary>
@@ -80,7 +115,7 @@ namespace FantasyRoyale.Playtest.Tests.PlayMode
             actor.SetMoveCommand(CharacterMoveCommand.None);
             yield return null;
             Assert.That(animator.IsRunning, Is.False);
-            Assert.That(renderer.sprite, Is.SameAs(sprites.IdleSide), "止まっても最後の向きを保ちます。");
+            Assert.That(renderer.sprite, Is.SameAs(View(CharacterDirection8.East).Idle), "止まっても最後の向きを保ちます。");
         }
 
         /// <summary>
@@ -94,7 +129,7 @@ namespace FantasyRoyale.Playtest.Tests.PlayMode
             actor.SetMovementScale(0f);
             yield return null;
             Assert.That(animator.IsRunning, Is.False);
-            Assert.That(renderer.sprite, Is.SameAs(sprites.IdleUp));
+            Assert.That(renderer.sprite, Is.SameAs(View(CharacterDirection8.North).Idle));
 
             actor.SetMovementScale(1f);
             actor.Health.ApplyDamage(actor.Health.MaximumHealth);
@@ -135,7 +170,7 @@ namespace FantasyRoyale.Playtest.Tests.PlayMode
             yield return null;
 
             var camera = preview.GameplayCamera;
-            Assert.That(camera.orthographicSize * 2f, Is.EqualTo(8f).Within(0.001f), "通常Cameraは縦8.0です。");
+            Assert.That(camera.orthographicSize * 2f, Is.EqualTo(14f).Within(0.001f), "通常Cameraは縦14.0です。");
             var start = (Vector2)preview.PlayerObject.transform.position;
             var startOrder = preview.PlayerSortingOrder;
             var playerRenderer = preview.PlayerObject.GetComponent<SpriteRenderer>();
@@ -201,9 +236,10 @@ namespace FantasyRoyale.Playtest.Tests.PlayMode
         {
             texture = new Texture2D(4, 4);
             Sprite Create() => Sprite.Create(texture, new Rect(0f, 0f, 4f, 4f), Vector2.zero);
-            Sprite[] Frames() => new[] { Create(), Create(), Create(), Create() };
+            CharacterSpriteView NewView() =>
+                new CharacterSpriteView(Create(), new[] { Create(), Create(), Create(), Create() });
             sprites = ScriptableObject.CreateInstance<CharacterSpriteSetDefinition>();
-            sprites.Configure(30f, Create(), Create(), Create(), Frames(), Frames(), Frames());
+            sprites.Configure(30f, NewView(), NewView(), NewView(), NewView(), NewView());
 
             character = new GameObject("TestCharacter");
             renderer = character.AddComponent<SpriteRenderer>();
@@ -212,6 +248,16 @@ namespace FantasyRoyale.Playtest.Tests.PlayMode
             animator = character.AddComponent<CharacterSpriteAnimator2D>();
             animator.Initialize(sprites);
             return actor;
+        }
+
+        private CharacterSpriteView View(CharacterDirection8 facing)
+        {
+            return sprites.GetView(facing);
+        }
+
+        private Sprite[] Frames(CharacterDirection8 facing)
+        {
+            return View(facing).Run;
         }
     }
 }

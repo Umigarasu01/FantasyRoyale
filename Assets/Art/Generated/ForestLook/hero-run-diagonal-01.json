@@ -1,0 +1,13 @@
+{
+  "status": "adopted for the forest run preview",
+  "file": "hero-run-diagonal-01.png",
+  "sha256": "5c27080d748e636b5f8e34f15b780a45a048318a77e81c02aa60c5391d9b9d7e",
+  "bytes": 1576701,
+  "tool": "openai-image skill, edit",
+  "model": "gpt-image-2.5-sunburst",
+  "size": "1536x1024",
+  "quality": "medium",
+  "n": 1,
+  "reference": "hero-run-01.png, hero-idle-01.png",
+  "prompt": "Create ONE NEW pixel-art run-cycle sprite sheet for a top-down 2D fantasy action game. Image 1 is the run sheet of the character seen from the front, the side and the back. Image 2 shows the same character standing. This new sheet adds the two diagonal views that are missing. Keep exactly the same character, proportions, palette, dark outline and pixel-art style as Image 1: a small chibi knight with a silver helmet, silver armour, a blue tunic with gold trim, a sword and a blue shield with a white cross.\n\nLayout: exactly 2 rows and 4 columns on a completely flat solid pure magenta background, RGB 255,0,255. Every character is the same size, about 300 pixels tall, centred in an evenly spaced grid cell. Keep clear magenta space between all characters.\n\nThe legs must be clearly different in each column, so that the four frames play as an energetic run:\n\nColumn 1, stride A: the two legs are spread far apart, one foot ahead and one foot behind, body low.\nColumn 2, passing: both legs are close together under the body, one knee raised, body slightly higher than column 1.\nColumn 3, stride B: the same wide stride as column 1 but with the opposite leg in front, body low.\nColumn 4, passing: both legs close together under the body, the other knee raised, body slightly higher.\n\nRow 1: running diagonally toward the viewer and to the right, a three-quarter front view. The body is turned halfway between the front view and the right-facing side view of Image 1. The face and the chest are visible at an angle, looking to the lower right.\nRow 2: running diagonally away from the viewer and to the right, a three-quarter back view. The body is turned halfway between the back view and the right-facing side view of Image 1. The back of the helmet and the back of the armour are visible at an angle, moving to the upper right. The face is not visible.\n\nThe sword arm and shield arm swing a little with the stride. Keep the sword and the shield on the same sides of the body as in Image 1. The helmet, armour, shield and sword keep the same shape, size and colours in every frame.\n\nDo not include: text, labels, numbers, grid lines, ground, shadows, dust, effects, borders, watermark, or any other object. No soft gradients, blur or painterly rendering."
+}
