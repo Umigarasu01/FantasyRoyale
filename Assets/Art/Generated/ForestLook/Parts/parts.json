@@ -2,80 +2,80 @@
   "tree-oak": {
     "file": "tree-oak.png",
     "size": [
-      157,
-      151
-    ],
-    "pivot": [
-      78,
-      0
-    ],
-    "source": "forest-trees-01.png",
-    "sha256": "8004705497c5d033c50c1ee02b0d08b57bc05927975f433b9f3d9fcf844e2a93"
-  },
-  "tree-upright": {
-    "file": "tree-upright.png",
-    "size": [
-      115,
-      156
-    ],
-    "pivot": [
-      57,
-      0
-    ],
-    "source": "forest-trees-01.png",
-    "sha256": "8a014b5b2001f5fc50b3fb6d736f1e35b292421a9295df705ff125123fdf75ea"
-  },
-  "tree-split": {
-    "file": "tree-split.png",
-    "size": [
-      156,
-      142
-    ],
-    "pivot": [
-      78,
-      0
-    ],
-    "source": "forest-trees-01.png",
-    "sha256": "7fd2600e662e0049b3043d4e8b17f2cf822da62b9163124d936172d5ec6fd304"
-  },
-  "tree-young": {
-    "file": "tree-young.png",
-    "size": [
-      82,
-      109
-    ],
-    "pivot": [
-      41,
-      0
-    ],
-    "source": "forest-trees-01.png",
-    "sha256": "9e83d0e3bee9e53a2332995593d347a9223f91e6003d63767c02a5ceca25bd71"
-  },
-  "tree-wide": {
-    "file": "tree-wide.png",
-    "size": [
-      159,
-      114
-    ],
-    "pivot": [
-      79,
-      0
-    ],
-    "source": "forest-trees-01.png",
-    "sha256": "405e5fbf749896dece5141748a1137e45072ebca3a8e31701eda57893e5c18c7"
-  },
-  "tree-dense": {
-    "file": "tree-dense.png",
-    "size": [
       153,
-      145
+      154
     ],
     "pivot": [
       76,
       0
     ],
-    "source": "forest-trees-01.png",
-    "sha256": "975c77ae4db0886a601580d9f506132f6c0b8913c92231b637149f6000206d63"
+    "source": "forest-trees-02.png",
+    "sha256": "53fe65f4eaa998ed7b08ca8c84767ce664b288b766631d076e7461b1b1e3e31c"
+  },
+  "tree-upright": {
+    "file": "tree-upright.png",
+    "size": [
+      83,
+      170
+    ],
+    "pivot": [
+      41,
+      0
+    ],
+    "source": "forest-trees-02.png",
+    "sha256": "147d0ef5a242d31e265f8dc34d8bd4f86924d48e3191fc79d6fafc445c0417bd"
+  },
+  "tree-split": {
+    "file": "tree-split.png",
+    "size": [
+      166,
+      140
+    ],
+    "pivot": [
+      83,
+      0
+    ],
+    "source": "forest-trees-02.png",
+    "sha256": "1388a308fa7b20a4ea82140088c62e5b4fac8e398af39aaece2ab7b25fb385fe"
+  },
+  "tree-young": {
+    "file": "tree-young.png",
+    "size": [
+      99,
+      144
+    ],
+    "pivot": [
+      49,
+      0
+    ],
+    "source": "forest-trees-02.png",
+    "sha256": "628414a1dbb4dd532b8337860fc2d750d914c92c00d0f245a90bc7957890d863"
+  },
+  "tree-wide": {
+    "file": "tree-wide.png",
+    "size": [
+      174,
+      142
+    ],
+    "pivot": [
+      87,
+      0
+    ],
+    "source": "forest-trees-02.png",
+    "sha256": "b9f9530cc0b34be16d6b2e5065abca0af9ddb5d6cb107daa103e06f4b4837d40"
+  },
+  "tree-dense": {
+    "file": "tree-dense.png",
+    "size": [
+      158,
+      153
+    ],
+    "pivot": [
+      79,
+      0
+    ],
+    "source": "forest-trees-02.png",
+    "sha256": "2cefed2da3cfcc22eca13aba1476fa6cc83480a5e2458d4da81999d9a6bd014a"
   },
   "feature-spring": {
     "file": "feature-spring.png",

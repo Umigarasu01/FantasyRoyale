@@ -1,5 +1,21 @@
 # GeneratedAssets
 
+## 2026-11-06 森マップの設置物の描き直し
+
+状態: **森マップで使用**
+
+既存の設置物は仮の絵で、草地に対して描き方がきれい過ぎたため、必要なものを新しく描いた。生成方法はOpenAI Image APIの`gpt-image-2.5-sunburst`（editsのmedium、1536x1024）で、草地の切り抜きと、描き方を認めた見本を参照画像にしている。
+
+| Source | 保存先 | Prompt概要 | SHA-256 |
+| --- | --- | --- | --- |
+| forest-trees-02 | 同Directoryの`forest-trees-02.png` | マゼンタ背景の異なる6種の木 | `76134b7cedd3a241bbe26653585d19c346c80a7b0b0b4b183469424d63644284` |
+| forest-village-01 | 同Directoryの`forest-village-01.png` | 宿、民家、屋台、噴水、木箱、樽、宝箱の閉と開、道標 | `b2acafe4b1014058ac16cb38b3c8aef652a247fcacccb9c1bd4dccf9f10c35a8` |
+| forest-rural-01 | 同Directoryの`forest-rural-01.png` | 天幕、焚き火、水車小屋、見張り台、作業小屋、丸太、切り株、畑、柵 | `baf8c11fd56767596b12ccd9b7083b4bf389799c810aafee9672d720d8466386` |
+| forest-landmarks-01 | 同Directoryの`forest-landmarks-01.png` | 洞窟、坑道、岩壁、崩れた門、柱、祠、泉、魔物の巣、荷車 | `23df74604431fade7f32d097aed93e4712b497feda4c67dc594e27625dd4b9d5` |
+| forest-extras-01 | 同Directoryの`forest-extras-01.png` | 井戸、廃屋、薬草畑、作業台、木箱と樽、岩、倒木、掲示板、瓦礫 | `b87fab73e332d34a55a2abeeef054b655a40cad9b81e496f3fc68345ff5c6225` |
+
+Prompt全文は同名のJSONで確認する。`Tools/MapAuthoring/forest_objects.py`が大きさと判定を持ち、シートから切り出す。木は`build_forest_parts.py`が切り出す。
+
 ## 2026-11-06 騎士の走りアニメーションと立ち姿
 
 状態: **[Forest Map Preview Debug Scene](../../design-docs/scenes/forest-map-preview-debug-scene.md)で使用**

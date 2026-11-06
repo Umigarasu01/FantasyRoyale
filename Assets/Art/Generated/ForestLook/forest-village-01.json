@@ -1,0 +1,13 @@
+{
+  "status": "adopted for the forest map",
+  "file": "forest-village-01.png",
+  "sha256": "b2acafe4b1014058ac16cb38b3c8aef652a247fcacccb9c1bd4dccf9f10c35a8",
+  "bytes": 1927553,
+  "tool": "openai-image skill, edit",
+  "model": "gpt-image-2.5-sunburst",
+  "size": "1536x1024",
+  "quality": "medium",
+  "n": 1,
+  "reference": "grass sample, redraw-01",
+  "prompt": "Image 1 is the grass ground of a top-down 2D pixel-art fantasy game. Image 2 shows objects in the approved art style for this game. Draw the new objects below in exactly the art style of Image 2, so they sit naturally on the grass of Image 1.\n\nStyle rules: the same top-down three-quarter viewing angle as Image 2. Small rough clusters of pixels and slight mottling, the same grain as the grass. Earthy, slightly muted natural colours. Dark warm soft shadow colours for edges, never pure black. A little wear, moss and dirt near the ground. No smooth or glossy surfaces.\n\nLayout: exactly 3 rows and 3 columns on a completely flat solid pure magenta background, RGB 255,0,255. Each object is centred in an evenly spaced grid cell, with clear magenta space around it.\n\nRow 1: a two-storey timber-framed inn with a red tile roof and a hanging sign; a small cottage with a red tile roof and a front door; a merchant's market stall with a blue and white striped awning and potions on the counter.\nRow 2: a round stone fountain with clear blue water; a small wooden crate; a wooden barrel.\nRow 3: a closed wooden treasure chest with iron bands and a gold lock; the same treasure chest open, with gold coins inside; a simple wooden signpost.\n\nDo not include: text, letters, labels, ground, grass tiles, cast shadows on the background, borders, watermark, or any other object. No blur, no painterly brush strokes, no gradients."
+}

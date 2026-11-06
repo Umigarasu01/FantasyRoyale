@@ -31,7 +31,7 @@ def part_scale(name, default):
     return next((scale for prefix, scale in UNDERSTORY_SCALES if name.startswith(prefix)), default)
 
 SHEETS = {
-    "forest-trees-01.png": {
+    "forest-trees-02.png": {
         "columns": 3,
         "rows": 2,
         "scale": TREE_SCALE,

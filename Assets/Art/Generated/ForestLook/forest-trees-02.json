@@ -1,0 +1,13 @@
+{
+  "status": "adopted for the forest map",
+  "file": "forest-trees-02.png",
+  "sha256": "76134b7cedd3a241bbe26653585d19c346c80a7b0b0b4b183469424d63644284",
+  "bytes": 1885762,
+  "tool": "openai-image skill, edit",
+  "model": "gpt-image-2.5-sunburst",
+  "size": "1536x1024",
+  "quality": "medium",
+  "n": 1,
+  "reference": "grass sample, redraw-01",
+  "prompt": "Image 1 is the grass ground of a top-down 2D pixel-art fantasy game. Image 2 shows objects in the approved art style for this game. Draw the new objects below in exactly the art style of Image 2, so they sit naturally on the grass of Image 1.\n\nStyle rules: the same top-down three-quarter viewing angle as Image 2. Small rough clusters of pixels and slight mottling, the same grain as the grass. Earthy, slightly muted natural colours. Dark warm soft shadow colours for edges, never pure black. A little wear, moss and dirt near the ground. No smooth or glossy surfaces.\n\nLayout: exactly 2 rows and 3 columns on a completely flat solid pure magenta background, RGB 255,0,255. Each tree is centred in an evenly spaced grid cell, with its trunk base near the bottom of the cell, and clear magenta space around it.\n\nDraw six different forest trees, all about the same height:\nRow 1: a broad round oak; a tall upright tree with a narrow crown; a tree whose trunk splits into two crowns.\nRow 2: a young slim tree; a wide spreading tree; a dense heavy tree with a full crown.\n\nEach tree has a short visible trunk and roots, and a crown made of clumps of leaves with lit tops and shaded undersides. Keep the greens close to the grass of Image 1, a little darker and cooler.\n\nDo not include: text, labels, ground, grass tiles, cast shadows on the background, borders, watermark, or any other object. No blur, no painterly brush strokes, no gradients."
+}

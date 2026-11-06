@@ -1,0 +1,13 @@
+{
+  "status": "adopted for the forest map",
+  "file": "forest-landmarks-01.png",
+  "sha256": "23df74604431fade7f32d097aed93e4712b497feda4c67dc594e27625dd4b9d5",
+  "bytes": 2118422,
+  "tool": "openai-image skill, edit",
+  "model": "gpt-image-2.5-sunburst",
+  "size": "1536x1024",
+  "quality": "medium",
+  "n": 1,
+  "reference": "grass sample, forest-village-01",
+  "prompt": "Image 1 is the grass ground of a top-down 2D pixel-art fantasy game. Image 2 shows objects in the approved art style for this game. Draw the new objects below in exactly the art style of Image 2, so they sit naturally on the grass of Image 1.\n\nStyle rules: the same top-down three-quarter viewing angle as Image 2. Small rough clusters of pixels and slight mottling, the same grain as the grass. Earthy, slightly muted natural colours. Dark warm soft shadow colours for edges, never pure black. A little wear, moss and dirt near the ground. No smooth or glossy surfaces.\n\nLayout: exactly 3 rows and 3 columns on a completely flat solid pure magenta background, RGB 255,0,255. Each object is centred in an evenly spaced grid cell, with clear magenta space around it.\n\nRow 1: a dark cave mouth in a mound of rocks; a mine entrance with a wooden frame set into rocks; a section of rocky cliff wall with grass on top.\nRow 2: a ruined stone archway with fallen blocks; a single broken stone column; a small stone wayside shrine with a tiny roof.\nRow 3: a small natural spring pond edged with stones and reeds; a monster nest made of sticks and bones with large eggs inside; a small old wooden handcart carrying a crate.\n\nDo not include: text, letters, labels, ground, grass tiles, cast shadows on the background, borders, watermark, or any other object. No blur, no painterly brush strokes, no gradients."
+}

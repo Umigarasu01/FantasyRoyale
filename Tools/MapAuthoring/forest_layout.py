@@ -32,6 +32,9 @@ ROADS = {
     "shrine-spur": [(118, 50.5), (115, 58), (113, 68.5)],
     "nest-spur": [(118, 50.5), (115, 45), (112, 42)],
     "farm-spur": [(114, 83.3), (116, 87), (118, 91)],
+    "hut-west-walk": [(43, 57.4), (43.4, 54), (44, 51)],
+    "hut-east-walk": [(74, 57.4), (74, 54), (73.5, 50.2)],
+    "shed-walk": [(28, 27.6), (31, 25.6), (36, 24.2)],
 }
 
 # Open ground: centre x, centre y, radius x, radius y.
@@ -62,32 +65,36 @@ FACILITIES = [
     # Village.
     ("inn", 60, 60), ("timber-hut", 74, 58), ("timber-hut", 43, 58),
     ("market-stall", 50, 47.5), ("market-stall", 55, 45.5), ("fountain", 61, 46), ("well", 72, 46.5),
-    ("loaded-cart", 80, 45.5), ("crate", 69, 60), ("crate", 52.5, 60.2), ("tool-bench", 78, 56),
+    ("crate-stack", 46.8, 46.6), ("barrel", 64.6, 59.6), ("crate", 55.2, 59.8), ("notice-board", 56, 55.4),
+    ("signpost", 62.4, 55), ("loaded-cart", 77.5, 48.4), ("tool-bench", 78.5, 56.5),
     # Checkpoint.
-    ("watchtower", 14, 57), ("fence", 26, 56), ("crate", 13.5, 47),
+    ("watchtower", 14, 57), ("fence", 10.5, 53.5), ("crate", 16.8, 56),
     # Camp.
-    ("tent", 22, 88), ("tent", 31, 93), ("tent", 40, 81), ("fire", 28, 87), ("log-stack", 15, 76), ("crate", 36, 92),
+    ("tent", 22, 88), ("tent", 31, 93), ("tent", 40, 81), ("fire", 28, 87), ("log-stack", 24.5, 82), ("crate", 35, 92.2),
     # Abandoned yard.
-    ("broken-house", 70, 96.5), ("well", 78, 94.5), ("fence", 61.5, 97), ("stump", 72, 92.5),
+    ("broken-house", 70, 96.5), ("well", 78, 94.5), ("fence", 66, 92.8), ("fence", 70.8, 92.8), ("rubble", 75, 92.8),
+    ("stump", 64, 94),
     # Mill.
-    ("watermill", 93.5, 91), ("crate", 87, 90),
+    ("watermill", 93.5, 91), ("crate", 87.4, 90), ("barrel", 86.6, 88.9),
     # Farm.
-    ("timber-hut", 118, 92), ("crop-row", 110, 90), ("crop-row", 110, 94.5), ("well", 124, 90), ("fence", 127, 94),
+    ("timber-hut", 118, 92), ("crop-row", 110, 90), ("crop-row", 110, 94.5), ("well", 124, 90),
+    ("fence", 105.6, 87.2), ("fence", 110.4, 87.2), ("fence", 124, 87),
     # Shrine.
     ("wayside-shrine", 113, 70), ("natural-spring", 120, 66), ("herb-bed", 105, 66),
     # Nest.
     ("monster-nest", 112, 38), ("rock-cluster", 117, 38.5), ("rock-cluster", 107, 37),
     # Fort.
-    ("ruined-arch", 113, 27), ("ruined-column", 104, 26), ("ruined-column", 122, 31.5),
-    ("watchtower", 120, 12), ("fence", 106, 15), ("crate", 111, 14.5),
+    ("ruined-arch", 113, 27), ("ruined-column", 104, 26), ("ruined-column", 122, 31.5), ("rubble", 109, 22),
+    ("watchtower", 120, 12), ("fence", 114.8, 13.4), ("fence", 125.2, 13.4), ("crate", 117.6, 13.6),
     # South yard.
-    ("tool-bench", 76, 23.5), ("crate", 72, 24.5), ("loaded-cart", 83, 12.5),
+    ("tool-bench", 76, 23.5), ("crate", 72, 24.5), ("loaded-cart", 76, 15.4),
     # Mine.
-    ("mine-mouth", 36, 27), ("logging-shed", 28, 28.5), ("log-stack", 42, 19.5), ("loaded-cart", 19, 22),
+    ("mine-mouth", 36, 27), ("logging-shed", 28, 28.5), ("log-stack", 42, 19.5), ("loaded-cart", 40.2, 25),
     # Cave.
     ("cave-mouth", 33, 68), ("cliff-face-small", 27.5, 68.5), ("cliff-face-small", 41.5, 68.5), ("rock-cluster", 28, 64),
     # Logging.
     ("logging-shed", 40, 37), ("log-stack", 48, 35.5), ("stump", 35, 33), ("stump", 44, 28.5), ("tool-bench", 33.5, 36.5),
+    ("fallen-log", 52, 33),
 ]
 
 # Places to photograph during the Unity check: name, x, y.

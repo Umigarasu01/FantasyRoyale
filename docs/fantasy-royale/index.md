@@ -38,6 +38,7 @@
 
 - 規約: [PLANS.md](PLANS.md)
 - 進行中: [Character・戦闘基盤](exec-plans/active/combat-foundation.md)
+- 進行中: [森マップをゲームとして整える](exec-plans/active/forest-playable-map.md)
 - 進行中: [森林マップの空間構成改善](exec-plans/active/forest-composition-improvement.md)
 - 完了済み: [Knowledge Base移行](exec-plans/completed/knowledge-base-migration.md)
 - 完了済み: [森林素材の再制作と自動配置検証](exec-plans/completed/forest-art-restart.md)

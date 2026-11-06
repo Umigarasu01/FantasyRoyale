@@ -22,7 +22,7 @@
 2. 部品化: `python build_forest_parts.py`。生成シートを切り出し、`Parts/`へ部品と`parts.json`を書き出す。
 3. 地図生成: `Tools/MapAuthoring/`で`python build_forest_map.py <出力先> [--area x0 x1 y0 y1]`を実行する。省略時は全域、`--area`で一部だけを生成する。全域は2〜4分かかる。道、川、施設の位置は`forest_layout.py`、デザイン画の画素から地面を合成する処理は`forest_texture.py`にある。
 
-デザイン案と施設の原画は`Tools/MapAuthoring/Inputs/`にある。生成した地図の出力は再生成できるのでGitへ入れない。
+デザイン案は`Tools/MapAuthoring/Inputs/`にある。同じ場所の施設の原画は旧素材で、地図生成では使わない。生成した地図の出力は再生成できるのでGitへ入れない。
 
 次はディスクにだけ残し、Gitへ入れない: `Assets/NemoBlocks/Scenes/`、`Assets/NemoBlocks/Generated/`、OverheadStudyAの素材とScene、`NemoValidation*/`、`Assets/_Recovery/`。新しいCloneにはないため、OverheadStudyAの素材を読むTestは失敗する。
 
@@ -35,6 +35,10 @@ Unity確認は、Repositoryではなく検証用Project`C:/Users/umiga/Documents
 3. Scene生成: Unityで`FantasyRoyale/Playtest/Build Forest Map Preview Debug Scene`を実行する。
 
 `Assets/ForestMapPreview/`はSceneを含めてGitへ入れない。新しいCloneでは上の手順で作り直す。
+
+## 森マップの設置物を足す
+
+設置物の絵は、草地の切り抜きと既存のシートを参照にして、3行3列のシートで生成する。`Tools/MapAuthoring/forest_objects.py`の一覧へ、シートの位置、地図での幅、足元、判定を足す。大きさは高さ72pxの騎士を基準にする。配置は`forest_layout.py`の`FACILITIES`で持つ。
 
 ## GraphicとCollision
 

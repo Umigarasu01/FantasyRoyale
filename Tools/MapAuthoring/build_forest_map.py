@@ -16,6 +16,7 @@ import sys
 from PIL import Image, ImageChops, ImageDraw, ImageFilter
 
 import forest_layout as L
+import forest_objects as O
 import forest_texture as T
 
 Image.MAX_IMAGE_PIXELS = None
@@ -24,8 +25,6 @@ ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 FOREST = os.path.join(ROOT, "Assets", "Art", "Generated", "ForestLook")
 PARTS = os.path.join(FOREST, "Parts")
 NATIVE = os.path.join(ROOT, "Assets", "NemoBlocks", "NativeTextures")
-LIBRARY = os.path.join(ROOT, "Assets", "NemoBlocks", "NativeLibrary", "Library.asset")
-INPUTS = os.path.join(os.path.dirname(os.path.abspath(__file__)), "Inputs")
 
 SEED = 20261105
 PPU = 64
@@ -34,11 +33,9 @@ SMALL = 8
 RIVER_WIDTH = 184
 FOREST_FLOOR = (14, 56, 52)
 TREE_SPACING = 84
-FEATURES = {
-    "natural-spring": "feature-spring", "herb-bed": "feature-herbs", "monster-nest": "feature-nest",
-    "cliff-face-small": "feature-cliff",
-}
-FEATURE_FOOT = {"natural-spring": 14, "cliff-face-small": 12}
+# Trees close over the river this far from the north and south edges, so its banks end in forest
+# instead of an invisible wall.
+RIVER_END_MARGIN = 9.0
 
 if "--area" in sys.argv:
     index = sys.argv.index("--area")
@@ -327,97 +324,6 @@ def design_bridge():
 
 
 # --- Facility art ---------------------------------------------------------------------------
-def read_library():
-    """Read prototype visuals, bounds and collision bodies from the Unity asset text."""
-    prototypes = {}
-    current = visual = section = list_name = None
-    with open(LIBRARY, encoding="utf-8") as file:
-        for raw in file:
-            line = raw.rstrip()
-            if line.startswith("  - id: "):
-                current = {"id": line[8:].strip(), "visuals": [], "bounds": [], "bodies": []}
-                prototypes[current["id"]] = current
-                section = None
-            elif current is None:
-                continue
-            elif line == "    visuals:":
-                section = "visuals"
-            elif line == "    bounds:":
-                section = "bounds"
-            elif line == "    bodies:":
-                section = "bodies"
-            elif section == "visuals":
-                stripped = line.strip()
-                if stripped.startswith("- path: "):
-                    visual = {"path": stripped[8:], "rect": [], "color": []}
-                    current["visuals"].append(visual)
-                    list_name = None
-                elif stripped in ("rect:", "color:"):
-                    list_name = stripped[:-1]
-                elif stripped.startswith("- ") and list_name:
-                    visual[list_name].append(float(stripped[2:]))
-                else:
-                    key, _, value = stripped.partition(": ")
-                    list_name = None
-                    if key in ("x", "y", "pivotX", "pivotY"):
-                        visual[key] = float(value)
-                    elif key in ("flipX", "flipY", "order"):
-                        visual[key] = int(value)
-            elif section == "bounds" and line.strip().startswith("- "):
-                current["bounds"].append(float(line.strip()[2:]))
-            elif section == "bodies":
-                stripped = line.strip()
-                if stripped.startswith("- x: "):
-                    current["bodies"].append({"x": float(stripped[5:])})
-                elif ": " in stripped and current["bodies"]:
-                    key, _, value = stripped.partition(": ")
-                    if key in ("y", "width", "height"):
-                        current["bodies"][-1][key] = float(value)
-    return prototypes
-
-
-def compose_prototype(prototype):
-    """Flatten a prototype's visuals into one sprite, returning it with its foot pivot."""
-    pieces = []
-    for visual in sorted(prototype["visuals"], key=lambda item: item.get("order", 0)):
-        path = os.path.join(ROOT, visual["path"].replace("/", os.sep))
-        if not os.path.exists(path):
-            continue
-        with Image.open(path) as source:
-            image = source.convert("RGBA")
-        x, y, width, height = (int(v) for v in visual["rect"])
-        piece = image.crop((x, image.height - y - height, x + width, image.height - y))
-        if visual.get("flipX"):
-            piece = piece.transpose(Image.FLIP_LEFT_RIGHT)
-        if visual.get("flipY"):
-            piece = piece.transpose(Image.FLIP_TOP_BOTTOM)
-        colour = visual["color"]
-        if len(colour) == 4 and colour != [1, 1, 1, 1]:
-            bands = piece.split()
-            piece = Image.merge("RGBA", tuple(band.point(lambda v, c=c: int(v * c)) for band, c in zip(bands, colour)))
-        pieces.append((piece, visual["x"] * PPU - visual["pivotX"], visual["y"] * PPU - visual["pivotY"]))
-    if not pieces:
-        return None, None
-    min_x = min(p[1] for p in pieces)
-    max_x = max(p[1] + p[0].width for p in pieces)
-    min_y = min(p[2] for p in pieces)
-    max_y = max(p[2] + p[0].height for p in pieces)
-    canvas = Image.new("RGBA", (int(max_x - min_x) + 1, int(max_y - min_y) + 1), (0, 0, 0, 0))
-    for piece, left, bottom in pieces:
-        canvas.alpha_composite(piece, (int(left - min_x), int(canvas.height - (bottom - min_y) - piece.height)))
-    return canvas, (int(-min_x), int(-min_y))
-
-
-def facility_overrides():
-    """The six rebuilt facilities use their approved originals at native size."""
-    result = {}
-    for entry in json.load(open(os.path.join(INPUTS, "facilities.json"), encoding="utf-8")):
-        with Image.open(os.path.join(INPUTS, entry["file"])) as source:
-            image = source.convert("RGBA").crop(tuple(entry["frame"]))
-        result[entry["id"]] = (image.resize(tuple(entry["size"]), Image.BOX), tuple(entry["pivot"]))
-    return result
-
-
 def grade(sprite, saturation, value):
     """Scale a sprite's saturation and brightness, keeping its alpha."""
     alpha = sprite.getchannel("A")
@@ -475,7 +381,9 @@ def forest_shape(facilities, curves, river):
         draw.ellipse((a, b, c, d), fill=255)
     for curve in curves.values():
         draw.line([px(p) for p in curve], fill=255, width=int(7.0 * scale), joint="curve")
-    draw.line([px(p) for p in river], fill=255, width=int(9.5 * scale), joint="curve")
+    open_river = [p for p in river if RIVER_END_MARGIN < p[1] < L.MAP_HEIGHT - RIVER_END_MARGIN]
+    draw.line([px(p) for p in open_river], fill=255, width=int(9.5 * scale), joint="curve")
+    draw.line([px(p) for p in river], fill=255, width=int(2.8 * scale), joint="curve")
     for left, bottom, right, top in facilities:
         a, b = px((left - 2.0, top + 1.0))
         c, d = px((right + 2.0, bottom - 2.5))
@@ -641,8 +549,7 @@ def main():
     os.makedirs(out, exist_ok=True)
     print("area", X0, X1, Y0, Y1, "size", W, H)
     parts = load_parts()
-    library = read_library()
-    overrides = facility_overrides()
+    sprites = O.load_sprites()
     curves = {name: L.catmull_rom(points) for name, points in L.ROADS.items()}
     river = L.catmull_rom(L.RIVER)
     bridges = [to_px(*bridge) for bridge in L.BRIDGES]
@@ -653,26 +560,16 @@ def main():
     solids = []
     fronts = []
     for proto, fx, fy in L.FACILITIES:
-        prototype = library[proto]
         name = "proto-" + proto
-        if name not in parts:
-            sprite, pivot = overrides.get(proto, (None, None))
-            feature = FEATURES.get(proto)
-            if feature:
-                sprite = parts[feature]
-                pivot = (sprite.width // 2, FEATURE_FOOT.get(proto, 8))
-            if sprite is None:
-                sprite, pivot = compose_prototype(prototype)
-            if sprite is None:
-                raise ValueError("no art for " + proto)
-            parts[name] = sprite
-            sprite_pivots[name] = list(pivot)
-        left, bottom, width, height = prototype["bounds"]
-        bounds.append((fx + left, fy + bottom, fx + left + width, fy + bottom + height))
+        sprite = sprites[proto]
+        parts[name] = sprite
+        sprite_pivots[name] = [sprite.width // 2, O.foot(proto)]
+        half, foot = sprite.width / 2 / PPU, O.foot(proto) / PPU
+        bounds.append((fx - half, fy - foot, fx + half, fy - foot + sprite.height / PPU))
         fronts.append((proto, (fx, fy - 1.0)))
-        for body in prototype["bodies"]:
-            a, b = to_px(fx + body["x"], fy + body["y"] + body["height"])
-            solids.append([int(a), int(b), int(body["width"] * PPU), int(body["height"] * PPU)])
+        for x, y, width, height in O.bodies(proto, sprite):
+            a, b = to_px(fx + x, fy + y + height)
+            solids.append([int(a), int(b), int(width * PPU), int(height * PPU)])
 
     # Masks.
     forest_small, forest = forest_shape(bounds, curves, river)
