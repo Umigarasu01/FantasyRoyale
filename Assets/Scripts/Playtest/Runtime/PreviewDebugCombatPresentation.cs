@@ -36,6 +36,14 @@ namespace FantasyRoyale.Playtest
         public int SlashEffectCount { get; private set; }
 
         /// <summary>
+        /// 的を持たず、斬撃と矢だけを表示する。
+        /// </summary>
+        public PreviewDebugCombatPresenter(CharacterCombat2D combat)
+            : this(combat, null, null)
+        {
+        }
+
+        /// <summary>
         /// 攻撃のEventを購読し、確認用のSpriteを作る。
         /// </summary>
         public PreviewDebugCombatPresenter(
@@ -66,6 +74,11 @@ namespace FantasyRoyale.Playtest
         public void Tick(float deltaSeconds)
         {
             flashRemaining = Mathf.Max(0f, flashRemaining - deltaSeconds);
+            if (targetRenderer == null)
+            {
+                return;
+            }
+
             targetRenderer.color = flashRemaining > 0f
                 ? HitColor
                 : target.Target != null && target.Target.IsAlive

@@ -13,8 +13,9 @@
 | forest-rural-01 | 同Directoryの`forest-rural-01.png` | 天幕、焚き火、水車小屋、見張り台、作業小屋、丸太、切り株、畑、柵 | `baf8c11fd56767596b12ccd9b7083b4bf389799c810aafee9672d720d8466386` |
 | forest-landmarks-01 | 同Directoryの`forest-landmarks-01.png` | 洞窟、坑道、岩壁、崩れた門、柱、祠、泉、魔物の巣、荷車 | `23df74604431fade7f32d097aed93e4712b497feda4c67dc594e27625dd4b9d5` |
 | forest-extras-01 | 同Directoryの`forest-extras-01.png` | 井戸、廃屋、薬草畑、作業台、木箱と樽、岩、倒木、掲示板、瓦礫 | `b87fab73e332d34a55a2abeeef054b655a40cad9b81e496f3fc68345ff5c6225` |
+| forest-slime-01 | 同Directoryの`forest-slime-01.png` | 跳ねる紫のスライムの4コマ | `2c9b19d278822601cda0aa307682e4d07ab654215df8847d83678ca48a8d5196` |
 
-Prompt全文は同名のJSONで確認する。`Tools/MapAuthoring/forest_objects.py`が大きさと判定を持ち、シートから切り出す。木は`build_forest_parts.py`が切り出す。
+Prompt全文は同名のJSONで確認する。`Tools/MapAuthoring/forest_objects.py`が大きさと判定を持ち、シートから切り出す。木は`build_forest_parts.py`が切り出す。宝箱と敵はUnityが置くので、同じファイルの実行で`Assets/Art/Generated/ForestLook/Game/`へ書き出す。
 
 ## 2026-11-06 騎士の走りアニメーションと立ち姿
 

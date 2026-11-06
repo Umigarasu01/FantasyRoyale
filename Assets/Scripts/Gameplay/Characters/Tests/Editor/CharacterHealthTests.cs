@@ -25,6 +25,22 @@ namespace FantasyRoyale.Gameplay.Characters.Tests.Editor
         }
 
         /// <summary>
+        /// 倒れた後だけ最大HPへ戻り、通常の回復では戻らないことを確認する。
+        /// </summary>
+        [Test]
+        public void Revive_RestoresOnlyDefeatedCharacters()
+        {
+            var health = new CharacterHealth(100);
+            Assert.That(health.Revive(), Is.False);
+
+            health.ApplyDamage(100);
+            Assert.That(health.RestoreHealth(10).IsApplied, Is.False);
+            Assert.That(health.Revive(), Is.True);
+            Assert.That(health.CurrentHealth, Is.EqualTo(100));
+            Assert.That(health.IsAlive, Is.True);
+        }
+
+        /// <summary>
         /// 過剰ダメージを現在HPまでにClampし、HP 0への一度の遷移だけを撃破として返す。
         /// </summary>
         [Test]

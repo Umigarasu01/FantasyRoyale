@@ -150,7 +150,7 @@ FantasyRoyale.MapAuthoringKit.Editor.ForestRestartAssetBuilder.BuildScene(
 
 ## 現在の基準
 
-2026-11-06、森マップの走行確認と斜めの表示の追加後、一時複製のProjectでのBatchmode実行: EditMode 279 / 279成功、PlayMode 14 / 19成功。失敗した5件は従来と同じStudyAのSetUp失敗で、証跡Folderの指定がないため実行されていない。Player Buildと`dotnet build`は未実行。攻撃の5件は時刻による入力の破棄で不安定だったため修正し、単独でも4回連続で全件成功した。
+2026-11-06、森マップへ攻撃、雑魚敵、宝箱を追加した後、一時複製のProjectでのBatchmode実行: EditMode 285 / 285成功、PlayMode 17 / 22成功。失敗した5件は従来と同じStudyAのSetUp失敗で、証跡Folderの指定がないため実行されていない。Player Buildと`dotnet build`は未実行。攻撃の5件は時刻による入力の破棄で不安定だったため修正し、単独でも4回連続で全件成功した。
 
 2026-11-05、攻撃のVertical Slice実装後のBatchmode実行: EditMode 279 / 279成功、Compile Error 0。PlayMode 9 / 14成功で、Exploration Previewの4件と攻撃の5件は成功した。失敗した5件は`StudyANativeLayoutsPlayPreviewDebugTests`と`StudyANativeFlexibleConnectionsPlayPreviewDebugTests`で、検証の保存先の指定がなくSetUpで止まる。以前の記録と同じ結果で、機能の不具合を示すものではない。C# Project BuildとPlayer Buildは実行していない。以下はそれ以前の記録である。
 

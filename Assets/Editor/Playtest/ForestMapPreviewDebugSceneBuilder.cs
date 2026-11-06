@@ -19,17 +19,41 @@ namespace FantasyRoyale.Editor.Playtest
         public const string Root = "Assets/ForestMapPreview";
         public const string ScenePath = Root + "/ForestMapPreviewDebug.unity";
         public const string HeroSpritesPath = "Assets/Data/Gameplay/Characters/HeroSprites.asset";
+        public const string EnemySpritesPath = "Assets/Data/Gameplay/Characters/SlimeSprites.asset";
 
         private const string HeroFolder = "Assets/Art/Generated/ForestLook/Hero";
+        private const string GameFolder = "Assets/Art/Generated/ForestLook/Game";
+        private const string SwordEquipmentPath = "Assets/Data/Gameplay/Equipment/SwordEquipment.asset";
+        private const string BowEquipmentPath = "Assets/Data/Gameplay/Equipment/BowEquipment.asset";
         private const string InputActionsPath = "Assets/InputSystem_Actions.inputactions";
         private const float PixelsPerUnit = 64f;
         private const int SortingOffset = 8000;
         private const int GroundSortingOrder = -30000;
         private const int HeroFrameCount = 4;
         private const float HeroPivotY = 4f / 80f;
+        private const int EnemyFrameCount = 4;
+        private const float EnemyFramesPerSecond = 7f;
+        private const float EnemyPivotY = 4f / 76f;
+        private const float ChestPivotY = 0.08f;
 
         // 村の広場を開始位置にする。
         private static readonly Vector2 SpawnPosition = new Vector2(60f, 51f);
+
+        // 敵は魔物の巣を中心に、砦、鉱山、洞窟、廃屋、祠の周りへ置く。
+        private static readonly Vector2[] EnemySpots =
+        {
+            new Vector2(109.5f, 40.5f), new Vector2(115f, 40.5f), new Vector2(108f, 34f), new Vector2(116f, 34f),
+            new Vector2(113f, 31f), new Vector2(107f, 24f), new Vector2(118f, 24f), new Vector2(32f, 23f),
+            new Vector2(39f, 22f), new Vector2(35f, 63f), new Vector2(30f, 61f), new Vector2(73f, 90f),
+            new Vector2(82f, 92f), new Vector2(122f, 70f), new Vector2(109f, 72f), new Vector2(44f, 41f)
+        };
+
+        // 宝箱は敵の近くや、道から外れた行き止まりへ置く。
+        private static readonly Vector2[] ChestSpots =
+        {
+            new Vector2(113f, 25.2f), new Vector2(26f, 85f), new Vector2(36f, 63.8f),
+            new Vector2(124f, 67f), new Vector2(83f, 96f)
+        };
 
         [Serializable] private class MapObject { public string part; public int x; public int y; public int sort; }
         [Serializable] private class MapTile { public string file; public int x; public int y; }
@@ -118,6 +142,17 @@ namespace FantasyRoyale.Editor.Playtest
                 camera,
                 new Rect(left, top - height, width, height),
                 SpawnPosition);
+            bootstrap.ConfigureGame(
+                LoadOrCreateEnemySprites(),
+                new[]
+                {
+                    AssetDatabase.LoadAssetAtPath<CharacterEquipmentDefinition>(SwordEquipmentPath),
+                    AssetDatabase.LoadAssetAtPath<CharacterEquipmentDefinition>(BowEquipmentPath)
+                },
+                LoadChestSprite("chest-closed"),
+                LoadChestSprite("chest-open"),
+                EnemySpots,
+                ChestSpots);
 
             if (!EditorSceneManager.SaveScene(scene, ScenePath, false))
             {
@@ -224,6 +259,51 @@ namespace FantasyRoyale.Editor.Playtest
                 LoadHeroView("up"));
             EditorUtility.SetDirty(definition);
             return definition;
+        }
+
+        /// <summary>
+        /// 跳ねる4コマをSpriteとして取り込み、全ての向きで同じ絵を使う定義Assetへまとめる。
+        /// </summary>
+        private static CharacterSpriteSetDefinition LoadOrCreateEnemySprites()
+        {
+            AssetDatabase.StartAssetEditing();
+            try
+            {
+                for (var frame = 0; frame < EnemyFrameCount; frame++)
+                {
+                    ImportSprite($"{GameFolder}/slime-{frame}.png", new Vector2(0.5f, EnemyPivotY));
+                }
+
+                ImportSprite($"{GameFolder}/chest-closed.png", new Vector2(0.5f, ChestPivotY));
+                ImportSprite($"{GameFolder}/chest-open.png", new Vector2(0.5f, ChestPivotY));
+            }
+            finally
+            {
+                AssetDatabase.StopAssetEditing();
+            }
+
+            var frames = new Sprite[EnemyFrameCount];
+            for (var frame = 0; frame < EnemyFrameCount; frame++)
+            {
+                frames[frame] = AssetDatabase.LoadAssetAtPath<Sprite>($"{GameFolder}/slime-{frame}.png");
+            }
+
+            var definition = AssetDatabase.LoadAssetAtPath<CharacterSpriteSetDefinition>(EnemySpritesPath);
+            if (definition == null)
+            {
+                definition = ScriptableObject.CreateInstance<CharacterSpriteSetDefinition>();
+                AssetDatabase.CreateAsset(definition, EnemySpritesPath);
+            }
+
+            var view = new CharacterSpriteView(frames[0], frames);
+            definition.Configure(EnemyFramesPerSecond, view, view, view, view, view);
+            EditorUtility.SetDirty(definition);
+            return definition;
+        }
+
+        private static Sprite LoadChestSprite(string name)
+        {
+            return AssetDatabase.LoadAssetAtPath<Sprite>($"{GameFolder}/{name}.png");
         }
 
         private static CharacterSpriteView LoadHeroView(string view)

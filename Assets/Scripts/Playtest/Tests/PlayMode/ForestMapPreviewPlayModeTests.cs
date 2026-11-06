@@ -15,9 +15,11 @@ namespace FantasyRoyale.Playtest.Tests.PlayMode
     public sealed class ForestMapPreviewPlayModeTests
     {
         private const string ScenePath = "Assets/ForestMapPreview/ForestMapPreviewDebug.unity";
+        private const int OpenGroundEnemy = 5;
 
         private static readonly Vector2 EastRiverBank = new Vector2(100f, 68.65f);
 
+        private ForestMapPreviewDebug preview;
         private Texture2D texture;
         private CharacterSpriteSetDefinition sprites;
         private GameObject character;
@@ -145,26 +147,7 @@ namespace FantasyRoyale.Playtest.Tests.PlayMode
         [UnityTest]
         public IEnumerator ForestMap_RunsAndCameraFollows()
         {
-            if (!File.Exists(ScenePath))
-            {
-                Assert.Ignore("森マップのSceneが生成されていません。");
-            }
-
-#if UNITY_EDITOR
-            var load = UnityEditor.SceneManagement.EditorSceneManager.LoadSceneAsyncInPlayMode(
-                ScenePath,
-                new LoadSceneParameters(LoadSceneMode.Single));
-            while (!load.isDone)
-            {
-                yield return null;
-            }
-#endif
-            var preview = Object.FindAnyObjectByType<ForestMapPreviewDebug>();
-            Assert.That(preview, Is.Not.Null);
-            while (!preview.IsReady)
-            {
-                yield return null;
-            }
+            yield return LoadForest();
 
             // 描画順はLateUpdateで決まるので、1Frame待ってから基準を読む。
             yield return null;
@@ -227,6 +210,113 @@ namespace FantasyRoyale.Playtest.Tests.PlayMode
             var halfWidth = halfHeight * camera.aspect;
             Assert.That(camera.transform.position.x - halfWidth, Is.GreaterThanOrEqualTo(preview.MapBounds.xMin - 0.02f));
             Assert.That(camera.transform.position.y - halfHeight, Is.GreaterThanOrEqualTo(preview.MapBounds.yMin - 0.02f));
+        }
+
+        /// <summary>
+        /// 敵は近づくと追ってきて、触れるとHPが減り、倒れた騎士は村へ戻って全回復する。
+        /// </summary>
+        [UnityTest]
+        public IEnumerator ForestMap_EnemyHurtsPlayerAndPlayerReturnsToVillage()
+        {
+            yield return LoadForest();
+            var enemy = preview.GetEnemyActor(OpenGroundEnemy);
+            preview.PlayerActor.Body.position = enemy.Body.position + Vector2.right * 3f;
+
+            var timeoutAt = Time.time + 4f;
+            while (preview.PlayerHealth.CurrentHealth == preview.PlayerHealth.MaximumHealth && Time.time < timeoutAt)
+            {
+                yield return null;
+            }
+
+            Assert.That(preview.PlayerHealth.CurrentHealth, Is.LessThan(preview.PlayerHealth.MaximumHealth), "敵に触れるとHPが減ります。");
+
+            preview.PlayerHealth.ApplyDamage(preview.PlayerHealth.CurrentHealth);
+            timeoutAt = Time.time + 4f;
+            while (!preview.PlayerHealth.IsAlive && Time.time < timeoutAt)
+            {
+                yield return null;
+            }
+
+            yield return new WaitForFixedUpdate();
+            Assert.That(preview.PlayerHealth.CurrentHealth, Is.EqualTo(preview.PlayerHealth.MaximumHealth));
+            Assert.That(Vector2.Distance(preview.PlayerActor.Body.position, preview.SpawnPosition), Is.LessThan(0.5f), "村へ戻ります。");
+        }
+
+        /// <summary>
+        /// 剣で敵を倒すとコインが増え、敵は消える。
+        /// </summary>
+        [UnityTest]
+        public IEnumerator ForestMap_SwordDefeatsEnemyForCoin()
+        {
+            yield return LoadForest();
+            var enemy = preview.GetEnemyActor(OpenGroundEnemy);
+            var command = new CharacterActionCommand(CharacterActionSlot.Primary, CharacterDirection8.West);
+            var timeoutAt = Time.time + 6f;
+            while (preview.Coins == 0 && Time.time < timeoutAt)
+            {
+                preview.PlayerActor.Body.position = enemy.Body.position + Vector2.right * 0.9f;
+                preview.PlayerCombat.TryStartAction(command);
+                yield return new WaitForFixedUpdate();
+            }
+
+            Assert.That(preview.Coins, Is.EqualTo(1));
+            Assert.That(enemy.gameObject.activeSelf, Is.False, "倒した敵は消えます。");
+        }
+
+        /// <summary>
+        /// 最初の宝箱で弓が手に入り、次の宝箱はコインになり、開けた宝箱は開かない。
+        /// </summary>
+        [UnityTest]
+        public IEnumerator ForestMap_ChestGivesBowThenCoins()
+        {
+            yield return LoadForest();
+            Assert.That(preview.CurrentEquipmentName, Is.EqualTo("剣"));
+            Assert.That(preview.OwnedEquipmentCount, Is.EqualTo(1));
+            Assert.That(preview.TryOpenNearestChest(), Is.False, "遠い宝箱は開きません。");
+
+            yield return MoveNextTo(preview.GetChestPosition(0));
+            Assert.That(preview.TryOpenNearestChest(), Is.True);
+            Assert.That(preview.CurrentEquipmentName, Is.EqualTo("弓"));
+            Assert.That(preview.OwnedEquipmentCount, Is.EqualTo(2));
+            Assert.That(preview.TryOpenNearestChest(), Is.False, "開けた宝箱は開きません。");
+
+            yield return MoveNextTo(preview.GetChestPosition(1));
+            Assert.That(preview.TryOpenNearestChest(), Is.True);
+            Assert.That(preview.Coins, Is.EqualTo(10));
+        }
+
+        private IEnumerator MoveNextTo(Vector2 position)
+        {
+            preview.PlayerActor.Body.position = position + Vector2.down * 0.9f;
+            preview.PlayerObject.transform.position = position + Vector2.down * 0.9f;
+            yield return new WaitForFixedUpdate();
+        }
+
+        /// <summary>
+        /// 森のSceneを読み込み、準備完了を待つ。Map出力はGitへ入れないため、Sceneがない環境では対象外にする。
+        /// </summary>
+        private IEnumerator LoadForest()
+        {
+            if (!File.Exists(ScenePath))
+            {
+                Assert.Ignore("森マップのSceneが生成されていません。");
+            }
+
+#if UNITY_EDITOR
+            var load = UnityEditor.SceneManagement.EditorSceneManager.LoadSceneAsyncInPlayMode(
+                ScenePath,
+                new LoadSceneParameters(LoadSceneMode.Single));
+            while (!load.isDone)
+            {
+                yield return null;
+            }
+#endif
+            preview = Object.FindAnyObjectByType<ForestMapPreviewDebug>();
+            Assert.That(preview, Is.Not.Null);
+            while (!preview.IsReady)
+            {
+                yield return null;
+            }
         }
 
         /// <summary>

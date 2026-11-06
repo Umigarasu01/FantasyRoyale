@@ -1,0 +1,13 @@
+{
+  "status": "adopted for the forest map",
+  "file": "forest-slime-01.png",
+  "sha256": "2c9b19d278822601cda0aa307682e4d07ab654215df8847d83678ca48a8d5196",
+  "bytes": 1291909,
+  "tool": "openai-image skill, edit",
+  "model": "gpt-image-2.5-sunburst",
+  "size": "1536x1024",
+  "quality": "medium",
+  "n": 1,
+  "reference": "grass sample, forest-village-01",
+  "prompt": "Image 1 is the grass ground of a top-down 2D pixel-art fantasy game. Image 2 shows objects in the approved art style for this game. Draw the new objects below in exactly the art style of Image 2, so they sit naturally on the grass of Image 1.\n\nStyle rules: the same top-down three-quarter viewing angle as Image 2. Small rough clusters of pixels and slight mottling, the same grain as the grass. Earthy, slightly muted natural colours. Dark warm soft shadow colours for edges, never pure black. A little wear, moss and dirt near the ground. No smooth or glossy surfaces.\n\nLayout: exactly 1 row and 4 columns on a completely flat solid pure magenta background, RGB 255,0,255. Each frame is centred in an evenly spaced cell, all resting on the same baseline, with clear magenta space around it.\n\nDraw one small round jelly monster in four frames of a bouncing hop. It is a deep violet-blue blob with a glossy top highlight drawn as rough pixels, two small dark eyes, and a little moss and dirt near its base. It must stand out clearly from green grass.\n\nColumn 1: resting, round.\nColumn 2: squashed wide and low.\nColumn 3: stretched tall and narrow.\nColumn 4: round, slightly smaller, in the middle of the hop.\n\nKeep the same colours, eyes and pixel size in all four frames.\n\nDo not include: text, letters, labels, ground, grass tiles, cast shadows on the background, borders, watermark, or any other object. No blur, no painterly brush strokes, no gradients."
+}

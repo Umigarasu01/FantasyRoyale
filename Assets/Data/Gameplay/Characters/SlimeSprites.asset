@@ -1,0 +1,50 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c1ea30060f510345bfdaff166e8701b, type: 3}
+  m_Name: SlimeSprites
+  m_EditorClassIdentifier: FantasyRoyale.Gameplay.Characters.Unity::FantasyRoyale.Gameplay.Characters.Unity.CharacterSpriteSetDefinition
+  framesPerSecond: 7
+  down:
+    idle: {fileID: 21300000, guid: 235af150339df704cb5aa6e9bf7a3303, type: 3}
+    run:
+    - {fileID: 21300000, guid: 235af150339df704cb5aa6e9bf7a3303, type: 3}
+    - {fileID: 21300000, guid: 3d32a8b50802a2a46b42f6492193b168, type: 3}
+    - {fileID: 21300000, guid: 29647b436ce74ec4d9828d95f91d5246, type: 3}
+    - {fileID: 21300000, guid: 32d6c906e3c748348b9d97a59dc68a17, type: 3}
+  downSide:
+    idle: {fileID: 21300000, guid: 235af150339df704cb5aa6e9bf7a3303, type: 3}
+    run:
+    - {fileID: 21300000, guid: 235af150339df704cb5aa6e9bf7a3303, type: 3}
+    - {fileID: 21300000, guid: 3d32a8b50802a2a46b42f6492193b168, type: 3}
+    - {fileID: 21300000, guid: 29647b436ce74ec4d9828d95f91d5246, type: 3}
+    - {fileID: 21300000, guid: 32d6c906e3c748348b9d97a59dc68a17, type: 3}
+  side:
+    idle: {fileID: 21300000, guid: 235af150339df704cb5aa6e9bf7a3303, type: 3}
+    run:
+    - {fileID: 21300000, guid: 235af150339df704cb5aa6e9bf7a3303, type: 3}
+    - {fileID: 21300000, guid: 3d32a8b50802a2a46b42f6492193b168, type: 3}
+    - {fileID: 21300000, guid: 29647b436ce74ec4d9828d95f91d5246, type: 3}
+    - {fileID: 21300000, guid: 32d6c906e3c748348b9d97a59dc68a17, type: 3}
+  upSide:
+    idle: {fileID: 21300000, guid: 235af150339df704cb5aa6e9bf7a3303, type: 3}
+    run:
+    - {fileID: 21300000, guid: 235af150339df704cb5aa6e9bf7a3303, type: 3}
+    - {fileID: 21300000, guid: 3d32a8b50802a2a46b42f6492193b168, type: 3}
+    - {fileID: 21300000, guid: 29647b436ce74ec4d9828d95f91d5246, type: 3}
+    - {fileID: 21300000, guid: 32d6c906e3c748348b9d97a59dc68a17, type: 3}
+  up:
+    idle: {fileID: 21300000, guid: 235af150339df704cb5aa6e9bf7a3303, type: 3}
+    run:
+    - {fileID: 21300000, guid: 235af150339df704cb5aa6e9bf7a3303, type: 3}
+    - {fileID: 21300000, guid: 3d32a8b50802a2a46b42f6492193b168, type: 3}
+    - {fileID: 21300000, guid: 29647b436ce74ec4d9828d95f91d5246, type: 3}
+    - {fileID: 21300000, guid: 32d6c906e3c748348b9d97a59dc68a17, type: 3}

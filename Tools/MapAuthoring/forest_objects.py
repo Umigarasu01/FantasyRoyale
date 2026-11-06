@@ -1,6 +1,6 @@
 """Catalog of the objects placed on the forest map.
 
-Each sheet is a generated 3 x 3 grid on magenta. An entry says where an object is on its sheet,
+Each sheet is a generated 3 x 3 grid on magenta. Running this file writes the sprites Unity places itself. An entry says where an object is on its sheet,
 how wide it is on the map, and how much of it blocks the player. Objects are sized against the
 hero, who is 72 pixels tall: a door matches the hero, and a crate reaches about the hero's waist.
 """
@@ -19,6 +19,12 @@ VILLAGE = "forest-village-01.png"
 RURAL = "forest-rural-01.png"
 LANDMARKS = "forest-landmarks-01.png"
 EXTRAS = "forest-extras-01.png"
+ENEMY = "forest-slime-01.png"
+ENEMY_FRAMES = 4
+ENEMY_SCALE = 0.24
+ENEMY_CANVAS = (72, 76)
+ENEMY_FOOT = 4
+CHEST_WIDTH = 74
 
 # id: sheet, row, column, width on the map in pixels, foot in pixels above the sprite's bottom,
 # depth of the blocking area in world units, and the share of the width that blocks.
@@ -151,3 +157,33 @@ def bodies(name, sprite):
         side = width * 0.3
         return [(-width * 0.47, 0, side, depth), (width * 0.17, 0, side, depth)]
     return [(-width * share / 2, -0.1, width * share, depth)]
+
+
+def write_game_sprites():
+    """Write the sprites that Unity places itself: chests and the enemy's hop."""
+    target = os.path.join(SOURCE, "Game")
+    os.makedirs(target, exist_ok=True)
+    sheet = key_magenta(Image.open(os.path.join(SOURCE, VILLAGE)))
+    cell_width, cell_height = sheet.width / COLUMNS, sheet.height / ROWS
+    for name, column in (("chest-closed", 0), ("chest-open", 1)):
+        cell = sheet.crop((
+            round(column * cell_width), round(2 * cell_height),
+            round((column + 1) * cell_width), round(3 * cell_height),
+        ))
+        fit(main_item(cell), CHEST_WIDTH).save(os.path.join(target, name + ".png"))
+
+    sheet = key_magenta(Image.open(os.path.join(SOURCE, ENEMY)))
+    cell_width = sheet.width / ENEMY_FRAMES
+    for frame in range(ENEMY_FRAMES):
+        cell = sheet.crop((round(frame * cell_width), 0, round((frame + 1) * cell_width), sheet.height))
+        item = main_item(cell)
+        small = fit(item, round(item.width * ENEMY_SCALE))
+        # Every frame shares one canvas, so the feet stay still through the hop.
+        canvas = Image.new("RGBA", ENEMY_CANVAS, (0, 0, 0, 0))
+        canvas.paste(small, ((ENEMY_CANVAS[0] - small.width) // 2, ENEMY_CANVAS[1] - ENEMY_FOOT - small.height))
+        canvas.save(os.path.join(target, f"slime-{frame}.png"))
+    print("game sprites written")
+
+
+if __name__ == "__main__":
+    write_game_sprites()

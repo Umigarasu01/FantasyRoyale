@@ -189,6 +189,20 @@ namespace FantasyRoyale.Gameplay.Characters
         }
 
         /// <summary>
+        /// 倒れた状態から最大HPへ戻す。通常の回復とは別の明示的な効果で、生存中は何もしない。
+        /// </summary>
+        public bool Revive()
+        {
+            if (IsAlive)
+            {
+                return false;
+            }
+
+            currentHealth = MaximumHealth;
+            return true;
+        }
+
+        /// <summary>
         /// 不正入力や条件拒否でHPを変えず、要求内容と現在値を診断可能な結果として返す。
         /// </summary>
         private CharacterHealthChangeResult CreateUnchangedResult(

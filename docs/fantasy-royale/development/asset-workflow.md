@@ -38,6 +38,8 @@ Unity確認は、Repositoryではなく検証用Project`C:/Users/umiga/Documents
 
 ## 森マップの設置物を足す
 
+宝箱と敵はUnityが置く絵なので、`Tools/MapAuthoring/`で`python forest_objects.py`を実行して書き出す。
+
 設置物の絵は、草地の切り抜きと既存のシートを参照にして、3行3列のシートで生成する。`Tools/MapAuthoring/forest_objects.py`の一覧へ、シートの位置、地図での幅、足元、判定を足す。大きさは高さ72pxの騎士を基準にする。配置は`forest_layout.py`の`FACILITIES`で持つ。
 
 ## GraphicとCollision
