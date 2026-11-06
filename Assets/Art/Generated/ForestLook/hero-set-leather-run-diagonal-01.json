@@ -1,0 +1,13 @@
+{
+  "status": "adopted for the armour set prototype",
+  "file": "hero-set-leather-run-diagonal-01.png",
+  "sha256": "f79ef57fc9b1f9d1f0fbcd0805cc498954ef14ee1b77f917a3869d33b92fbfac",
+  "bytes": 1478480,
+  "tool": "openai-image skill, edit",
+  "model": "gpt-image-2.5-sunburst",
+  "size": "1536x1024",
+  "quality": "medium",
+  "n": 1,
+  "reference": "hero-body-run-diagonal-01.png",
+  "prompt": "Image 1 is a pixel-art sprite sheet of a small chibi knight for a top-down 2D game. Redraw this sheet exactly, with the same layout, the same number of characters in the same positions, the same poses, the same size, the same pixel-art style and the same flat solid pure magenta background, RGB 255,0,255.\n\nEvery arm, hand, leg and foot must stay at exactly the same place and at the same angle as in Image 1, and the head must stay at the same place and the same size. The outline of each character must stay as close as possible to Image 1.\n\nChange only the outfit. The same person now wears a full matching set of ranger armour instead of the steel plate armour: a dark green cloth hood instead of the steel helmet, a dark green tunic, a brown leather chest piece and leather shoulder guards instead of the steel plates, and dark leather leg guards. Keep the same closed brown leather gloves and the same brown boots.\n\nThe hands stay empty and closed. Do not add any weapon or shield.\n\nDo not include: weapons, shields, text, labels, numbers, grid lines, ground, shadows, dust, effects, borders, watermark, or any other object. No soft gradients, blur or painterly rendering."
+}

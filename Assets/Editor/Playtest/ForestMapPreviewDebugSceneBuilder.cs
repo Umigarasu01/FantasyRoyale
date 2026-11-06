@@ -21,11 +21,14 @@ namespace FantasyRoyale.Editor.Playtest
         public const string Root = "Assets/ForestMapPreview";
         public const string ScenePath = Root + "/ForestMapPreviewDebug.unity";
         public const string HeroSpritesPath = "Assets/Data/Gameplay/Characters/HeroSprites.asset";
+        public const string HeroLeatherSpritesPath = "Assets/Data/Gameplay/Characters/HeroLeatherSprites.asset";
         public const string GearDataFolder = "Assets/Data/Gameplay/Gear";
         public const string EnemySpritesPath = "Assets/Data/Gameplay/Characters/SlimeSprites.asset";
 
         private const string HeroFolder = "Assets/Art/Generated/ForestLook/Hero";
+        private const string LeatherFolder = "Assets/Art/Generated/ForestLook/Sets/leather";
         private const string GearFolder = "Assets/Art/Generated/ForestLook/Gear";
+        private const string HandFolder = "Assets/Art/Generated/ForestLook/Hand";
         private const string GameFolder = "Assets/Art/Generated/ForestLook/Game";
         private const string SwordEquipmentPath = "Assets/Data/Gameplay/Equipment/SwordEquipment.asset";
         private const string BowEquipmentPath = "Assets/Data/Gameplay/Equipment/BowEquipment.asset";
@@ -35,6 +38,7 @@ namespace FantasyRoyale.Editor.Playtest
         private const int SortingOffset = 8000;
         private const int GroundSortingOrder = -30000;
         private const int HeroFrameCount = 4;
+        private const int HeroAttackFrameCount = 3;
         private const float HeroPivotY = 4f / 80f;
         private const int EnemyFrameCount = 4;
         private const float EnemyFramesPerSecond = 7f;
@@ -72,10 +76,10 @@ namespace FantasyRoyale.Editor.Playtest
         [Serializable] private class MapTile { public string file; public int x; public int y; }
         [Serializable] private class MapSprite { public string name; public float pivotX; public float pivotY; }
         [Serializable] private class MapData { public int[] size; public float[] origin; public MapTile[] tiles; public MapSprite[] sprites; public MapObject[] objects; }
-        [Serializable] private class HeroAnchorFrame { public string name; public Vector2 mainHand; public Vector2 offHand; public Vector2 back; }
+        [Serializable] private class HeroAnchorFrame { public string name; public Vector2 mainHand; public Vector2 offHand; public Vector2 back; public float mainHandAngle; }
         [Serializable] private class HeroAnchorData { public HeroAnchorFrame[] frames; }
         [Serializable] private class GearView { public string view; public string file; public float pivotX; public float pivotY; }
-        [Serializable] private class GearItem { public string name; public string slot; public GearView[] views; }
+        [Serializable] private class GearItem { public string name; public string slot; public GearView[] views; public string[] rotations; public bool heldInFist; }
         [Serializable] private class GearData { public GearItem[] items; }
         [Serializable] private class MapBox { public float x; public float y; public float w; public float h; }
         [Serializable] private class MapCollision { public MapBox[] rects; }
@@ -94,25 +98,31 @@ namespace FantasyRoyale.Editor.Playtest
             AssetDatabase.Refresh();
             var data = JsonUtility.FromJson<MapData>(File.ReadAllText(Root + "/objects.json"));
             var collision = JsonUtility.FromJson<MapCollision>(File.ReadAllText(Root + "/collision.json"));
-            var heroSprites = LoadOrCreateHeroSprites();
+            var anchors = LoadHeroAnchors();
+            var heroSprites = LoadOrCreateBody(HeroSpritesPath, HeroFolder, "騎士の鎧", anchors);
+            var leatherSprites = LoadOrCreateBody(HeroLeatherSpritesPath, LeatherFolder, "革の装備", anchors);
+            var armourSets = new[] { heroSprites, leatherSprites };
             var gear = LoadOrCreateGear();
-            var problems = heroSprites.FindAnchorProblems();
-            foreach (var item in gear.Values)
-            {
-                problems.AddRange(item.FindProblems(heroSprites.GetView(CharacterDirection8.South).Idle.pixelsPerUnit));
-            }
-
-            if (problems.Count > 0)
-            {
-                throw new InvalidOperationException($"装備の部品を重ねられません: {string.Join(" / ", problems)}");
-            }
-
             var sword = AssetDatabase.LoadAssetAtPath<CharacterEquipmentDefinition>(SwordEquipmentPath);
             var bow = AssetDatabase.LoadAssetAtPath<CharacterEquipmentDefinition>(BowEquipmentPath);
             sword.SetGear(new[] { gear["sword"], gear["shield"] });
             bow.SetGear(new[] { gear["bow"], gear["quiver"] });
             EditorUtility.SetDirty(sword);
             EditorUtility.SetDirty(bow);
+
+            var problems = new List<string>();
+            foreach (var armourSet in armourSets)
+            {
+                problems.AddRange(armourSet.FindAnchorProblems());
+                problems.AddRange(armourSet.FindEquipmentProblems(sword));
+                problems.AddRange(armourSet.FindEquipmentProblems(bow));
+            }
+
+            if (problems.Count > 0)
+            {
+                throw new InvalidOperationException($"全身セットと装備を組み合わせられません: {string.Join(" / ", problems)}");
+            }
+
             var inputActions = AssetDatabase.LoadAssetAtPath<InputActionAsset>(InputActionsPath);
             if (inputActions == null)
             {
@@ -181,6 +191,7 @@ namespace FantasyRoyale.Editor.Playtest
             bootstrap.ConfigureGame(
                 LoadOrCreateEnemySprites(),
                 new[] { sword, bow },
+                armourSets,
                 LoadChestSprite("chest-closed"),
                 LoadChestSprite("chest-open"),
                 EnemySpots,
@@ -250,22 +261,18 @@ namespace FantasyRoyale.Editor.Playtest
         }
 
         /// <summary>
-        /// 立ち姿と走りのコマをSpriteとして取り込み、騎士の定義Assetへまとめる。
-        /// 調整した再生速度は作り直しても残す。
+        /// 手と背中の位置、拳の絵を読む。全身セットは騎士の着替えなので、全てのセットがこの値を共有する。
         /// </summary>
-        private static CharacterSpriteSetDefinition LoadOrCreateHeroSprites()
+        private static Dictionary<string, CharacterSpriteAnchors> LoadHeroAnchors()
         {
-            var views = new[] { "down", "downside", "side", "upside", "up" };
+            var anchorData = JsonUtility.FromJson<HeroAnchorData>(File.ReadAllText($"{HeroFolder}/anchors.json"));
             AssetDatabase.StartAssetEditing();
             try
             {
-                foreach (var view in views)
+                foreach (var entry in anchorData.frames)
                 {
-                    ImportSprite($"{HeroFolder}/hero-idle-{view}.png", new Vector2(0.5f, HeroPivotY));
-                    for (var frame = 0; frame < HeroFrameCount; frame++)
-                    {
-                        ImportSprite($"{HeroFolder}/hero-{view}-{frame}.png", new Vector2(0.5f, HeroPivotY));
-                    }
+                    ImportSprite($"{HandFolder}/{entry.name}-main.png", new Vector2(0.5f, HeroPivotY));
+                    ImportSprite($"{HandFolder}/{entry.name}-off.png", new Vector2(0.5f, HeroPivotY));
                 }
             }
             finally
@@ -274,15 +281,54 @@ namespace FantasyRoyale.Editor.Playtest
             }
 
             var anchors = new Dictionary<string, CharacterSpriteAnchors>();
-            foreach (var entry in JsonUtility.FromJson<HeroAnchorData>(File.ReadAllText($"{HeroFolder}/anchors.json")).frames)
+            foreach (var entry in anchorData.frames)
             {
                 anchors[entry.name] = new CharacterSpriteAnchors(
                     entry.mainHand / PixelsPerUnit,
                     entry.offHand / PixelsPerUnit,
-                    entry.back / PixelsPerUnit);
+                    entry.back / PixelsPerUnit,
+                    entry.mainHandAngle,
+                    AssetDatabase.LoadAssetAtPath<Sprite>($"{HandFolder}/{entry.name}-main.png"),
+                    AssetDatabase.LoadAssetAtPath<Sprite>($"{HandFolder}/{entry.name}-off.png"));
             }
 
-            var definition = AssetDatabase.LoadAssetAtPath<CharacterSpriteSetDefinition>(HeroSpritesPath);
+            return anchors;
+        }
+
+        /// <summary>
+        /// 全身セット1つの立ち姿、走り、攻撃のコマをSpriteとして取り込み、定義Assetへまとめる。
+        /// 調整した再生速度は作り直しても残す。
+        /// </summary>
+        private static CharacterSpriteSetDefinition LoadOrCreateBody(
+            string assetPath,
+            string folder,
+            string displayName,
+            Dictionary<string, CharacterSpriteAnchors> anchors)
+        {
+            var views = new[] { "down", "downside", "side", "upside", "up" };
+            AssetDatabase.StartAssetEditing();
+            try
+            {
+                foreach (var view in views)
+                {
+                    ImportSprite($"{folder}/hero-idle-{view}.png", new Vector2(0.5f, HeroPivotY));
+                    for (var frame = 0; frame < HeroFrameCount; frame++)
+                    {
+                        ImportSprite($"{folder}/hero-{view}-{frame}.png", new Vector2(0.5f, HeroPivotY));
+                    }
+
+                    for (var frame = 0; frame < HeroAttackFrameCount; frame++)
+                    {
+                        ImportSprite($"{folder}/hero-attack-{view}-{frame}.png", new Vector2(0.5f, HeroPivotY));
+                    }
+                }
+            }
+            finally
+            {
+                AssetDatabase.StopAssetEditing();
+            }
+
+            var definition = AssetDatabase.LoadAssetAtPath<CharacterSpriteSetDefinition>(assetPath);
             if (definition == null)
             {
                 if (!AssetDatabase.IsValidFolder("Assets/Data/Gameplay/Characters"))
@@ -291,16 +337,17 @@ namespace FantasyRoyale.Editor.Playtest
                 }
 
                 definition = ScriptableObject.CreateInstance<CharacterSpriteSetDefinition>();
-                AssetDatabase.CreateAsset(definition, HeroSpritesPath);
+                AssetDatabase.CreateAsset(definition, assetPath);
             }
 
             definition.Configure(
                 definition.FramesPerSecond,
-                LoadHeroView("down", anchors),
-                LoadHeroView("downside", anchors),
-                LoadHeroView("side", anchors),
-                LoadHeroView("upside", anchors),
-                LoadHeroView("up", anchors));
+                LoadBodyView(folder, "down", anchors),
+                LoadBodyView(folder, "downside", anchors),
+                LoadBodyView(folder, "side", anchors),
+                LoadBodyView(folder, "upside", anchors),
+                LoadBodyView(folder, "up", anchors));
+            definition.SetDisplayName(displayName);
             EditorUtility.SetDirty(definition);
             return definition;
         }
@@ -350,19 +397,29 @@ namespace FantasyRoyale.Editor.Playtest
             return AssetDatabase.LoadAssetAtPath<Sprite>($"{GameFolder}/{name}.png");
         }
 
-        private static CharacterSpriteView LoadHeroView(string view, Dictionary<string, CharacterSpriteAnchors> anchors)
+        private static CharacterSpriteView LoadBodyView(string folder, string view, Dictionary<string, CharacterSpriteAnchors> anchors)
         {
             var frames = new Sprite[HeroFrameCount];
             var frameAnchors = new CharacterSpriteAnchors[HeroFrameCount];
             for (var frame = 0; frame < HeroFrameCount; frame++)
             {
                 var name = $"hero-{view}-{frame}";
-                frames[frame] = AssetDatabase.LoadAssetAtPath<Sprite>($"{HeroFolder}/{name}.png");
+                frames[frame] = AssetDatabase.LoadAssetAtPath<Sprite>($"{folder}/{name}.png");
                 frameAnchors[frame] = anchors[name];
             }
 
-            var idle = AssetDatabase.LoadAssetAtPath<Sprite>($"{HeroFolder}/hero-idle-{view}.png");
-            return new CharacterSpriteView(idle, frames, anchors[$"hero-idle-{view}"], frameAnchors);
+            var attack = new Sprite[HeroAttackFrameCount];
+            var attackAnchors = new CharacterSpriteAnchors[HeroAttackFrameCount];
+            for (var frame = 0; frame < HeroAttackFrameCount; frame++)
+            {
+                var name = $"hero-attack-{view}-{frame}";
+                attack[frame] = AssetDatabase.LoadAssetAtPath<Sprite>($"{folder}/{name}.png");
+                attackAnchors[frame] = anchors[name];
+            }
+
+            var idle = AssetDatabase.LoadAssetAtPath<Sprite>($"{folder}/hero-idle-{view}.png");
+            var swing = new CharacterMotionFrames(CharacterActionMotion.Swing, attack, attackAnchors);
+            return new CharacterSpriteView(idle, frames, anchors[$"hero-idle-{view}"], frameAnchors, new[] { swing });
         }
 
         /// <summary>
@@ -380,6 +437,11 @@ namespace FantasyRoyale.Editor.Playtest
                     foreach (var view in item.views)
                     {
                         ImportSprite($"{GearFolder}/{view.file}.png", new Vector2(view.pivotX, view.pivotY));
+                    }
+
+                    foreach (var rotation in item.rotations)
+                    {
+                        ImportSprite($"{GearFolder}/{rotation}.png", new Vector2(0.5f, 0.5f));
                     }
                 }
             }
@@ -404,14 +466,24 @@ namespace FantasyRoyale.Editor.Playtest
                     AssetDatabase.CreateAsset(definition, path);
                 }
 
-                Sprite Load(string view) => AssetDatabase.LoadAssetAtPath<Sprite>($"{GearFolder}/{item.name}-{view}.png");
-                definition.Configure(
-                    (CharacterGearSlot)Enum.Parse(typeof(CharacterGearSlot), item.slot),
-                    Load("down"),
-                    Load("downside"),
-                    Load("side"),
-                    Load("upside"),
-                    Load("up"));
+                Sprite Load(string file) => AssetDatabase.LoadAssetAtPath<Sprite>($"{GearFolder}/{file}.png");
+                var slot = (CharacterGearSlot)Enum.Parse(typeof(CharacterGearSlot), item.slot);
+                if (item.rotations.Length > 0)
+                {
+                    definition.ConfigureRotations(slot, Array.ConvertAll(item.rotations, Load));
+                }
+                else
+                {
+                    definition.Configure(
+                        slot,
+                        Load($"{item.name}-down"),
+                        Load($"{item.name}-downside"),
+                        Load($"{item.name}-side"),
+                        Load($"{item.name}-upside"),
+                        Load($"{item.name}-up"));
+                }
+
+                definition.SetHeldInFist(item.heldInFist);
                 EditorUtility.SetDirty(definition);
                 result[item.name] = definition;
             }

@@ -3,38 +3,34 @@
   {
    "name": "sword",
    "slot": "MainHand",
-   "views": [
-    {
-     "view": "down",
-     "file": "sword-down",
-     "pivotX": 0.5,
-     "pivotY": 0.26
-    },
-    {
-     "view": "downside",
-     "file": "sword-downside",
-     "pivotX": 0.76,
-     "pivotY": 0.26
-    },
-    {
-     "view": "side",
-     "file": "sword-side",
-     "pivotX": 0.5,
-     "pivotY": 0.26
-    },
-    {
-     "view": "upside",
-     "file": "sword-upside",
-     "pivotX": 0.24,
-     "pivotY": 0.26
-    },
-    {
-     "view": "up",
-     "file": "sword-up",
-     "pivotX": 0.5,
-     "pivotY": 0.26
-    }
-   ]
+   "views": [],
+   "rotations": [
+    "sword-rot-00",
+    "sword-rot-01",
+    "sword-rot-02",
+    "sword-rot-03",
+    "sword-rot-04",
+    "sword-rot-05",
+    "sword-rot-06",
+    "sword-rot-07",
+    "sword-rot-08",
+    "sword-rot-09",
+    "sword-rot-10",
+    "sword-rot-11",
+    "sword-rot-12",
+    "sword-rot-13",
+    "sword-rot-14",
+    "sword-rot-15",
+    "sword-rot-16",
+    "sword-rot-17",
+    "sword-rot-18",
+    "sword-rot-19",
+    "sword-rot-20",
+    "sword-rot-21",
+    "sword-rot-22",
+    "sword-rot-23"
+   ],
+   "heldInFist": true
   },
   {
    "name": "shield",
@@ -70,7 +66,9 @@
      "pivotX": 0.5,
      "pivotY": 0.5
     }
-   ]
+   ],
+   "rotations": [],
+   "heldInFist": false
   },
   {
    "name": "bow",
@@ -106,7 +104,9 @@
      "pivotX": 0.5,
      "pivotY": 0.5
     }
-   ]
+   ],
+   "rotations": [],
+   "heldInFist": true
   },
   {
    "name": "quiver",
@@ -142,7 +142,9 @@
      "pivotX": 0.5,
      "pivotY": 0.48
     }
-   ]
+   ],
+   "rotations": [],
+   "heldInFist": false
   }
  ]
 }

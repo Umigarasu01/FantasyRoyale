@@ -71,6 +71,7 @@ namespace FantasyRoyale.Playtest
         [SerializeField, Min(1f)] private float cameraHeight = 14f;
         [SerializeField] private CharacterSpriteSetDefinition enemySprites;
         [SerializeField] private CharacterEquipmentDefinition[] equipment = new CharacterEquipmentDefinition[0];
+        [SerializeField] private CharacterSpriteSetDefinition[] armourSets = new CharacterSpriteSetDefinition[0];
         [SerializeField] private Sprite chestClosed;
         [SerializeField] private Sprite chestOpen;
         [SerializeField] private Vector2[] enemySpots = new Vector2[0];
@@ -98,6 +99,7 @@ namespace FantasyRoyale.Playtest
         private CharacterMoveCommand testMoveCommand;
         private float smoothedFrameSeconds = 1f / 60f;
         private int equipmentIndex;
+        private int armourIndex;
         private float playerReturnAt = -1f;
         private float playerGraceUntil;
 
@@ -119,6 +121,7 @@ namespace FantasyRoyale.Playtest
         public int EnemyCount => enemies.Count;
         public int ChestCount => chests.Count;
         public string CurrentEquipmentName => equipment.Length == 0 ? string.Empty : equipment[equipmentIndex].DisplayName;
+        public string CurrentArmourName => armourSets.Length == 0 ? string.Empty : armourSets[armourIndex].DisplayName;
 
         public CharacterActor2D GetEnemyActor(int index)
         {
@@ -163,6 +166,7 @@ namespace FantasyRoyale.Playtest
         public void ConfigureGame(
             CharacterSpriteSetDefinition newEnemySprites,
             CharacterEquipmentDefinition[] newEquipment,
+            CharacterSpriteSetDefinition[] newArmourSets,
             Sprite newChestClosed,
             Sprite newChestOpen,
             Vector2[] newEnemySpots,
@@ -173,6 +177,7 @@ namespace FantasyRoyale.Playtest
         {
             enemySprites = newEnemySprites;
             equipment = newEquipment;
+            armourSets = newArmourSets;
             chestClosed = newChestClosed;
             chestOpen = newChestOpen;
             enemySpots = newEnemySpots;
@@ -301,6 +306,22 @@ namespace FantasyRoyale.Playtest
             return true;
         }
 
+        /// <summary>
+        /// 次の全身セットへ着替える。確認用なので代金はかからない。持っている武器はそのまま使える。
+        /// </summary>
+        public bool TryChangeArmour()
+        {
+            if (armourSets.Length < 2)
+            {
+                return false;
+            }
+
+            armourIndex = (armourIndex + 1) % armourSets.Length;
+            PlayerAnimator.Initialize(armourSets[armourIndex]);
+            LastMessage = $"{CurrentArmourName}に着替えた";
+            return true;
+        }
+
         private bool IsNearShop()
         {
             var position = (Vector2)PlayerObject.transform.position;
@@ -348,6 +369,7 @@ namespace FantasyRoyale.Playtest
             PlayerAnimator.SetGear(equipment[equipmentIndex].Gear);
             PlayerCombat.Initialize(loadout, LayerMask.GetMask(MapCollisionLayerName));
             PlayerCombat.HitApplied += OnHitApplied;
+            PlayerAnimator.BindCombat(PlayerCombat);
             combatPresenter = new PreviewDebugCombatPresenter(PlayerCombat);
 
             // 入力状態をAsset本体へ残さないよう、Runtime複製だけを有効化する。
@@ -649,7 +671,8 @@ namespace FantasyRoyale.Playtest
 
         private void OnGUI()
         {
-            if (!IsReady)
+            // Play中にCodeが再Compileされると、保存されないHPの参照だけが消える。
+            if (!IsReady || PlayerHealth == null)
             {
                 return;
             }
@@ -657,7 +680,7 @@ namespace FantasyRoyale.Playtest
             var position = PlayerObject.transform.position;
             GUILayout.BeginArea(new Rect(12f, 12f, 320f, 150f), GUI.skin.box);
             GUILayout.Label($"HP: {PlayerHealth.CurrentHealth} / {PlayerHealth.MaximumHealth}   Coins: {Coins}");
-            GUILayout.Label($"Equipment (1 / 2): {CurrentEquipmentName}");
+            GUILayout.Label($"Equipment (1 / 2): {CurrentEquipmentName}   Armour: {CurrentArmourName}");
             GUILayout.Label("Move: WASD   Attack: J   Special: K   Use: E");
             GUILayout.Label($"Position: {position.x:0.0}, {position.y:0.0}   FPS: {1f / smoothedFrameSeconds:0}   Seed: {Seed}");
             if (!string.IsNullOrEmpty(LastMessage))
@@ -677,7 +700,7 @@ namespace FantasyRoyale.Playtest
         /// </summary>
         private void DrawShop()
         {
-            GUILayout.BeginArea(new Rect(Screen.width * 0.5f - 150f, 40f, 300f, 130f), GUI.skin.box);
+            GUILayout.BeginArea(new Rect(Screen.width * 0.5f - 150f, 40f, 300f, 160f), GUI.skin.box);
             GUILayout.Label($"ショップ   コイン: {Coins}");
             if (GUILayout.Button($"回復薬  {PotionPrice} コイン（HP {PotionHealing} 回復）"))
             {
@@ -691,6 +714,11 @@ namespace FantasyRoyale.Playtest
             }
 
             GUI.enabled = true;
+            if (GUILayout.Button($"着替える（今: {CurrentArmourName}）"))
+            {
+                TryChangeArmour();
+            }
+
             GUILayout.Label("E: 閉じる");
             GUILayout.EndArea();
         }

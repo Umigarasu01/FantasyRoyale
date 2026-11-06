@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ab55939579af0c14383ffbb8b1f80d43, type: 3}
+  m_Script: {fileID: 11500000, guid: 19aee41e7b6055b43a66f0aa4dbe48a1, type: 3}
   m_Name: quiver
   m_EditorClassIdentifier: FantasyRoyale.Gameplay.Characters.Unity::FantasyRoyale.Gameplay.Characters.Unity.CharacterGearDefinition
   slot: 2
@@ -18,3 +18,5 @@ MonoBehaviour:
   side: {fileID: 21300000, guid: 061bba21ae066f748ac4f862a92cdb0b, type: 3}
   upSide: {fileID: 21300000, guid: 96660af19cc868b4d84be4d2246fb614, type: 3}
   up: {fileID: 21300000, guid: f63f19d95c4895b4fbd9aed827937a25, type: 3}
+  rotations: []
+  heldInFist: 0

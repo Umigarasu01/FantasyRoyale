@@ -13,6 +13,7 @@ namespace FantasyRoyale.Gameplay.Characters.Unity
     {
         [SerializeField] private string actionId = string.Empty;
         [SerializeField] private CharacterActionKind kind = CharacterActionKind.Melee;
+        [SerializeField] private CharacterActionMotion motion = CharacterActionMotion.Swing;
         [SerializeField, Min(1)] private int damage = 1;
         [SerializeField, Min(0f)] private float windupSeconds = 0.1f;
         [SerializeField, Min(0f)] private float activeSeconds = 0.1f;
@@ -24,12 +25,18 @@ namespace FantasyRoyale.Gameplay.Characters.Unity
         public string ActionId => actionId;
 
         /// <summary>
+        /// 体が見せる動きの型。武器の差は型の中の数値で出し、動きの絵は増やさない。
+        /// </summary>
+        public CharacterActionMotion Motion => motion;
+
+        /// <summary>
         /// Editor Builderから近接Actionの値をまとめて設定する。
         /// </summary>
         public void ConfigureMelee(string newActionId, int newDamage, CharacterActionTiming timing, float newRange, float newArcDegrees)
         {
             actionId = newActionId;
             kind = CharacterActionKind.Melee;
+            motion = CharacterActionMotion.Swing;
             damage = newDamage;
             ApplyTiming(timing);
             range = newRange;
@@ -43,6 +50,7 @@ namespace FantasyRoyale.Gameplay.Characters.Unity
         {
             actionId = newActionId;
             kind = CharacterActionKind.Projectile;
+            motion = CharacterActionMotion.Shoot;
             damage = newDamage;
             ApplyTiming(timing);
             range = newRange;
@@ -56,8 +64,8 @@ namespace FantasyRoyale.Gameplay.Characters.Unity
         {
             var timing = new CharacterActionTiming(windupSeconds, activeSeconds, recoverySeconds);
             return kind == CharacterActionKind.Projectile
-                ? CharacterActionSpec.CreateProjectile(actionId, damage, timing, range, projectileSpeed)
-                : CharacterActionSpec.CreateMelee(actionId, damage, timing, range, arcDegrees);
+                ? CharacterActionSpec.CreateProjectile(actionId, damage, timing, range, projectileSpeed, motion)
+                : CharacterActionSpec.CreateMelee(actionId, damage, timing, range, arcDegrees, motion);
         }
 
         private void ApplyTiming(CharacterActionTiming timing)

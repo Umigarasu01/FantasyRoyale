@@ -17,10 +17,29 @@
 | hero-body-run-diagonal-01 | 同Directoryの`hero-body-run-diagonal-01.png` | 斜めの走りの素手の体 | `26bedaaa9705632ee535748f43d161229c33fba5e67ebe19b25ea589d0afd745` |
 | hero-body-idle-01 | 同Directoryの`hero-body-idle-01.png` | 立ち姿の素手の体 | `c9ad1ec171f0764ced009375fcc9f7e53c1a90d75da5f8cb0fdcc6aff253ab16` |
 | hero-body-idle-diagonal-01 | 同Directoryの`hero-body-idle-diagonal-01.png` | 斜めの立ち姿の素手の体 | `43aade27f6a4e2aba9ac7941d3ea8781340b095b822d7d31cedec3df380ed6d7` |
+| hero-body-attack-01 | 同Directoryの`hero-body-attack-01.png` | 素手の体の攻撃3段階、正面、横、背面 | `6cd7ba8ea0e442030ad8ed373cb9ce0d085e659a21779c679f2967a137117739` |
+| hero-body-attack-diagonal-01 | 同Directoryの`hero-body-attack-diagonal-01.png` | 素手の体の攻撃3段階、斜め前、斜め後ろ | `82c32d71807aab0141296a079369a7f06f0a158d5be5130cc8b898a6e9fd66a0` |
 | hero-gear-01 | 同Directoryの`hero-gear-01.png` | 剣、盾、弓、矢筒の5方向の部品 | `0fa6502fe31cd304274b466451b9d935eefd028951072fff5292c93cb773d90d` |
 | forest-slime-01 | 同Directoryの`forest-slime-01.png` | 跳ねる紫のスライムの4コマ | `2c9b19d278822601cda0aa307682e4d07ab654215df8847d83678ca48a8d5196` |
 
 Prompt全文は同名のJSONで確認する。`Tools/MapAuthoring/forest_objects.py`が大きさと判定を持ち、シートから切り出す。木は`build_forest_parts.py`が切り出す。宝箱と敵はUnityが置くので、同じファイルの実行で`Assets/Art/Generated/ForestLook/Game/`へ書き出す。
+
+## 2026-11-07 革装備の全身セット
+
+状態: **[Forest Map Preview Debug Scene](../../design-docs/scenes/forest-map-preview-debug-scene.md)で使用**
+
+`hero-body-*`の各シートを参照画像にして、OpenAI Image APIの`gpt-image-2.5-sunburst`（editsのmedium、1536x1024、1枚約$0.024）で着替えさせた試作である。保存先は`Assets/Art/Generated/ForestLook/`である。
+
+| Source | 保存先 | Prompt概要 | SHA-256 |
+| --- | --- | --- | --- |
+| hero-set-leather-run-01 | 同Directoryの`hero-set-leather-run-01.png` | 革装備の全身セットの走り、正面、横、背面 | `d2745e8b600caffd046359daaff8289b94b0eba86f1b24084b1519dd147b165d` |
+| hero-set-leather-run-diagonal-01 | 同Directoryの`hero-set-leather-run-diagonal-01.png` | 革装備の全身セットの斜めの走り | `f79ef57fc9b1f9d1f0fbcd0805cc498954ef14ee1b77f917a3869d33b92fbfac` |
+| hero-set-leather-idle-01 | 同Directoryの`hero-set-leather-idle-01.png` | 革装備の全身セットの立ち姿、正面、横、背面 | `b21363d532e80b6890ff4afde7352d8cd3b9d3b3e4b73dafeb3c932874a03031` |
+| hero-set-leather-idle-diagonal-01 | 同Directoryの`hero-set-leather-idle-diagonal-01.png` | 革装備の全身セットの斜めの立ち姿 | `1f169d571e955ec908dc36683695c2d49da0867e1443705b8ebaf7996337173d` |
+| hero-set-leather-attack-01 | 同Directoryの`hero-set-leather-attack-01.png` | 革装備の全身セットの攻撃3段階、正面、横、背面 | `06d94d98e1e4abf6aac1cd256be29ef754caf3020802139ced83714b96d99975` |
+| hero-set-leather-attack-diagonal-01 | 同Directoryの`hero-set-leather-attack-diagonal-01.png` | 革装備の全身セットの攻撃3段階、斜め前、斜め後ろ | `530e159d03f6f531f19f7318fb538e4f0d068aac45cfc20d548007caa2f5ac1c` |
+
+Prompt全文は同名のJSONで確認する。`Tools/MapAuthoring/build_hero_frames.py`が騎士のコマと同じ位置へ切り出し、`Sets/leather/`へ書き出す。
 
 ## 2026-11-06 騎士の走りアニメーションと立ち姿
 
@@ -35,7 +54,7 @@ Prompt全文は同名のJSONで確認する。`Tools/MapAuthoring/forest_objects
 | hero-run-diagonal-01 | 同Directoryの`hero-run-diagonal-01.png` | マゼンタ背景の斜め前と斜め後ろの4コマの走りシート | `5c27080d748e636b5f8e34f15b780a45a048318a77e81c02aa60c5391d9b9d7e` |
 | hero-idle-diagonal-01 | 同Directoryの`hero-idle-diagonal-01.png` | マゼンタ背景の斜め前と斜め後ろの立ち姿 | `f7777525cb7b61b82535c2d3251a4e5c3d5bb566dae1a6c02893f5141ea24f13` |
 
-Prompt全文は同名のJSONで確認する。`Tools/MapAuthoring/build_hero_frames.py`が背景を抜いて地図の縮尺へ揃え、現在の騎士は`hero-body-*`の素手の体を使い、`hero-run-*`と`hero-idle-*`は描き直しの元絵として残す。`Assets/Art/Generated/ForestLook/Hero/`へ走り20コマと立ち姿5枚、`Gear/`へ部品を書き出す。横と斜めは右寄りの向きだけを持ち、左寄りの向きは表示時に反転する。
+Prompt全文は同名のJSONで確認する。`Tools/MapAuthoring/build_hero_frames.py`が背景を抜いて地図の縮尺へ揃え、現在の騎士は`hero-body-*`の素手の体を使い、`hero-run-*`と`hero-idle-*`は描き直しの元絵で、ツールが手の位置と武器の角度を測るのにも使う。`Assets/Art/Generated/ForestLook/Hero/`へ走り20コマと立ち姿5枚、`Gear/`へ部品を書き出す。横と斜めは右寄りの向きだけを持ち、左寄りの向きは表示時に反転する。
 
 ## 2026-11-05 森マップの画作り部品
 

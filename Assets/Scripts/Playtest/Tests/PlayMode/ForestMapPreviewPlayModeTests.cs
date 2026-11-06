@@ -347,6 +347,8 @@ namespace FantasyRoyale.Playtest.Tests.PlayMode
             Assert.That(animator.GetGearSprite(CharacterGearSlot.OffHand), Is.Not.Null, "盾を持っています。");
             Assert.That(animator.GetGearSprite(CharacterGearSlot.Back), Is.Null);
             var shield = animator.GetGearSprite(CharacterGearSlot.OffHand);
+            Assert.That(animator.GetHandOverSprite(CharacterGearSlot.MainHand), Is.Not.Null, "剣は拳で握ります。");
+            Assert.That(animator.GetHandOverSprite(CharacterGearSlot.OffHand), Is.Null, "盾は拳を隠します。");
             Assert.That(preview.CurrentEquipmentName, Is.EqualTo("剣"));
             Assert.That(preview.TryOpenShop(), Is.False, "屋台から遠いと開きません。");
 
@@ -366,7 +368,83 @@ namespace FantasyRoyale.Playtest.Tests.PlayMode
             Assert.That(animator.GetGearSprite(CharacterGearSlot.MainHand), Is.Null, "剣はしまいます。");
             Assert.That(animator.GetGearSprite(CharacterGearSlot.OffHand), Is.Not.SameAs(shield), "盾が弓に替わります。");
             Assert.That(animator.GetGearSprite(CharacterGearSlot.Back), Is.Not.Null, "矢筒を背負います。");
+            Assert.That(animator.GetHandOverSprite(CharacterGearSlot.MainHand), Is.Null);
+            Assert.That(animator.GetHandOverSprite(CharacterGearSlot.OffHand), Is.Not.Null, "弓は拳で握ります。");
             Assert.That(preview.TryBuyBow(), Is.False, "同じ物は買えません。");
+        }
+
+        /// <summary>
+        /// 剣を振ると攻撃のコマへ替わり、剣は角度を変えながら扇を通り、終わると元の絵へ戻る。
+        /// </summary>
+        [UnityTest]
+        public IEnumerator ForestMap_SwordSwingsThroughAttackPose()
+        {
+            yield return LoadForest();
+            yield return null;
+            var playerRenderer = preview.PlayerObject.GetComponent<SpriteRenderer>();
+            var animator = preview.PlayerAnimator;
+            var idle = playerRenderer.sprite;
+            var command = new CharacterActionCommand(CharacterActionSlot.Primary, CharacterDirection8.East);
+            Assert.That(preview.PlayerCombat.TryStartAction(command), Is.True);
+
+            var bodies = new HashSet<Sprite>();
+            var swords = new HashSet<Sprite>();
+            var timeoutAt = Time.time + 2f;
+            while (preview.PlayerCombat.ActionState.IsBusy && Time.time < timeoutAt)
+            {
+                yield return null;
+                if (preview.PlayerCombat.ActionState.IsBusy)
+                {
+                    bodies.Add(playerRenderer.sprite);
+                    swords.Add(animator.GetGearSprite(CharacterGearSlot.MainHand));
+                }
+            }
+
+            Assert.That(bodies.Contains(idle), Is.False, "攻撃中は攻撃のコマを使います。");
+            Assert.That(bodies.Count, Is.GreaterThanOrEqualTo(2), "攻撃のコマが進みます。");
+            Assert.That(swords.Count, Is.GreaterThanOrEqualTo(3), "剣は角度を変えて振られます。");
+            yield return null;
+            Assert.That(playerRenderer.sprite, Is.Not.Null);
+            Assert.That(bodies.Contains(playerRenderer.sprite), Is.False, "終わると通常の絵へ戻ります。");
+        }
+
+        /// <summary>
+        /// 全身セットを着替えると体の絵だけが替わり、武器は同じ手の位置に残り、攻撃もそのセットの絵で動く。
+        /// </summary>
+        [UnityTest]
+        public IEnumerator ForestMap_ChangingArmourKeepsTheWeapon()
+        {
+            yield return LoadForest();
+            yield return null;
+            var playerRenderer = preview.PlayerObject.GetComponent<SpriteRenderer>();
+            var animator = preview.PlayerAnimator;
+            var knight = playerRenderer.sprite;
+            var sword = animator.GetGearSprite(CharacterGearSlot.MainHand);
+            var hand = animator.GetGearPosition(CharacterGearSlot.MainHand);
+            Assert.That(preview.CurrentArmourName, Is.EqualTo("騎士の鎧"));
+
+            Assert.That(preview.TryChangeArmour(), Is.True);
+            yield return null;
+            Assert.That(preview.CurrentArmourName, Is.EqualTo("革の装備"));
+            Assert.That(playerRenderer.sprite, Is.Not.SameAs(knight), "体の絵が替わります。");
+            Assert.That(animator.GetGearSprite(CharacterGearSlot.MainHand), Is.SameAs(sword), "剣はそのままです。");
+            Assert.That(animator.GetGearPosition(CharacterGearSlot.MainHand), Is.EqualTo(hand), "手の位置は同じです。");
+
+            var leather = playerRenderer.sprite;
+            var command = new CharacterActionCommand(CharacterActionSlot.Primary, CharacterDirection8.East);
+            Assert.That(preview.PlayerCombat.TryStartAction(command), Is.True);
+            yield return null;
+            Assert.That(playerRenderer.sprite, Is.Not.SameAs(leather), "革の装備でも攻撃のコマへ替わります。");
+
+            var timeoutAt = Time.time + 2f;
+            while (preview.PlayerCombat.ActionState.IsBusy && Time.time < timeoutAt)
+            {
+                yield return null;
+            }
+
+            Assert.That(preview.TryChangeArmour(), Is.True);
+            yield return null;
+            Assert.That(preview.CurrentArmourName, Is.EqualTo("騎士の鎧"), "一周すると元へ戻ります。");
         }
 
         /// <summary>

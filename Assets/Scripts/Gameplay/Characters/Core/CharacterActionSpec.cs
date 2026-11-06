@@ -21,6 +21,22 @@ namespace FantasyRoyale.Gameplay.Characters
     }
 
     /// <summary>
+    /// Actionで体が見せる動きの型。動きの絵は武器ごとではなく型ごとに持つ。
+    /// </summary>
+    public enum CharacterActionMotion
+    {
+        /// <summary>
+        /// 利き手の武器を振る。
+        /// </summary>
+        Swing = 1,
+
+        /// <summary>
+        /// 弓で射る。動きの絵がまだないので、走りと立ち姿のまま撃つ。
+        /// </summary>
+        Shoot = 2
+    }
+
+    /// <summary>
     /// 発生、持続、硬直の秒数。持続0は飛び道具のように一瞬だけ発動するActionを表す。
     /// </summary>
     public readonly struct CharacterActionTiming
@@ -59,6 +75,7 @@ namespace FantasyRoyale.Gameplay.Characters
         private CharacterActionSpec(
             string id,
             CharacterActionKind kind,
+            CharacterActionMotion motion,
             int damage,
             CharacterActionTiming timing,
             float range,
@@ -82,6 +99,7 @@ namespace FantasyRoyale.Gameplay.Characters
 
             Id = id;
             Kind = kind;
+            Motion = motion;
             Damage = damage;
             Timing = timing;
             Range = range;
@@ -91,6 +109,7 @@ namespace FantasyRoyale.Gameplay.Characters
 
         public string Id { get; }
         public CharacterActionKind Kind { get; }
+        public CharacterActionMotion Motion { get; }
         public int Damage { get; }
         public CharacterActionTiming Timing { get; }
         public float Range { get; }
@@ -105,14 +124,15 @@ namespace FantasyRoyale.Gameplay.Characters
             int damage,
             CharacterActionTiming timing,
             float range,
-            float arcDegrees)
+            float arcDegrees,
+            CharacterActionMotion motion = CharacterActionMotion.Swing)
         {
             if (float.IsNaN(arcDegrees) || arcDegrees <= 0f || arcDegrees > 360f)
             {
                 throw new ArgumentOutOfRangeException(nameof(arcDegrees), "Arcは0より大きく360以下である必要があります。");
             }
 
-            return new CharacterActionSpec(id, CharacterActionKind.Melee, damage, timing, range, arcDegrees, 0f);
+            return new CharacterActionSpec(id, CharacterActionKind.Melee, motion, damage, timing, range, arcDegrees, 0f);
         }
 
         /// <summary>
@@ -123,14 +143,15 @@ namespace FantasyRoyale.Gameplay.Characters
             int damage,
             CharacterActionTiming timing,
             float range,
-            float projectileSpeed)
+            float projectileSpeed,
+            CharacterActionMotion motion = CharacterActionMotion.Shoot)
         {
             if (float.IsNaN(projectileSpeed) || float.IsInfinity(projectileSpeed) || projectileSpeed <= 0f)
             {
                 throw new ArgumentOutOfRangeException(nameof(projectileSpeed), "弾速は有限の正数である必要があります。");
             }
 
-            return new CharacterActionSpec(id, CharacterActionKind.Projectile, damage, timing, range, 0f, projectileSpeed);
+            return new CharacterActionSpec(id, CharacterActionKind.Projectile, motion, damage, timing, range, 0f, projectileSpeed);
         }
 
         /// <summary>

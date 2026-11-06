@@ -83,7 +83,13 @@ Editorが同じProjectを開いているとBatchmodeは使えない。編集中�
 
 Folderの絶対Pathが長いと、一部のPackageで`DirectoryNotFoundException`が出る。短いPathを選ぶ。
 
-複製先で作ったSceneを本体へ戻すときは、参照が切れないよう新しいAssetと`.meta`を一緒に戻す。本体のEditorは新しいFileを先にImportして別のGUIDを付けることがあるので、戻す前に`.meta`のGUIDを比べ、参照されているFileは複製先の`.meta`で揃える。
+複製先で作ったSceneを本体へ戻すときは、参照が切れないよう新しいAssetと`.meta`を一緒に戻す。本体のEditorは新しいFileを先にImportして別のGUIDを付けることがあるので、GUIDを比べて揃える。
+
+- 新しいScriptの`.meta`は、複製先でAssetを作る前に本体の値へ揃える。ScriptableObjectのAssetはScriptのGUIDを持つので、ずれると本体では部品が黙って表示されない。
+- 絵のように参照される側の`.meta`は、複製先の値で本体を揃える。
+- 戻した後に`Tools/MapAuthoring/`で`python check_asset_references.py`を実行する。複製先のTestは本体の参照切れを検出できない。
+
+複製先で確認しただけでは、本体のEditorで見えることの確認にならない。
 
 ## Forest Compositionの再現
 
@@ -150,7 +156,9 @@ FantasyRoyale.MapAuthoringKit.Editor.ForestRestartAssetBuilder.BuildScene(
 
 ## 現在の基準
 
-2026-11-06、森マップへ攻撃、雑魚敵、宝箱、ショップを追加した後、一時複製のProjectでのBatchmode実行: EditMode 291 / 291成功、PlayMode 22 / 27成功。失敗した5件は従来と同じStudyAのSetUp失敗で、証跡Folderの指定がないため実行されていない。Player Buildと`dotnet build`は未実行。攻撃の5件は時刻による入力の破棄で不安定だったため修正し、単独でも4回連続で全件成功した。
+2026-11-07、全身セットと武器の動きの型を追加した後、一時複製のProjectでのBatchmode実行: EditMode 300 / 300成功、PlayMode 24 / 29成功。失敗した5件は従来と同じStudyAのSetUp失敗で、証跡Folderの指定がないため実行されていない。Player Buildと`dotnet build`は未実行。
+
+2026-11-06、森マップへ攻撃、雑魚敵、宝箱、ショップを追加した後、一時複製のProjectでのBatchmode実行: EditMode 294 / 294成功、PlayMode 23 / 28成功。失敗した5件は従来と同じStudyAのSetUp失敗で、証跡Folderの指定がないため実行されていない。Player Buildと`dotnet build`は未実行。攻撃の5件は時刻による入力の破棄で不安定だったため修正し、単独でも4回連続で全件成功した。
 
 2026-11-05、攻撃のVertical Slice実装後のBatchmode実行: EditMode 279 / 279成功、Compile Error 0。PlayMode 9 / 14成功で、Exploration Previewの4件と攻撃の5件は成功した。失敗した5件は`StudyANativeLayoutsPlayPreviewDebugTests`と`StudyANativeFlexibleConnectionsPlayPreviewDebugTests`で、検証の保存先の指定がなくSetUpで止まる。以前の記録と同じ結果で、機能の不具合を示すものではない。C# Project BuildとPlayer Buildは実行していない。以下はそれ以前の記録である。
 

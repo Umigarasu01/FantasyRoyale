@@ -8,6 +8,22 @@ namespace FantasyRoyale.Gameplay.Characters.Tests.Editor
     /// </summary>
     public sealed class CharacterActionTests
     {
+        /// <summary>
+        /// 段階の進み具合が0から1へ進み、待機中は1を返すことを確認する。
+        /// </summary>
+        [Test]
+        public void PhaseProgress_FollowsThePhase()
+        {
+            var state = new CharacterActionState();
+            Assert.That(state.PhaseProgress, Is.EqualTo(1f));
+
+            var spec = CharacterActionSpec.CreateMelee("test", 1, new CharacterActionTiming(1f, 1f, 1f), 1f, 90f);
+            state.TryStart(spec, CharacterDirection8.East);
+            Assert.That(state.PhaseProgress, Is.EqualTo(0f));
+            state.Advance(0.5f);
+            Assert.That(state.PhaseProgress, Is.EqualTo(0.5f).Within(0.001f));
+        }
+
         private static CharacterActionSpec CreateSword()
         {
             return CharacterActionSpec.CreateMelee(

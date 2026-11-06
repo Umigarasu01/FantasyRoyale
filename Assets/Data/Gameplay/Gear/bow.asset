@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ab55939579af0c14383ffbb8b1f80d43, type: 3}
+  m_Script: {fileID: 11500000, guid: 19aee41e7b6055b43a66f0aa4dbe48a1, type: 3}
   m_Name: bow
   m_EditorClassIdentifier: FantasyRoyale.Gameplay.Characters.Unity::FantasyRoyale.Gameplay.Characters.Unity.CharacterGearDefinition
   slot: 1
@@ -18,3 +18,5 @@ MonoBehaviour:
   side: {fileID: 21300000, guid: 00bcb5257a676fb49baabe43441321df, type: 3}
   upSide: {fileID: 21300000, guid: 0bee17deafde5fd4da9e07dbbc5dca8d, type: 3}
   up: {fileID: 21300000, guid: 04fa9e8f0de379e48bb57f61dfd17c36, type: 3}
+  rotations: []
+  heldInFist: 1

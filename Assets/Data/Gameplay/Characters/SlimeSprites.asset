@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c1ea30060f510345bfdaff166e8701b, type: 3}
   m_Name: SlimeSprites
   m_EditorClassIdentifier: FantasyRoyale.Gameplay.Characters.Unity::FantasyRoyale.Gameplay.Characters.Unity.CharacterSpriteSetDefinition
+  displayName: 
   framesPerSecond: 7
   down:
     idle: {fileID: 21300000, guid: 235af150339df704cb5aa6e9bf7a3303, type: 3}
@@ -20,6 +21,15 @@ MonoBehaviour:
     - {fileID: 21300000, guid: 3d32a8b50802a2a46b42f6492193b168, type: 3}
     - {fileID: 21300000, guid: 29647b436ce74ec4d9828d95f91d5246, type: 3}
     - {fileID: 21300000, guid: 32d6c906e3c748348b9d97a59dc68a17, type: 3}
+    idleAnchors:
+      mainHand: {x: 0, y: 0}
+      offHand: {x: 0, y: 0}
+      back: {x: 0, y: 0}
+      mainHandAngle: 0
+      mainHandOver: {fileID: 0}
+      offHandOver: {fileID: 0}
+    runAnchors: []
+    motions: []
   downSide:
     idle: {fileID: 21300000, guid: 235af150339df704cb5aa6e9bf7a3303, type: 3}
     run:
@@ -27,6 +37,15 @@ MonoBehaviour:
     - {fileID: 21300000, guid: 3d32a8b50802a2a46b42f6492193b168, type: 3}
     - {fileID: 21300000, guid: 29647b436ce74ec4d9828d95f91d5246, type: 3}
     - {fileID: 21300000, guid: 32d6c906e3c748348b9d97a59dc68a17, type: 3}
+    idleAnchors:
+      mainHand: {x: 0, y: 0}
+      offHand: {x: 0, y: 0}
+      back: {x: 0, y: 0}
+      mainHandAngle: 0
+      mainHandOver: {fileID: 0}
+      offHandOver: {fileID: 0}
+    runAnchors: []
+    motions: []
   side:
     idle: {fileID: 21300000, guid: 235af150339df704cb5aa6e9bf7a3303, type: 3}
     run:
@@ -34,6 +53,15 @@ MonoBehaviour:
     - {fileID: 21300000, guid: 3d32a8b50802a2a46b42f6492193b168, type: 3}
     - {fileID: 21300000, guid: 29647b436ce74ec4d9828d95f91d5246, type: 3}
     - {fileID: 21300000, guid: 32d6c906e3c748348b9d97a59dc68a17, type: 3}
+    idleAnchors:
+      mainHand: {x: 0, y: 0}
+      offHand: {x: 0, y: 0}
+      back: {x: 0, y: 0}
+      mainHandAngle: 0
+      mainHandOver: {fileID: 0}
+      offHandOver: {fileID: 0}
+    runAnchors: []
+    motions: []
   upSide:
     idle: {fileID: 21300000, guid: 235af150339df704cb5aa6e9bf7a3303, type: 3}
     run:
@@ -41,6 +69,15 @@ MonoBehaviour:
     - {fileID: 21300000, guid: 3d32a8b50802a2a46b42f6492193b168, type: 3}
     - {fileID: 21300000, guid: 29647b436ce74ec4d9828d95f91d5246, type: 3}
     - {fileID: 21300000, guid: 32d6c906e3c748348b9d97a59dc68a17, type: 3}
+    idleAnchors:
+      mainHand: {x: 0, y: 0}
+      offHand: {x: 0, y: 0}
+      back: {x: 0, y: 0}
+      mainHandAngle: 0
+      mainHandOver: {fileID: 0}
+      offHandOver: {fileID: 0}
+    runAnchors: []
+    motions: []
   up:
     idle: {fileID: 21300000, guid: 235af150339df704cb5aa6e9bf7a3303, type: 3}
     run:
@@ -48,3 +85,12 @@ MonoBehaviour:
     - {fileID: 21300000, guid: 3d32a8b50802a2a46b42f6492193b168, type: 3}
     - {fileID: 21300000, guid: 29647b436ce74ec4d9828d95f91d5246, type: 3}
     - {fileID: 21300000, guid: 32d6c906e3c748348b9d97a59dc68a17, type: 3}
+    idleAnchors:
+      mainHand: {x: 0, y: 0}
+      offHand: {x: 0, y: 0}
+      back: {x: 0, y: 0}
+      mainHandAngle: 0
+      mainHandOver: {fileID: 0}
+      offHandOver: {fileID: 0}
+    runAnchors: []
+    motions: []

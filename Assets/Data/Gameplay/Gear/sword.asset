@@ -9,12 +9,38 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ab55939579af0c14383ffbb8b1f80d43, type: 3}
+  m_Script: {fileID: 11500000, guid: 19aee41e7b6055b43a66f0aa4dbe48a1, type: 3}
   m_Name: sword
   m_EditorClassIdentifier: FantasyRoyale.Gameplay.Characters.Unity::FantasyRoyale.Gameplay.Characters.Unity.CharacterGearDefinition
   slot: 0
-  down: {fileID: 21300000, guid: 0f2e4651e0517154e87b9a145bfa18b3, type: 3}
-  downSide: {fileID: 21300000, guid: 77818a5077f14a74e8af93ee860e565a, type: 3}
-  side: {fileID: 21300000, guid: ff2ea393251fefe44b53c39257e5d9a7, type: 3}
-  upSide: {fileID: 21300000, guid: 90e98129e7e4a494d9187cf654ccd237, type: 3}
-  up: {fileID: 21300000, guid: 2a5b66c9e0312914da16ee41630649d7, type: 3}
+  down: {fileID: 0}
+  downSide: {fileID: 0}
+  side: {fileID: 0}
+  upSide: {fileID: 0}
+  up: {fileID: 0}
+  rotations:
+  - {fileID: 21300000, guid: 013ce279800188e47902b43608b4b1fa, type: 3}
+  - {fileID: 21300000, guid: 518b23a8f39b7e54d85ca90fd62524d7, type: 3}
+  - {fileID: 21300000, guid: 0cfa79bd6e63f234fb9bbe7e39cfa9d8, type: 3}
+  - {fileID: 21300000, guid: e06781edf6e363743812817097b2deab, type: 3}
+  - {fileID: 21300000, guid: cfa7a0adca0d86c45b3e62d1ccf4bf8e, type: 3}
+  - {fileID: 21300000, guid: 62b1c30ca0030ba4ea04d7de5e108226, type: 3}
+  - {fileID: 21300000, guid: 0d899045ad0dd8b4d8aae01a3f60665a, type: 3}
+  - {fileID: 21300000, guid: 8eaca0a71dbd34643a430a51e9d3c96b, type: 3}
+  - {fileID: 21300000, guid: 05053454349c3ef43b291bac57ff988b, type: 3}
+  - {fileID: 21300000, guid: bb576c37502c9854ab04169739b9f1f3, type: 3}
+  - {fileID: 21300000, guid: 9009c9e6c92872f449772cfa0b094e36, type: 3}
+  - {fileID: 21300000, guid: a41a5a48d1356fa4f88df6f1f1cbc7e6, type: 3}
+  - {fileID: 21300000, guid: fcde0801c71507744b725162657a50a0, type: 3}
+  - {fileID: 21300000, guid: d9e1874ae97bf37458181b6114043902, type: 3}
+  - {fileID: 21300000, guid: e092aaeb523919b4cbe7c1dc4266ff9c, type: 3}
+  - {fileID: 21300000, guid: f350f2ffc460ea74b9ec855703624ff0, type: 3}
+  - {fileID: 21300000, guid: 5cb5d7286c170de41a12748157469634, type: 3}
+  - {fileID: 21300000, guid: fe5717284bec02a4395db3c5b7b89e89, type: 3}
+  - {fileID: 21300000, guid: e46b37809004639448901fec51012c70, type: 3}
+  - {fileID: 21300000, guid: dc7c9067a45ba1548bd50566c0a2f90d, type: 3}
+  - {fileID: 21300000, guid: b635462f7d2b1784f91d60fc517653de, type: 3}
+  - {fileID: 21300000, guid: 01f4e60482a72754298b86eb0538b5b7, type: 3}
+  - {fileID: 21300000, guid: fea6de360a73b0648bb10df4bd854dc8, type: 3}
+  - {fileID: 21300000, guid: c7eca500aad987540b2849e4541d341d, type: 3}
+  heldInFist: 1

@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ab55939579af0c14383ffbb8b1f80d43, type: 3}
+  m_Script: {fileID: 11500000, guid: 19aee41e7b6055b43a66f0aa4dbe48a1, type: 3}
   m_Name: shield
   m_EditorClassIdentifier: FantasyRoyale.Gameplay.Characters.Unity::FantasyRoyale.Gameplay.Characters.Unity.CharacterGearDefinition
   slot: 1
@@ -18,3 +18,5 @@ MonoBehaviour:
   side: {fileID: 21300000, guid: 1360be01674b76746a14711737f19a22, type: 3}
   upSide: {fileID: 21300000, guid: ae0d5146024e7804e8ea59e4b6edb309, type: 3}
   up: {fileID: 21300000, guid: 335fc9562853cc546ba654e9618c3dd8, type: 3}
+  rotations: []
+  heldInFist: 0

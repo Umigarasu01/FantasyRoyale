@@ -44,6 +44,23 @@ namespace FantasyRoyale.Gameplay.Characters
         public bool IsBusy => Phase != CharacterActionPhase.Idle;
 
         /// <summary>
+        /// 今の段階の進み具合を0から1で返す。長さ0の段階と待機中は1とする。
+        /// </summary>
+        public float PhaseProgress
+        {
+            get
+            {
+                if (!IsBusy)
+                {
+                    return 1f;
+                }
+
+                var duration = GetPhaseDuration();
+                return duration > 0f ? Math.Min(1f, phaseElapsedSeconds / duration) : 1f;
+            }
+        }
+
+        /// <summary>
         /// 発生と持続の間は移動不可、硬直中は半速、待機中は通常速度を返す。
         /// </summary>
         public float MovementScale
