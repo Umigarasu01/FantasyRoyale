@@ -20,6 +20,23 @@ MonoBehaviour:
     - {fileID: 21300000, guid: 551bc728c85902b42b8e032e8a80825f, type: 3}
     - {fileID: 21300000, guid: 78082baf507dc104d99afa7bc7b5a248, type: 3}
     - {fileID: 21300000, guid: d4013e66b57d4304c81b4e93b135e865, type: 3}
+    idleAnchors:
+      mainHand: {x: -0.3046875, y: 0.421875}
+      offHand: {x: 0.2890625, y: 0.378125}
+      back: {x: 0, y: 0.653125}
+    runAnchors:
+    - mainHand: {x: -0.3328125, y: 0.446875}
+      offHand: {x: 0.315625, y: 0.409375}
+      back: {x: 0, y: 0.6078125}
+    - mainHand: {x: -0.3296875, y: 0.4296875}
+      offHand: {x: 0.303125, y: 0.4140625}
+      back: {x: 0, y: 0.5984375}
+    - mainHand: {x: -0.33125, y: 0.446875}
+      offHand: {x: 0.3171875, y: 0.4109375}
+      back: {x: 0, y: 0.6078125}
+    - mainHand: {x: -0.3265625, y: 0.428125}
+      offHand: {x: 0.3046875, y: 0.4125}
+      back: {x: 0, y: 0.5984375}
   downSide:
     idle: {fileID: 21300000, guid: bdd734b083257fe4ba8e222b25b80340, type: 3}
     run:
@@ -27,6 +44,23 @@ MonoBehaviour:
     - {fileID: 21300000, guid: be0a3799a98e13d43ab2197633c7fcc3, type: 3}
     - {fileID: 21300000, guid: 69da57d0aa35798478e6173542233316, type: 3}
     - {fileID: 21300000, guid: ca69acc67cf281e41844d15d155b3865, type: 3}
+    idleAnchors:
+      mainHand: {x: -0.2625, y: 0.484375}
+      offHand: {x: 0.25, y: 0.384375}
+      back: {x: -0.0625, y: 0.653125}
+    runAnchors:
+    - mainHand: {x: -0.35, y: 0.4875}
+      offHand: {x: 0.275, y: 0.509375}
+      back: {x: -0.0625, y: 0.634375}
+    - mainHand: {x: -0.259375, y: 0.475}
+      offHand: {x: 0.2765625, y: 0.5046875}
+      back: {x: -0.0625, y: 0.625}
+    - mainHand: {x: -0.353125, y: 0.4875}
+      offHand: {x: 0.275, y: 0.509375}
+      back: {x: -0.0625, y: 0.634375}
+    - mainHand: {x: -0.2609375, y: 0.46875}
+      offHand: {x: 0.278125, y: 0.5046875}
+      back: {x: -0.0625, y: 0.625}
   side:
     idle: {fileID: 21300000, guid: 3e959005bf3ce01498e547d16bb2fcbb, type: 3}
     run:
@@ -34,6 +68,23 @@ MonoBehaviour:
     - {fileID: 21300000, guid: 216de8f5c2f42be4fac8a75f7e54c381, type: 3}
     - {fileID: 21300000, guid: 2b1311e512380074db5deb70c605da6a, type: 3}
     - {fileID: 21300000, guid: dde663a01828e0c48a69eed9d8e18e86, type: 3}
+    idleAnchors:
+      mainHand: {x: -0.171875, y: 0.375}
+      offHand: {x: 0.1796875, y: 0.3921875}
+      back: {x: -0.125, y: 0.634375}
+    runAnchors:
+    - mainHand: {x: -0.2171875, y: 0.3671875}
+      offHand: {x: 0.1359375, y: 0.440625}
+      back: {x: -0.125, y: 0.5890625}
+    - mainHand: {x: -0.246875, y: 0.4375}
+      offHand: {x: 0.1984375, y: 0.4390625}
+      back: {x: -0.125, y: 0.5890625}
+    - mainHand: {x: -0.2265625, y: 0.3828125}
+      offHand: {x: 0.2, y: 0.41875}
+      back: {x: -0.125, y: 0.5625}
+    - mainHand: {x: -0.2328125, y: 0.4578125}
+      offHand: {x: 0.215625, y: 0.4609375}
+      back: {x: -0.125, y: 0.5984375}
   upSide:
     idle: {fileID: 21300000, guid: f21bbe4d27df58e46a397d6a4b0d6789, type: 3}
     run:
@@ -41,6 +92,23 @@ MonoBehaviour:
     - {fileID: 21300000, guid: d9835d2f8d4731b48906d7971905f1b1, type: 3}
     - {fileID: 21300000, guid: 3b64823e39dc3c140ba332093d595a07, type: 3}
     - {fileID: 21300000, guid: e85c3c6c8614b1640844c969b647b529, type: 3}
+    idleAnchors:
+      mainHand: {x: 0.2296875, y: 0.41875}
+      offHand: {x: -0.2484375, y: 0.49375}
+      back: {x: -0.046875, y: 0.653125}
+    runAnchors:
+    - mainHand: {x: 0.2078125, y: 0.4359375}
+      offHand: {x: -0.359375, y: 0.5234375}
+      back: {x: -0.046875, y: 0.625}
+    - mainHand: {x: 0.215625, y: 0.4265625}
+      offHand: {x: -0.3328125, y: 0.5}
+      back: {x: -0.046875, y: 0.615625}
+    - mainHand: {x: 0.20625, y: 0.4515625}
+      offHand: {x: -0.365625, y: 0.540625}
+      back: {x: -0.046875, y: 0.634375}
+    - mainHand: {x: 0.215625, y: 0.4203125}
+      offHand: {x: -0.3328125, y: 0.496875}
+      back: {x: -0.046875, y: 0.615625}
   up:
     idle: {fileID: 21300000, guid: 2ed09bb9b6660c743aa8a22de32d9b95, type: 3}
     run:
@@ -48,3 +116,20 @@ MonoBehaviour:
     - {fileID: 21300000, guid: f8625aa26c5d1a94bb68b8506ca90e62, type: 3}
     - {fileID: 21300000, guid: 490668230f3fd6f4fa1768f499254e66, type: 3}
     - {fileID: 21300000, guid: ba98570ad15717149984799a1bee5574, type: 3}
+    idleAnchors:
+      mainHand: {x: 0.30625, y: 0.378125}
+      offHand: {x: -0.2953125, y: 0.384375}
+      back: {x: 0, y: 0.653125}
+    runAnchors:
+    - mainHand: {x: 0.3125, y: 0.421875}
+      offHand: {x: -0.3328125, y: 0.4671875}
+      back: {x: 0, y: 0.615625}
+    - mainHand: {x: 0.296875, y: 0.40625}
+      offHand: {x: -0.334375, y: 0.4484375}
+      back: {x: 0, y: 0.6078125}
+    - mainHand: {x: 0.3109375, y: 0.4171875}
+      offHand: {x: -0.3328125, y: 0.4640625}
+      back: {x: 0, y: 0.615625}
+    - mainHand: {x: 0.2953125, y: 0.40625}
+      offHand: {x: -0.3375, y: 0.4484375}
+      back: {x: 0, y: 0.6078125}

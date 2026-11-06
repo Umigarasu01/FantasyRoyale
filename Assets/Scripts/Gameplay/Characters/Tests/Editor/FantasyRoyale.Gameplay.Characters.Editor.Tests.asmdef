@@ -2,7 +2,8 @@
   "name": "FantasyRoyale.Gameplay.Characters.Editor.Tests",
   "rootNamespace": "FantasyRoyale.Gameplay.Characters.Tests.Editor",
   "references": [
-    "FantasyRoyale.Gameplay.Characters.Core"
+    "FantasyRoyale.Gameplay.Characters.Core",
+    "FantasyRoyale.Gameplay.Characters.Unity"
   ],
   "includePlatforms": [
     "Editor"

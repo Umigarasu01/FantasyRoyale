@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab55939579af0c14383ffbb8b1f80d43, type: 3}
+  m_Name: bow
+  m_EditorClassIdentifier: FantasyRoyale.Gameplay.Characters.Unity::FantasyRoyale.Gameplay.Characters.Unity.CharacterGearDefinition
+  slot: 1
+  down: {fileID: 21300000, guid: ed5bf421801a0ae4eabdbe41a5f78cf6, type: 3}
+  downSide: {fileID: 21300000, guid: 73faef4fe2cc6df43b884639a3c65e79, type: 3}
+  side: {fileID: 21300000, guid: 00bcb5257a676fb49baabe43441321df, type: 3}
+  upSide: {fileID: 21300000, guid: 0bee17deafde5fd4da9e07dbbc5dca8d, type: 3}
+  up: {fileID: 21300000, guid: 04fa9e8f0de379e48bb57f61dfd17c36, type: 3}

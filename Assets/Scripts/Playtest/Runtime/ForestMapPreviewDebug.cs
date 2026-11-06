@@ -1,6 +1,9 @@
+using System;
 using System.Collections.Generic;
 using FantasyRoyale.Gameplay.Characters;
 using FantasyRoyale.Gameplay.Characters.Unity;
+using FantasyRoyale.Gameplay.Events;
+using FantasyRoyale.MapAuthoringKit;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -45,6 +48,13 @@ namespace FantasyRoyale.Playtest
         private const float PlayerGraceSeconds = 2f;
         private const float PlayerBlinkPerSecond = 10f;
         private const float ChestReach = 1.6f;
+        private const float HealingReach = 2f;
+        private const float ShopReach = 2.2f;
+        private const int PotionPrice = 5;
+        private const int PotionHealing = 30;
+        private const int BowPrice = 20;
+        private const int ActiveEnemyCount = 12;
+        private const int ActiveChestCount = 4;
         private const int CoinsPerEnemy = 1;
         private const int CoinsPerChest = 10;
 
@@ -65,9 +75,17 @@ namespace FantasyRoyale.Playtest
         [SerializeField] private Sprite chestOpen;
         [SerializeField] private Vector2[] enemySpots = new Vector2[0];
         [SerializeField] private Vector2[] chestSpots = new Vector2[0];
+        [SerializeField] private MapEventDefinition healingEvent;
+        [SerializeField] private Vector2[] healingSpots = new Vector2[0];
+        [SerializeField] private Vector2[] shopSpots = new Vector2[0];
+
+        // 0なら試合ごとに置き場所が変わる。同じ配置を再現するときだけ値を入れる。
+        [SerializeField] private int matchSeed;
 
         private readonly List<Enemy> enemies = new List<Enemy>();
         private readonly List<Chest> chests = new List<Chest>();
+        private readonly PreviewDebugMapEventRuntimeStateStore eventState = new PreviewDebugMapEventRuntimeStateStore();
+        private MapEventExecutionService eventService;
         private InputActionAsset runtimeInputActions;
         private HumanCharacterMoveInputAdapter humanMoveInput;
         private HumanCharacterActionInputAdapter humanActionInput;
@@ -96,6 +114,8 @@ namespace FantasyRoyale.Playtest
         public Rect MapBounds => mapBounds;
         public Vector2 SpawnPosition => spawnPosition;
         public int PlayerSortingOrder => playerRenderer == null ? 0 : playerRenderer.sortingOrder;
+        public int Seed { get; private set; }
+        public bool IsShopOpen { get; private set; }
         public int EnemyCount => enemies.Count;
         public int ChestCount => chests.Count;
         public string CurrentEquipmentName => equipment.Length == 0 ? string.Empty : equipment[equipmentIndex].DisplayName;
@@ -108,6 +128,16 @@ namespace FantasyRoyale.Playtest
         public Vector2 GetChestPosition(int index)
         {
             return chests[index].Position;
+        }
+
+        public Vector2 GetHealingPosition(int index)
+        {
+            return healingSpots[index];
+        }
+
+        public Vector2 GetShopPosition(int index)
+        {
+            return shopSpots[index];
         }
 
         /// <summary>
@@ -136,7 +166,10 @@ namespace FantasyRoyale.Playtest
             Sprite newChestClosed,
             Sprite newChestOpen,
             Vector2[] newEnemySpots,
-            Vector2[] newChestSpots)
+            Vector2[] newChestSpots,
+            MapEventDefinition newHealingEvent,
+            Vector2[] newHealingSpots,
+            Vector2[] newShopSpots)
         {
             enemySprites = newEnemySprites;
             equipment = newEquipment;
@@ -144,6 +177,17 @@ namespace FantasyRoyale.Playtest
             chestOpen = newChestOpen;
             enemySpots = newEnemySpots;
             chestSpots = newChestSpots;
+            healingEvent = newHealingEvent;
+            healingSpots = newHealingSpots;
+            shopSpots = newShopSpots;
+        }
+
+        /// <summary>
+        /// PlayMode Testが敵を倒さずに買い物を確認できるよう、コインを足す。
+        /// </summary>
+        public void AddCoinsForTests(int amount)
+        {
+            Coins += amount;
         }
 
         /// <summary>
@@ -164,7 +208,7 @@ namespace FantasyRoyale.Playtest
         }
 
         /// <summary>
-        /// 手の届く閉じた宝箱を開ける。最初は装備、持ち切った後はコインが手に入る。
+        /// 手の届く閉じた宝箱を開ける。中身はショップで使うコインである。
         /// </summary>
         public bool TryOpenNearestChest()
         {
@@ -179,23 +223,106 @@ namespace FantasyRoyale.Playtest
 
                 chest.IsOpen = true;
                 chest.Renderer.sprite = chestOpen;
-                if (OwnedEquipmentCount < equipment.Length)
-                {
-                    equipmentIndex = OwnedEquipmentCount;
-                    OwnedEquipmentCount++;
-                    equipment[equipmentIndex].ApplyTo(PlayerCombat.Loadout);
-                    LastMessage = $"{CurrentEquipmentName}を手に入れた";
-                }
-                else
-                {
-                    Coins += CoinsPerChest;
-                    LastMessage = $"コイン {CoinsPerChest} 枚を手に入れた";
-                }
-
+                Coins += CoinsPerChest;
+                LastMessage = $"コイン {CoinsPerChest} 枚を手に入れた";
                 return true;
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// 手の届く回復の場所を使う。既存の回復の泉のEventと同じ規則で、一度使うと使えなくなる。
+        /// </summary>
+        public bool TryUseNearestHealing()
+        {
+            var position = (Vector2)PlayerObject.transform.position;
+            for (var index = 0; index < healingSpots.Length; index++)
+            {
+                if (Vector2.Distance(position, healingSpots[index]) > HealingReach)
+                {
+                    continue;
+                }
+
+                var result = eventService.Execute(
+                    $"forest-healing-{index}",
+                    healingEvent,
+                    new MapEventExecutionContext(PlayerHealth),
+                    eventState);
+                LastMessage = result.IsSuccess
+                    ? $"HPが {result.AppliedValue} 回復した"
+                    : eventState.IsUsed($"forest-healing-{index}") ? "もう水が湧いていない" : "HPは減っていない";
+                return result.IsSuccess;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// 屋台の前でショップを開く。
+        /// </summary>
+        public bool TryOpenShop()
+        {
+            IsShopOpen = IsNearShop();
+            return IsShopOpen;
+        }
+
+        /// <summary>
+        /// 回復薬を買ってその場で飲む。HPが減っていなければ買わない。
+        /// </summary>
+        public bool TryBuyPotion()
+        {
+            if (Coins < PotionPrice || !PlayerHealth.RestoreHealth(PotionHealing).IsApplied)
+            {
+                LastMessage = Coins < PotionPrice ? "コインが足りない" : "HPは減っていない";
+                return false;
+            }
+
+            Coins -= PotionPrice;
+            LastMessage = "回復薬を飲んだ";
+            return true;
+        }
+
+        /// <summary>
+        /// 弓を買って持ち替える。騎士の手の部品も弓に替わる。
+        /// </summary>
+        public bool TryBuyBow()
+        {
+            if (OwnedEquipmentCount >= equipment.Length || Coins < BowPrice)
+            {
+                LastMessage = Coins < BowPrice ? "コインが足りない" : "もう持っている";
+                return false;
+            }
+
+            Coins -= BowPrice;
+            OwnedEquipmentCount++;
+            EquipIndex(OwnedEquipmentCount - 1);
+            LastMessage = $"{CurrentEquipmentName}を買った";
+            return true;
+        }
+
+        private bool IsNearShop()
+        {
+            var position = (Vector2)PlayerObject.transform.position;
+            for (var index = 0; index < shopSpots.Length; index++)
+            {
+                if (Vector2.Distance(position, shopSpots[index]) <= ShopReach)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// 装備のActionと見た目の部品をまとめて替える。体のアニメーションはそのまま使う。
+        /// </summary>
+        private void EquipIndex(int index)
+        {
+            equipmentIndex = index;
+            equipment[index].ApplyTo(PlayerCombat.Loadout);
+            PlayerAnimator.SetGear(equipment[index].Gear);
         }
 
         /// <summary>
@@ -218,6 +345,7 @@ namespace FantasyRoyale.Playtest
             PlayerCombat = PlayerObject.AddComponent<CharacterCombat2D>();
             var loadout = new CharacterLoadout(null, null);
             equipment[equipmentIndex].ApplyTo(loadout);
+            PlayerAnimator.SetGear(equipment[equipmentIndex].Gear);
             PlayerCombat.Initialize(loadout, LayerMask.GetMask(MapCollisionLayerName));
             PlayerCombat.HitApplied += OnHitApplied;
             combatPresenter = new PreviewDebugCombatPresenter(PlayerCombat);
@@ -237,12 +365,17 @@ namespace FantasyRoyale.Playtest
             nextEquipmentAction.Enable();
             previousEquipmentAction.Enable();
 
-            foreach (var spot in enemySpots)
+            eventService = new MapEventExecutionService(
+                new MapEventHandlerRegistry(new IMapEventHandler[] { new HealingFountainEventHandler() }));
+
+            // 地形は固定で、敵と宝箱の置き場所だけを候補から試合ごとに選ぶ。
+            Seed = matchSeed != 0 ? matchSeed : Environment.TickCount;
+            foreach (var spot in PickSpots(enemySpots, ActiveEnemyCount, "enemy", Seed))
             {
                 enemies.Add(CreateEnemy(spot));
             }
 
-            foreach (var spot in chestSpots)
+            foreach (var spot in PickSpots(chestSpots, ActiveChestCount, "chest", Seed + 1))
             {
                 chests.Add(CreateChest(spot));
             }
@@ -251,6 +384,37 @@ namespace FantasyRoyale.Playtest
             gameplayCamera.orthographicSize = cameraHeight * 0.5f;
             FollowWithCamera(spawnPosition);
             IsReady = true;
+        }
+
+        /// <summary>
+        /// 候補の中から指定数をSeedで選ぶ。抽選はEvent配置と同じ純C#の選択器を使う。
+        /// </summary>
+        private static List<Vector2> PickSpots(Vector2[] candidates, int count, string prefix, int seed)
+        {
+            var sockets = new List<MapEventSocketCandidate>();
+            for (var index = 0; index < candidates.Length; index++)
+            {
+                sockets.Add(new MapEventSocketCandidate($"{prefix}-{index}"));
+            }
+
+            if (!MapEventPlacementSelector.TryCreatePlan(
+                    sockets,
+                    new[] { new MapEventPoolCandidate(prefix, 1) },
+                    Mathf.Min(count, candidates.Length),
+                    seed,
+                    out var plan,
+                    out var error))
+            {
+                throw new InvalidOperationException(error);
+            }
+
+            var picked = new List<Vector2>();
+            foreach (var assignment in plan.Assignments)
+            {
+                picked.Add(candidates[int.Parse(assignment.SocketId.Substring(prefix.Length + 1))]);
+            }
+
+            return picked;
         }
 
         private InputAction FindPlayerAction(string actionName)
@@ -327,7 +491,19 @@ namespace FantasyRoyale.Playtest
 
             if (interactAction.WasPressedThisFrame())
             {
-                TryOpenNearestChest();
+                if (IsShopOpen)
+                {
+                    IsShopOpen = false;
+                }
+                else if (!TryOpenNearestChest() && !TryUseNearestHealing())
+                {
+                    TryOpenShop();
+                }
+            }
+
+            if (IsShopOpen && !IsNearShop())
+            {
+                IsShopOpen = false;
             }
 
             if (nextEquipmentAction.WasPressedThisFrame())
@@ -342,8 +518,7 @@ namespace FantasyRoyale.Playtest
 
         private void CycleEquipment(int step)
         {
-            equipmentIndex = (equipmentIndex + step + OwnedEquipmentCount) % OwnedEquipmentCount;
-            equipment[equipmentIndex].ApplyTo(PlayerCombat.Loadout);
+            EquipIndex((equipmentIndex + step + OwnedEquipmentCount) % OwnedEquipmentCount);
         }
 
         /// <summary>
@@ -431,7 +606,7 @@ namespace FantasyRoyale.Playtest
             }
 
             var position = (Vector2)PlayerObject.transform.position;
-            SortByFeet(playerRenderer, position.y);
+            PlayerAnimator.SetSortingOrder(FeetOrder(position.y));
             for (var index = 0; index < enemies.Count; index++)
             {
                 SortByFeet(enemies[index].Renderer, enemies[index].Object.transform.position.y);
@@ -445,7 +620,12 @@ namespace FantasyRoyale.Playtest
 
         private void SortByFeet(SpriteRenderer renderer, float y)
         {
-            renderer.sortingOrder = Mathf.RoundToInt((mapBounds.yMax - y) * PixelsPerUnit) - SortingOffset;
+            renderer.sortingOrder = FeetOrder(y);
+        }
+
+        private int FeetOrder(float y)
+        {
+            return Mathf.RoundToInt((mapBounds.yMax - y) * PixelsPerUnit) - SortingOffset;
         }
 
         private void OnDestroy()
@@ -478,13 +658,40 @@ namespace FantasyRoyale.Playtest
             GUILayout.BeginArea(new Rect(12f, 12f, 320f, 150f), GUI.skin.box);
             GUILayout.Label($"HP: {PlayerHealth.CurrentHealth} / {PlayerHealth.MaximumHealth}   Coins: {Coins}");
             GUILayout.Label($"Equipment (1 / 2): {CurrentEquipmentName}");
-            GUILayout.Label("Move: WASD   Attack: J   Special: K   Open: E");
-            GUILayout.Label($"Position: {position.x:0.0}, {position.y:0.0}   FPS: {1f / smoothedFrameSeconds:0}");
+            GUILayout.Label("Move: WASD   Attack: J   Special: K   Use: E");
+            GUILayout.Label($"Position: {position.x:0.0}, {position.y:0.0}   FPS: {1f / smoothedFrameSeconds:0}   Seed: {Seed}");
             if (!string.IsNullOrEmpty(LastMessage))
             {
                 GUILayout.Label(LastMessage);
             }
 
+            GUILayout.EndArea();
+            if (IsShopOpen)
+            {
+                DrawShop();
+            }
+        }
+
+        /// <summary>
+        /// 確認用の簡単なショップ画面。Eで閉じるか、屋台から離れると閉じる。
+        /// </summary>
+        private void DrawShop()
+        {
+            GUILayout.BeginArea(new Rect(Screen.width * 0.5f - 150f, 40f, 300f, 130f), GUI.skin.box);
+            GUILayout.Label($"ショップ   コイン: {Coins}");
+            if (GUILayout.Button($"回復薬  {PotionPrice} コイン（HP {PotionHealing} 回復）"))
+            {
+                TryBuyPotion();
+            }
+
+            GUI.enabled = OwnedEquipmentCount < equipment.Length;
+            if (GUILayout.Button(GUI.enabled ? $"弓  {BowPrice} コイン" : "弓  購入済み"))
+            {
+                TryBuyBow();
+            }
+
+            GUI.enabled = true;
+            GUILayout.Label("E: 閉じる");
             GUILayout.EndArea();
         }
 

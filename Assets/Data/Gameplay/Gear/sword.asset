@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab55939579af0c14383ffbb8b1f80d43, type: 3}
+  m_Name: sword
+  m_EditorClassIdentifier: FantasyRoyale.Gameplay.Characters.Unity::FantasyRoyale.Gameplay.Characters.Unity.CharacterGearDefinition
+  slot: 0
+  down: {fileID: 21300000, guid: 0f2e4651e0517154e87b9a145bfa18b3, type: 3}
+  downSide: {fileID: 21300000, guid: 77818a5077f14a74e8af93ee860e565a, type: 3}
+  side: {fileID: 21300000, guid: ff2ea393251fefe44b53c39257e5d9a7, type: 3}
+  upSide: {fileID: 21300000, guid: 90e98129e7e4a494d9187cf654ccd237, type: 3}
+  up: {fileID: 21300000, guid: 2a5b66c9e0312914da16ee41630649d7, type: 3}

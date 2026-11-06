@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using FantasyRoyale.Gameplay.Characters;
 using FantasyRoyale.Gameplay.Characters.Unity;
@@ -15,7 +16,6 @@ namespace FantasyRoyale.Playtest.Tests.PlayMode
     public sealed class ForestMapPreviewPlayModeTests
     {
         private const string ScenePath = "Assets/ForestMapPreview/ForestMapPreviewDebug.unity";
-        private const int OpenGroundEnemy = 5;
 
         private static readonly Vector2 EastRiverBank = new Vector2(100f, 68.65f);
 
@@ -94,6 +94,60 @@ namespace FantasyRoyale.Playtest.Tests.PlayMode
             }
 
             Assert.That(Frames(CharacterDirection8.East), Does.Contain(renderer.sprite));
+        }
+
+        /// <summary>
+        /// 部品は体のコマごとの手の位置へ付いて動き、左向きでは反転し、背中の物は前向きで体の後ろへ回る。
+        /// </summary>
+        [UnityTest]
+        public IEnumerator Animator_GearFollowsAnchorsOfEachFrame()
+        {
+            var actor = CreateCharacter(out var renderer, out var animator);
+            Sprite Part() => Sprite.Create(texture, new Rect(0f, 0f, 4f, 4f), Vector2.zero);
+            var hand = ScriptableObject.CreateInstance<CharacterGearDefinition>();
+            hand.Configure(CharacterGearSlot.MainHand, Part(), Part(), Part(), Part(), Part());
+            var back = ScriptableObject.CreateInstance<CharacterGearDefinition>();
+            back.Configure(CharacterGearSlot.Back, Part(), Part(), Part(), Part(), Part());
+            CharacterSpriteView AnchoredView()
+            {
+                var run = new[] { Part(), Part(), Part(), Part() };
+                var anchors = new CharacterSpriteAnchors[4];
+                for (var frame = 0; frame < 4; frame++)
+                {
+                    anchors[frame] = new CharacterSpriteAnchors(new Vector2(1f + frame, 2f), Vector2.zero, Vector2.up);
+                }
+
+                return new CharacterSpriteView(Part(), run, new CharacterSpriteAnchors(Vector2.right * 9f, Vector2.zero, Vector2.up), anchors);
+            }
+
+            sprites.Configure(30f, AnchoredView(), AnchoredView(), AnchoredView(), AnchoredView(), AnchoredView());
+            animator.Initialize(sprites);
+            animator.SetGear(new[] { hand, back });
+
+            Assert.That(animator.GetGearPosition(CharacterGearSlot.MainHand).x, Is.EqualTo(9f), "立ち姿の手に付きます。");
+            Assert.That(animator.IsGearBehindBody(CharacterGearSlot.Back), Is.True, "前向きでは背中の物は後ろです。");
+
+            actor.SetMoveCommand(new CharacterMoveCommand(1f, 0f));
+            var seen = new HashSet<float>();
+            var endAt = Time.time + 1f;
+            while (seen.Count < 2 && Time.time < endAt)
+            {
+                yield return null;
+                seen.Add(animator.GetGearPosition(CharacterGearSlot.MainHand).x);
+            }
+
+            Assert.That(seen.Count, Is.GreaterThanOrEqualTo(2), "コマに合わせて部品も動きます。");
+
+            actor.SetMoveCommand(new CharacterMoveCommand(-1f, 0f));
+            yield return null;
+            Assert.That(animator.GetGearPosition(CharacterGearSlot.MainHand).x, Is.LessThan(0f), "左向きでは反転します。");
+
+            actor.SetMoveCommand(new CharacterMoveCommand(0f, 1f));
+            yield return null;
+            Assert.That(animator.IsGearBehindBody(CharacterGearSlot.Back), Is.False, "背を向けると背中の物が見えます。");
+
+            Object.Destroy(hand);
+            Object.Destroy(back);
         }
 
         /// <summary>
@@ -219,8 +273,8 @@ namespace FantasyRoyale.Playtest.Tests.PlayMode
         public IEnumerator ForestMap_EnemyHurtsPlayerAndPlayerReturnsToVillage()
         {
             yield return LoadForest();
-            var enemy = preview.GetEnemyActor(OpenGroundEnemy);
-            preview.PlayerActor.Body.position = enemy.Body.position + Vector2.right * 3f;
+            var enemy = preview.GetEnemyActor(0);
+            preview.PlayerActor.Body.position = enemy.Body.position + Vector2.right * 0.7f;
 
             var timeoutAt = Time.time + 4f;
             while (preview.PlayerHealth.CurrentHealth == preview.PlayerHealth.MaximumHealth && Time.time < timeoutAt)
@@ -249,7 +303,7 @@ namespace FantasyRoyale.Playtest.Tests.PlayMode
         public IEnumerator ForestMap_SwordDefeatsEnemyForCoin()
         {
             yield return LoadForest();
-            var enemy = preview.GetEnemyActor(OpenGroundEnemy);
+            var enemy = preview.GetEnemyActor(0);
             var command = new CharacterActionCommand(CharacterActionSlot.Primary, CharacterDirection8.West);
             var timeoutAt = Time.time + 6f;
             while (preview.Coins == 0 && Time.time < timeoutAt)
@@ -264,25 +318,103 @@ namespace FantasyRoyale.Playtest.Tests.PlayMode
         }
 
         /// <summary>
-        /// 最初の宝箱で弓が手に入り、次の宝箱はコインになり、開けた宝箱は開かない。
+        /// 宝箱からコインが手に入り、開けた宝箱と遠い宝箱は開かない。
         /// </summary>
         [UnityTest]
-        public IEnumerator ForestMap_ChestGivesBowThenCoins()
+        public IEnumerator ForestMap_ChestGivesCoins()
         {
             yield return LoadForest();
-            Assert.That(preview.CurrentEquipmentName, Is.EqualTo("剣"));
-            Assert.That(preview.OwnedEquipmentCount, Is.EqualTo(1));
             Assert.That(preview.TryOpenNearestChest(), Is.False, "遠い宝箱は開きません。");
 
             yield return MoveNextTo(preview.GetChestPosition(0));
             Assert.That(preview.TryOpenNearestChest(), Is.True);
-            Assert.That(preview.CurrentEquipmentName, Is.EqualTo("弓"));
-            Assert.That(preview.OwnedEquipmentCount, Is.EqualTo(2));
-            Assert.That(preview.TryOpenNearestChest(), Is.False, "開けた宝箱は開きません。");
-
-            yield return MoveNextTo(preview.GetChestPosition(1));
-            Assert.That(preview.TryOpenNearestChest(), Is.True);
             Assert.That(preview.Coins, Is.EqualTo(10));
+            Assert.That(preview.TryOpenNearestChest(), Is.False, "開けた宝箱は開きません。");
+        }
+
+        /// <summary>
+        /// 屋台で弓を買うと手の部品が替わり、体のアニメーションはそのまま使う。コインが足りなければ買えない。
+        /// </summary>
+        [UnityTest]
+        public IEnumerator ForestMap_ShopSellsBowAndChangesLook()
+        {
+            yield return LoadForest();
+            yield return null;
+            var playerRenderer = preview.PlayerObject.GetComponent<SpriteRenderer>();
+            var body = playerRenderer.sprite;
+            var animator = preview.PlayerAnimator;
+            Assert.That(animator.GetGearSprite(CharacterGearSlot.MainHand), Is.Not.Null, "剣を持っています。");
+            Assert.That(animator.GetGearSprite(CharacterGearSlot.OffHand), Is.Not.Null, "盾を持っています。");
+            Assert.That(animator.GetGearSprite(CharacterGearSlot.Back), Is.Null);
+            var shield = animator.GetGearSprite(CharacterGearSlot.OffHand);
+            Assert.That(preview.CurrentEquipmentName, Is.EqualTo("剣"));
+            Assert.That(preview.TryOpenShop(), Is.False, "屋台から遠いと開きません。");
+
+            preview.PlayerActor.Body.position = preview.GetShopPosition(0);
+            preview.PlayerObject.transform.position = preview.GetShopPosition(0);
+            yield return new WaitForFixedUpdate();
+            Assert.That(preview.TryOpenShop(), Is.True);
+            Assert.That(preview.TryBuyBow(), Is.False, "コインが足りなければ買えません。");
+
+            preview.AddCoinsForTests(25);
+            Assert.That(preview.TryBuyBow(), Is.True);
+            Assert.That(preview.Coins, Is.EqualTo(5));
+            Assert.That(preview.CurrentEquipmentName, Is.EqualTo("弓"));
+            Assert.That(preview.PlayerCombat.Loadout.Get(CharacterActionSlot.Primary).Id, Is.EqualTo("bow-shot"));
+            yield return null;
+            Assert.That(playerRenderer.sprite, Is.SameAs(body), "体の絵は替わりません。");
+            Assert.That(animator.GetGearSprite(CharacterGearSlot.MainHand), Is.Null, "剣はしまいます。");
+            Assert.That(animator.GetGearSprite(CharacterGearSlot.OffHand), Is.Not.SameAs(shield), "盾が弓に替わります。");
+            Assert.That(animator.GetGearSprite(CharacterGearSlot.Back), Is.Not.Null, "矢筒を背負います。");
+            Assert.That(preview.TryBuyBow(), Is.False, "同じ物は買えません。");
+        }
+
+        /// <summary>
+        /// 回復薬はHPが減っているときだけ買え、その場で回復する。
+        /// </summary>
+        [UnityTest]
+        public IEnumerator ForestMap_PotionHealsWhenHurt()
+        {
+            yield return LoadForest();
+            preview.AddCoinsForTests(5);
+            Assert.That(preview.TryBuyPotion(), Is.False, "HPが減っていなければ買いません。");
+            Assert.That(preview.Coins, Is.EqualTo(5));
+
+            preview.PlayerHealth.ApplyDamage(50);
+            Assert.That(preview.TryBuyPotion(), Is.True);
+            Assert.That(preview.PlayerHealth.CurrentHealth, Is.EqualTo(80));
+            Assert.That(preview.Coins, Is.EqualTo(0));
+        }
+
+        /// <summary>
+        /// 噴水でHPが回復し、一度使うと次は使えない。
+        /// </summary>
+        [UnityTest]
+        public IEnumerator ForestMap_FountainHealsOnce()
+        {
+            yield return LoadForest();
+            preview.PlayerActor.Body.position = preview.GetHealingPosition(0);
+            preview.PlayerObject.transform.position = preview.GetHealingPosition(0);
+            yield return new WaitForFixedUpdate();
+
+            Assert.That(preview.TryUseNearestHealing(), Is.False, "HPが減っていなければ使いません。");
+            preview.PlayerHealth.ApplyDamage(50);
+            Assert.That(preview.TryUseNearestHealing(), Is.True);
+            Assert.That(preview.PlayerHealth.CurrentHealth, Is.EqualTo(80));
+
+            preview.PlayerHealth.ApplyDamage(20);
+            Assert.That(preview.TryUseNearestHealing(), Is.False, "一度使うと使えません。");
+        }
+
+        /// <summary>
+        /// 敵と宝箱は候補から決まった数だけ置かれる。
+        /// </summary>
+        [UnityTest]
+        public IEnumerator ForestMap_PlacesEnemiesAndChestsFromCandidates()
+        {
+            yield return LoadForest();
+            Assert.That(preview.EnemyCount, Is.EqualTo(12));
+            Assert.That(preview.ChestCount, Is.EqualTo(4));
         }
 
         private IEnumerator MoveNextTo(Vector2 position)

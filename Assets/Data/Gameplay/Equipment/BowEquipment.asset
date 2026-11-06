@@ -15,3 +15,6 @@ MonoBehaviour:
   displayName: "\u5F13"
   primaryAction: {fileID: 11400000, guid: 578f6f035530aee42941274aea53a3cd, type: 2}
   specialAction: {fileID: 11400000, guid: bf17e0658f3c525499ae3238896d1244, type: 2}
+  gear:
+  - {fileID: 11400000, guid: 95d28f71d705b114191308cacf4e211f, type: 2}
+  - {fileID: 11400000, guid: 051dab60d72c3df4db0fa8f48ca00b44, type: 2}

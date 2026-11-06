@@ -1,0 +1,148 @@
+{
+ "items": [
+  {
+   "name": "sword",
+   "slot": "MainHand",
+   "views": [
+    {
+     "view": "down",
+     "file": "sword-down",
+     "pivotX": 0.5,
+     "pivotY": 0.26
+    },
+    {
+     "view": "downside",
+     "file": "sword-downside",
+     "pivotX": 0.76,
+     "pivotY": 0.26
+    },
+    {
+     "view": "side",
+     "file": "sword-side",
+     "pivotX": 0.5,
+     "pivotY": 0.26
+    },
+    {
+     "view": "upside",
+     "file": "sword-upside",
+     "pivotX": 0.24,
+     "pivotY": 0.26
+    },
+    {
+     "view": "up",
+     "file": "sword-up",
+     "pivotX": 0.5,
+     "pivotY": 0.26
+    }
+   ]
+  },
+  {
+   "name": "shield",
+   "slot": "OffHand",
+   "views": [
+    {
+     "view": "down",
+     "file": "shield-down",
+     "pivotX": 0.5,
+     "pivotY": 0.5
+    },
+    {
+     "view": "downside",
+     "file": "shield-downside",
+     "pivotX": 0.5,
+     "pivotY": 0.5
+    },
+    {
+     "view": "side",
+     "file": "shield-side",
+     "pivotX": 0.5,
+     "pivotY": 0.5
+    },
+    {
+     "view": "upside",
+     "file": "shield-upside",
+     "pivotX": 0.5,
+     "pivotY": 0.5
+    },
+    {
+     "view": "up",
+     "file": "shield-up",
+     "pivotX": 0.5,
+     "pivotY": 0.5
+    }
+   ]
+  },
+  {
+   "name": "bow",
+   "slot": "OffHand",
+   "views": [
+    {
+     "view": "down",
+     "file": "bow-down",
+     "pivotX": 0.5,
+     "pivotY": 0.5
+    },
+    {
+     "view": "downside",
+     "file": "bow-downside",
+     "pivotX": 0.5,
+     "pivotY": 0.5
+    },
+    {
+     "view": "side",
+     "file": "bow-side",
+     "pivotX": 0.5,
+     "pivotY": 0.5
+    },
+    {
+     "view": "upside",
+     "file": "bow-upside",
+     "pivotX": 0.5,
+     "pivotY": 0.5
+    },
+    {
+     "view": "up",
+     "file": "bow-up",
+     "pivotX": 0.5,
+     "pivotY": 0.5
+    }
+   ]
+  },
+  {
+   "name": "quiver",
+   "slot": "Back",
+   "views": [
+    {
+     "view": "down",
+     "file": "quiver-down",
+     "pivotX": 0.5,
+     "pivotY": 0.48
+    },
+    {
+     "view": "downside",
+     "file": "quiver-downside",
+     "pivotX": 0.5,
+     "pivotY": 0.48
+    },
+    {
+     "view": "side",
+     "file": "quiver-side",
+     "pivotX": 0.5,
+     "pivotY": 0.48
+    },
+    {
+     "view": "upside",
+     "file": "quiver-upside",
+     "pivotX": 0.5,
+     "pivotY": 0.48
+    },
+    {
+     "view": "up",
+     "file": "quiver-up",
+     "pivotX": 0.5,
+     "pivotY": 0.48
+    }
+   ]
+  }
+ ]
+}

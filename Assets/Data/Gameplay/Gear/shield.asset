@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab55939579af0c14383ffbb8b1f80d43, type: 3}
+  m_Name: shield
+  m_EditorClassIdentifier: FantasyRoyale.Gameplay.Characters.Unity::FantasyRoyale.Gameplay.Characters.Unity.CharacterGearDefinition
+  slot: 1
+  down: {fileID: 21300000, guid: 7dd075e69214a5b4ab72527803eac8f0, type: 3}
+  downSide: {fileID: 21300000, guid: c795c4848cde18244bb544a35b43cd8c, type: 3}
+  side: {fileID: 21300000, guid: 1360be01674b76746a14711737f19a22, type: 3}
+  upSide: {fileID: 21300000, guid: ae0d5146024e7804e8ea59e4b6edb309, type: 3}
+  up: {fileID: 21300000, guid: 335fc9562853cc546ba654e9618c3dd8, type: 3}

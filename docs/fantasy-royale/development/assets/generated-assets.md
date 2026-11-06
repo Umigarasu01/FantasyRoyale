@@ -13,6 +13,11 @@
 | forest-rural-01 | 同Directoryの`forest-rural-01.png` | 天幕、焚き火、水車小屋、見張り台、作業小屋、丸太、切り株、畑、柵 | `baf8c11fd56767596b12ccd9b7083b4bf389799c810aafee9672d720d8466386` |
 | forest-landmarks-01 | 同Directoryの`forest-landmarks-01.png` | 洞窟、坑道、岩壁、崩れた門、柱、祠、泉、魔物の巣、荷車 | `23df74604431fade7f32d097aed93e4712b497feda4c67dc594e27625dd4b9d5` |
 | forest-extras-01 | 同Directoryの`forest-extras-01.png` | 井戸、廃屋、薬草畑、作業台、木箱と樽、岩、倒木、掲示板、瓦礫 | `b87fab73e332d34a55a2abeeef054b655a40cad9b81e496f3fc68345ff5c6225` |
+| hero-body-run-01 | 同Directoryの`hero-body-run-01.png` | 走りシートから持ち物を除いた素手の体 | `baa8b23683e43edb6cba0f3c59ae04dfdfa150ff97ec64c9643d2058909f6d40` |
+| hero-body-run-diagonal-01 | 同Directoryの`hero-body-run-diagonal-01.png` | 斜めの走りの素手の体 | `26bedaaa9705632ee535748f43d161229c33fba5e67ebe19b25ea589d0afd745` |
+| hero-body-idle-01 | 同Directoryの`hero-body-idle-01.png` | 立ち姿の素手の体 | `c9ad1ec171f0764ced009375fcc9f7e53c1a90d75da5f8cb0fdcc6aff253ab16` |
+| hero-body-idle-diagonal-01 | 同Directoryの`hero-body-idle-diagonal-01.png` | 斜めの立ち姿の素手の体 | `43aade27f6a4e2aba9ac7941d3ea8781340b095b822d7d31cedec3df380ed6d7` |
+| hero-gear-01 | 同Directoryの`hero-gear-01.png` | 剣、盾、弓、矢筒の5方向の部品 | `0fa6502fe31cd304274b466451b9d935eefd028951072fff5292c93cb773d90d` |
 | forest-slime-01 | 同Directoryの`forest-slime-01.png` | 跳ねる紫のスライムの4コマ | `2c9b19d278822601cda0aa307682e4d07ab654215df8847d83678ca48a8d5196` |
 
 Prompt全文は同名のJSONで確認する。`Tools/MapAuthoring/forest_objects.py`が大きさと判定を持ち、シートから切り出す。木は`build_forest_parts.py`が切り出す。宝箱と敵はUnityが置くので、同じファイルの実行で`Assets/Art/Generated/ForestLook/Game/`へ書き出す。
@@ -30,7 +35,7 @@ Prompt全文は同名のJSONで確認する。`Tools/MapAuthoring/forest_objects
 | hero-run-diagonal-01 | 同Directoryの`hero-run-diagonal-01.png` | マゼンタ背景の斜め前と斜め後ろの4コマの走りシート | `5c27080d748e636b5f8e34f15b780a45a048318a77e81c02aa60c5391d9b9d7e` |
 | hero-idle-diagonal-01 | 同Directoryの`hero-idle-diagonal-01.png` | マゼンタ背景の斜め前と斜め後ろの立ち姿 | `f7777525cb7b61b82535c2d3251a4e5c3d5bb566dae1a6c02893f5141ea24f13` |
 
-Prompt全文は同名のJSONで確認する。`Tools/MapAuthoring/build_hero_frames.py`が背景を抜いて地図の縮尺へ揃え、`Assets/Art/Generated/ForestLook/Hero/`へ走り20コマと立ち姿5枚を書き出す。横と斜めは右寄りの向きだけを持ち、左寄りの向きは表示時に反転する。
+Prompt全文は同名のJSONで確認する。`Tools/MapAuthoring/build_hero_frames.py`が背景を抜いて地図の縮尺へ揃え、現在の騎士は`hero-body-*`の素手の体を使い、`hero-run-*`と`hero-idle-*`は描き直しの元絵として残す。`Assets/Art/Generated/ForestLook/Hero/`へ走り20コマと立ち姿5枚、`Gear/`へ部品を書き出す。横と斜めは右寄りの向きだけを持ち、左寄りの向きは表示時に反転する。
 
 ## 2026-11-05 森マップの画作り部品
 

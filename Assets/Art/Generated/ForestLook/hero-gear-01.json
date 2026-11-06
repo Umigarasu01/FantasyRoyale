@@ -1,0 +1,13 @@
+{
+  "status": "adopted for the hero body and gear",
+  "file": "hero-gear-01.png",
+  "sha256": "0fa6502fe31cd304274b466451b9d935eefd028951072fff5292c93cb773d90d",
+  "bytes": 1454804,
+  "tool": "openai-image skill, edit",
+  "model": "gpt-image-2.5-sunburst",
+  "size": "1536x1024",
+  "quality": "medium",
+  "n": 1,
+  "reference": "hero-idle-01.png, hero-bow-idle-01 (draft, not kept)",
+  "prompt": "Image 1 shows a chibi knight carrying a sword and a blue shield, from several angles. Image 2 shows the same knight carrying a wooden longbow and a brown leather quiver of arrows, from several angles. Draw ONLY the carried items, on their own, with no character, in exactly the same pixel-art style, colours and dark outline.\n\nLayout: exactly 4 rows and 5 columns on a completely flat solid pure magenta background, RGB 255,0,255. Each item is centred in an evenly spaced grid cell, with clear magenta space around it. Every item in a row is the same object and the same size, seen from a different angle.\n\nRow 1: the steel sword, pointing down and slightly outward, as it hangs from the hand.\nRow 2: the blue shield with the white cross.\nRow 3: the wooden longbow with its pale string, held upright.\nRow 4: the brown leather quiver with white arrow fletchings.\n\nThe five columns are the viewing angles of the knight who carries the item:\nColumn 1: seen from the front.\nColumn 2: seen from the front and to the right, three-quarter view.\nColumn 3: seen from the right side.\nColumn 4: seen from behind and to the right, three-quarter view.\nColumn 5: seen from behind. The back of the shield shows dark wood and leather straps, not the cross.\n\nDo not include: hands, arms, people, text, labels, numbers, grid lines, ground, shadows, borders, watermark, or any other object. No soft gradients, blur or painterly rendering."
+}

@@ -171,6 +171,8 @@ debug.log
 # Forest map inputs and generation records
 !Assets/Art/Generated/ForestLook/*.json
 !Assets/Art/Generated/ForestLook/Parts/parts.json
+!Assets/Art/Generated/ForestLook/Hero/anchors.json
+!Assets/Art/Generated/ForestLook/Gear/gear.json
 !Assets/NemoBlocks/Resources/*.json
 !Tools/MapAuthoring/Inputs/*.json
 

@@ -15,3 +15,6 @@ MonoBehaviour:
   displayName: "\u5263"
   primaryAction: {fileID: 11400000, guid: bf17e0658f3c525499ae3238896d1244, type: 2}
   specialAction: {fileID: 11400000, guid: 578f6f035530aee42941274aea53a3cd, type: 2}
+  gear:
+  - {fileID: 11400000, guid: 961936815636cd846955bbac5bc1fe42, type: 2}
+  - {fileID: 11400000, guid: 76357a4eaf9cd1c489a52b3b144eb224, type: 2}

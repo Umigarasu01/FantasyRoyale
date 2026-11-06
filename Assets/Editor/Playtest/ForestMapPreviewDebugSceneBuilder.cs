@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using FantasyRoyale.Gameplay.Characters;
 using FantasyRoyale.Gameplay.Characters.Unity;
+using FantasyRoyale.MapAuthoringKit;
 using FantasyRoyale.Playtest;
 using UnityEditor;
 using UnityEditor.SceneManagement;
@@ -19,12 +21,15 @@ namespace FantasyRoyale.Editor.Playtest
         public const string Root = "Assets/ForestMapPreview";
         public const string ScenePath = Root + "/ForestMapPreviewDebug.unity";
         public const string HeroSpritesPath = "Assets/Data/Gameplay/Characters/HeroSprites.asset";
+        public const string GearDataFolder = "Assets/Data/Gameplay/Gear";
         public const string EnemySpritesPath = "Assets/Data/Gameplay/Characters/SlimeSprites.asset";
 
         private const string HeroFolder = "Assets/Art/Generated/ForestLook/Hero";
+        private const string GearFolder = "Assets/Art/Generated/ForestLook/Gear";
         private const string GameFolder = "Assets/Art/Generated/ForestLook/Game";
         private const string SwordEquipmentPath = "Assets/Data/Gameplay/Equipment/SwordEquipment.asset";
         private const string BowEquipmentPath = "Assets/Data/Gameplay/Equipment/BowEquipment.asset";
+        private const string HealingFountainPath = "Assets/Data/MapAuthoring/Events/HealingFountainBasic.asset";
         private const string InputActionsPath = "Assets/InputSystem_Actions.inputactions";
         private const float PixelsPerUnit = 64f;
         private const int SortingOffset = 8000;
@@ -39,26 +44,39 @@ namespace FantasyRoyale.Editor.Playtest
         // 村の広場を開始位置にする。
         private static readonly Vector2 SpawnPosition = new Vector2(60f, 51f);
 
-        // 敵は魔物の巣を中心に、砦、鉱山、洞窟、廃屋、祠の周りへ置く。
+        // 敵の置き場所の候補。魔物の巣を中心に、砦、鉱山、洞窟、廃屋、祠の周りから試合ごとに選ぶ。
         private static readonly Vector2[] EnemySpots =
         {
             new Vector2(109.5f, 40.5f), new Vector2(115f, 40.5f), new Vector2(108f, 34f), new Vector2(116f, 34f),
             new Vector2(113f, 31f), new Vector2(107f, 24f), new Vector2(118f, 24f), new Vector2(32f, 23f),
             new Vector2(39f, 22f), new Vector2(35f, 63f), new Vector2(30f, 61f), new Vector2(73f, 90f),
-            new Vector2(82f, 92f), new Vector2(122f, 70f), new Vector2(109f, 72f), new Vector2(44f, 41f)
+            new Vector2(82f, 92f), new Vector2(122f, 70f), new Vector2(109f, 72f), new Vector2(44f, 41f),
+            new Vector2(22f, 30f), new Vector2(96f, 30f), new Vector2(36f, 50f), new Vector2(100f, 40f)
         };
 
-        // 宝箱は敵の近くや、道から外れた行き止まりへ置く。
+        // 宝箱の置き場所の候補。敵の近くや、道から外れた行き止まりから試合ごとに選ぶ。
         private static readonly Vector2[] ChestSpots =
         {
             new Vector2(113f, 25.2f), new Vector2(26f, 85f), new Vector2(36f, 63.8f),
-            new Vector2(124f, 67f), new Vector2(83f, 96f)
+            new Vector2(124f, 67f), new Vector2(83f, 96f), new Vector2(120f, 18f),
+            new Vector2(18f, 40f), new Vector2(100f, 62f), new Vector2(68f, 20f)
         };
+
+        // 屋台の手前。ここでEを押すとショップが開く。
+        private static readonly Vector2[] ShopSpots = { new Vector2(50f, 46f), new Vector2(55f, 44f) };
+
+        // 回復できる場所。村の噴水と祠の泉の手前に立つ。
+        private static readonly Vector2[] HealingSpots = { new Vector2(61f, 44.6f), new Vector2(120f, 64f) };
 
         [Serializable] private class MapObject { public string part; public int x; public int y; public int sort; }
         [Serializable] private class MapTile { public string file; public int x; public int y; }
         [Serializable] private class MapSprite { public string name; public float pivotX; public float pivotY; }
         [Serializable] private class MapData { public int[] size; public float[] origin; public MapTile[] tiles; public MapSprite[] sprites; public MapObject[] objects; }
+        [Serializable] private class HeroAnchorFrame { public string name; public Vector2 mainHand; public Vector2 offHand; public Vector2 back; }
+        [Serializable] private class HeroAnchorData { public HeroAnchorFrame[] frames; }
+        [Serializable] private class GearView { public string view; public string file; public float pivotX; public float pivotY; }
+        [Serializable] private class GearItem { public string name; public string slot; public GearView[] views; }
+        [Serializable] private class GearData { public GearItem[] items; }
         [Serializable] private class MapBox { public float x; public float y; public float w; public float h; }
         [Serializable] private class MapCollision { public MapBox[] rects; }
 
@@ -77,6 +95,24 @@ namespace FantasyRoyale.Editor.Playtest
             var data = JsonUtility.FromJson<MapData>(File.ReadAllText(Root + "/objects.json"));
             var collision = JsonUtility.FromJson<MapCollision>(File.ReadAllText(Root + "/collision.json"));
             var heroSprites = LoadOrCreateHeroSprites();
+            var gear = LoadOrCreateGear();
+            var problems = heroSprites.FindAnchorProblems();
+            foreach (var item in gear.Values)
+            {
+                problems.AddRange(item.FindProblems(heroSprites.GetView(CharacterDirection8.South).Idle.pixelsPerUnit));
+            }
+
+            if (problems.Count > 0)
+            {
+                throw new InvalidOperationException($"装備の部品を重ねられません: {string.Join(" / ", problems)}");
+            }
+
+            var sword = AssetDatabase.LoadAssetAtPath<CharacterEquipmentDefinition>(SwordEquipmentPath);
+            var bow = AssetDatabase.LoadAssetAtPath<CharacterEquipmentDefinition>(BowEquipmentPath);
+            sword.SetGear(new[] { gear["sword"], gear["shield"] });
+            bow.SetGear(new[] { gear["bow"], gear["quiver"] });
+            EditorUtility.SetDirty(sword);
+            EditorUtility.SetDirty(bow);
             var inputActions = AssetDatabase.LoadAssetAtPath<InputActionAsset>(InputActionsPath);
             if (inputActions == null)
             {
@@ -144,15 +180,14 @@ namespace FantasyRoyale.Editor.Playtest
                 SpawnPosition);
             bootstrap.ConfigureGame(
                 LoadOrCreateEnemySprites(),
-                new[]
-                {
-                    AssetDatabase.LoadAssetAtPath<CharacterEquipmentDefinition>(SwordEquipmentPath),
-                    AssetDatabase.LoadAssetAtPath<CharacterEquipmentDefinition>(BowEquipmentPath)
-                },
+                new[] { sword, bow },
                 LoadChestSprite("chest-closed"),
                 LoadChestSprite("chest-open"),
                 EnemySpots,
-                ChestSpots);
+                ChestSpots,
+                AssetDatabase.LoadAssetAtPath<HealingFountainEventDefinition>(HealingFountainPath),
+                HealingSpots,
+                ShopSpots);
 
             if (!EditorSceneManager.SaveScene(scene, ScenePath, false))
             {
@@ -238,6 +273,15 @@ namespace FantasyRoyale.Editor.Playtest
                 AssetDatabase.StopAssetEditing();
             }
 
+            var anchors = new Dictionary<string, CharacterSpriteAnchors>();
+            foreach (var entry in JsonUtility.FromJson<HeroAnchorData>(File.ReadAllText($"{HeroFolder}/anchors.json")).frames)
+            {
+                anchors[entry.name] = new CharacterSpriteAnchors(
+                    entry.mainHand / PixelsPerUnit,
+                    entry.offHand / PixelsPerUnit,
+                    entry.back / PixelsPerUnit);
+            }
+
             var definition = AssetDatabase.LoadAssetAtPath<CharacterSpriteSetDefinition>(HeroSpritesPath);
             if (definition == null)
             {
@@ -252,11 +296,11 @@ namespace FantasyRoyale.Editor.Playtest
 
             definition.Configure(
                 definition.FramesPerSecond,
-                LoadHeroView("down"),
-                LoadHeroView("downside"),
-                LoadHeroView("side"),
-                LoadHeroView("upside"),
-                LoadHeroView("up"));
+                LoadHeroView("down", anchors),
+                LoadHeroView("downside", anchors),
+                LoadHeroView("side", anchors),
+                LoadHeroView("upside", anchors),
+                LoadHeroView("up", anchors));
             EditorUtility.SetDirty(definition);
             return definition;
         }
@@ -306,16 +350,73 @@ namespace FantasyRoyale.Editor.Playtest
             return AssetDatabase.LoadAssetAtPath<Sprite>($"{GameFolder}/{name}.png");
         }
 
-        private static CharacterSpriteView LoadHeroView(string view)
+        private static CharacterSpriteView LoadHeroView(string view, Dictionary<string, CharacterSpriteAnchors> anchors)
         {
             var frames = new Sprite[HeroFrameCount];
+            var frameAnchors = new CharacterSpriteAnchors[HeroFrameCount];
             for (var frame = 0; frame < HeroFrameCount; frame++)
             {
-                frames[frame] = AssetDatabase.LoadAssetAtPath<Sprite>($"{HeroFolder}/hero-{view}-{frame}.png");
+                var name = $"hero-{view}-{frame}";
+                frames[frame] = AssetDatabase.LoadAssetAtPath<Sprite>($"{HeroFolder}/{name}.png");
+                frameAnchors[frame] = anchors[name];
             }
 
             var idle = AssetDatabase.LoadAssetAtPath<Sprite>($"{HeroFolder}/hero-idle-{view}.png");
-            return new CharacterSpriteView(idle, frames);
+            return new CharacterSpriteView(idle, frames, anchors[$"hero-idle-{view}"], frameAnchors);
+        }
+
+        /// <summary>
+        /// `gear.json`の部品をSpriteとして取り込み、部品ごとの定義Assetへまとめる。
+        /// 新しい部品はシートと一覧へ足すだけで、ここは変わらない。
+        /// </summary>
+        private static Dictionary<string, CharacterGearDefinition> LoadOrCreateGear()
+        {
+            var data = JsonUtility.FromJson<GearData>(File.ReadAllText($"{GearFolder}/gear.json"));
+            AssetDatabase.StartAssetEditing();
+            try
+            {
+                foreach (var item in data.items)
+                {
+                    foreach (var view in item.views)
+                    {
+                        ImportSprite($"{GearFolder}/{view.file}.png", new Vector2(view.pivotX, view.pivotY));
+                    }
+                }
+            }
+            finally
+            {
+                AssetDatabase.StopAssetEditing();
+            }
+
+            if (!AssetDatabase.IsValidFolder(GearDataFolder))
+            {
+                AssetDatabase.CreateFolder("Assets/Data/Gameplay", "Gear");
+            }
+
+            var result = new Dictionary<string, CharacterGearDefinition>();
+            foreach (var item in data.items)
+            {
+                var path = $"{GearDataFolder}/{item.name}.asset";
+                var definition = AssetDatabase.LoadAssetAtPath<CharacterGearDefinition>(path);
+                if (definition == null)
+                {
+                    definition = ScriptableObject.CreateInstance<CharacterGearDefinition>();
+                    AssetDatabase.CreateAsset(definition, path);
+                }
+
+                Sprite Load(string view) => AssetDatabase.LoadAssetAtPath<Sprite>($"{GearFolder}/{item.name}-{view}.png");
+                definition.Configure(
+                    (CharacterGearSlot)Enum.Parse(typeof(CharacterGearSlot), item.slot),
+                    Load("down"),
+                    Load("downside"),
+                    Load("side"),
+                    Load("upside"),
+                    Load("up"));
+                EditorUtility.SetDirty(definition);
+                result[item.name] = definition;
+            }
+
+            return result;
         }
 
         /// <summary>

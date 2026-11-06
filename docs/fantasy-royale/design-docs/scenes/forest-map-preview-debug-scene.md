@@ -20,7 +20,8 @@
 | `CharacterActor2D` | 移動、足元判定。本番と同じ |
 | `HumanCharacterMoveInputAdapter` | `Player/Move`の入力。本番と同じ |
 | `CharacterSpriteAnimator2D` | 向きと移動状態から表示Spriteを選ぶ本番Component。移動や判定には影響しない |
-| `CharacterSpriteSetDefinition` | 5方向の立ち姿と走りのコマ、再生速度を持つ定義Asset |
+| `CharacterSpriteSetDefinition` | 5方向の立ち姿と走りのコマ、コマごとの手と背中の位置、再生速度を持つ定義Asset |
+| `CharacterGearDefinition` | 装備の部品1つ。付ける位置と5方向の絵だけを持ち、走りのコマは持たない |
 | `CharacterCombat2D` | 攻撃。本番と同じ |
 | `CharacterChaseBrain` | 敵が追うか持ち場へ戻るかの判断。純C#の本番規則 |
 | `CharacterChaseController2D` | Brainの結果をActorへ渡し、触れたときのダメージを与える本番Component |
@@ -43,10 +44,24 @@
 - 操作は移動WASD、通常攻撃J、特殊K、装備切り替え1と2、宝箱を開けるE。
 - 敵は6以内に近づくと追い、持ち場から14を超えた相手は諦める。速さは3で騎士の5より遅い。
 - 敵のHPは40で、触れると1秒に一度10ダメージを与える。倒すとコインが1枚増え、30秒後に持ち場へ戻る。
-- 開始時の装備は剣だけで、最初に開けた宝箱から弓が手に入る。以降の宝箱はコイン10枚になる。
+- 開始時の装備は剣だけ。宝箱の中身はコイン10枚で、弓はショップで買う。
+- 屋台の前でEを押すとショップが開く。回復薬は5コインでHPを30回復し、弓は20コインで買うとその場で持ち替える。
+- 装備を替えると攻撃と一緒に手と背中の部品も替わる。
 - 騎士のHPは100。倒れると1.5秒後に村へ戻って全回復し、2秒間は敵に触れてもダメージを受けない。育成中は脱落しない方針に合わせている。
+- 村の噴水と祠の泉の前でEを押すと、既存の回復の泉のEventでHPが30回復する。それぞれ一度しか使えない。
 
-敵と宝箱の置き場所は`ForestMapPreviewDebugSceneBuilder`の一覧で持つ。
+地形は固定で、敵は候補20か所から12か所、宝箱は候補9か所から4か所を、Event配置と同じ`MapEventPlacementSelector`で試合ごとに選ぶ。候補は`ForestMapPreviewDebugSceneBuilder`の一覧で持つ。HUDにSeedを表示し、`ForestMapPreviewDebug`の`matchSeed`へ入れると同じ配置を再現できる。
+
+## 装備の見た目
+
+体のアニメーションは素手の1組だけで、部品を重ねて装備を表す。
+
+- 部品の位置は`MainHand`、`OffHand`、`Back`の3つである。剣は`MainHand`、盾と弓は`OffHand`、矢筒は`Back`に付く。
+- `CharacterSpriteAnimator2D`が今のコマの手と背中の位置へ部品を毎Frame置く。左寄りの向きは体と一緒に反転する。
+- 部品を体の前後どちらに描くかは、位置と向きから`CharacterSpriteAnimator2D`が決める。背中の物は背を向けたときだけ体の前に出る。
+- 体の描画順は`SetSortingOrder`で変える。部品の前後が崩れないよう、体と同時に更新する。
+
+足し方と確認の仕組みは[Asset導入・生成Workflow](../../development/asset-workflow.md)に従う。
 
 ## Camera
 

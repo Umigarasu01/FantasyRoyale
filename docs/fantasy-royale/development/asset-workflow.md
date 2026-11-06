@@ -42,6 +42,16 @@ Unity確認は、Repositoryではなく検証用Project`C:/Users/umiga/Documents
 
 設置物の絵は、草地の切り抜きと既存のシートを参照にして、3行3列のシートで生成する。`Tools/MapAuthoring/forest_objects.py`の一覧へ、シートの位置、地図での幅、足元、判定を足す。大きさは高さ72pxの騎士を基準にする。配置は`forest_layout.py`の`FACILITIES`で持つ。
 
+## 装備の見た目を足す
+
+騎士の体のアニメーションは素手の1組だけで、装備は部品として手と背中へ重ねる。体は`Hero/anchors.json`にコマごとの手と背中の位置を持ち、部品はその位置へ毎Frame付いて動く。新しい装備に走りのコマは要らず、5方向の部品の絵だけで足せる。
+
+1. `hero-gear-01.png`を参照にして、5列の部品シートへ行を足すか、同じ形のシートを生成する。列は正面、斜め前、横、斜め後ろ、背面の順である。
+2. `Tools/MapAuthoring/build_hero_frames.py`の`GEAR_ITEMS`へ、付ける位置、高さ、持つ点を足して実行する。
+3. Scene Builderを実行すると部品の定義Assetができる。`CharacterEquipmentDefinition`の`Gear`へ設定する。
+
+部品が体へ重ねられることは機械的に確認する。全方向の絵、体と同じPPU、全コマの手の位置が揃っていなければScene Builderが止まり、EditMode Testの`CharacterSpriteContractTests`が失敗する。別の体を足すときも、同じ`anchors.json`を作れば全ての部品がそのまま使える。
+
 ## GraphicとCollision
 
 - 見た目と移動判定を分離する。

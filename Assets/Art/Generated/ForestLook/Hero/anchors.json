@@ -1,0 +1,379 @@
+{
+ "frames": [
+  {
+   "name": "hero-down-0",
+   "mainHand": {
+    "x": -21.3,
+    "y": 28.6
+   },
+   "offHand": {
+    "x": 20.2,
+    "y": 26.2
+   },
+   "back": {
+    "x": 0.0,
+    "y": 38.9
+   }
+  },
+  {
+   "name": "hero-down-1",
+   "mainHand": {
+    "x": -21.1,
+    "y": 27.5
+   },
+   "offHand": {
+    "x": 19.4,
+    "y": 26.5
+   },
+   "back": {
+    "x": 0.0,
+    "y": 38.3
+   }
+  },
+  {
+   "name": "hero-down-2",
+   "mainHand": {
+    "x": -21.2,
+    "y": 28.6
+   },
+   "offHand": {
+    "x": 20.3,
+    "y": 26.3
+   },
+   "back": {
+    "x": 0.0,
+    "y": 38.9
+   }
+  },
+  {
+   "name": "hero-down-3",
+   "mainHand": {
+    "x": -20.9,
+    "y": 27.4
+   },
+   "offHand": {
+    "x": 19.5,
+    "y": 26.4
+   },
+   "back": {
+    "x": 0.0,
+    "y": 38.3
+   }
+  },
+  {
+   "name": "hero-side-0",
+   "mainHand": {
+    "x": -13.9,
+    "y": 23.5
+   },
+   "offHand": {
+    "x": 8.7,
+    "y": 28.2
+   },
+   "back": {
+    "x": -8.0,
+    "y": 37.7
+   }
+  },
+  {
+   "name": "hero-side-1",
+   "mainHand": {
+    "x": -15.8,
+    "y": 28.0
+   },
+   "offHand": {
+    "x": 12.7,
+    "y": 28.1
+   },
+   "back": {
+    "x": -8.0,
+    "y": 37.7
+   }
+  },
+  {
+   "name": "hero-side-2",
+   "mainHand": {
+    "x": -14.5,
+    "y": 24.5
+   },
+   "offHand": {
+    "x": 12.8,
+    "y": 26.8
+   },
+   "back": {
+    "x": -8.0,
+    "y": 36.0
+   }
+  },
+  {
+   "name": "hero-side-3",
+   "mainHand": {
+    "x": -14.9,
+    "y": 29.3
+   },
+   "offHand": {
+    "x": 13.8,
+    "y": 29.5
+   },
+   "back": {
+    "x": -8.0,
+    "y": 38.3
+   }
+  },
+  {
+   "name": "hero-up-0",
+   "mainHand": {
+    "x": 20.0,
+    "y": 27.0
+   },
+   "offHand": {
+    "x": -21.3,
+    "y": 29.9
+   },
+   "back": {
+    "x": 0.0,
+    "y": 39.4
+   }
+  },
+  {
+   "name": "hero-up-1",
+   "mainHand": {
+    "x": 19.0,
+    "y": 26.0
+   },
+   "offHand": {
+    "x": -21.4,
+    "y": 28.7
+   },
+   "back": {
+    "x": 0.0,
+    "y": 38.9
+   }
+  },
+  {
+   "name": "hero-up-2",
+   "mainHand": {
+    "x": 19.9,
+    "y": 26.7
+   },
+   "offHand": {
+    "x": -21.3,
+    "y": 29.7
+   },
+   "back": {
+    "x": 0.0,
+    "y": 39.4
+   }
+  },
+  {
+   "name": "hero-up-3",
+   "mainHand": {
+    "x": 18.9,
+    "y": 26.0
+   },
+   "offHand": {
+    "x": -21.6,
+    "y": 28.7
+   },
+   "back": {
+    "x": 0.0,
+    "y": 38.9
+   }
+  },
+  {
+   "name": "hero-downside-0",
+   "mainHand": {
+    "x": -22.4,
+    "y": 31.2
+   },
+   "offHand": {
+    "x": 17.6,
+    "y": 32.6
+   },
+   "back": {
+    "x": -4.0,
+    "y": 40.6
+   }
+  },
+  {
+   "name": "hero-downside-1",
+   "mainHand": {
+    "x": -16.6,
+    "y": 30.4
+   },
+   "offHand": {
+    "x": 17.7,
+    "y": 32.3
+   },
+   "back": {
+    "x": -4.0,
+    "y": 40.0
+   }
+  },
+  {
+   "name": "hero-downside-2",
+   "mainHand": {
+    "x": -22.6,
+    "y": 31.2
+   },
+   "offHand": {
+    "x": 17.6,
+    "y": 32.6
+   },
+   "back": {
+    "x": -4.0,
+    "y": 40.6
+   }
+  },
+  {
+   "name": "hero-downside-3",
+   "mainHand": {
+    "x": -16.7,
+    "y": 30.0
+   },
+   "offHand": {
+    "x": 17.8,
+    "y": 32.3
+   },
+   "back": {
+    "x": -4.0,
+    "y": 40.0
+   }
+  },
+  {
+   "name": "hero-upside-0",
+   "mainHand": {
+    "x": 13.3,
+    "y": 27.9
+   },
+   "offHand": {
+    "x": -23.0,
+    "y": 33.5
+   },
+   "back": {
+    "x": -3.0,
+    "y": 40.0
+   }
+  },
+  {
+   "name": "hero-upside-1",
+   "mainHand": {
+    "x": 13.8,
+    "y": 27.3
+   },
+   "offHand": {
+    "x": -21.3,
+    "y": 32.0
+   },
+   "back": {
+    "x": -3.0,
+    "y": 39.4
+   }
+  },
+  {
+   "name": "hero-upside-2",
+   "mainHand": {
+    "x": 13.2,
+    "y": 28.9
+   },
+   "offHand": {
+    "x": -23.4,
+    "y": 34.6
+   },
+   "back": {
+    "x": -3.0,
+    "y": 40.6
+   }
+  },
+  {
+   "name": "hero-upside-3",
+   "mainHand": {
+    "x": 13.8,
+    "y": 26.9
+   },
+   "offHand": {
+    "x": -21.3,
+    "y": 31.8
+   },
+   "back": {
+    "x": -3.0,
+    "y": 39.4
+   }
+  },
+  {
+   "name": "hero-idle-down",
+   "mainHand": {
+    "x": -19.5,
+    "y": 27.0
+   },
+   "offHand": {
+    "x": 18.5,
+    "y": 24.2
+   },
+   "back": {
+    "x": 0.0,
+    "y": 41.8
+   }
+  },
+  {
+   "name": "hero-idle-side",
+   "mainHand": {
+    "x": -11.0,
+    "y": 24.0
+   },
+   "offHand": {
+    "x": 11.5,
+    "y": 25.1
+   },
+   "back": {
+    "x": -8.0,
+    "y": 40.6
+   }
+  },
+  {
+   "name": "hero-idle-up",
+   "mainHand": {
+    "x": 19.6,
+    "y": 24.2
+   },
+   "offHand": {
+    "x": -18.9,
+    "y": 24.6
+   },
+   "back": {
+    "x": 0.0,
+    "y": 41.8
+   }
+  },
+  {
+   "name": "hero-idle-downside",
+   "mainHand": {
+    "x": -16.8,
+    "y": 31.0
+   },
+   "offHand": {
+    "x": 16.0,
+    "y": 24.6
+   },
+   "back": {
+    "x": -4.0,
+    "y": 41.8
+   }
+  },
+  {
+   "name": "hero-idle-upside",
+   "mainHand": {
+    "x": 14.7,
+    "y": 26.8
+   },
+   "offHand": {
+    "x": -15.9,
+    "y": 31.6
+   },
+   "back": {
+    "x": -3.0,
+    "y": 41.8
+   }
+  }
+ ]
+}
