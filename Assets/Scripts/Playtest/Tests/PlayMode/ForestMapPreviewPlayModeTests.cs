@@ -171,8 +171,8 @@ namespace FantasyRoyale.Playtest.Tests.PlayMode
             Assert.That(preview.PlayerAnimator.IsRunning, Is.True);
             Assert.That(
                 Mathf.Abs(camera.transform.position.x - position.x),
-                Is.LessThan(1.5f),
-                "Cameraは進む方向を少し先まで見せながら追従します。");
+                Is.LessThan(0.2f),
+                "Cameraは騎士へ遅れなく追従します。");
 
             preview.SetMoveInputOverrideForTests(Vector2.down);
             endAt = Time.time + 0.3f;

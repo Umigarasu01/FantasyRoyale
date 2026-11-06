@@ -51,7 +51,7 @@
 ## Camera
 
 - 縦14.0 Unity単位を使う。Sceneの値が優先されるので、`ForestMapPreviewDebug`の`cameraHeight`で変える。Play中の変更もすぐ反映される。
-- 体の中心を追い、進行方向へ少し先を見せる。追従の遅れと先読みの量は`ForestMapPreviewDebug`のInspectorで調整できる。
+- 体の中心へ遅れなく追従する。追従の遅れと進行方向の先読みは違和感があったため入れない。
 - Mapの外を映さないよう制限し、64 PPUの画素単位へ丸める。
 
 ## Map

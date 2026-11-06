@@ -59,8 +59,6 @@ namespace FantasyRoyale.Playtest
         [SerializeField] private Vector2 spawnPosition;
         [SerializeField, Min(0.1f)] private float moveSpeed = 5f;
         [SerializeField, Min(1f)] private float cameraHeight = 14f;
-        [SerializeField, Min(0f)] private float cameraSmoothSeconds = 0.08f;
-        [SerializeField, Min(0f)] private float cameraLookAhead = 0.8f;
         [SerializeField] private CharacterSpriteSetDefinition enemySprites;
         [SerializeField] private CharacterEquipmentDefinition[] equipment = new CharacterEquipmentDefinition[0];
         [SerializeField] private Sprite chestClosed;
@@ -78,11 +76,8 @@ namespace FantasyRoyale.Playtest
         private InputAction previousEquipmentAction;
         private PreviewDebugCombatPresenter combatPresenter;
         private SpriteRenderer playerRenderer;
-        private CharacterMoveCommand latestMoveCommand;
         private bool hasTestMoveOverride;
         private CharacterMoveCommand testMoveCommand;
-        private Vector2 cameraPosition;
-        private Vector2 cameraVelocity;
         private float smoothedFrameSeconds = 1f / 60f;
         private int equipmentIndex;
         private float playerReturnAt = -1f;
@@ -254,8 +249,7 @@ namespace FantasyRoyale.Playtest
 
             gameplayCamera.orthographic = true;
             gameplayCamera.orthographicSize = cameraHeight * 0.5f;
-            cameraPosition = ClampToMap(spawnPosition + Vector2.up * CameraTargetHeight);
-            ApplyCameraPosition();
+            FollowWithCamera(spawnPosition);
             IsReady = true;
         }
 
@@ -309,8 +303,7 @@ namespace FantasyRoyale.Playtest
                 return;
             }
 
-            latestMoveCommand = hasTestMoveOverride ? testMoveCommand : humanMoveInput.ReadMoveCommand();
-            PlayerActor.SetMoveCommand(latestMoveCommand);
+            PlayerActor.SetMoveCommand(hasTestMoveOverride ? testMoveCommand : humanMoveInput.ReadMoveCommand());
             smoothedFrameSeconds = Mathf.Lerp(smoothedFrameSeconds, Time.unscaledDeltaTime, 0.05f);
             if (PlayerHealth.IsAlive)
             {
@@ -428,7 +421,7 @@ namespace FantasyRoyale.Playtest
         }
 
         /// <summary>
-        /// 足元のYで描画順を決め、進む方向を少し先まで見せながらCameraを追従させる。
+        /// 足元のYで描画順を決め、Cameraを騎士へ遅れなく追従させる。
         /// </summary>
         private void LateUpdate()
         {
@@ -447,10 +440,7 @@ namespace FantasyRoyale.Playtest
             // Play中にInspectorで高さを変えて見比べられるよう、毎Frame反映する。
             gameplayCamera.orthographicSize = cameraHeight * 0.5f;
 
-            var lookAhead = new Vector2(latestMoveCommand.Horizontal, latestMoveCommand.Vertical) * cameraLookAhead;
-            var target = ClampToMap(position + Vector2.up * CameraTargetHeight + lookAhead);
-            cameraPosition = Vector2.SmoothDamp(cameraPosition, target, ref cameraVelocity, cameraSmoothSeconds);
-            ApplyCameraPosition();
+            FollowWithCamera(position);
         }
 
         private void SortByFeet(SpriteRenderer renderer, float y)
@@ -511,13 +501,14 @@ namespace FantasyRoyale.Playtest
         }
 
         /// <summary>
-        /// 64 PPUの画素単位へ丸めて、地面のドットが揺れないようにする。
+        /// 騎士の体の中心を映す。64 PPUの画素単位へ丸めて、地面のドットが揺れないようにする。
         /// </summary>
-        private void ApplyCameraPosition()
+        private void FollowWithCamera(Vector2 feet)
         {
+            var centre = ClampToMap(feet + Vector2.up * CameraTargetHeight);
             gameplayCamera.transform.position = new Vector3(
-                Mathf.Round(cameraPosition.x * PixelsPerUnit) / PixelsPerUnit,
-                Mathf.Round(cameraPosition.y * PixelsPerUnit) / PixelsPerUnit,
+                Mathf.Round(centre.x * PixelsPerUnit) / PixelsPerUnit,
+                Mathf.Round(centre.y * PixelsPerUnit) / PixelsPerUnit,
                 -10f);
         }
 
