@@ -19,6 +19,7 @@ namespace FantasyRoyale.Playtest.Tests.PlayMode
 
         private const int SwordDamage = 20;
         private const int BowDamage = 12;
+        private const double InputClockStartSeconds = 1000000000d;
 
         private BattleRoyaleExplorationPreviewDebug bootstrap;
         private Keyboard keyboard;
@@ -189,6 +190,10 @@ namespace FantasyRoyale.Playtest.Tests.PlayMode
             Assert.That(bootstrap.FailureMessage, Is.Empty);
             Assert.That(bootstrap.IsReady, Is.True);
             keyboard = InputSystem.AddDevice<Keyboard>();
+
+            // Input SystemはEditを抜けてからPlayに入るまでの時刻の入力を捨てる。その時刻は
+            // Editorの起動からの秒数で、Test用の時計も同じ範囲を通るため、確実に先へ進める。
+            currentTime = InputClockStartSeconds;
 
             // 起動後に追加した仮想Keyboardは、Action Mapへ指定し直すまで入力の対象にならない。
             var actionMap = bootstrap.RuntimeInputActions.FindActionMap(

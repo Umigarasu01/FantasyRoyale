@@ -1,0 +1,13 @@
+{
+  "status": "adopted for the forest run preview",
+  "file": "hero-run-01.png",
+  "sha256": "1fedd70d882e815c4cce57fe536d223520ded9e6e9654dfcce72633406ed1b18",
+  "bytes": 1680411,
+  "tool": "openai-image skill, edit",
+  "model": "gpt-image-2.5-sunburst",
+  "size": "1536x1024",
+  "quality": "medium",
+  "n": 1,
+  "reference": "hero_idle.png scaled 6x on magenta",
+  "prompt": "Create ONE NEW pixel-art run-cycle sprite sheet for a top-down 2D fantasy action game. Image 1 is the character reference: a small chibi knight with a silver helmet, silver armour, a blue tunic with gold trim, a sword in the right hand and a blue shield with a white cross in the left hand. Keep exactly the same character, proportions, palette, dark outline and pixel-art style in every frame.\n\nLayout: exactly 3 rows and 4 columns on a completely flat solid pure magenta background, RGB 255,0,255. Every character is the same size and centred in an evenly spaced grid cell. Keep clear magenta space between all characters.\n\nThe legs must be clearly different in each column, so that the four frames play as an energetic run:\n\nColumn 1, stride A: the two legs are spread as far apart as possible, one foot far ahead and one foot far behind, body low.\nColumn 2, passing: both legs are close together directly under the body, one knee raised, body slightly higher than column 1.\nColumn 3, stride B: the same wide stride as column 1 but with the opposite leg in front, body low.\nColumn 4, passing: both legs close together under the body, the other knee raised, body slightly higher.\n\nRow 1: running toward the viewer, front view. In a stride one boot is large and low near the viewer and the other boot is lifted behind.\nRow 2: running to the right, side view, leaning forward, with a very wide leg stride in columns 1 and 3.\nRow 3: running away from the viewer, back view. In a stride one boot is lifted and the other is planted.\n\nThe sword arm and shield arm swing a little with the stride. The helmet, armour, shield and sword keep the same shape, size and colours in every frame.\n\nDo not include: text, labels, numbers, grid lines, ground, shadows, dust, effects, borders, watermark, or any other object. No soft gradients, blur or painterly rendering.\n"
+}

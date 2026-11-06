@@ -95,7 +95,7 @@ Assemblyは既存の`FantasyRoyale.Gameplay.Characters.Core`と`FantasyRoyale.Ga
 - Step 2完了時: C# 12 Projectが0 warning / 0 error、EditMode 83 passed、PlayMode 4 passed。
 - Step 4完了時: EditMode 279 / 279成功。PlayMode 9 / 14成功で、失敗5件は[Build・Test手順](../../development/testing.md)に記録した既存のStudyAのSetUp失敗。
 - PlayModeの攻撃Test5件は、仮想KeyboardからInput Action、Adapter、Combat、Physics、HPまで本番の経路を通す。
-- 斬撃、矢、倒れた的の表示は一時的な撮影Testの画像で確認した。実際の手触りと物理Keyboardは未確認。
+- 斬撃、矢、倒れた的の表示は一時的な撮影Testの画像で確認した。2026-11-06に所有者がRepositoryのProjectで実際に操作し、攻撃が動くことを確認した。武器の数値と手触りの調整は未了。
 
 ## 完了結果
 

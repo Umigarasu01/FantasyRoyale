@@ -1,5 +1,18 @@
 # GeneratedAssets
 
+## 2026-11-06 騎士の走りアニメーションと立ち姿
+
+状態: **[Forest Map Preview Debug Scene](../../design-docs/scenes/forest-map-preview-debug-scene.md)で使用**
+
+地図の騎士`hero_idle.png`を6倍にして参照画像とし、OpenAI Image APIの`gpt-image-2.5-sunburst`（editsのmedium、1536x1024）で正面、横、背面の3行4コマを生成した。立ち姿は同じ設定で、走りのシートも参照に加えて3方向を生成した。
+
+| Source | 保存先 | Prompt概要 | SHA-256 |
+| --- | --- | --- | --- |
+| hero-run-01 | `Assets/Art/Generated/ForestLook/hero-run-01.png` | マゼンタ背景の3方向4コマの走りシート | `1fedd70d882e815c4cce57fe536d223520ded9e6e9654dfcce72633406ed1b18` |
+| hero-idle-01 | 同Directoryの`hero-idle-01.png` | マゼンタ背景の足を揃えた3方向の立ち姿 | `d57f7c8ca12454f98698a19bcfa0e1132681638aa357aa985849e1569396b5b5` |
+
+Prompt全文は同名のJSONで確認する。`Tools/MapAuthoring/build_hero_frames.py`が背景を抜いて地図の縮尺へ揃え、`Assets/Art/Generated/ForestLook/Hero/`へ走り12コマと立ち姿3枚を書き出す。横向きは右向きだけを持ち、左向きは表示時に反転する。
+
 ## 2026-11-05 森マップの画作り部品
 
 状態: **森マップの基準で使用。Repositoryの既存AssetやSceneからは参照していない**。検証用Projectでのみ使用した

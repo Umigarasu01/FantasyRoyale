@@ -1,0 +1,13 @@
+{
+  "status": "adopted for the forest run preview",
+  "file": "hero-idle-01.png",
+  "sha256": "d57f7c8ca12454f98698a19bcfa0e1132681638aa357aa985849e1569396b5b5",
+  "bytes": 1368264,
+  "tool": "openai-image skill, edit",
+  "model": "gpt-image-2.5-sunburst",
+  "size": "1536x1024",
+  "quality": "medium",
+  "n": 1,
+  "reference": "hero_idle.png scaled 6x on magenta, hero-run-01.png",
+  "prompt": "Create ONE NEW pixel-art idle-pose sprite sheet for a top-down 2D fantasy action game. Image 1 is the character standing still, seen from the front. Image 2 is a run sheet of the same character: use it to see how the character looks from the side and from behind. Keep exactly the same character, proportions, palette, dark outline and pixel-art style.\n\nLayout: exactly 1 row and 3 columns on a completely flat solid pure magenta background, RGB 255,0,255. Every character is the same size, about 320 pixels tall, all standing on the same baseline, each centred in an evenly spaced cell. Keep clear magenta space between the characters.\n\nAll three are a calm standing idle pose. The body is upright and does not lean. Both feet are planted flat on the ground next to each other. The legs are straight. No foot is lifted, no knee is raised, and there is no stride. The arms are relaxed and low: the sword points down beside the body and the shield rests at the side.\n\nColumn 1: facing the viewer, front view, the same pose as Image 1.\nColumn 2: facing right, side view. The character looks to the right. The two feet stand together under the body. Keep the sword and shield on the same sides as the side view in Image 2.\nColumn 3: facing away from the viewer, back view. Both boots are planted side by side. Keep the shield and sword on the same sides as the back view in Image 2.\n\nThe helmet, armour, shield and sword keep the same shape, size and colours in all three.\n\nDo not include: text, labels, numbers, grid lines, ground, shadows, dust, effects, borders, watermark, or any other object. No soft gradients, blur or painterly rendering."
+}

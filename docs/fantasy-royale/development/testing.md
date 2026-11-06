@@ -71,6 +71,20 @@ $testResult.results | Where-Object Status -ne Passed
 
 EditMode終了後、`--mode playmode`で同じ手順を実行する。結果を取得してから次のTestを始める。
 
+## 仮想Keyboardの入力が届かないとき
+
+`InputTestFixture`の`Press`がPlayMode Testで効かず、`InputSystem.onEvent`にも現れない場合は、Input Systemの時刻による破棄を疑う。Input SystemはEditを抜けてからPlayへ入るまでの時刻を持つ入力を捨てる。この時刻はEditor起動からの秒数で、Test用の時計も0付近から同じ範囲を通るため、実行のたびに一部のTestだけが失敗する。`Time.realtimeSinceStartup`もPlay開始付近から数えるので、同じ範囲を通る。
+
+`PreviewDebugCombatPlayModeTests`は仮想Keyboardを追加した直後に`currentTime`を十分先の値へ進めて避ける。`Press`を使うTestを新しく書くときは同じようにする。
+
+## 所有者のEditorが開いている間の検証
+
+Editorが同じProjectを開いているとBatchmodeは使えない。編集中の状態を変えずに検証するときは、`Assets/`、`Packages/`、`ProjectSettings/`を一時Folderへ複製し、そのProjectへBatchmodeを実行する。`Library/`は複製しない。初回は再Importで数分かかる。
+
+Folderの絶対Pathが長いと、一部のPackageで`DirectoryNotFoundException`が出る。短いPathを選ぶ。
+
+複製先で作ったSceneを本体へ戻すときは、参照が切れないよう新しいAssetと`.meta`を一緒に戻す。本体のEditorがImportした後は`.meta`のGUIDが別になるので、Builderのメニューで作り直す。
+
 ## Forest Compositionの再現
 
 今回の比較生成では、保存済みSceneを開き、Playを停止してから`Assets/Art/Map/ForestRestart/Composition/ForestCompositionSettings.asset`を選ぶ。Inspectorの`seed`を20261003、`focusOrthographicSize`を8.5、`includeLandmarkCandidates`をtrueにして保存し、`FantasyRoyale/Map Authoring/Generate Configured Forest Composition`を実行する。
@@ -135,6 +149,8 @@ FantasyRoyale.MapAuthoringKit.Editor.ForestRestartAssetBuilder.BuildScene(
 40 Seedの論理Planと代表4 Sceneを現行の構成規則で生成する。結果は`Assets/Art/Map/ForestRestart/QA/generation-validation.json`。実Scene未検証の36 Seedは`sceneValidated=false`で区別する。QAは同じDirectoryの`composition-seed-{seed}-*.png`へ保存される。以前の40Plan / 4Sceneの成功数を、再実行せず今回の変更後の結果として扱わない。
 
 ## 現在の基準
+
+2026-11-06、森マップの走行確認の追加後、一時複製のProjectでのBatchmode実行: EditMode 279 / 279成功、PlayMode 13 / 18成功（4回連続で同じ結果）。失敗した5件は従来と同じStudyAのSetUp失敗で、証跡Folderの指定がないため実行されていない。Player Buildと`dotnet build`は未実行。攻撃の5件は時刻による入力の破棄で不安定だったため修正し、単独でも4回連続で全件成功した。
 
 2026-11-05、攻撃のVertical Slice実装後のBatchmode実行: EditMode 279 / 279成功、Compile Error 0。PlayMode 9 / 14成功で、Exploration Previewの4件と攻撃の5件は成功した。失敗した5件は`StudyANativeLayoutsPlayPreviewDebugTests`と`StudyANativeFlexibleConnectionsPlayPreviewDebugTests`で、検証の保存先の指定がなくSetUpで止まる。以前の記録と同じ結果で、機能の不具合を示すものではない。C# Project BuildとPlayer Buildは実行していない。以下はそれ以前の記録である。
 

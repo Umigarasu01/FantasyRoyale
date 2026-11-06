@@ -28,6 +28,14 @@
 
 Unity確認は、Repositoryではなく検証用Project`C:/Users/umiga/Documents/Codex/2026-10-12/task/nemo-visual-implementation/UnityVisualValidation/`で行う。出力を同Projectの`Assets/ForestLookSlice/`へ置き、`Tools/MapAuthoring/Unity/`の`.cs.txt`を拡張子`.cs`で配置する。Runnerは`Editor/`、`ForestLookWalker`は同Directoryの直下に置く。環境変数`FOREST_LOOK_OUT`へ結果の出力先を指定し、`-batchmode -projectPath <検証用Project> -executeMethod ForestLookSliceRunner.Run`で実行する。結果は`report.json`と撮影画像である。Sceneは`Assets/ForestLookSlice/ForestLookMap.unity`に保存され、Playすると矢印キーまたはWASDで移動できる。
 
+## 森マップを走るSceneの作り方
+
+1. 騎士のコマ: `Tools/MapAuthoring/`で`python build_hero_frames.py [--preview <gif>]`を実行する。生成シートから走り12コマと立ち姿3枚を書き出す。出力は決まった結果になる。
+2. 地図の配置: 地図出力の地面画像、`objects.json`、`collision.json`、`Parts/`を`Assets/ForestMapPreview/`へ置く。
+3. Scene生成: Unityで`FantasyRoyale/Playtest/Build Forest Map Preview Debug Scene`を実行する。
+
+`Assets/ForestMapPreview/`はSceneを含めてGitへ入れない。新しいCloneでは上の手順で作り直す。
+
 ## GraphicとCollision
 
 - 見た目と移動判定を分離する。

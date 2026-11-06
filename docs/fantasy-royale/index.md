@@ -32,6 +32,7 @@
 - [Forest Production Atlas Contract](design-docs/map-authoring/forest-production-atlas-contract.md)
 - [GBA Forest Map Authoring Scene](design-docs/scenes/gba-forest-map-authoring-scene.md)
 - [Exploration Preview Debug Scene](design-docs/scenes/exploration-preview-debug-scene.md)
+- [Forest Map Preview Debug Scene](design-docs/scenes/forest-map-preview-debug-scene.md)
 
 ## Exec Plans
 

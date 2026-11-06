@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c1ea30060f510345bfdaff166e8701b, type: 3}
+  m_Name: HeroSprites
+  m_EditorClassIdentifier: FantasyRoyale.Gameplay.Characters.Unity::FantasyRoyale.Gameplay.Characters.Unity.CharacterSpriteSetDefinition
+  framesPerSecond: 11
+  idleDown: {fileID: 21300000, guid: c25b1279a6acd4b4e8886563198a709f, type: 3}
+  idleSide: {fileID: 21300000, guid: 3e959005bf3ce01498e547d16bb2fcbb, type: 3}
+  idleUp: {fileID: 21300000, guid: 2ed09bb9b6660c743aa8a22de32d9b95, type: 3}
+  runDown:
+  - {fileID: 21300000, guid: 58f8473cfdcbfd54fb9b5a392aefeb35, type: 3}
+  - {fileID: 21300000, guid: 551bc728c85902b42b8e032e8a80825f, type: 3}
+  - {fileID: 21300000, guid: 78082baf507dc104d99afa7bc7b5a248, type: 3}
+  - {fileID: 21300000, guid: d4013e66b57d4304c81b4e93b135e865, type: 3}
+  runSide:
+  - {fileID: 21300000, guid: 47c867337ab95ce47a1beb537c30a042, type: 3}
+  - {fileID: 21300000, guid: 216de8f5c2f42be4fac8a75f7e54c381, type: 3}
+  - {fileID: 21300000, guid: 2b1311e512380074db5deb70c605da6a, type: 3}
+  - {fileID: 21300000, guid: dde663a01828e0c48a69eed9d8e18e86, type: 3}
+  runUp:
+  - {fileID: 21300000, guid: 59b4d796cab438d4382343e1e80ecf5c, type: 3}
+  - {fileID: 21300000, guid: f8625aa26c5d1a94bb68b8506ca90e62, type: 3}
+  - {fileID: 21300000, guid: 490668230f3fd6f4fa1768f499254e66, type: 3}
+  - {fileID: 21300000, guid: ba98570ad15717149984799a1bee5574, type: 3}

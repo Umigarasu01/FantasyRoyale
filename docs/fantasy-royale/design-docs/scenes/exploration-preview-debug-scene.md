@@ -59,6 +59,8 @@ PlayerStart付近に確認用の的を置く。HPは100で、倒すと2秒後に
 
 剣の装備は通常攻撃が剣で特殊Actionが弓、弓の装備はその逆である。斬撃、矢、的の色の変化はRuntime生成の仮表示である。このSceneは承認済みの森マップではなく、従来のReference Mapを読む。
 
+検証用Project`UnityVisualValidation`にも同じ名前のSceneがあるが、古いコピーなので攻撃は入っていない。攻撃はRepositoryのProjectで確認する。
+
 ## 未実装
 
 - Loot / Enemy / Merchant SocketのRuntime選定と生成。
