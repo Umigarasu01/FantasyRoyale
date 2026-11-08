@@ -1,0 +1,13 @@
+{
+  "status": "adopted for the armour parts",
+  "file": "hero-set-leather-head-01.png",
+  "sha256": "69d6bfeb20177faa9d405fa0a13fe26eddd86c5327f118c5ed9facb35331d3a9",
+  "bytes": 1288154,
+  "tool": "openai-image skill, edit",
+  "model": "gpt-image-2.5-sunburst",
+  "size": "1536x1024",
+  "quality": "medium",
+  "n": 1,
+  "reference": "hero-set-leather-idle-01.pngとdiagonalの頭と肩を並べた絵",
+  "prompt": "Image 1 is a pixel-art sprite sheet of the head and shoulders of a small chibi character for a top-down 2D game, seen from 5 sides: three figures in the top row and two in the bottom row. Redraw this sheet exactly, with the same layout, the same 5 figures in the same positions, the same head size, the same pixel-art style and the same flat solid pure magenta background, RGB 255,0,255. Do not move, resize or redraw the head.\n\nChange only one thing: keep the head alone. Keep the headwear, the hair, the face and the chin, in exactly the same place. Remove everything below the chin: the neck scarf, the collar, the shoulders, the chest and the arms. Where the head meets what was removed, finish it with a clean dark outline, so each head is a complete sprite on its own.\n\nDo not include: shoulders, a torso, arms, hands, weapons, shields, text, labels, numbers, grid lines, ground, shadows, dust, effects, borders, watermark, or any other object. No soft gradients, blur or painterly rendering."
+}

@@ -23,6 +23,7 @@ namespace FantasyRoyale.Playtest
         public const string SpecialActionName = "Special";
         public const string NextEquipmentActionName = "Next";
         public const string PreviousEquipmentActionName = "Previous";
+        public const string JumpActionName = "Jump";
         public const string MapCollisionLayerName = "MapCollision";
 
         private const string PlayerActionMapName = "Player";
@@ -58,6 +59,11 @@ namespace FantasyRoyale.Playtest
         private const int CoinsPerEnemy = 1;
         private const int CoinsPerChest = 10;
 
+        private static readonly Rect EquipmentToggleRect = new Rect(12f, 188f, 320f, 26f);
+        private const float EquipmentPanelMaxHeight = 420f;
+        private const float EquipmentBarHeight = 27f;
+        private const float EquipmentRowHeight = 25f;
+        private static readonly CharacterArmourSlot[] EquipmentPanelSlots = { CharacterArmourSlot.Head, CharacterArmourSlot.Torso, CharacterArmourSlot.Legs };
         private static readonly Color DownColor = new Color(0.45f, 0.45f, 0.45f);
         private static readonly Color HitColor = new Color(1f, 0.35f, 0.3f);
         private static readonly Color GraceColor = new Color(1f, 1f, 1f, 0.45f);
@@ -67,11 +73,12 @@ namespace FantasyRoyale.Playtest
         [SerializeField] private Camera gameplayCamera;
         [SerializeField] private Rect mapBounds;
         [SerializeField] private Vector2 spawnPosition;
-        [SerializeField, Min(0.1f)] private float moveSpeed = 5f;
+        // 大きく変えるときは、体の定義のFrames Per Secondも同じ割合で変えて足の滑りを防ぐ。
+        [SerializeField, Min(0.1f)] private float moveSpeed = 6f;
         [SerializeField, Min(1f)] private float cameraHeight = 14f;
         [SerializeField] private CharacterSpriteSetDefinition enemySprites;
         [SerializeField] private CharacterEquipmentDefinition[] equipment = new CharacterEquipmentDefinition[0];
-        [SerializeField] private CharacterSpriteSetDefinition[] armourSets = new CharacterSpriteSetDefinition[0];
+        [SerializeField] private CharacterEquipmentCatalog catalog;
         [SerializeField] private Sprite chestClosed;
         [SerializeField] private Sprite chestOpen;
         [SerializeField] private Vector2[] enemySpots = new Vector2[0];
@@ -93,13 +100,20 @@ namespace FantasyRoyale.Playtest
         private InputAction interactAction;
         private InputAction nextEquipmentAction;
         private InputAction previousEquipmentAction;
+        private InputAction jumpAction;
         private PreviewDebugCombatPresenter combatPresenter;
         private SpriteRenderer playerRenderer;
         private bool hasTestMoveOverride;
         private CharacterMoveCommand testMoveCommand;
         private float smoothedFrameSeconds = 1f / 60f;
         private int equipmentIndex;
-        private int armourIndex;
+        private CharacterEquipmentDefinition currentEquipment;
+        private Vector2 equipmentPanelScroll;
+        private int equipmentPanelTab;
+        private int weaponKindTab;
+        private GUIStyle equipmentTabStyle;
+        private GUIStyle equipmentRowStyle;
+        private GUIStyle equipmentIdStyle;
         private float playerReturnAt = -1f;
         private float playerGraceUntil;
 
@@ -118,10 +132,52 @@ namespace FantasyRoyale.Playtest
         public int PlayerSortingOrder => playerRenderer == null ? 0 : playerRenderer.sortingOrder;
         public int Seed { get; private set; }
         public bool IsShopOpen { get; private set; }
+
+        /// <summary>
+        /// 全装備の確認画面を開いているか。
+        /// </summary>
+        public bool IsEquipmentPanelOpen { get; set; }
+
+        public CharacterEquipmentCatalog EquipmentCatalog => catalog;
         public int EnemyCount => enemies.Count;
         public int ChestCount => chests.Count;
-        public string CurrentEquipmentName => equipment.Length == 0 ? string.Empty : equipment[equipmentIndex].DisplayName;
-        public string CurrentArmourName => armourSets.Length == 0 ? string.Empty : armourSets[armourIndex].DisplayName;
+        public string CurrentEquipmentName => currentEquipment == null ? string.Empty : currentEquipment.DisplayName;
+
+        /// <summary>
+        /// 全装備の画面の枠。高さは今の一覧の行数に合わせ、多ければ上限で止めて一覧を送って選ぶ。
+        /// </summary>
+        private Rect EquipmentPanelRect
+        {
+            get
+            {
+                // 上の段と、武器なら武器種の段、一覧の行。
+                var bars = equipmentPanelTab == 0 ? 2 : 1;
+                var height = 20f + bars * EquipmentBarHeight + CountEquipmentChoices() * EquipmentRowHeight;
+                return new Rect(Screen.width - 312f, 12f, 300f, Mathf.Min(height, EquipmentPanelMaxHeight, Screen.height - 24f));
+            }
+        }
+
+        /// <summary>
+        /// 全装備の画面で今並んでいる行の数。武器がなければ、その旨の1行を数える。
+        /// </summary>
+        private int CountEquipmentChoices()
+        {
+            if (equipmentPanelTab != 0)
+            {
+                return catalog.GetArmour(EquipmentPanelSlots[equipmentPanelTab - 1]).Count;
+            }
+
+            var kinds = catalog.GetWeaponKinds();
+            return kinds.Count == 0 ? 1 : catalog.GetWeapons(kinds[Mathf.Clamp(weaponKindTab, 0, kinds.Count - 1)]).Count;
+        }
+
+        /// <summary>
+        /// 指定の部位で今着ている物の名前を返す。
+        /// </summary>
+        public string GetArmourName(CharacterArmourSlot slot)
+        {
+            return PlayerAnimator.GetArmour(slot).DisplayName;
+        }
 
         public CharacterActor2D GetEnemyActor(int index)
         {
@@ -166,7 +222,7 @@ namespace FantasyRoyale.Playtest
         public void ConfigureGame(
             CharacterSpriteSetDefinition newEnemySprites,
             CharacterEquipmentDefinition[] newEquipment,
-            CharacterSpriteSetDefinition[] newArmourSets,
+            CharacterEquipmentCatalog newCatalog,
             Sprite newChestClosed,
             Sprite newChestOpen,
             Vector2[] newEnemySpots,
@@ -177,7 +233,7 @@ namespace FantasyRoyale.Playtest
         {
             enemySprites = newEnemySprites;
             equipment = newEquipment;
-            armourSets = newArmourSets;
+            catalog = newCatalog;
             chestClosed = newChestClosed;
             chestOpen = newChestOpen;
             enemySpots = newEnemySpots;
@@ -307,18 +363,36 @@ namespace FantasyRoyale.Playtest
         }
 
         /// <summary>
-        /// 次の全身セットへ着替える。確認用なので代金はかからない。持っている武器はそのまま使える。
+        /// idの武器へ持ち替える。確認用なので、買っていなくても代金なしで持てる。
         /// </summary>
-        public bool TryChangeArmour()
+        public bool TryEquipWeapon(string id)
         {
-            if (armourSets.Length < 2)
+            var weapon = catalog.FindWeapon(id);
+            if (weapon == null)
             {
+                LastMessage = $"{id}という武器はない";
                 return false;
             }
 
-            armourIndex = (armourIndex + 1) % armourSets.Length;
-            PlayerAnimator.Initialize(armourSets[armourIndex]);
-            LastMessage = $"{CurrentArmourName}に着替えた";
+            Equip(weapon);
+            LastMessage = $"{weapon.DisplayName}に持ち替えた";
+            return true;
+        }
+
+        /// <summary>
+        /// 指定の部位をidの防具へ着替える。確認用なので代金はかからない。他の部位と武器はそのまま使える。
+        /// </summary>
+        public bool TryEquipArmour(CharacterArmourSlot slot, string id)
+        {
+            var part = catalog.FindArmour(id);
+            if (part == null || !part.Covers(slot))
+            {
+                LastMessage = $"{id}は{slot}に着られない";
+                return false;
+            }
+
+            PlayerAnimator.SetArmour(slot, part);
+            LastMessage = $"{slot}を{part.DisplayName}に着替えた";
             return true;
         }
 
@@ -337,13 +411,20 @@ namespace FantasyRoyale.Playtest
         }
 
         /// <summary>
-        /// 装備のActionと見た目の部品をまとめて替える。体のアニメーションはそのまま使う。
+        /// 装備のActionと見た目の部品をまとめて替える。走りの胴は、胴が武器種の走りを持っていればそれになる。
         /// </summary>
         private void EquipIndex(int index)
         {
             equipmentIndex = index;
-            equipment[index].ApplyTo(PlayerCombat.Loadout);
-            PlayerAnimator.SetGear(equipment[index].Gear);
+            Equip(equipment[index]);
+        }
+
+        private void Equip(CharacterEquipmentDefinition weapon)
+        {
+            currentEquipment = weapon;
+            weapon.ApplyTo(PlayerCombat.Loadout);
+            PlayerAnimator.SetGear(weapon.Gear);
+            PlayerAnimator.SetWeaponKind(weapon.WeaponKind);
         }
 
         /// <summary>
@@ -364,13 +445,11 @@ namespace FantasyRoyale.Playtest
             PlayerObject.AddComponent<CharacterHurtbox2D>().Initialize(PlayerHealth);
 
             PlayerCombat = PlayerObject.AddComponent<CharacterCombat2D>();
-            var loadout = new CharacterLoadout(null, null);
-            equipment[equipmentIndex].ApplyTo(loadout);
-            PlayerAnimator.SetGear(equipment[equipmentIndex].Gear);
-            PlayerCombat.Initialize(loadout, LayerMask.GetMask(MapCollisionLayerName));
+            PlayerCombat.Initialize(new CharacterLoadout(null, null), LayerMask.GetMask(MapCollisionLayerName));
+            EquipIndex(equipmentIndex);
             PlayerCombat.HitApplied += OnHitApplied;
             PlayerAnimator.BindCombat(PlayerCombat);
-            combatPresenter = new PreviewDebugCombatPresenter(PlayerCombat);
+            combatPresenter = new PreviewDebugCombatPresenter(PlayerCombat, false);
 
             // 入力状態をAsset本体へ残さないよう、Runtime複製だけを有効化する。
             runtimeInputActions = Instantiate(inputActions);
@@ -383,9 +462,11 @@ namespace FantasyRoyale.Playtest
             interactAction = FindPlayerAction(InteractActionName);
             nextEquipmentAction = FindPlayerAction(NextEquipmentActionName);
             previousEquipmentAction = FindPlayerAction(PreviousEquipmentActionName);
+            jumpAction = FindPlayerAction(JumpActionName);
             interactAction.Enable();
             nextEquipmentAction.Enable();
             previousEquipmentAction.Enable();
+            jumpAction.Enable();
 
             eventService = new MapEventExecutionService(
                 new MapEventHandlerRegistry(new IMapEventHandler[] { new HealingFountainEventHandler() }));
@@ -502,11 +583,16 @@ namespace FantasyRoyale.Playtest
         }
 
         /// <summary>
-        /// 攻撃、装備の切り替え、宝箱を開ける入力を処理する。
+        /// 攻撃、跳躍、装備の切り替え、宝箱を開ける入力を処理する。
         /// </summary>
         private void PollActionInput()
         {
-            if (humanActionInput.TryReadCommand(PlayerActor.Facing, out var command))
+            if (jumpAction.WasPressedThisFrame())
+            {
+                PlayerActor.TryJump();
+            }
+
+            if (humanActionInput.TryReadCommand(PlayerActor.Facing, out var command) && !IsClickingEquipmentPanel())
             {
                 PlayerCombat.TryStartAction(command);
             }
@@ -663,6 +749,7 @@ namespace FantasyRoyale.Playtest
             interactAction?.Disable();
             nextEquipmentAction?.Disable();
             previousEquipmentAction?.Disable();
+            jumpAction?.Disable();
             if (runtimeInputActions != null)
             {
                 Destroy(runtimeInputActions);
@@ -678,10 +765,11 @@ namespace FantasyRoyale.Playtest
             }
 
             var position = PlayerObject.transform.position;
-            GUILayout.BeginArea(new Rect(12f, 12f, 320f, 150f), GUI.skin.box);
+            GUILayout.BeginArea(new Rect(12f, 12f, 320f, 170f), GUI.skin.box);
             GUILayout.Label($"HP: {PlayerHealth.CurrentHealth} / {PlayerHealth.MaximumHealth}   Coins: {Coins}");
-            GUILayout.Label($"Equipment (1 / 2): {CurrentEquipmentName}   Armour: {CurrentArmourName}");
-            GUILayout.Label("Move: WASD   Attack: J   Special: K   Use: E");
+            GUILayout.Label($"Equipment (1 / 2): {CurrentEquipmentName}");
+            GUILayout.Label($"Armour: {GetArmourName(CharacterArmourSlot.Head)} / {GetArmourName(CharacterArmourSlot.Torso)} / {GetArmourName(CharacterArmourSlot.Legs)}");
+            GUILayout.Label("Move: WASD   Attack: J   Special: K   Jump: Space   Use: E");
             GUILayout.Label($"Position: {position.x:0.0}, {position.y:0.0}   FPS: {1f / smoothedFrameSeconds:0}   Seed: {Seed}");
             if (!string.IsNullOrEmpty(LastMessage))
             {
@@ -689,6 +777,16 @@ namespace FantasyRoyale.Playtest
             }
 
             GUILayout.EndArea();
+            if (GUI.Button(EquipmentToggleRect, IsEquipmentPanelOpen ? "全装備を閉じる" : "全装備を開く"))
+            {
+                IsEquipmentPanelOpen = !IsEquipmentPanelOpen;
+            }
+
+            if (IsEquipmentPanelOpen)
+            {
+                DrawEquipmentPanel();
+            }
+
             if (IsShopOpen)
             {
                 DrawShop();
@@ -696,11 +794,171 @@ namespace FantasyRoyale.Playtest
         }
 
         /// <summary>
+        /// 確認用の全装備の画面。上の段で武器と部位を切り替え、武器は武器種でも絞って一覧から選ぶ。
+        /// 一覧にある物を全て並べるので、装備や武器種を増やしてもここは書き足さない。
+        /// </summary>
+        private void DrawEquipmentPanel()
+        {
+            EnsureEquipmentStyles();
+            GUILayout.BeginArea(EquipmentPanelRect, GUI.skin.box);
+            var tabs = new[]
+            {
+                $"武器 {catalog.Weapons.Count}",
+                $"頭 {catalog.GetArmour(CharacterArmourSlot.Head).Count}",
+                $"胴 {catalog.GetArmour(CharacterArmourSlot.Torso).Count}",
+                $"足 {catalog.GetArmour(CharacterArmourSlot.Legs).Count}"
+            };
+
+            // 切り替えは描き終えてから反映する。同じ入力の途中で並びが変わると、IMGUIの配置が食い違うためである。
+            var requestedTab = GUILayout.Toolbar(equipmentPanelTab, tabs, equipmentTabStyle);
+            if (equipmentPanelTab == 0)
+            {
+                DrawWeaponChoices();
+            }
+            else
+            {
+                DrawArmourChoices(EquipmentPanelSlots[equipmentPanelTab - 1]);
+            }
+
+            GUILayout.EndArea();
+            if (requestedTab != equipmentPanelTab)
+            {
+                equipmentPanelTab = requestedTab;
+                equipmentPanelScroll = Vector2.zero;
+            }
+        }
+
+        private void DrawWeaponChoices()
+        {
+            var kinds = catalog.GetWeaponKinds();
+            if (kinds.Count == 0)
+            {
+                GUILayout.Label("武器がありません。");
+                return;
+            }
+
+            weaponKindTab = Mathf.Clamp(weaponKindTab, 0, kinds.Count - 1);
+            var names = new string[kinds.Count];
+            for (var index = 0; index < kinds.Count; index++)
+            {
+                names[index] = $"{GetWeaponKindName(kinds[index])} {catalog.GetWeapons(kinds[index]).Count}";
+            }
+
+            var requestedKind = GUILayout.Toolbar(weaponKindTab, names, equipmentTabStyle);
+            equipmentPanelScroll = GUILayout.BeginScrollView(equipmentPanelScroll);
+            foreach (var weapon in catalog.GetWeapons(kinds[weaponKindTab]))
+            {
+                if (DrawChoice(weapon.DisplayName, weapon.Id, weapon == currentEquipment))
+                {
+                    TryEquipWeapon(weapon.Id);
+                }
+            }
+
+            GUILayout.EndScrollView();
+            if (requestedKind != weaponKindTab)
+            {
+                weaponKindTab = requestedKind;
+                equipmentPanelScroll = Vector2.zero;
+            }
+        }
+
+        private void DrawArmourChoices(CharacterArmourSlot slot)
+        {
+            var worn = PlayerAnimator.GetArmour(slot);
+            equipmentPanelScroll = GUILayout.BeginScrollView(equipmentPanelScroll);
+            foreach (var part in catalog.GetArmour(slot))
+            {
+                if (DrawChoice(part.DisplayName, part.Id, part == worn))
+                {
+                    TryEquipArmour(slot, part.Id);
+                }
+            }
+
+            GUILayout.EndScrollView();
+        }
+
+        /// <summary>
+        /// 一覧の1行を描き、押されたら真を返す。左に名前、右にidを出し、身につけている物は印と色で見せる。
+        /// </summary>
+        private bool DrawChoice(string displayName, string id, bool isCurrent)
+        {
+            var text = isCurrent ? $"● {displayName}" : $"    {displayName}";
+            var pressed = GUILayout.Toggle(isCurrent, text, equipmentRowStyle) != isCurrent;
+            GUI.Label(GUILayoutUtility.GetLastRect(), id, equipmentIdStyle);
+            return pressed;
+        }
+
+        /// <summary>
+        /// 一覧の行の見た目を作る。GUI.skinはOnGUIの中でしか使えないので、初めて描くときに作る。
+        /// </summary>
+        private void EnsureEquipmentStyles()
+        {
+            if (equipmentRowStyle != null)
+            {
+                return;
+            }
+
+            equipmentRowStyle = new GUIStyle(GUI.skin.button)
+            {
+                alignment = TextAnchor.MiddleLeft,
+                fixedHeight = 24f,
+                padding = new RectOffset(8, 8, 2, 2),
+                margin = new RectOffset(2, 2, 1, 1)
+            };
+            var chosen = new Color(1f, 0.85f, 0.4f);
+            equipmentRowStyle.onNormal.textColor = chosen;
+            equipmentRowStyle.onHover.textColor = chosen;
+            equipmentRowStyle.onActive.textColor = chosen;
+            equipmentTabStyle = new GUIStyle(GUI.skin.button);
+            equipmentTabStyle.onNormal.textColor = chosen;
+            equipmentTabStyle.onHover.textColor = chosen;
+            equipmentTabStyle.onActive.textColor = chosen;
+            equipmentIdStyle = new GUIStyle(GUI.skin.label)
+            {
+                alignment = TextAnchor.MiddleRight,
+                padding = new RectOffset(0, 10, 0, 0)
+            };
+            equipmentIdStyle.normal.textColor = new Color(1f, 1f, 1f, 0.5f);
+        }
+
+        /// <summary>
+        /// 武器種の画面の名前。武器種を増やすときは動きの絵も作るので、名前もここへ足す。足すまでは型の名前を見せる。
+        /// </summary>
+        private static string GetWeaponKindName(CharacterActionMotion kind)
+        {
+            switch (kind)
+            {
+                case CharacterActionMotion.Swing:
+                    return "片手剣";
+                case CharacterActionMotion.Shoot:
+                    return "弓";
+                default:
+                    return kind.ToString();
+            }
+        }
+
+        /// <summary>
+        /// 全装備の画面を押したクリックかを返す。攻撃はマウスにも割り当てているので、押しても振らないようにする。
+        /// </summary>
+        private bool IsClickingEquipmentPanel()
+        {
+            var mouse = Mouse.current;
+            if (mouse == null || !(mouse.leftButton.wasPressedThisFrame || mouse.rightButton.wasPressedThisFrame))
+            {
+                return false;
+            }
+
+            var pointer = mouse.position.ReadValue();
+            var fromTop = new Vector2(pointer.x, Screen.height - pointer.y);
+            return EquipmentToggleRect.Contains(fromTop) || (IsEquipmentPanelOpen && EquipmentPanelRect.Contains(fromTop));
+        }
+
+        /// <summary>
         /// 確認用の簡単なショップ画面。Eで閉じるか、屋台から離れると閉じる。
         /// </summary>
         private void DrawShop()
         {
-            GUILayout.BeginArea(new Rect(Screen.width * 0.5f - 150f, 40f, 300f, 160f), GUI.skin.box);
+            GUILayout.BeginArea(new Rect(Screen.width * 0.5f - 150f, 40f, 300f, 220f), GUI.skin.box);
             GUILayout.Label($"ショップ   コイン: {Coins}");
             if (GUILayout.Button($"回復薬  {PotionPrice} コイン（HP {PotionHealing} 回復）"))
             {
@@ -714,11 +972,6 @@ namespace FantasyRoyale.Playtest
             }
 
             GUI.enabled = true;
-            if (GUILayout.Button($"着替える（今: {CurrentArmourName}）"))
-            {
-                TryChangeArmour();
-            }
-
             GUILayout.Label("E: 閉じる");
             GUILayout.EndArea();
         }

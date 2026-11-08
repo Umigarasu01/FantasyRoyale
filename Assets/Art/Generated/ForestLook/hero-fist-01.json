@@ -1,0 +1,13 @@
+{
+  "status": "adopted as the fist over rotated weapons",
+  "file": "hero-fist-01.png",
+  "sha256": "d8fc9aa6364812f1f0020a2a79c93bf94bf9d3d2ba35a5c12a0f619ac43392ce",
+  "bytes": 855863,
+  "tool": "openai-image skill, edit",
+  "model": "gpt-image-2.5-sunburst",
+  "size": "1024x1024",
+  "quality": "medium",
+  "n": 1,
+  "reference": "hero-idle-01.png, hero-gear-01.png",
+  "prompt": "Image 1 is a pixel-art sprite sheet of a small chibi knight for a top-down 2D game. He wears closed brown leather gloves. Image 2 is his gear sheet; the sword in the top left corner is drawn with its tip pointing down.\n\nDraw ONE NEW image: a single large pixel-art closed fist, the knight's right hand, gripping a sword handle that runs straight up and down through the middle of the fist, as if holding the sword from Image 2 with its tip pointing down. Do not draw the sword or the handle at all: draw only the hand, closed around the empty space where the handle would be, cut off at the wrist. No arm, no sleeve, no cuff.\n\nSeen from the side: the curled fingers on one side, the thumb wrapped over them, the back of the hand on the other side. The fist is compact and roundish, about as wide as it is tall, centred in the image, about 420 pixels tall.\n\nColour: paint the whole glove in shades of pure bright green instead of brown, from dark green in the shadows to light green in the highlights, with the same number of shades, the same shading and the same dark outline as the knight's gloves in Image 1. Use no other colours on the hand.\n\nSame pixel-art style as Image 1: crisp hard-edged pixels, dark outline, no soft gradients, no blur, no anti-aliasing. Flat solid pure magenta background, RGB 255,0,255. Do not include: the sword, a handle, an arm, text, labels, shadows, effects, borders or any other object."
+}

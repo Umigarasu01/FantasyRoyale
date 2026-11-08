@@ -156,6 +156,54 @@ FantasyRoyale.MapAuthoringKit.Editor.ForestRestartAssetBuilder.BuildScene(
 
 ## 現在の基準
 
+2026-11-08、斜めのキーが少しずれて離れても止まったまま斜めへ振れるよう、向きを保つ決まりを`CharacterActor2D`へ移した後、一時複製のProjectでのBatchmode実行: EditMode 324 / 324成功、PlayMode 38件中33件成功。失敗した5件は従来と同じStudyAのSetUp失敗である。
+
+2026-11-08、片手剣の型の走りの胴と、剣を鍔から先と柄頭に分けて胴の拳の両端へ付ける形を入れ、緑の拳を外した後、一時複製のProjectでのBatchmode実行: EditMode 324 / 324成功、PlayMode 37件中32件成功。失敗した5件は従来と同じStudyAのSetUp失敗である。戻した後の`check_asset_references.py`は参照切れ0件。本体のEditorでの見え方は未確認である。
+
+2026-11-08、緑の拳を胴の部位ごとの手袋の色に塗り、武器と同じ角度に回して柄へ重ねるようにした後、一時複製のProjectでのBatchmode実行: EditMode 323 / 323成功、PlayMode 36件中31件成功。失敗した5件は従来と同じStudyAのSetUp失敗である。
+
+2026-11-08、利き手の拳を剣入りの絵から剣の角度に最も近いものを選んで重ね、握る向きと剣の向きを揃えた後、一時複製のProjectでのBatchmode実行: EditMode 321 / 321成功、PlayMode 36件中31件成功。失敗した5件は従来と同じStudyAのSetUp失敗である。
+
+2026-11-08、剣を胴の絵の拳に持たせ、横向きの走りの剣の腕を下ろして描き直した後、一時複製のProjectでのBatchmode実行: EditMode 321 / 321成功、PlayMode 36件中31件成功。失敗した5件は従来と同じStudyAのSetUp失敗である。
+
+2026-11-08、利き手の拳を玉にして剣の柄が中心を貫くようにした後、一時複製のProjectでのBatchmode実行: EditMode 321 / 321成功、PlayMode 36件中31件成功。失敗した5件は従来と同じStudyAのSetUp失敗である。
+
+2026-11-08、剣を鍔からの部品にして拳の端へ付けた後、一時複製のProjectでのBatchmode実行: EditMode 321 / 321成功、PlayMode 36件中31件成功。失敗した5件は従来と同じStudyAのSetUp失敗である。
+
+2026-11-08、斜め後ろの走りの剣の角度と拳を立ち姿から取るようにした後、一時複製のProjectでのBatchmode実行: EditMode 321 / 321成功、PlayMode 36件中31件成功。失敗した5件は従来と同じStudyAのSetUp失敗である。
+
+2026-11-08、斜め後ろの走りの剣を背面の走りの角度にした後、一時複製のProjectでのBatchmode実行: EditMode 321 / 321成功、PlayMode 36件中31件成功。失敗した5件は従来と同じStudyAのSetUp失敗である。
+
+2026-11-08、斜め後ろの走りの頭を首の付け根へ付け直した後、一時複製のProjectでのBatchmode実行: EditMode 321 / 321成功、PlayMode 36件中31件成功。失敗した5件は従来と同じStudyAのSetUp失敗である。
+
+2026-11-08、斜めの走りを、正面・背面の騎士を見本にし拍子を揃えたGIFで作り直した後、一時複製のProjectでのBatchmode実行: EditMode 321 / 321成功、PlayMode 36件中31件成功。失敗した5件は従来と同じStudyAのSetUp失敗である。
+
+2026-11-08、斜めの走りを、横向きの騎士を見た目だけの見本にしたGIFで作り直した後、一時複製のProjectでのBatchmode実行: EditMode 321 / 321成功、PlayMode 36件中31件成功。失敗した5件は従来と同じStudyAのSetUp失敗である。
+
+2026-11-08、斜めの走りをGIFから作り直した後、一時複製のProjectでのBatchmode実行: EditMode 321 / 321成功、PlayMode 36件中31件成功。失敗した5件は従来と同じStudyAのSetUp失敗である。
+
+2026-11-08、斜めの走りの脚を下書きに沿って描き直した後、一時複製のProjectでのBatchmode実行: EditMode 321 / 321成功、PlayMode 36件中31件成功。失敗した5件は従来と同じStudyAのSetUp失敗である。
+
+2026-11-07、斜めの足の2歩目の脚を入れ替えた後、一時複製のProjectでのBatchmode実行: EditMode 321 / 321成功、PlayMode 36件中31件成功。失敗した5件は従来と同じStudyAのSetUp失敗である。
+
+2026-11-07、斜めの走りを奥行きのある歩幅で作り直した後、一時複製のProjectでのBatchmode実行: EditMode 321 / 321成功、PlayMode 36件中31件成功。失敗した5件は従来と同じStudyAのSetUp失敗である。
+
+2026-11-07、斜めの走りを両脚で作り直した後、一時複製のProjectでのBatchmode実行: EditMode 321 / 321成功、PlayMode 36件中31件成功。失敗した5件は従来と同じStudyAのSetUp失敗である。
+
+2026-11-07、走りを6コマへ描き直した後、一時複製のProjectでのBatchmode実行: EditMode 321 / 321成功、PlayMode 36件中31件成功。失敗した5件は従来と同じStudyAのSetUp失敗である。
+
+2026-11-07、足元の影と走りの砂ぼこりを追加した後、一時複製のProjectでのBatchmode実行: EditMode 320 / 320成功、PlayMode 36件中31件成功。失敗した5件は従来と同じStudyAのSetUp失敗である。
+
+2026-11-07、ジャンプを追加した後、一時複製のProjectでのBatchmode実行: EditMode 320 / 320成功、PlayMode 35件中30件成功。失敗した5件は従来と同じStudyAのSetUp失敗である。
+
+2026-11-07、片手剣の振る向きを左から右へ変え、走る速さを6へ上げた後、一時複製のProjectでのBatchmode実行: EditMode 317 / 317成功、PlayMode 34件中29件成功。失敗した5件は従来と同じStudyAのSetUp失敗である。
+
+2026-11-07、足の部位（布巻きサンダル、鉄の重靴）を追加した後、一時複製のProjectでのBatchmode実行: EditMode 317 / 317成功、PlayMode 34件中29件成功、5件失敗。失敗した5件は従来と同じStudyAのSetUp失敗である。
+
+2026-11-07、装備をidで引く全装備の一覧と確認用の画面を追加した後、一時複製のProjectでのBatchmode実行: EditMode 317 / 317成功、PlayMode 34件中29件成功、5件失敗。失敗した5件は従来と同じStudyAのSetUp失敗で、証跡フォルダの指定が要るTestである。確認用の画面はBatchmodeでは描かれないので、画面付きのEditorで撮影して確認した。
+
+2026-11-07、防具を足、胴、頭の3層へ分けた後、一時複製のProjectでのBatchmode実行: EditMode 313 / 313成功、PlayMode 33件中28件成功、5件失敗。失敗した5件は従来と同じStudyAのSetUp失敗で、証跡Folderの指定がないため実行されていない。Player Buildと`dotnet build`は未実行。
+
 2026-11-07、全身セットと武器の動きの型を追加した後、一時複製のProjectでのBatchmode実行: EditMode 300 / 300成功、PlayMode 24 / 29成功。失敗した5件は従来と同じStudyAのSetUp失敗で、証跡Folderの指定がないため実行されていない。Player Buildと`dotnet build`は未実行。
 
 2026-11-06、森マップへ攻撃、雑魚敵、宝箱、ショップを追加した後、一時複製のProjectでのBatchmode実行: EditMode 294 / 294成功、PlayMode 23 / 28成功。失敗した5件は従来と同じStudyAのSetUp失敗で、証跡Folderの指定がないため実行されていない。Player Buildと`dotnet build`は未実行。攻撃の5件は時刻による入力の破棄で不安定だったため修正し、単独でも4回連続で全件成功した。

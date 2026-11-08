@@ -1,0 +1,13 @@
+{
+  "status": "settled for the sword type run; the tool does not read it yet",
+  "file": "hero-body-run-sword-01.png",
+  "sha256": "de1ed4610028d59a153ca29b54c75516a028a127903048fb229fd10f8b24ef62",
+  "bytes": 1859389,
+  "tool": "openai-image skill, edit",
+  "model": "gpt-image-2.5-sunburst",
+  "size": "1536x1024",
+  "quality": "medium",
+  "n": 1,
+  "reference": "hero-run-sword-01.png",
+  "prompt": "Step 1: The sword (blade and guard) and the shield with its rim were erased to the background; only the erased area was kept from the edit.\n\nImage 1 is a pixel-art run sheet of a small chibi knight for a top-down 2D game: 3 rows of 6 figures on a flat solid pure magenta background, RGB 255,0,255. The top row runs toward the viewer, the middle row runs to the right, the bottom row runs away from the viewer.\n\nIn every figure his sword and his shield have been erased and left as holes of magenta background. Fill the holes so the knight runs empty-handed, with the same pixel-art style, colours and dark outline as the rest of the figure:\n- Where the sword was, draw what is behind it: his legs, his body, or the magenta background. Draw no sword, no handle, no guard and no blade.\n- His sword hand stays a closed empty fist exactly where it is now, at the end of his hanging arm.\n- Where the shield was, draw his other forearm bent in front of his body with a closed empty brown gloved fist, exactly where he held the shield, and what was behind the shield: his chest armour, belt and skirt.\n- Keep every figure's legs, body, head and arms outside the holes exactly as they are, and keep the layout and the magenta background.\n\nNo soft gradients, blur or painterly rendering. Do not include text, labels, numbers, grid lines, ground, shadows or effects."
+}

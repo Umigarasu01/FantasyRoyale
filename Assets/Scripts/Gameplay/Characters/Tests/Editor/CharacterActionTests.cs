@@ -24,6 +24,14 @@ namespace FantasyRoyale.Gameplay.Characters.Tests.Editor
             Assert.That(state.PhaseProgress, Is.EqualTo(0.5f).Within(0.001f));
         }
 
+        private static CharacterActionSpec CreateCombo()
+        {
+            var timing = new CharacterActionTiming(0.1f, 0.1f, 0.1f);
+            var third = CharacterActionSpec.CreateMelee("third", 1, timing, 1f, 90f);
+            var second = CharacterActionSpec.CreateMelee("second", 1, timing, 1f, 90f, CharacterActionMotion.Swing, third);
+            return CharacterActionSpec.CreateMelee("first", 1, timing, 1f, 90f, CharacterActionMotion.Swing, second);
+        }
+
         private static CharacterActionSpec CreateSword()
         {
             return CharacterActionSpec.CreateMelee(
@@ -127,17 +135,17 @@ namespace FantasyRoyale.Gameplay.Characters.Tests.Editor
         }
 
         /// <summary>
-        /// 発生、持続、硬直の順に進み、段階ごとの移動制限を返すことを確認する。
+        /// 発生、持続、硬直の順に進み、攻撃中も動けることを確認する。
         /// </summary>
         [Test]
-        public void Advance_MovesThroughPhasesWithMovementLimits()
+        public void Advance_MovesThroughPhasesWhileKeepingMovement()
         {
             var state = new CharacterActionState();
             Assert.That(state.MovementScale, Is.EqualTo(1f));
             Assert.That(state.TryStart(CreateSword(), CharacterDirection8.North), Is.True);
             Assert.That(state.Phase, Is.EqualTo(CharacterActionPhase.Windup));
             Assert.That(state.Direction, Is.EqualTo(CharacterDirection8.North));
-            Assert.That(state.MovementScale, Is.EqualTo(0f));
+            Assert.That(state.MovementScale, Is.EqualTo(CharacterActionState.ActingMovementScale));
 
             var result = state.Advance(0.05f);
             Assert.That(state.Phase, Is.EqualTo(CharacterActionPhase.Windup));
@@ -146,17 +154,133 @@ namespace FantasyRoyale.Gameplay.Characters.Tests.Editor
             result = state.Advance(0.06f);
             Assert.That(state.Phase, Is.EqualTo(CharacterActionPhase.Active));
             Assert.That(result.EnteredActive, Is.True);
-            Assert.That(state.MovementScale, Is.EqualTo(0f));
+            Assert.That(state.MovementScale, Is.EqualTo(CharacterActionState.ActingMovementScale));
 
             state.Advance(0.1f);
             Assert.That(state.Phase, Is.EqualTo(CharacterActionPhase.Recovery));
-            Assert.That(state.MovementScale, Is.EqualTo(CharacterActionState.RecoveryMovementScale));
+            Assert.That(state.MovementScale, Is.EqualTo(CharacterActionState.ActingMovementScale));
 
             result = state.Advance(0.3f);
             Assert.That(result.Finished, Is.True);
             Assert.That(state.Phase, Is.EqualTo(CharacterActionPhase.Idle));
             Assert.That(state.CurrentSpec, Is.Null);
             Assert.That(state.MovementScale, Is.EqualTo(1f));
+        }
+
+        /// <summary>
+        /// 振っている間に押すと次の段へ予約され、硬直が終わると向きも替わって続く。
+        /// </summary>
+        [Test]
+        public void TryStart_QueuesTheNextStepWhileSwinging()
+        {
+            var combo = CreateCombo();
+            var state = new CharacterActionState();
+            state.TryStart(combo, CharacterDirection8.East);
+
+            Assert.That(state.TryStart(combo, CharacterDirection8.North), Is.True);
+            Assert.That(state.TryStart(combo, CharacterDirection8.West), Is.False, "予約は一度だけです。");
+            Assert.That(state.CurrentSpec.Id, Is.EqualTo("first"), "今の段は最後まで振ります。");
+
+            var result = state.Advance(0.31f);
+            Assert.That(result.Finished, Is.False);
+            Assert.That(state.CurrentSpec.Id, Is.EqualTo("second"));
+            Assert.That(state.Direction, Is.EqualTo(CharacterDirection8.North));
+            Assert.That(state.Phase, Is.EqualTo(CharacterActionPhase.Windup));
+        }
+
+        /// <summary>
+        /// 最後の段の後は予約できず、次に押すと最初の段へ戻る。
+        /// </summary>
+        [Test]
+        public void TryStart_RestartsAfterTheLastStep()
+        {
+            var combo = CreateCombo();
+            var state = new CharacterActionState();
+            state.TryStart(combo, CharacterDirection8.East);
+            state.TryStart(combo, CharacterDirection8.East);
+            state.Advance(0.31f);
+            state.TryStart(combo, CharacterDirection8.East);
+            state.Advance(0.31f);
+
+            Assert.That(state.CurrentSpec.Id, Is.EqualTo("third"));
+            Assert.That(state.TryStart(combo, CharacterDirection8.East), Is.False, "最後の段に続きはありません。");
+            Assert.That(state.Advance(0.31f).Finished, Is.True);
+            Assert.That(state.TryStart(combo, CharacterDirection8.East), Is.True);
+            Assert.That(state.CurrentSpec.Id, Is.EqualTo("first"));
+        }
+
+        /// <summary>
+        /// 段が終わった後も短い間は続けられ、過ぎると最初の段へ戻る。
+        /// </summary>
+        [Test]
+        public void TryStart_ContinuesOnlyWithinTheComboWindow()
+        {
+            var combo = CreateCombo();
+            var state = new CharacterActionState();
+            state.TryStart(combo, CharacterDirection8.East);
+            state.Advance(0.31f);
+            Assert.That(state.IsBusy, Is.False);
+
+            state.Advance(CharacterActionState.ComboWindowSeconds * 0.5f);
+            state.TryStart(combo, CharacterDirection8.East);
+            Assert.That(state.CurrentSpec.Id, Is.EqualTo("second"), "間に合えば次の段です。");
+
+            state.Advance(0.31f);
+            state.Advance(CharacterActionState.ComboWindowSeconds + 0.01f);
+            state.TryStart(combo, CharacterDirection8.East);
+            Assert.That(state.CurrentSpec.Id, Is.EqualTo("first"), "間に合わなければ最初の段です。");
+        }
+
+        /// <summary>
+        /// 連撃の途中でも、別のActionは割り込めない。続かないActionの実行中も同じである。
+        /// </summary>
+        [Test]
+        public void TryStart_RejectsOtherActionsWhileBusy()
+        {
+            var combo = CreateCombo();
+            var state = new CharacterActionState();
+            state.TryStart(combo, CharacterDirection8.East);
+            Assert.That(state.TryStart(CreateBow(), CharacterDirection8.East), Is.False);
+
+            var sword = CreateSword();
+            var single = new CharacterActionState();
+            single.TryStart(sword, CharacterDirection8.East);
+            Assert.That(single.TryStart(sword, CharacterDirection8.East), Is.False);
+        }
+
+        /// <summary>
+        /// 別のActionを始めると、続けられる状態は消える。
+        /// </summary>
+        [Test]
+        public void TryStart_ForgetsTheComboWhenAnotherActionStarts()
+        {
+            var combo = CreateCombo();
+            var state = new CharacterActionState();
+            state.TryStart(combo, CharacterDirection8.East);
+            state.Advance(0.31f);
+            state.TryStart(CreateBow(), CharacterDirection8.East);
+            state.Advance(1f);
+
+            state.TryStart(combo, CharacterDirection8.East);
+            Assert.That(state.CurrentSpec.Id, Is.EqualTo("first"));
+        }
+
+        /// <summary>
+        /// 撃破などで打ち切ると、連撃も最初へ戻る。
+        /// </summary>
+        [Test]
+        public void Cancel_ForgetsTheCombo()
+        {
+            var combo = CreateCombo();
+            var state = new CharacterActionState();
+            state.TryStart(combo, CharacterDirection8.East);
+            state.TryStart(combo, CharacterDirection8.East);
+            state.Cancel();
+
+            state.TryStart(combo, CharacterDirection8.East);
+            Assert.That(state.CurrentSpec.Id, Is.EqualTo("first"));
+            state.Advance(0.31f);
+            Assert.That(state.IsBusy, Is.False, "予約も消えています。");
         }
 
         /// <summary>

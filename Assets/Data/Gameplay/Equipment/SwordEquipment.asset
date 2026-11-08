@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9cf07e13357750b40b4c7fe8cdc95994, type: 3}
   m_Name: SwordEquipment
   m_EditorClassIdentifier: FantasyRoyale.Gameplay.Characters.Unity::FantasyRoyale.Gameplay.Characters.Unity.CharacterEquipmentDefinition
+  id: sword
   displayName: "\u5263"
   primaryAction: {fileID: 11400000, guid: bf17e0658f3c525499ae3238896d1244, type: 2}
   specialAction: {fileID: 11400000, guid: 578f6f035530aee42941274aea53a3cd, type: 2}

@@ -1,0 +1,13 @@
+{
+  "status": "adopted for the armour parts",
+  "file": "hero-torso-idle-diagonal-01.png",
+  "sha256": "ea0b00073749386078c426c2a0f43855de95e7a045ab5bc20eaba4ba469463d5",
+  "bytes": 1294434,
+  "tool": "openai-image skill, edit",
+  "model": "gpt-image-2.5-sunburst",
+  "size": "1536x1024",
+  "quality": "medium",
+  "n": 1,
+  "reference": "hero-body-idle-diagonal-01.png",
+  "prompt": "Image 1 is a pixel-art sprite sheet of a small chibi character for a top-down 2D game, in 1 row and 2 columns. Redraw this sheet exactly, with the same layout, the same 2 figures in the same positions, the same size, the same pixel-art style and the same flat solid pure magenta background, RGB 255,0,255. Do not move, resize or redraw the body. Every shoulder, arm, glove, belt and waist guard stays on exactly the same pixels as in Image 1.\n\nChange only two things.\nFirst, remove the head: the helmet or hood, the hair, the face and the neck. Keep the collar or scarf at the base of the neck, and paint the inside of the collar opening a very dark colour. Where the head was, finish the top of the collar and the shoulders with a clean dark outline.\nSecond, remove the legs below the bottom edge of the waist guard: the thighs, the knees and the boots. Keep the whole belt and the whole waist guard or skirt, complete down to its bottom hem, and finish the hem with a clean dark outline.\n\nKeep only the collar, the shoulders, the chest, both arms with their gloves, the belt and the waist guard.\n\nDo not include: a head, a neck, thighs, knees, boots, weapons, shields, text, labels, numbers, grid lines, ground, shadows, dust, effects, borders, watermark, or any other object. No soft gradients, blur or painterly rendering."
+}

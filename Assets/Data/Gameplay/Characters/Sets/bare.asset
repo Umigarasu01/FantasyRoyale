@@ -1,0 +1,112 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c1ea30060f510345bfdaff166e8701b, type: 3}
+  m_Name: bare
+  m_EditorClassIdentifier: FantasyRoyale.Gameplay.Characters.Unity::FantasyRoyale.Gameplay.Characters.Unity.CharacterSpriteSetDefinition
+  id: bare
+  displayName: "\u7D20\u9854"
+  framesPerSecond: 17
+  down:
+    idle: {fileID: 0}
+    run: []
+    idleAnchors:
+      mainHand: {x: -0.2703125, y: 0.471875}
+      offHand: {x: 0.2890625, y: 0.378125}
+      back: {x: 0, y: 0.653125}
+      mainHandAngle: 243.2
+      mainHandOver: {fileID: 21300000, guid: 401a21242ceb72e46879a19718e19a30, type: 3}
+      offHandOver: {fileID: 21300000, guid: 6262f9304f720ef4d86f7d7279219412, type: 3}
+      head: {x: -0, y: 1.009375}
+      mainHandFront: 0.0515625
+      mainHandBack: -0.0453125
+    runAnchors: []
+    idleLegs: {fileID: 0}
+    runLegs: []
+    motions: []
+    head: {fileID: 21300000, guid: da9f3852268039848945a7ffe898670c, type: 3}
+    weaponRuns: []
+  downSide:
+    idle: {fileID: 0}
+    run: []
+    idleAnchors:
+      mainHand: {x: -0.2359375, y: 0.459375}
+      offHand: {x: 0.253125, y: 0.3828125}
+      back: {x: -0.0625, y: 0.653125}
+      mainHandAngle: 243.7
+      mainHandOver: {fileID: 21300000, guid: 693a38a2e06a0c9439e9bcc8c1884b95, type: 3}
+      offHandOver: {fileID: 21300000, guid: 5e25cf75a222da241a284061494fe39a, type: 3}
+      head: {x: 0.0125, y: 1.01875}
+      mainHandFront: 0.0484375
+      mainHandBack: -0.0515625
+    runAnchors: []
+    idleLegs: {fileID: 0}
+    runLegs: []
+    motions: []
+    head: {fileID: 21300000, guid: edf5baac950e30e4c80975f16950d093, type: 3}
+    weaponRuns: []
+  side:
+    idle: {fileID: 0}
+    run: []
+    idleAnchors:
+      mainHand: {x: -0.165625, y: 0.378125}
+      offHand: {x: 0.18125, y: 0.3859375}
+      back: {x: -0.125, y: 0.634375}
+      mainHandAngle: 310.5
+      mainHandOver: {fileID: 21300000, guid: 61bb5204a519919449e3a1adf1fd6047, type: 3}
+      offHandOver: {fileID: 21300000, guid: b546c8230a59e1b428f6dc1c2eb7b59c, type: 3}
+      head: {x: 0.0125, y: 1.0109375}
+      mainHandFront: 0.0484375
+      mainHandBack: -0.0421875
+    runAnchors: []
+    idleLegs: {fileID: 0}
+    runLegs: []
+    motions: []
+    head: {fileID: 21300000, guid: 0ef7a24b0f5f1d7458585680e960a2a9, type: 3}
+    weaponRuns: []
+  upSide:
+    idle: {fileID: 0}
+    run: []
+    idleAnchors:
+      mainHand: {x: 0.2234375, y: 0.4421875}
+      offHand: {x: -0.2484375, y: 0.49375}
+      back: {x: -0.046875, y: 0.653125}
+      mainHandAngle: 299.2
+      mainHandOver: {fileID: 21300000, guid: 497ab09d8c0fddd458e6449553975c34, type: 3}
+      offHandOver: {fileID: 21300000, guid: 0d01b267b71b64749ba8150101061f90, type: 3}
+      head: {x: 0.0046875, y: 1.021875}
+      mainHandFront: 0.053125
+      mainHandBack: -0.05
+    runAnchors: []
+    idleLegs: {fileID: 0}
+    runLegs: []
+    motions: []
+    head: {fileID: 21300000, guid: e80d3a672951a324886aa6639e70939b, type: 3}
+    weaponRuns: []
+  up:
+    idle: {fileID: 0}
+    run: []
+    idleAnchors:
+      mainHand: {x: 0.2796875, y: 0.465625}
+      offHand: {x: -0.2953125, y: 0.384375}
+      back: {x: 0, y: 0.653125}
+      mainHandAngle: 298.1
+      mainHandOver: {fileID: 21300000, guid: 5587ee97ae8f4ee4085973a98b8a8750, type: 3}
+      offHandOver: {fileID: 21300000, guid: 04649867fbd12ea4083c68efc0e51729, type: 3}
+      head: {x: 0.0109375, y: 1.009375}
+      mainHandFront: 0.103125
+      mainHandBack: 0.00625
+    runAnchors: []
+    idleLegs: {fileID: 0}
+    runLegs: []
+    motions: []
+    head: {fileID: 21300000, guid: f84d20ad40c28464b82c994f6cf2fdd7, type: 3}
+    weaponRuns: []

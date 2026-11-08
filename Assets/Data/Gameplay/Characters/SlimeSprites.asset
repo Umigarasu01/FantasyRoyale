@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c1ea30060f510345bfdaff166e8701b, type: 3}
   m_Name: SlimeSprites
   m_EditorClassIdentifier: FantasyRoyale.Gameplay.Characters.Unity::FantasyRoyale.Gameplay.Characters.Unity.CharacterSpriteSetDefinition
+  id: 
   displayName: 
   framesPerSecond: 7
   down:
@@ -28,8 +29,15 @@ MonoBehaviour:
       mainHandAngle: 0
       mainHandOver: {fileID: 0}
       offHandOver: {fileID: 0}
+      head: {x: 0, y: 0}
+      mainHandFront: 0
+      mainHandBack: 0
     runAnchors: []
+    idleLegs: {fileID: 0}
+    runLegs: []
     motions: []
+    head: {fileID: 0}
+    weaponRuns: []
   downSide:
     idle: {fileID: 21300000, guid: 235af150339df704cb5aa6e9bf7a3303, type: 3}
     run:
@@ -44,8 +52,15 @@ MonoBehaviour:
       mainHandAngle: 0
       mainHandOver: {fileID: 0}
       offHandOver: {fileID: 0}
+      head: {x: 0, y: 0}
+      mainHandFront: 0
+      mainHandBack: 0
     runAnchors: []
+    idleLegs: {fileID: 0}
+    runLegs: []
     motions: []
+    head: {fileID: 0}
+    weaponRuns: []
   side:
     idle: {fileID: 21300000, guid: 235af150339df704cb5aa6e9bf7a3303, type: 3}
     run:
@@ -60,8 +75,15 @@ MonoBehaviour:
       mainHandAngle: 0
       mainHandOver: {fileID: 0}
       offHandOver: {fileID: 0}
+      head: {x: 0, y: 0}
+      mainHandFront: 0
+      mainHandBack: 0
     runAnchors: []
+    idleLegs: {fileID: 0}
+    runLegs: []
     motions: []
+    head: {fileID: 0}
+    weaponRuns: []
   upSide:
     idle: {fileID: 21300000, guid: 235af150339df704cb5aa6e9bf7a3303, type: 3}
     run:
@@ -76,8 +98,15 @@ MonoBehaviour:
       mainHandAngle: 0
       mainHandOver: {fileID: 0}
       offHandOver: {fileID: 0}
+      head: {x: 0, y: 0}
+      mainHandFront: 0
+      mainHandBack: 0
     runAnchors: []
+    idleLegs: {fileID: 0}
+    runLegs: []
     motions: []
+    head: {fileID: 0}
+    weaponRuns: []
   up:
     idle: {fileID: 21300000, guid: 235af150339df704cb5aa6e9bf7a3303, type: 3}
     run:
@@ -92,5 +121,12 @@ MonoBehaviour:
       mainHandAngle: 0
       mainHandOver: {fileID: 0}
       offHandOver: {fileID: 0}
+      head: {x: 0, y: 0}
+      mainHandFront: 0
+      mainHandBack: 0
     runAnchors: []
+    idleLegs: {fileID: 0}
+    runLegs: []
     motions: []
+    head: {fileID: 0}
+    weaponRuns: []

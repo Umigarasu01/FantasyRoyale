@@ -20,5 +20,6 @@ MonoBehaviour:
   activeSeconds: 0.1
   recoverySeconds: 0.2
   range: 1.4
-  arcDegrees: 120
+  arcDegrees: 180
   projectileSpeed: 12
+  nextInCombo: {fileID: 11400000, guid: b12cc29630acc7e4780732a0323d035e, type: 2}

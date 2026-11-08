@@ -1,0 +1,977 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c1ea30060f510345bfdaff166e8701b, type: 3}
+  m_Name: leather
+  m_EditorClassIdentifier: FantasyRoyale.Gameplay.Characters.Unity::FantasyRoyale.Gameplay.Characters.Unity.CharacterSpriteSetDefinition
+  id: leather
+  displayName: "\u9769"
+  framesPerSecond: 17
+  down:
+    idle: {fileID: 21300000, guid: c7846e2471b41274a854bc15df51ecef, type: 3}
+    run:
+    - {fileID: 21300000, guid: 1a7dffbd45c43684c8413459a570c0e4, type: 3}
+    - {fileID: 21300000, guid: 79c844c2fdac4d840b1dc61e77227760, type: 3}
+    - {fileID: 21300000, guid: 7344a170fc617c74ca376f1cc340e4e9, type: 3}
+    - {fileID: 21300000, guid: c79b5bd4a7ef4a248a54eb721e776001, type: 3}
+    - {fileID: 21300000, guid: 9fc2a3e947c67e94694583cfe2a42cea, type: 3}
+    - {fileID: 21300000, guid: 41f7a5c842aff264c88779c9398c73a8, type: 3}
+    idleAnchors:
+      mainHand: {x: -0.2703125, y: 0.471875}
+      offHand: {x: 0.2890625, y: 0.378125}
+      back: {x: 0, y: 0.653125}
+      mainHandAngle: 243.2
+      mainHandOver: {fileID: 21300000, guid: 401a21242ceb72e46879a19718e19a30, type: 3}
+      offHandOver: {fileID: 21300000, guid: 6262f9304f720ef4d86f7d7279219412, type: 3}
+      head: {x: -0, y: 1.009375}
+      mainHandFront: 0.0515625
+      mainHandBack: -0.0453125
+    runAnchors:
+    - mainHand: {x: -0.284375, y: 0.575}
+      offHand: {x: 0.2765625, y: 0.534375}
+      back: {x: 0, y: 0.64375}
+      mainHandAngle: 241.4
+      mainHandOver: {fileID: 21300000, guid: af1856da515b5e24cadc3c09144b8c21, type: 3}
+      offHandOver: {fileID: 21300000, guid: 95585947c7d5c2d4e8c5e923e274bcfb, type: 3}
+      head: {x: 0.00625, y: 0.99375}
+      mainHandFront: 0.0453125
+      mainHandBack: -0.0359375
+    - mainHand: {x: -0.296875, y: 0.56875}
+      offHand: {x: 0.271875, y: 0.4859375}
+      back: {x: 0, y: 0.615625}
+      mainHandAngle: 241.4
+      mainHandOver: {fileID: 21300000, guid: 32989a09f55aa5a4498d6543eb4c3c97, type: 3}
+      offHandOver: {fileID: 21300000, guid: 8a4de0ac77cb50942be0afd6338208ed, type: 3}
+      head: {x: -0.003125, y: 0.9515625}
+      mainHandFront: 0.0484375
+      mainHandBack: -0.0453125
+    - mainHand: {x: -0.3171875, y: 0.6640625}
+      offHand: {x: 0.2515625, y: 0.60625}
+      back: {x: 0, y: 0.6625}
+      mainHandAngle: 241.4
+      mainHandOver: {fileID: 21300000, guid: 472b51d7a3615794a9435996a71532c2, type: 3}
+      offHandOver: {fileID: 21300000, guid: b2e7bdde75ca04c4996075a0964809c5, type: 3}
+      head: {x: -0.0015625, y: 0.99375}
+      mainHandFront: 0.05
+      mainHandBack: -0.0359375
+    - mainHand: {x: -0.290625, y: 0.5640625}
+      offHand: {x: 0.275, y: 0.490625}
+      back: {x: 0, y: 0.615625}
+      mainHandAngle: 241.4
+      mainHandOver: {fileID: 21300000, guid: 079628d73ff91974cb452e662ab194ec, type: 3}
+      offHandOver: {fileID: 21300000, guid: f52d0d125badb2d45ad45fcb80a88d86, type: 3}
+      head: {x: -0.0015625, y: 0.9515625}
+      mainHandFront: 0.0484375
+      mainHandBack: -0.0515625
+    - mainHand: {x: -0.3, y: 0.571875}
+      offHand: {x: 0.2703125, y: 0.4890625}
+      back: {x: 0, y: 0.615625}
+      mainHandAngle: 241.4
+      mainHandOver: {fileID: 21300000, guid: 9050e5ff421b0a8498ed4b1301bb687f, type: 3}
+      offHandOver: {fileID: 21300000, guid: b0e9650a2d25e4a49a1a62e364bd0b9a, type: 3}
+      head: {x: -0.0015625, y: 0.9515625}
+      mainHandFront: 0.05
+      mainHandBack: -0.0265625
+    - mainHand: {x: -0.3171875, y: 0.6640625}
+      offHand: {x: 0.2546875, y: 0.6015625}
+      back: {x: 0, y: 0.6625}
+      mainHandAngle: 241.4
+      mainHandOver: {fileID: 21300000, guid: 4cfef101eaff7004daf85ef2e5d462e3, type: 3}
+      offHandOver: {fileID: 21300000, guid: 5f86972ff7eba4a47aa5aec59091d298, type: 3}
+      head: {x: -0.0015625, y: 0.99375}
+      mainHandFront: 0.05
+      mainHandBack: -0.0359375
+    idleLegs: {fileID: 0}
+    runLegs: []
+    motions:
+    - motion: 1
+      frames:
+      - {fileID: 21300000, guid: d1126c8c5cd150d439233fef66fe5b46, type: 3}
+      - {fileID: 21300000, guid: ac194465bc61522458c809f44e73a6a0, type: 3}
+      - {fileID: 21300000, guid: ae6b707c21a51c94d9dace641f5b024c, type: 3}
+      - {fileID: 21300000, guid: 8f1fb81886ad9a6479ca876c3f38c0bc, type: 3}
+      anchors:
+      - mainHand: {x: 0.075, y: -0.421875}
+        offHand: {x: 0.20625, y: -0.5171875}
+        back: {x: 0, y: -0.35625}
+        mainHandAngle: 359.2
+        mainHandOver: {fileID: 21300000, guid: 35f56b6b930d40042b253c3c9a5b05df, type: 3}
+        offHandOver: {fileID: 21300000, guid: 829b5c6833c3cf84cbc0721faff8788a, type: 3}
+        head: {x: 0, y: 0}
+        mainHandFront: 0.0421875
+        mainHandBack: -0.0359375
+      - mainHand: {x: -0.1625, y: -0.4515625}
+        offHand: {x: 0.20625, y: -0.5171875}
+        back: {x: 0, y: -0.35625}
+        mainHandAngle: 318.3
+        mainHandOver: {fileID: 21300000, guid: 1893277e9c5779541b66378f4b87e6f9, type: 3}
+        offHandOver: {fileID: 21300000, guid: 391481e0ab139eb4c9349b3ae95e73e0, type: 3}
+        head: {x: 0, y: 0}
+        mainHandFront: 0.034375
+        mainHandBack: -0.04375
+      - mainHand: {x: -0.2796875, y: -0.4265625}
+        offHand: {x: 0.20625, y: -0.5171875}
+        back: {x: 0, y: -0.35625}
+        mainHandAngle: 224.8
+        mainHandOver: {fileID: 21300000, guid: 44477daff40304d4dbe608a79be498da, type: 3}
+        offHandOver: {fileID: 21300000, guid: 207a526c24327b142aa261d4b40c87b0, type: 3}
+        head: {x: 0, y: 0}
+        mainHandFront: 0.0375
+        mainHandBack: -0.0421875
+      - mainHand: {x: -0.3703125, y: -0.2625}
+        offHand: {x: 0.20625, y: -0.5171875}
+        back: {x: 0, y: -0.35625}
+        mainHandAngle: 179.7
+        mainHandOver: {fileID: 21300000, guid: 2e5cfea08b5b2a74b9cc597799d48cde, type: 3}
+        offHandOver: {fileID: 21300000, guid: 5d2dfe46210fdd9459c88c3b4e544899, type: 3}
+        head: {x: 0, y: 0}
+        mainHandFront: 0.028125
+        mainHandBack: -0.034375
+      smears:
+      - {fileID: 0}
+      - {fileID: 21300000, guid: 2fde6b22d728ccc41928ee503ab3f315, type: 3}
+      - {fileID: 21300000, guid: 902562c66633ca840ae87c28373ea9dc, type: 3}
+      - {fileID: 21300000, guid: 3eb883c75b505174599af1895a5ddcde, type: 3}
+      standLegs: []
+      standHeads: []
+    head: {fileID: 21300000, guid: 7efd04378b0b7834bb6b5b755d64bb9e, type: 3}
+    weaponRuns:
+    - weaponKind: 1
+      frames:
+      - {fileID: 21300000, guid: 94ad2ae934e4bde4e954022f8cd7ad04, type: 3}
+      - {fileID: 21300000, guid: 9f436cbda1fe73840947000306ad2c05, type: 3}
+      - {fileID: 21300000, guid: 1d583b3051ed43c419cd0ac83729b1fd, type: 3}
+      - {fileID: 21300000, guid: 77f32b8ca7066b7458a8a09571224efc, type: 3}
+      - {fileID: 21300000, guid: efd0389296ca2ca4594fe57abfd9a774, type: 3}
+      - {fileID: 21300000, guid: a84fbb9fdbaa5ff49b10c111bdab2a71, type: 3}
+      anchors:
+      - mainHand: {x: -0.2921875, y: 0.4984375}
+        offHand: {x: 0.196875, y: 0.5359375}
+        back: {x: 0, y: 0.628125}
+        mainHandAngle: 240
+        mainHandOver: {fileID: 21300000, guid: c3a535c9a40c09b499065d8ee04395d1, type: 3}
+        offHandOver: {fileID: 21300000, guid: 4490059a78c6c0a4e9ed021cfe88785f, type: 3}
+        head: {x: 0.00625, y: 0.99375}
+        mainHandFront: 0.053125
+        mainHandBack: -0.05
+      - mainHand: {x: -0.30625, y: 0.49375}
+        offHand: {x: 0.196875, y: 0.53125}
+        back: {x: 0, y: 0.6234375}
+        mainHandAngle: 240
+        mainHandOver: {fileID: 21300000, guid: a49e3db827db53f4da96bec70b990463, type: 3}
+        offHandOver: {fileID: 21300000, guid: cc0a0c61ea3d58349a92669210d58a0d, type: 3}
+        head: {x: -0.003125, y: 0.9515625}
+        mainHandFront: 0.0484375
+        mainHandBack: -0.053125
+      - mainHand: {x: -0.3140625, y: 0.5828125}
+        offHand: {x: 0.1953125, y: 0.6046875}
+        back: {x: 0, y: 0.6625}
+        mainHandAngle: 240
+        mainHandOver: {fileID: 21300000, guid: e8cbb0cd35ef5c540ae9666c2f7d851a, type: 3}
+        offHandOver: {fileID: 21300000, guid: 42130db7101c73945bb24679c13b85b6, type: 3}
+        head: {x: -0.0015625, y: 0.99375}
+        mainHandFront: 0.0484375
+        mainHandBack: -0.053125
+      - mainHand: {x: -0.296875, y: 0.4890625}
+        offHand: {x: 0.196875, y: 0.515625}
+        back: {x: 0, y: 0.609375}
+        mainHandAngle: 240
+        mainHandOver: {fileID: 21300000, guid: 623cc2a7e43179147ba12dfb261b8087, type: 3}
+        offHandOver: {fileID: 21300000, guid: 82c1e5fa3ae32544bbbf73a9f410a281, type: 3}
+        head: {x: -0.0015625, y: 0.9515625}
+        mainHandFront: 0.05
+        mainHandBack: -0.046875
+      - mainHand: {x: -0.30625, y: 0.496875}
+        offHand: {x: 0.196875, y: 0.53125}
+        back: {x: 0, y: 0.6234375}
+        mainHandAngle: 240
+        mainHandOver: {fileID: 21300000, guid: 8772f612b807a034d800360e6df788d6, type: 3}
+        offHandOver: {fileID: 21300000, guid: c9bf76f7c094ad3469cd57a41c370955, type: 3}
+        head: {x: -0.0015625, y: 0.9515625}
+        mainHandFront: 0.0515625
+        mainHandBack: -0.0515625
+      - mainHand: {x: -0.3125, y: 0.5828125}
+        offHand: {x: 0.19375, y: 0.6046875}
+        back: {x: 0, y: 0.6625}
+        mainHandAngle: 240
+        mainHandOver: {fileID: 21300000, guid: bf5569457eff44f4db45724157224567, type: 3}
+        offHandOver: {fileID: 21300000, guid: 2dd74b448c562ac4f9fba7a548ca7dc1, type: 3}
+        head: {x: -0.0015625, y: 0.99375}
+        mainHandFront: 0.05
+        mainHandBack: -0.053125
+  downSide:
+    idle: {fileID: 21300000, guid: 5fd6a5704a3aedd4ca508205f56ea3dd, type: 3}
+    run:
+    - {fileID: 21300000, guid: 5d4f4b7682a7cda4bbe262e606090d57, type: 3}
+    - {fileID: 21300000, guid: 29c1502ec9c5b1b46947c51a9fe55fa6, type: 3}
+    - {fileID: 21300000, guid: 8713c2abc20ff674889aad01eaeabc02, type: 3}
+    - {fileID: 21300000, guid: 35ae7010d3154d746833efaf4d4d4ce0, type: 3}
+    - {fileID: 21300000, guid: cd3e6ea28c376534b8c1be56ebc1eb04, type: 3}
+    - {fileID: 21300000, guid: b313913b3ce598c4280f0f40a2c4f989, type: 3}
+    idleAnchors:
+      mainHand: {x: -0.2359375, y: 0.459375}
+      offHand: {x: 0.253125, y: 0.3828125}
+      back: {x: -0.0625, y: 0.653125}
+      mainHandAngle: 243.7
+      mainHandOver: {fileID: 21300000, guid: 693a38a2e06a0c9439e9bcc8c1884b95, type: 3}
+      offHandOver: {fileID: 21300000, guid: 5e25cf75a222da241a284061494fe39a, type: 3}
+      head: {x: 0.0125, y: 1.01875}
+      mainHandFront: 0.0484375
+      mainHandBack: -0.0515625
+    runAnchors:
+    - mainHand: {x: -0.3265625, y: 0.5671875}
+      offHand: {x: 0.221875, y: 0.475}
+      back: {x: -0.0625, y: 0.634375}
+      mainHandAngle: 241.3
+      mainHandOver: {fileID: 21300000, guid: 0408d1db0660df84fbf133226dd0ae0d, type: 3}
+      offHandOver: {fileID: 21300000, guid: 6f51d3a26b6126440addbbbfc1c3ca35, type: 3}
+      head: {x: 0.0078125, y: 0.9796875}
+      mainHandFront: 0.0421875
+      mainHandBack: -0.0515625
+    - mainHand: {x: -0.2515625, y: 0.4921875}
+      offHand: {x: 0.2140625, y: 0.4125}
+      back: {x: -0.0625, y: 0.5984375}
+      mainHandAngle: 241.3
+      mainHandOver: {fileID: 21300000, guid: 3ed540cc2aa07664397d2da0e6e9215b, type: 3}
+      offHandOver: {fileID: 21300000, guid: 426f231ef7442a349884735918ef4d25, type: 3}
+      head: {x: 0.0078125, y: 0.9171875}
+      mainHandFront: 0.0375
+      mainHandBack: -0.03125
+    - mainHand: {x: -0.2984375, y: 0.5375}
+      offHand: {x: 0.2453125, y: 0.490625}
+      back: {x: -0.0625, y: 0.6171875}
+      mainHandAngle: 241.3
+      mainHandOver: {fileID: 21300000, guid: 74d12296424a5a94c9398a3d216c62dc, type: 3}
+      offHandOver: {fileID: 21300000, guid: f3220119cc22fac4387be023af3d78b3, type: 3}
+      head: {x: 0.003125, y: 0.9125}
+      mainHandFront: 0.05
+      mainHandBack: -0.046875
+    - mainHand: {x: -0.2609375, y: 0.5046875}
+      offHand: {x: 0.2078125, y: 0.440625}
+      back: {x: -0.0625, y: 0.615625}
+      mainHandAngle: 241.3
+      mainHandOver: {fileID: 21300000, guid: 6154b5bd3116ffb46814526bc0891a59, type: 3}
+      offHandOver: {fileID: 21300000, guid: 0e62b01e73df95c45b5a86b8ec7e9369, type: 3}
+      head: {x: 0.0046875, y: 0.94375}
+      mainHandFront: 0.05
+      mainHandBack: -0.04375
+    - mainHand: {x: -0.2453125, y: 0.4921875}
+      offHand: {x: 0.2375, y: 0.4078125}
+      back: {x: -0.0625, y: 0.5984375}
+      mainHandAngle: 241.3
+      mainHandOver: {fileID: 21300000, guid: bffb70e2be5793c4d96d720c47be0cd9, type: 3}
+      offHandOver: {fileID: 21300000, guid: 94fc8efeffa90964bbe1fac240dab1c6, type: 3}
+      head: {x: 0.015625, y: 0.9125}
+      mainHandFront: 0.046875
+      mainHandBack: -0.0359375
+    - mainHand: {x: -0.3046875, y: 0.5203125}
+      offHand: {x: 0.240625, y: 0.453125}
+      back: {x: -0.0625, y: 0.6}
+      mainHandAngle: 241.3
+      mainHandOver: {fileID: 21300000, guid: c993dc3d8a15dc7408461386b2fa66c9, type: 3}
+      offHandOver: {fileID: 21300000, guid: 1ad9ac255dbb011469553978bfe910fc, type: 3}
+      head: {x: 0.003125, y: 0.8859375}
+      mainHandFront: 0.040625
+      mainHandBack: -0.0484375
+    idleLegs: {fileID: 0}
+    runLegs: []
+    motions:
+    - motion: 1
+      frames:
+      - {fileID: 21300000, guid: c8aa16b4bf1b73c4089b58fb8e016411, type: 3}
+      - {fileID: 21300000, guid: a5bd15a27abf6d44fa3cbb2512462a65, type: 3}
+      - {fileID: 21300000, guid: 81ce3b591f5570643927e6f1434c91c6, type: 3}
+      - {fileID: 21300000, guid: 4b9bb11d866ea28439e0dd015583783c, type: 3}
+      anchors:
+      - mainHand: {x: 0.034375, y: -0.48125}
+        offHand: {x: 0.215625, y: -0.515625}
+        back: {x: -0.075, y: -0.365625}
+        mainHandAngle: 34.1
+        mainHandOver: {fileID: 21300000, guid: a0b267b8161953b49ac3244d8925f8f7, type: 3}
+        offHandOver: {fileID: 21300000, guid: 57db57351c7b3e447801f622806fde52, type: 3}
+        head: {x: 0, y: 0}
+        mainHandFront: 0.0453125
+        mainHandBack: -0.0484375
+      - mainHand: {x: -0.19375, y: -0.496875}
+        offHand: {x: 0.215625, y: -0.515625}
+        back: {x: -0.075, y: -0.365625}
+        mainHandAngle: 332.8
+        mainHandOver: {fileID: 21300000, guid: e50a370d95cee0241952f2247a153a15, type: 3}
+        offHandOver: {fileID: 21300000, guid: 834f4004861a08d4bb0f1874a9d2d087, type: 3}
+        head: {x: 0, y: 0}
+        mainHandFront: 0.0421875
+        mainHandBack: -0.05
+      - mainHand: {x: -0.2140625, y: -0.459375}
+        offHand: {x: 0.215625, y: -0.515625}
+        back: {x: -0.075, y: -0.365625}
+        mainHandAngle: 270.7
+        mainHandOver: {fileID: 21300000, guid: 24a36b6eb90da30428298b96fd598503, type: 3}
+        offHandOver: {fileID: 21300000, guid: 3adc678e5a19f884681a6b8e78fe33f8, type: 3}
+        head: {x: 0, y: 0}
+        mainHandFront: 0.0328125
+        mainHandBack: -0.0453125
+      - mainHand: {x: -0.3203125, y: -0.4734375}
+        offHand: {x: 0.215625, y: -0.515625}
+        back: {x: -0.075, y: -0.365625}
+        mainHandAngle: 224.2
+        mainHandOver: {fileID: 21300000, guid: b8a69fd3dbcfafb42880dc35c5243b5f, type: 3}
+        offHandOver: {fileID: 21300000, guid: 7a65102d5b194b045984dc0d2d6e9c81, type: 3}
+        head: {x: 0, y: 0}
+        mainHandFront: 0.053125
+        mainHandBack: -0.0484375
+      smears:
+      - {fileID: 0}
+      - {fileID: 21300000, guid: 83a0f8a69546be244bb10ce0b4f05c96, type: 3}
+      - {fileID: 21300000, guid: 79f95cf4cb75d99459220a04cb30b26d, type: 3}
+      - {fileID: 21300000, guid: 2cdc072bc4fca244782b54e1ccd22106, type: 3}
+      standLegs: []
+      standHeads: []
+    head: {fileID: 21300000, guid: cdf391dd34e0191468b683be49164eed, type: 3}
+    weaponRuns:
+    - weaponKind: 1
+      frames:
+      - {fileID: 21300000, guid: d64059bae416e5a4d85c2f38a6276ee7, type: 3}
+      - {fileID: 21300000, guid: 20b01d620731580458ac3548472217da, type: 3}
+      - {fileID: 21300000, guid: 852773e0c1fb1da4cbc1d6d315458a1b, type: 3}
+      - {fileID: 21300000, guid: 0d52d8e5b5aaa6a4fbfbb0940c20c8d1, type: 3}
+      - {fileID: 21300000, guid: 504568e3ae0030e42aaf2bb559e9a149, type: 3}
+      - {fileID: 21300000, guid: f3bb31c8d18d767498a1815b377ca86e, type: 3}
+      anchors:
+      - mainHand: {x: -0.321875, y: 0.5296875}
+        offHand: {x: 0.20625, y: 0.5828125}
+        back: {x: -0.0625, y: 0.640625}
+        mainHandAngle: 232.4
+        mainHandOver: {fileID: 21300000, guid: 91ca622929d60bd489f8be8add6c95a7, type: 3}
+        offHandOver: {fileID: 21300000, guid: 64eb1b7fc742dc2409e5ef24615290f0, type: 3}
+        head: {x: 0.0078125, y: 0.9796875}
+        mainHandFront: 0.0546875
+        mainHandBack: -0.046875
+      - mainHand: {x: -0.3046875, y: 0.4609375}
+        offHand: {x: 0.209375, y: 0.521875}
+        back: {x: -0.0625, y: 0.6046875}
+        mainHandAngle: 232.4
+        mainHandOver: {fileID: 21300000, guid: a9f3368b3093da94f843a755fe345fa6, type: 3}
+        offHandOver: {fileID: 21300000, guid: d253fe8cc1557d746964e7e9045f912c, type: 3}
+        head: {x: 0.0078125, y: 0.9171875}
+        mainHandFront: 0.0515625
+        mainHandBack: -0.05
+      - mainHand: {x: -0.3359375, y: 0.4359375}
+        offHand: {x: 0.1953125, y: 0.5265625}
+        back: {x: -0.0625, y: 0.625}
+        mainHandAngle: 232.4
+        mainHandOver: {fileID: 21300000, guid: 931e83283e7f8df48adbe272e877c3a8, type: 3}
+        offHandOver: {fileID: 21300000, guid: 88c67e4fd6d2cc845918f8d7113b5ebb, type: 3}
+        head: {x: 0.003125, y: 0.9125}
+        mainHandFront: 0.04375
+        mainHandBack: -0.046875
+      - mainHand: {x: -0.2921875, y: 0.5109375}
+        offHand: {x: 0.2046875, y: 0.540625}
+        back: {x: -0.0625, y: 0.615625}
+        mainHandAngle: 232.4
+        mainHandOver: {fileID: 21300000, guid: c87329d930666924db72c8789fec32bd, type: 3}
+        offHandOver: {fileID: 21300000, guid: 7b42117ebce3ab84e86a59868e005d45, type: 3}
+        head: {x: 0.0046875, y: 0.94375}
+        mainHandFront: 0.0515625
+        mainHandBack: -0.05
+      - mainHand: {x: -0.290625, y: 0.4578125}
+        offHand: {x: 0.2265625, y: 0.5078125}
+        back: {x: -0.0625, y: 0.5984375}
+        mainHandAngle: 232.4
+        mainHandOver: {fileID: 21300000, guid: c94c7c5f9469b6d41b2046f522463e80, type: 3}
+        offHandOver: {fileID: 21300000, guid: 0914293840e9b384b8a0f091dcf70dbe, type: 3}
+        head: {x: 0.015625, y: 0.9125}
+        mainHandFront: 0.0484375
+        mainHandBack: -0.053125
+      - mainHand: {x: -0.3109375, y: 0.44375}
+        offHand: {x: 0.209375, y: 0.4875}
+        back: {x: -0.0625, y: 0.6}
+        mainHandAngle: 232.4
+        mainHandOver: {fileID: 21300000, guid: ea795f7426af4d54b8cad0ca81fdbee4, type: 3}
+        offHandOver: {fileID: 21300000, guid: 0b3eebba05a01664db45adecf0250a37, type: 3}
+        head: {x: 0.003125, y: 0.8859375}
+        mainHandFront: 0.0453125
+        mainHandBack: -0.0453125
+  side:
+    idle: {fileID: 21300000, guid: f608b0aea4dc9514dafaae9b13a3fd1e, type: 3}
+    run:
+    - {fileID: 21300000, guid: 297ad386a9161c74999e92bb8010745d, type: 3}
+    - {fileID: 21300000, guid: b328c2d5c9e8b2d4d9f8bebe161f97cf, type: 3}
+    - {fileID: 21300000, guid: 43bbe352d8d96cd48b04bb9130c1a05d, type: 3}
+    - {fileID: 21300000, guid: 8744f94e681e6c64886b38db2ed9e31b, type: 3}
+    - {fileID: 21300000, guid: 6760e2368dbe3754a8a3228da2e7e2cc, type: 3}
+    - {fileID: 21300000, guid: 6681e418b7ffdb2488fe5b5517d4f506, type: 3}
+    idleAnchors:
+      mainHand: {x: -0.165625, y: 0.378125}
+      offHand: {x: 0.18125, y: 0.3859375}
+      back: {x: -0.125, y: 0.634375}
+      mainHandAngle: 310.5
+      mainHandOver: {fileID: 21300000, guid: 61bb5204a519919449e3a1adf1fd6047, type: 3}
+      offHandOver: {fileID: 21300000, guid: b546c8230a59e1b428f6dc1c2eb7b59c, type: 3}
+      head: {x: 0.0125, y: 1.0109375}
+      mainHandFront: 0.0484375
+      mainHandBack: -0.0421875
+    runAnchors:
+    - mainHand: {x: -0.3328125, y: 0.5203125}
+      offHand: {x: 0.146875, y: 0.5015625}
+      back: {x: -0.125, y: 0.615625}
+      mainHandAngle: 244.7
+      mainHandOver: {fileID: 21300000, guid: 2fbaa6b66f14b32469ea5ad1c3d66414, type: 3}
+      offHandOver: {fileID: 21300000, guid: 27acd2c46bb2367468d9f9432c2b7a3e, type: 3}
+      head: {x: 0.0234375, y: 0.9625}
+      mainHandFront: 0.053125
+      mainHandBack: -0.05
+    - mainHand: {x: -0.328125, y: 0.5078125}
+      offHand: {x: 0.1671875, y: 0.4703125}
+      back: {x: -0.125, y: 0.5890625}
+      mainHandAngle: 244.7
+      mainHandOver: {fileID: 21300000, guid: 5a9c9fc2f695f744d916bc6c96c820b0, type: 3}
+      offHandOver: {fileID: 21300000, guid: bf5eac2a581bac44f85b2757ff6d9c86, type: 3}
+      head: {x: 0.01875, y: 0.928125}
+      mainHandFront: 0.05
+      mainHandBack: -0.04375
+    - mainHand: {x: -0.3625, y: 0.3984375}
+      offHand: {x: 0.140625, y: 0.4484375}
+      back: {x: -0.125, y: 0.6}
+      mainHandAngle: 244.7
+      mainHandOver: {fileID: 21300000, guid: 3259d1dde6b7c5748a8f13d9848a399f, type: 3}
+      offHandOver: {fileID: 21300000, guid: 8b0b1fb42d7033a43bf7d4dbcc32b6b6, type: 3}
+      head: {x: 0.015625, y: 0.9046875}
+      mainHandFront: 0.0484375
+      mainHandBack: -0.0515625
+    - mainHand: {x: -0.3265625, y: 0.509375}
+      offHand: {x: 0.1421875, y: 0.490625}
+      back: {x: -0.125, y: 0.6078125}
+      mainHandAngle: 244.7
+      mainHandOver: {fileID: 21300000, guid: a0e20131b6986524cad8534ed92febcf, type: 3}
+      offHandOver: {fileID: 21300000, guid: 10b9fb0277d7ac44ea0df6cd80b5b706, type: 3}
+      head: {x: 0.0171875, y: 0.9515625}
+      mainHandFront: 0.0515625
+      mainHandBack: -0.05
+    - mainHand: {x: -0.3265625, y: 0.5078125}
+      offHand: {x: 0.16875, y: 0.4671875}
+      back: {x: -0.125, y: 0.5890625}
+      mainHandAngle: 244.7
+      mainHandOver: {fileID: 21300000, guid: c2205f9934bda854b9305915367e0e0a, type: 3}
+      offHandOver: {fileID: 21300000, guid: f0b11bdc99fb7c244b5d2f60df940f86, type: 3}
+      head: {x: 0.0171875, y: 0.928125}
+      mainHandFront: 0.0515625
+      mainHandBack: -0.040625
+    - mainHand: {x: -0.3765625, y: 0.3921875}
+      offHand: {x: -0.1828125, y: 0.4078125}
+      back: {x: -0.125, y: 0.6}
+      mainHandAngle: 244.7
+      mainHandOver: {fileID: 21300000, guid: ae42627ee979ce84094df74532132e5c, type: 3}
+      offHandOver: {fileID: 21300000, guid: 5187de3bdb3b5e54fabd5639288d11bd, type: 3}
+      head: {x: 0.015625, y: 0.9046875}
+      mainHandFront: 0.0515625
+      mainHandBack: -0.0515625
+    idleLegs: {fileID: 0}
+    runLegs: []
+    motions:
+    - motion: 1
+      frames:
+      - {fileID: 21300000, guid: 8e878937b2ac5424ba4ceb55994b88a6, type: 3}
+      - {fileID: 21300000, guid: 2dffc9de439562840a6719bb04d17a25, type: 3}
+      - {fileID: 21300000, guid: fb1aa6a95b70a18448c4c784de548863, type: 3}
+      - {fileID: 21300000, guid: 13a4efd85c8ed514aba460846e5ea734, type: 3}
+      anchors:
+      - mainHand: {x: 0.2515625, y: -0.2828125}
+        offHand: {x: 0.1890625, y: -0.4890625}
+        back: {x: -0.1375, y: -0.3765625}
+        mainHandAngle: 89.5
+        mainHandOver: {fileID: 21300000, guid: 356f1bee38b0a9e4d8eb24c2be303a3f, type: 3}
+        offHandOver: {fileID: 21300000, guid: b545e6f96ee3f524784eee36651f14da, type: 3}
+        head: {x: 0, y: 0}
+        mainHandFront: 0.040625
+        mainHandBack: -0.053125
+      - mainHand: {x: 0.1609375, y: -0.378125}
+        offHand: {x: 0.1890625, y: -0.4890625}
+        back: {x: -0.1375, y: -0.3765625}
+        mainHandAngle: 27
+        mainHandOver: {fileID: 21300000, guid: d003ca793d334c64dba4256b9e928a18, type: 3}
+        offHandOver: {fileID: 21300000, guid: b1dd5d263ba2eda4e87848816b8f617d, type: 3}
+        head: {x: 0, y: 0}
+        mainHandFront: 0.04375
+        mainHandBack: -0.053125
+      - mainHand: {x: -0.0703125, y: -0.48125}
+        offHand: {x: 0.1890625, y: -0.4890625}
+        back: {x: -0.1375, y: -0.3765625}
+        mainHandAngle: 315.4
+        mainHandOver: {fileID: 21300000, guid: 000ef62a389966e49b4b85fff43b3db3, type: 3}
+        offHandOver: {fileID: 21300000, guid: 20fbb04576b8e324db81a77f8b7d2bec, type: 3}
+        head: {x: 0, y: 0}
+        mainHandFront: 0.0375
+        mainHandBack: -0.053125
+      - mainHand: {x: -0.1375, y: -0.4640625}
+        offHand: {x: 0.1890625, y: -0.4890625}
+        back: {x: -0.1375, y: -0.3765625}
+        mainHandAngle: 270.2
+        mainHandOver: {fileID: 21300000, guid: 245066294dfbfb040b1a3c5b5bc0e350, type: 3}
+        offHandOver: {fileID: 21300000, guid: bfd5b33fff533c5449bf7594e0abc20c, type: 3}
+        head: {x: 0, y: 0}
+        mainHandFront: 0.04375
+        mainHandBack: -0.05
+      smears:
+      - {fileID: 0}
+      - {fileID: 21300000, guid: 6a7b8ed733691fa4a93a118621fbddf8, type: 3}
+      - {fileID: 21300000, guid: 6a9161d15d46dc04e8a8d6195ddcc337, type: 3}
+      - {fileID: 21300000, guid: 5493430c324d1144db5b2f254c2082d0, type: 3}
+      standLegs: []
+      standHeads: []
+    head: {fileID: 21300000, guid: 1b7c4754360b892408089de2bb71e53d, type: 3}
+    weaponRuns:
+    - weaponKind: 1
+      frames:
+      - {fileID: 21300000, guid: 212e783fe565b784288c65c0643eb111, type: 3}
+      - {fileID: 21300000, guid: accb6b641f77e914d8f86eda357aa103, type: 3}
+      - {fileID: 21300000, guid: 0e349a9cc7eabf64981bf2da218515cc, type: 3}
+      - {fileID: 21300000, guid: 5b20a61ffe6f3534d90151a13f139a15, type: 3}
+      - {fileID: 21300000, guid: c3bf593fa3c912040968c7fb2968f4e4, type: 3}
+      - {fileID: 21300000, guid: f3075de8ff5022340b5bac5b9678ae82, type: 3}
+      anchors:
+      - mainHand: {x: -0.340625, y: 0.40625}
+        offHand: {x: 0.153125, y: 0.5640625}
+        back: {x: -0.125, y: 0.6234375}
+        mainHandAngle: 304.6
+        mainHandOver: {fileID: 21300000, guid: 17d3deaf3e214bc47ab8cacba83c1c4c, type: 3}
+        offHandOver: {fileID: 21300000, guid: fd593da7e045ebd40a7b1b6634d58f42, type: 3}
+        head: {x: 0.0234375, y: 0.9625}
+        mainHandFront: 0.05
+        mainHandBack: -0.053125
+      - mainHand: {x: -0.3125, y: 0.3796875}
+        offHand: {x: 0.1734375, y: 0.5453125}
+        back: {x: -0.125, y: 0.5890625}
+        mainHandAngle: 304.6
+        mainHandOver: {fileID: 21300000, guid: fbed9f7c103ea4b40b467fe742ebabdd, type: 3}
+        offHandOver: {fileID: 21300000, guid: 501f7e40c44780e4cab847d00fc4de50, type: 3}
+        head: {x: 0.01875, y: 0.928125}
+        mainHandFront: 0.0484375
+        mainHandBack: -0.0515625
+      - mainHand: {x: -0.3484375, y: 0.359375}
+        offHand: {x: 0.146875, y: 0.5140625}
+        back: {x: -0.125, y: 0.6}
+        mainHandAngle: 304.6
+        mainHandOver: {fileID: 21300000, guid: 77560cbb3c6174643be8a5150c355eb5, type: 3}
+        offHandOver: {fileID: 21300000, guid: 184e39f7f49b4a84db9da7e081c08b0c, type: 3}
+        head: {x: 0.015625, y: 0.9046875}
+        mainHandFront: 0.053125
+        mainHandBack: -0.05
+      - mainHand: {x: -0.3109375, y: 0.3796875}
+        offHand: {x: 0.1375, y: 0.55}
+        back: {x: -0.125, y: 0.5984375}
+        mainHandAngle: 304.6
+        mainHandOver: {fileID: 21300000, guid: e55c1c5d1eeaea142ae36d836b59e063, type: 3}
+        offHandOver: {fileID: 21300000, guid: e497347247a893245a84d69035945553, type: 3}
+        head: {x: 0.0171875, y: 0.9515625}
+        mainHandFront: 0.05
+        mainHandBack: -0.053125
+      - mainHand: {x: -0.3140625, y: 0.3796875}
+        offHand: {x: 0.1734375, y: 0.5453125}
+        back: {x: -0.125, y: 0.5890625}
+        mainHandAngle: 304.6
+        mainHandOver: {fileID: 21300000, guid: 8309f5508827a2344bcc4735b9959303, type: 3}
+        offHandOver: {fileID: 21300000, guid: 7c0d2496b4aa592468a90e1eea828e45, type: 3}
+        head: {x: 0.0171875, y: 0.928125}
+        mainHandFront: 0.0484375
+        mainHandBack: -0.0515625
+      - mainHand: {x: -0.353125, y: 0.35}
+        offHand: {x: 0.146875, y: 0.5140625}
+        back: {x: -0.125, y: 0.6}
+        mainHandAngle: 304.6
+        mainHandOver: {fileID: 21300000, guid: 056c0da9ef408114aa2c957d7e09100e, type: 3}
+        offHandOver: {fileID: 21300000, guid: 84b0cd9d6b44ee542bd7b747b42c73e3, type: 3}
+        head: {x: 0.015625, y: 0.9046875}
+        mainHandFront: 0.053125
+        mainHandBack: -0.0484375
+  upSide:
+    idle: {fileID: 21300000, guid: 9e7277bc9709f0146b3d40b794ecde3d, type: 3}
+    run:
+    - {fileID: 21300000, guid: e3529c648b3f4b54e8540996f114727f, type: 3}
+    - {fileID: 21300000, guid: 5cc15e3098a326047aa5fc6bc86c4580, type: 3}
+    - {fileID: 21300000, guid: c8f30f54d7d08be46a5040fa1ca72732, type: 3}
+    - {fileID: 21300000, guid: 1f3e142766fd0d84a920028e3caa9bce, type: 3}
+    - {fileID: 21300000, guid: 6ea4894095f336d4da4f0175948becc6, type: 3}
+    - {fileID: 21300000, guid: 724284dd5654c5342938255bc956ad3b, type: 3}
+    idleAnchors:
+      mainHand: {x: 0.2234375, y: 0.4421875}
+      offHand: {x: -0.2484375, y: 0.49375}
+      back: {x: -0.046875, y: 0.653125}
+      mainHandAngle: 299.2
+      mainHandOver: {fileID: 21300000, guid: 497ab09d8c0fddd458e6449553975c34, type: 3}
+      offHandOver: {fileID: 21300000, guid: 0d01b267b71b64749ba8150101061f90, type: 3}
+      head: {x: 0.0046875, y: 1.021875}
+      mainHandFront: 0.053125
+      mainHandBack: -0.05
+    runAnchors:
+    - mainHand: {x: 0.175, y: 0.4203125}
+      offHand: {x: -0.3578125, y: 0.55}
+      back: {x: -0.046875, y: 0.5984375}
+      mainHandAngle: 299.2
+      mainHandOver: {fileID: 21300000, guid: f103155b5dc0bc744a247883af0ee1c8, type: 3}
+      offHandOver: {fileID: 21300000, guid: a0b65670722784549ad0defaceb89a2b, type: 3}
+      head: {x: -0.084375, y: 0.925}
+      mainHandFront: 0.0484375
+      mainHandBack: -0.053125
+    - mainHand: {x: 0.1765625, y: 0.45}
+      offHand: {x: -0.3296875, y: 0.5765625}
+      back: {x: -0.046875, y: 0.6078125}
+      mainHandAngle: 299.2
+      mainHandOver: {fileID: 21300000, guid: 2fef04fa0e234a2438f4144252dcf121, type: 3}
+      offHandOver: {fileID: 21300000, guid: eb27eda20028f4c49929e52946c35630, type: 3}
+      head: {x: -0.0609375, y: 0.940625}
+      mainHandFront: 0.05
+      mainHandBack: -0.0515625
+    - mainHand: {x: 0.175, y: 0.484375}
+      offHand: {x: -0.34375, y: 0.578125}
+      back: {x: -0.046875, y: 0.6171875}
+      mainHandAngle: 299.2
+      mainHandOver: {fileID: 21300000, guid: bf8c9da864927bc4bb7cc7a8c70a8181, type: 3}
+      offHandOver: {fileID: 21300000, guid: f1f19d8c0c083354db1cab5d86217aec, type: 3}
+      head: {x: -0.084375, y: 0.9875}
+      mainHandFront: 0.0484375
+      mainHandBack: -0.053125
+    - mainHand: {x: 0.19375, y: 0.4796875}
+      offHand: {x: -0.3546875, y: 0.6046875}
+      back: {x: -0.046875, y: 0.634375}
+      mainHandAngle: 299.2
+      mainHandOver: {fileID: 21300000, guid: 42efff2664fe7794ab6e062ba1ffb5f7, type: 3}
+      offHandOver: {fileID: 21300000, guid: 5f7dde329730a5041a607dee830cd8af, type: 3}
+      head: {x: -0.06875, y: 0.9875}
+      mainHandFront: 0.05
+      mainHandBack: -0.0515625
+    - mainHand: {x: 0.1703125, y: 0.4375}
+      offHand: {x: -0.33125, y: 0.578125}
+      back: {x: -0.046875, y: 0.615625}
+      mainHandAngle: 299.2
+      mainHandOver: {fileID: 21300000, guid: 0885388b9a7518f408e431ad60a10a67, type: 3}
+      offHandOver: {fileID: 21300000, guid: 2b9d15d056cfd5d4fa82a9cd41ebec06, type: 3}
+      head: {x: -0.06875, y: 0.940625}
+      mainHandFront: 0.0515625
+      mainHandBack: -0.0484375
+    - mainHand: {x: 0.175, y: 0.5015625}
+      offHand: {x: -0.346875, y: 0.596875}
+      back: {x: -0.046875, y: 0.6359375}
+      mainHandAngle: 299.2
+      mainHandOver: {fileID: 21300000, guid: 4b521a8811a5f1344b82d4c5c2b22bba, type: 3}
+      offHandOver: {fileID: 21300000, guid: 6e7dc08cee8799047913d33d99160219, type: 3}
+      head: {x: -0.053125, y: 1.003125}
+      mainHandFront: 0.046875
+      mainHandBack: -0.0421875
+    idleLegs: {fileID: 0}
+    runLegs: []
+    motions:
+    - motion: 1
+      frames:
+      - {fileID: 21300000, guid: c98c897ae0fdf2a4da9dbb505bb5fd0a, type: 3}
+      - {fileID: 21300000, guid: 5d709507ef733a64cb69f7cecfe4cb96, type: 3}
+      - {fileID: 21300000, guid: 54a4f9e44fe5ba244922a180d4f3471b, type: 3}
+      - {fileID: 21300000, guid: 9e57406df2e864344b23eee0f10264e0, type: 3}
+      anchors:
+      - mainHand: {x: -0.1109375, y: -0.1828125}
+        offHand: {x: -0.2875, y: -0.4609375}
+        back: {x: -0.0515625, y: -0.36875}
+        mainHandAngle: 142.2
+        mainHandOver: {fileID: 21300000, guid: f1eeae752e3e9754186c2036621a0b38, type: 3}
+        offHandOver: {fileID: 21300000, guid: 98f9e2fc1a06eb44ea9ce0f59a0fa369, type: 3}
+        head: {x: 0, y: 0}
+        mainHandFront: 0.0453125
+        mainHandBack: -0.0453125
+      - mainHand: {x: 0.315625, y: -0.246875}
+        offHand: {x: -0.2875, y: -0.4609375}
+        back: {x: -0.0515625, y: -0.36875}
+        mainHandAngle: 89.1
+        mainHandOver: {fileID: 21300000, guid: 1eed2e8c4994b1e4abcd555368fe3f9b, type: 3}
+        offHandOver: {fileID: 21300000, guid: bc03e312bdcea7a4bb76ad292e9750fd, type: 3}
+        head: {x: 0, y: 0}
+        mainHandFront: 0.0515625
+        mainHandBack: -0.0421875
+      - mainHand: {x: 0.3109375, y: -0.35625}
+        offHand: {x: -0.2875, y: -0.4609375}
+        back: {x: -0.0515625, y: -0.36875}
+        mainHandAngle: 25.9
+        mainHandOver: {fileID: 21300000, guid: bccdeeaa2c265db46bf54214db4f7099, type: 3}
+        offHandOver: {fileID: 21300000, guid: 5e5e86745a75b3b4c896a8216ec6c614, type: 3}
+        head: {x: 0, y: 0}
+        mainHandFront: 0.0515625
+        mainHandBack: -0.0515625
+      - mainHand: {x: 0.240625, y: -0.4609375}
+        offHand: {x: -0.2875, y: -0.4609375}
+        back: {x: -0.0515625, y: -0.36875}
+        mainHandAngle: 315.4
+        mainHandOver: {fileID: 21300000, guid: 248b36cc6888aa84e90b8e309bee5d9f, type: 3}
+        offHandOver: {fileID: 21300000, guid: b4975f2e0f035e548ba313446cdba967, type: 3}
+        head: {x: 0, y: 0}
+        mainHandFront: 0.040625
+        mainHandBack: -0.05
+      smears:
+      - {fileID: 0}
+      - {fileID: 21300000, guid: c0fa396b81f38b346b546d3c0acf0500, type: 3}
+      - {fileID: 21300000, guid: d6e89a8fe7e6bd34186ac2528a99aa2d, type: 3}
+      - {fileID: 21300000, guid: 3e29ae35494ea4e49b3ad94712ae7e3f, type: 3}
+      standLegs: []
+      standHeads: []
+    head: {fileID: 21300000, guid: 4c7882c48029e954b9c8bc8c6057e9ed, type: 3}
+    weaponRuns:
+    - weaponKind: 1
+      frames:
+      - {fileID: 21300000, guid: 983519d02ddb2fc49a5ae399aace81b9, type: 3}
+      - {fileID: 21300000, guid: 37e91e4dde5862545b0f0c8c3f3b57b9, type: 3}
+      - {fileID: 21300000, guid: 293a3e82437d83146a5dfdab897cf4b1, type: 3}
+      - {fileID: 21300000, guid: 1bd37b49ffeca8847a7c96bdc127d592, type: 3}
+      - {fileID: 21300000, guid: 3416296a71fa5c9438b64c871bc04c13, type: 3}
+      - {fileID: 21300000, guid: 06d7fb23ca4b23a4491a86ce19465c90, type: 3}
+      anchors:
+      - mainHand: {x: 0.1484375, y: 0.403125}
+        offHand: {x: -0.3359375, y: 0.578125}
+        back: {x: -0.046875, y: 0.5984375}
+        mainHandAngle: 325.5
+        mainHandOver: {fileID: 21300000, guid: ee8e56b0fdb63394a8c835e2bdab4474, type: 3}
+        offHandOver: {fileID: 21300000, guid: 82e150cc9f6b03e4cb266be565f6e603, type: 3}
+        head: {x: -0.084375, y: 0.925}
+        mainHandFront: 0.05
+        mainHandBack: -0.053125
+      - mainHand: {x: 0.165625, y: 0.421875}
+        offHand: {x: -0.296875, y: 0.6015625}
+        back: {x: -0.046875, y: 0.6078125}
+        mainHandAngle: 325.5
+        mainHandOver: {fileID: 21300000, guid: c8d0a196c6686a642b42894a25de6373, type: 3}
+        offHandOver: {fileID: 21300000, guid: 4d42a0297cf189e439446f704abfbf1b, type: 3}
+        head: {x: -0.0609375, y: 0.940625}
+        mainHandFront: 0.05
+        mainHandBack: -0.0515625
+      - mainHand: {x: 0.159375, y: 0.421875}
+        offHand: {x: -0.309375, y: 0.6171875}
+        back: {x: -0.046875, y: 0.609375}
+        mainHandAngle: 325.5
+        mainHandOver: {fileID: 21300000, guid: 9794a2ed317f90f4293a1d53b973e5d3, type: 3}
+        offHandOver: {fileID: 21300000, guid: c97d0a7a312594a4bb4d9d501e56e99e, type: 3}
+        head: {x: -0.084375, y: 0.9875}
+        mainHandFront: 0.0484375
+        mainHandBack: -0.0484375
+      - mainHand: {x: 0.1515625, y: 0.453125}
+        offHand: {x: -0.3265625, y: 0.634375}
+        back: {x: -0.046875, y: 0.640625}
+        mainHandAngle: 325.5
+        mainHandOver: {fileID: 21300000, guid: 6d760afbc52d5f24dbe6046d29beb1c4, type: 3}
+        offHandOver: {fileID: 21300000, guid: d91f7bd17fae3ac4d9a4d58df66e707e, type: 3}
+        head: {x: -0.06875, y: 0.9875}
+        mainHandFront: 0.05
+        mainHandBack: -0.053125
+      - mainHand: {x: 0.153125, y: 0.409375}
+        offHand: {x: -0.2984375, y: 0.603125}
+        back: {x: -0.046875, y: 0.6078125}
+        mainHandAngle: 325.5
+        mainHandOver: {fileID: 21300000, guid: f82f11184e450664da616ff253dbedc1, type: 3}
+        offHandOver: {fileID: 21300000, guid: 455368b33317d4e49bd8d8dab9a0817c, type: 3}
+        head: {x: -0.06875, y: 0.940625}
+        mainHandFront: 0.0484375
+        mainHandBack: -0.053125
+      - mainHand: {x: 0.1640625, y: 0.446875}
+        offHand: {x: -0.3140625, y: 0.6421875}
+        back: {x: -0.046875, y: 0.6359375}
+        mainHandAngle: 325.5
+        mainHandOver: {fileID: 21300000, guid: 4e3099a0d5a8ceb4f80ed0416807cc2e, type: 3}
+        offHandOver: {fileID: 21300000, guid: c35d446617e46614c80e01cc3e133a70, type: 3}
+        head: {x: -0.053125, y: 1.003125}
+        mainHandFront: 0.0484375
+        mainHandBack: -0.053125
+  up:
+    idle: {fileID: 21300000, guid: 04b41d806b25cf54b81bdfe71965639f, type: 3}
+    run:
+    - {fileID: 21300000, guid: 8cd7cfd2c10402a48a7715b146ac40c2, type: 3}
+    - {fileID: 21300000, guid: abe165dd83c867c4ebcd7bb34f6edb87, type: 3}
+    - {fileID: 21300000, guid: 58a2097b073ac71449d08becbd12d7dd, type: 3}
+    - {fileID: 21300000, guid: 0e83abfdc84fa8946a0713d9f6728daa, type: 3}
+    - {fileID: 21300000, guid: 960153fb3e320a246bb6077362b5ddc1, type: 3}
+    - {fileID: 21300000, guid: 3025930c36b0a6843968d71a93dce82d, type: 3}
+    idleAnchors:
+      mainHand: {x: 0.2796875, y: 0.465625}
+      offHand: {x: -0.2953125, y: 0.384375}
+      back: {x: 0, y: 0.653125}
+      mainHandAngle: 298.1
+      mainHandOver: {fileID: 21300000, guid: 5587ee97ae8f4ee4085973a98b8a8750, type: 3}
+      offHandOver: {fileID: 21300000, guid: 04649867fbd12ea4083c68efc0e51729, type: 3}
+      head: {x: 0.0109375, y: 1.009375}
+      mainHandFront: 0.103125
+      mainHandBack: 0.00625
+    runAnchors:
+    - mainHand: {x: 0.2890625, y: 0.5734375}
+      offHand: {x: -0.3328125, y: 0.55}
+      back: {x: 0, y: 0.64375}
+      mainHandAngle: 299.2
+      mainHandOver: {fileID: 21300000, guid: 1df173ef05db45542a7d3e3f5c4b9bbf, type: 3}
+      offHandOver: {fileID: 21300000, guid: 20339f4d8f359574b8f8de398fb861a2, type: 3}
+      head: {x: -0.0078125, y: 1.0015625}
+      mainHandFront: 0.10625
+      mainHandBack: 0.003125
+    - mainHand: {x: 0.2921875, y: 0.55}
+      offHand: {x: -0.3328125, y: 0.534375}
+      back: {x: 0, y: 0.625}
+      mainHandAngle: 299.2
+      mainHandOver: {fileID: 21300000, guid: ed33a49c5f7d94a429a57f4869610430, type: 3}
+      offHandOver: {fileID: 21300000, guid: e058b8c13e5b9fe46ad9f0839ecad51e, type: 3}
+      head: {x: -0.0078125, y: 0.9703125}
+      mainHandFront: 0.103125
+      mainHandBack: 0.003125
+    - mainHand: {x: 0.2828125, y: 0.5578125}
+      offHand: {x: -0.31875, y: 0.5546875}
+      back: {x: 0, y: 0.6171875}
+      mainHandAngle: 299.2
+      mainHandOver: {fileID: 21300000, guid: 3298d368301dc3a4989a99f981360334, type: 3}
+      offHandOver: {fileID: 21300000, guid: 199d405b6b5a0554897232161cd2f8c9, type: 3}
+      head: {x: -0.0046875, y: 0.959375}
+      mainHandFront: 0.1078125
+      mainHandBack: 0.00625
+    - mainHand: {x: 0.309375, y: 0.56875}
+      offHand: {x: -0.315625, y: 0.55}
+      back: {x: 0, y: 0.64375}
+      mainHandAngle: 299.2
+      mainHandOver: {fileID: 21300000, guid: 0fad777c8d117a64db355240413e4843, type: 3}
+      offHandOver: {fileID: 21300000, guid: 201f3af4fe43bdd4b8cc0e499d624657, type: 3}
+      head: {x: 0.0046875, y: 1.0015625}
+      mainHandFront: 0.10625
+      mainHandBack: 0.0046875
+    - mainHand: {x: 0.284375, y: 0.5625}
+      offHand: {x: -0.334375, y: 0.54375}
+      back: {x: 0, y: 0.634375}
+      mainHandAngle: 299.2
+      mainHandOver: {fileID: 21300000, guid: a52a672817caf214d882341dddf41b69, type: 3}
+      offHandOver: {fileID: 21300000, guid: 72da132b3d3b4914c89201b28146f2f0, type: 3}
+      head: {x: -0.0078125, y: 0.9859375}
+      mainHandFront: 0.1046875
+      mainHandBack: 0.0015625
+    - mainHand: {x: 0.290625, y: 0.55625}
+      offHand: {x: -0.3203125, y: 0.55625}
+      back: {x: 0, y: 0.6171875}
+      mainHandAngle: 299.2
+      mainHandOver: {fileID: 21300000, guid: 163433fb30dc49c45b771999f00d44ba, type: 3}
+      offHandOver: {fileID: 21300000, guid: 876fa4bbe880fc24cb05dbf667361622, type: 3}
+      head: {x: -0.0015625, y: 0.95625}
+      mainHandFront: 0.103125
+      mainHandBack: 0.0015625
+    idleLegs: {fileID: 0}
+    runLegs: []
+    motions:
+    - motion: 1
+      frames:
+      - {fileID: 21300000, guid: 84d2e856ac895c14e9415ef8179c02bf, type: 3}
+      - {fileID: 21300000, guid: 16cf9b25ef555dc46b3482ea940e5540, type: 3}
+      - {fileID: 21300000, guid: cad4120beaff6ba43b18005638667882, type: 3}
+      - {fileID: 21300000, guid: 8f03d5ae7a7b3a74abb2050af328a9cf, type: 3}
+      anchors:
+      - mainHand: {x: -0.13125, y: -0.0921875}
+        offHand: {x: -0.29375, y: -0.4828125}
+        back: {x: -0.0109375, y: -0.35625}
+        mainHandAngle: 179.9
+        mainHandOver: {fileID: 21300000, guid: c201b7d6608e73f4e978acf9273e0e2b, type: 3}
+        offHandOver: {fileID: 21300000, guid: ed03224ecb00f9145af8863659a7b750, type: 3}
+        head: {x: 0, y: 0}
+        mainHandFront: 0.0484375
+        mainHandBack: -0.0296875
+      - mainHand: {x: -0.0234375, y: -0.040625}
+        offHand: {x: -0.29375, y: -0.4828125}
+        back: {x: -0.0109375, y: -0.35625}
+        mainHandAngle: 141.3
+        mainHandOver: {fileID: 21300000, guid: 108ce90c3ceabde4394349e6e4bdf56d, type: 3}
+        offHandOver: {fileID: 21300000, guid: 2b75751f4dfb67c4599a28f678ed9e7a, type: 3}
+        head: {x: 0, y: 0}
+        mainHandFront: 0
+        mainHandBack: 0
+      - mainHand: {x: 0.275, y: -0.14375}
+        offHand: {x: -0.29375, y: -0.4828125}
+        back: {x: -0.0109375, y: -0.35625}
+        mainHandAngle: 51.4
+        mainHandOver: {fileID: 21300000, guid: e5bc96843780a714595983a4e009ba06, type: 3}
+        offHandOver: {fileID: 21300000, guid: 8efe045f0d354ba48b462613b309858e, type: 3}
+        head: {x: 0, y: 0}
+        mainHandFront: 0.025
+        mainHandBack: -0.0328125
+      - mainHand: {x: 0.359375, y: -0.2625}
+        offHand: {x: -0.29375, y: -0.4828125}
+        back: {x: -0.0109375, y: -0.35625}
+        mainHandAngle: 0.4
+        mainHandOver: {fileID: 21300000, guid: 5040683b8386cf04bb5917aa75ca6e52, type: 3}
+        offHandOver: {fileID: 21300000, guid: 00feef20af66e924f89702d3ab437b3b, type: 3}
+        head: {x: 0, y: 0}
+        mainHandFront: 0.0390625
+        mainHandBack: -0.0390625
+      smears:
+      - {fileID: 0}
+      - {fileID: 21300000, guid: 3ab7c51c79fe3a04fbb2bc51a64b3cae, type: 3}
+      - {fileID: 21300000, guid: f089125dfabcf7d44bc699125f940869, type: 3}
+      - {fileID: 21300000, guid: 5bebc3b1447cd964eb31aa0bb4ec6ead, type: 3}
+      standLegs: []
+      standHeads: []
+    head: {fileID: 21300000, guid: ab4ff4ac7680d3b40be16d52361c22e8, type: 3}
+    weaponRuns:
+    - weaponKind: 1
+      frames:
+      - {fileID: 21300000, guid: adc2f5d7804c7954ba94ecfed4e7728d, type: 3}
+      - {fileID: 21300000, guid: 94bc205cba31ddc4db8efd068d820d22, type: 3}
+      - {fileID: 21300000, guid: a599cb3e10da80748956fb8f3ef4026d, type: 3}
+      - {fileID: 21300000, guid: 8b6b1304e9fada6458b46f151ae3586b, type: 3}
+      - {fileID: 21300000, guid: 1e2b4f78dfcda654dafd65466d259c5e, type: 3}
+      - {fileID: 21300000, guid: 35cabc5af5913644aa5eb0e0fe51e962, type: 3}
+      anchors:
+      - mainHand: {x: 0.275, y: 0.5296875}
+        offHand: {x: -0.3171875, y: 0.5359375}
+        back: {x: 0, y: 0.64375}
+        mainHandAngle: 300
+        mainHandOver: {fileID: 21300000, guid: 642c9cc1bebd36c4ba65c1db10656597, type: 3}
+        offHandOver: {fileID: 21300000, guid: bce98a2bb236cf24cb4df2f48dd4e2d1, type: 3}
+        head: {x: -0.0078125, y: 1.0015625}
+        mainHandFront: 0.1078125
+        mainHandBack: 0.0046875
+      - mainHand: {x: 0.290625, y: 0.51875}
+        offHand: {x: -0.3046875, y: 0.53125}
+        back: {x: 0, y: 0.61875}
+        mainHandAngle: 300
+        mainHandOver: {fileID: 21300000, guid: feea692017bddb44f932d84e6d243306, type: 3}
+        offHandOver: {fileID: 21300000, guid: 4ed7d7e1352171949b06d0ba1d0b2698, type: 3}
+        head: {x: -0.0078125, y: 0.9703125}
+        mainHandFront: 0.1046875
+        mainHandBack: 0.0015625
+      - mainHand: {x: 0.2875, y: 0.5140625}
+        offHand: {x: -0.29375, y: 0.5640625}
+        back: {x: 0, y: 0.6171875}
+        mainHandAngle: 300
+        mainHandOver: {fileID: 21300000, guid: e7263735dc1dd8e47ac594525500f780, type: 3}
+        offHandOver: {fileID: 21300000, guid: 32d09a25de4489c4498b8bb0bb56191f, type: 3}
+        head: {x: -0.0046875, y: 0.959375}
+        mainHandFront: 0.1015625
+        mainHandBack: 0.0078125
+      - mainHand: {x: 0.2890625, y: 0.534375}
+        offHand: {x: -0.3171875, y: 0.5421875}
+        back: {x: 0, y: 0.64375}
+        mainHandAngle: 300
+        mainHandOver: {fileID: 21300000, guid: bf73a5b13a004954f87d5abdb1f8f8cb, type: 3}
+        offHandOver: {fileID: 21300000, guid: f34121b1f7905a4489570a8e9a68624d, type: 3}
+        head: {x: 0.0046875, y: 1.0015625}
+        mainHandFront: 0.1046875
+        mainHandBack: 0.0046875
+      - mainHand: {x: 0.2890625, y: 0.534375}
+        offHand: {x: -0.303125, y: 0.5453125}
+        back: {x: 0, y: 0.634375}
+        mainHandAngle: 300
+        mainHandOver: {fileID: 21300000, guid: ae09b4c4c21238a44affd7ce5c07753a, type: 3}
+        offHandOver: {fileID: 21300000, guid: e1d96594b5d202c4f8b11fbf4901efca, type: 3}
+        head: {x: -0.0078125, y: 0.9859375}
+        mainHandFront: 0.1046875
+        mainHandBack: 0.0015625
+      - mainHand: {x: 0.2890625, y: 0.509375}
+        offHand: {x: -0.3140625, y: 0.5421875}
+        back: {x: 0, y: 0.6171875}
+        mainHandAngle: 300
+        mainHandOver: {fileID: 21300000, guid: 111eed1ca3d102844b7e4ed3b2b556a6, type: 3}
+        offHandOver: {fileID: 21300000, guid: b9b53cc7708e43741b7b8f0630b287be, type: 3}
+        head: {x: -0.0015625, y: 0.95625}
+        mainHandFront: 0.1046875
+        mainHandBack: 0.0015625

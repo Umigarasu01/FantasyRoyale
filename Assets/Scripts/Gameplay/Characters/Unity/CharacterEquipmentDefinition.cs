@@ -12,10 +12,16 @@ namespace FantasyRoyale.Gameplay.Characters.Unity
         menuName = "FantasyRoyale/Gameplay/Character Equipment")]
     public sealed class CharacterEquipmentDefinition : ScriptableObject
     {
+        [SerializeField] private string id = string.Empty;
         [SerializeField] private string displayName = string.Empty;
         [SerializeField] private CharacterActionDefinition primaryAction;
         [SerializeField] private CharacterActionDefinition specialAction;
         [SerializeField] private CharacterGearDefinition[] gear = new CharacterGearDefinition[0];
+
+        /// <summary>
+        /// 全装備の一覧で引く名前。これを入れた定義は一覧へ自動で載る。
+        /// </summary>
+        public string Id => id;
 
         public string DisplayName => displayName;
         public CharacterActionDefinition PrimaryAction => primaryAction;
@@ -25,6 +31,12 @@ namespace FantasyRoyale.Gameplay.Characters.Unity
         /// この装備を持ったときに体へ重ねる部品。
         /// </summary>
         public CharacterGearDefinition[] Gear => gear;
+
+        /// <summary>
+        /// 武器種。同じ武器種の武器は同じ動きを使うので、通常攻撃の動きの型で決まる。
+        /// 通常攻撃がなければ、Actionの既定の型と同じく振る武器として扱う。
+        /// </summary>
+        public CharacterActionMotion WeaponKind => primaryAction == null ? CharacterActionMotion.Swing : primaryAction.Motion;
 
         /// <summary>
         /// 通常攻撃の動きの型に部品が合っているかを調べ、問題の一覧を返す。空なら合っている。
@@ -38,16 +50,27 @@ namespace FantasyRoyale.Gameplay.Characters.Unity
                 return problems;
             }
 
-            if (primaryAction.Motion == CharacterActionMotion.Swing && !HasGear(CharacterGearSlot.MainHand, true))
+            if (primaryAction.Motion == CharacterActionMotion.Shoot)
+            {
+                if (!HasGear(CharacterGearSlot.OffHand, false))
+                {
+                    problems.Add($"{name}: 弓は、反対の手の部品が要ります。");
+                }
+            }
+            else if (!HasGear(CharacterGearSlot.MainHand, true))
             {
                 problems.Add($"{name}: 振る武器は、利き手に角度ごとの絵が要ります。");
             }
-            else if (primaryAction.Motion == CharacterActionMotion.Shoot && !HasGear(CharacterGearSlot.OffHand, false))
-            {
-                problems.Add($"{name}: 弓は、反対の手の部品が要ります。");
-            }
 
             return problems;
+        }
+
+        /// <summary>
+        /// Editor Builderからidを設定する。
+        /// </summary>
+        public void SetId(string newId)
+        {
+            id = newId;
         }
 
         /// <summary>

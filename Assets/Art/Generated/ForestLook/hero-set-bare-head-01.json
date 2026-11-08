@@ -1,0 +1,13 @@
+{
+  "status": "adopted for the armour parts",
+  "file": "hero-set-bare-head-01.png",
+  "sha256": "76a0f26bef3867c8aaa5d47246c7299972429522677dd653801a801027155682",
+  "bytes": 1275428,
+  "tool": "openai-image skill, edit",
+  "model": "gpt-image-2.5-sunburst",
+  "size": "1536x1024",
+  "quality": "medium",
+  "n": 1,
+  "reference": "騎士の頭の試作",
+  "prompt": "Image 1 is a pixel-art sprite sheet of the head of a small chibi character for a top-down 2D game, seen from 5 sides: three figures in the top row and two in the bottom row. In the top row the figures face the viewer, face right, and face away. In the bottom row the figures face down and right, and up and right. Redraw this sheet with the same layout, the same 5 figures in the same positions, the same head size, the same pixel-art style and the same flat solid pure magenta background, RGB 255,0,255.\n\nChange only one thing: remove the helmet. Draw the bare head of the same young character instead: the same face and the same chin on exactly the same pixels, and short neat brown hair on the top and the back of the head, in the same size as the skull under the helmet. Finish the bottom of the head with a clean dark outline.\n\nDo not include: a helmet, a hat, a neck, shoulders, a torso, weapons, text, labels, numbers, grid lines, ground, shadows, dust, effects, borders, watermark, or any other object. No soft gradients, blur or painterly rendering."
+}

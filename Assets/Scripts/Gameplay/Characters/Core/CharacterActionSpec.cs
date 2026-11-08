@@ -26,7 +26,7 @@ namespace FantasyRoyale.Gameplay.Characters
     public enum CharacterActionMotion
     {
         /// <summary>
-        /// 利き手の武器を振る。
+        /// 利き手の武器を、向いた方向へ半円に横へ振る。
         /// </summary>
         Swing = 1,
 
@@ -80,7 +80,8 @@ namespace FantasyRoyale.Gameplay.Characters
             CharacterActionTiming timing,
             float range,
             float arcDegrees,
-            float projectileSpeed)
+            float projectileSpeed,
+            CharacterActionSpec next)
         {
             if (string.IsNullOrWhiteSpace(id))
             {
@@ -105,6 +106,7 @@ namespace FantasyRoyale.Gameplay.Characters
             Range = range;
             ArcDegrees = arcDegrees;
             ProjectileSpeed = projectileSpeed;
+            Next = next;
         }
 
         public string Id { get; }
@@ -117,6 +119,11 @@ namespace FantasyRoyale.Gameplay.Characters
         public float ProjectileSpeed { get; }
 
         /// <summary>
+        /// 連撃の次の段。続かないActionと最後の段はnullである。
+        /// </summary>
+        public CharacterActionSpec Next { get; }
+
+        /// <summary>
         /// 前方の扇形へ当たる近接Actionを作る。
         /// </summary>
         public static CharacterActionSpec CreateMelee(
@@ -125,14 +132,15 @@ namespace FantasyRoyale.Gameplay.Characters
             CharacterActionTiming timing,
             float range,
             float arcDegrees,
-            CharacterActionMotion motion = CharacterActionMotion.Swing)
+            CharacterActionMotion motion = CharacterActionMotion.Swing,
+            CharacterActionSpec next = null)
         {
             if (float.IsNaN(arcDegrees) || arcDegrees <= 0f || arcDegrees > 360f)
             {
                 throw new ArgumentOutOfRangeException(nameof(arcDegrees), "Arcは0より大きく360以下である必要があります。");
             }
 
-            return new CharacterActionSpec(id, CharacterActionKind.Melee, motion, damage, timing, range, arcDegrees, 0f);
+            return new CharacterActionSpec(id, CharacterActionKind.Melee, motion, damage, timing, range, arcDegrees, 0f, next);
         }
 
         /// <summary>
@@ -151,7 +159,7 @@ namespace FantasyRoyale.Gameplay.Characters
                 throw new ArgumentOutOfRangeException(nameof(projectileSpeed), "弾速は有限の正数である必要があります。");
             }
 
-            return new CharacterActionSpec(id, CharacterActionKind.Projectile, motion, damage, timing, range, 0f, projectileSpeed);
+            return new CharacterActionSpec(id, CharacterActionKind.Projectile, motion, damage, timing, range, 0f, projectileSpeed, null);
         }
 
         /// <summary>

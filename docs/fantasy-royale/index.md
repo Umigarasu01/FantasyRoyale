@@ -17,8 +17,10 @@
 
 - [ゲーム企画](product-specs/game-concept.md)
 - [Prototype方針](product-specs/prototype-direction.md)
+- [装備と動きの要件](product-specs/equipment-and-motion.md)
 - [Prototype Milestones](product-specs/prototype-milestones.md)
 - [Art Direction](product-specs/art/art-direction.md)
+- [防具の部位デザイン規約](product-specs/art/armor-part-design.md)
 - [Map Plan](product-specs/art/map-plan.md)
 - [Object Plan](product-specs/art/object-plan.md)
 - [Tileset Plan](product-specs/art/tileset-plan.md)
@@ -40,6 +42,10 @@
 - 進行中: [Character・戦闘基盤](exec-plans/active/combat-foundation.md)
 - 進行中: [森マップをゲームとして整える](exec-plans/active/forest-playable-map.md)
 - 進行中: [全身セットと武器の動きの型](exec-plans/active/armor-sets-and-weapon-motions.md)
+- 進行中: [防具の足、胴、頭への分割](exec-plans/active/armor-parts-head-torso-legs.md)
+- 進行中: [片手剣の三段コンボと走りながらの攻撃](exec-plans/active/sword-combo-and-running-attack.md)
+- 進行中: [地面を蹴る走りへの描き直し](exec-plans/active/bounding-run-cycle.md)
+- 進行中: [片手剣の型の走りと剣の付け方の組み込み](exec-plans/active/sword-type-pose.md)
 - 進行中: [森林マップの空間構成改善](exec-plans/active/forest-composition-improvement.md)
 - 完了済み: [Knowledge Base移行](exec-plans/completed/knowledge-base-migration.md)
 - 完了済み: [森林素材の再制作と自動配置検証](exec-plans/completed/forest-art-restart.md)
@@ -62,6 +68,7 @@
 
 移行前の履歴、廃案、保留設計は[旧Vault Index](references/legacy/legacy-vault-index.md)から参照できる。Legacy Documentは現行仕様のSource of Truthとして使用しない。
 
+- [2Dスプライトの装備差分の手法](references/sprite-equipment-layering.md)
 - [Unity CLI MCP導入・接続確認](development/unity-cli-mcp.md)
 
 

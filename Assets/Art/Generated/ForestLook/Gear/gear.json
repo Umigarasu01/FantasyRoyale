@@ -30,6 +30,32 @@
     "sword-rot-22",
     "sword-rot-23"
    ],
+   "backRotations": [
+    "sword-pommel-rot-00",
+    "sword-pommel-rot-01",
+    "sword-pommel-rot-02",
+    "sword-pommel-rot-03",
+    "sword-pommel-rot-04",
+    "sword-pommel-rot-05",
+    "sword-pommel-rot-06",
+    "sword-pommel-rot-07",
+    "sword-pommel-rot-08",
+    "sword-pommel-rot-09",
+    "sword-pommel-rot-10",
+    "sword-pommel-rot-11",
+    "sword-pommel-rot-12",
+    "sword-pommel-rot-13",
+    "sword-pommel-rot-14",
+    "sword-pommel-rot-15",
+    "sword-pommel-rot-16",
+    "sword-pommel-rot-17",
+    "sword-pommel-rot-18",
+    "sword-pommel-rot-19",
+    "sword-pommel-rot-20",
+    "sword-pommel-rot-21",
+    "sword-pommel-rot-22",
+    "sword-pommel-rot-23"
+   ],
    "heldInFist": true
   },
   {
@@ -68,6 +94,7 @@
     }
    ],
    "rotations": [],
+   "backRotations": [],
    "heldInFist": false
   },
   {
@@ -106,6 +133,7 @@
     }
    ],
    "rotations": [],
+   "backRotations": [],
    "heldInFist": true
   },
   {
@@ -144,6 +172,7 @@
     }
    ],
    "rotations": [],
+   "backRotations": [],
    "heldInFist": false
   }
  ]

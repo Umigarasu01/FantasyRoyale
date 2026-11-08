@@ -1,13 +1,13 @@
 {
-  "status": "adopted for the hero body and gear",
+  "status": "adopted for the six-frame bounding run",
   "file": "hero-body-run-diagonal-01.png",
-  "sha256": "26bedaaa9705632ee535748f43d161229c33fba5e67ebe19b25ea589d0afd745",
-  "bytes": 1523132,
+  "sha256": "c2a52e35afeb40d46bf28a289b24d3147ac35cde9bae46e5e092135f5027d784",
+  "bytes": 1648063,
   "tool": "openai-image skill, edit",
-  "model": "gpt-image-2.5-sunburst",
+  "model": "gpt-image-2.6-sunburst / gpt-image-2.5-sunburst",
   "size": "1536x1024",
   "quality": "medium",
   "n": 1,
   "reference": "hero-run-diagonal-01.png",
-  "prompt": "Image 1 is a pixel-art sprite sheet of a small chibi knight for a top-down 2D game. Redraw this sheet exactly, with the same layout, the same number of characters in the same positions, the same poses, the same legs, the same arms, the same size, the same armour and helmet, the same pixel-art style and the same flat solid pure magenta background, RGB 255,0,255.\n\nChange only one thing: remove everything the knight carries. Remove the sword. Remove the blue shield. Both hands stay in exactly the same place as in Image 1, and are empty, drawn as closed brown leather gloves. Fill in the parts of the body and armour that were hidden behind the sword and shield.\n\nDo not change the legs, the arms or the body pose. Do not include: weapons, shields, text, labels, numbers, grid lines, ground, shadows, dust, effects, borders, watermark, or any other object. No soft gradients, blur or painterly rendering."
+  "prompt": "Image 1 is a pixel-art sprite sheet of a small chibi knight for a top-down 2D game. Redraw this sheet exactly, with the same layout, the same number of characters in the same positions, the same poses, the same legs, the same arms, the same size, the same armour and helmet, the same pixel-art style and the same flat solid pure magenta background, RGB 255,0,255.\n\nChange only one thing: remove everything the knight carries. Remove the sword completely, including any part of the blade that crosses in front of the body, so no white or grey blade is left anywhere. Remove the blue shield. Both hands stay in exactly the same place as in Image 1, and are empty, drawn as closed brown leather gloves. Fill in the parts of the body and armour that were hidden behind the sword and shield.\n\nDo not change the legs, the arms or the body pose. Both legs stay visible in every figure, the near leg and the far leg, exactly as in Image 1. Do not include: weapons, shields, text, labels, numbers, grid lines, ground, shadows, dust, effects, borders, watermark, or any other object. No soft gradients, blur or painterly rendering."
 }

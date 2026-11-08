@@ -29,14 +29,28 @@ namespace FantasyRoyale.Gameplay.Characters
     }
 
     /// <summary>
-    /// 発生、持続、硬直の時間進行と移動制限を管理する純C#状態。
+    /// 発生、持続、硬直の時間進行と、連撃のつながりを管理する純C#状態。
     /// 開始後は割り込まれず、撃破時だけCancelで打ち切る。
+    /// 連撃は振っている間の入力を次の段へ予約し、硬直が終わると続ける。予約がなくても少しの間は続けられる。
     /// </summary>
     public sealed class CharacterActionState
     {
-        public const float RecoveryMovementScale = 0.5f;
+        /// <summary>
+        /// 攻撃中の移動の速さ。走りながら攻撃できるよう、まず通常と同じにしている。
+        /// </summary>
+        public const float ActingMovementScale = 1f;
+
+        /// <summary>
+        /// 段が終わった後、次の段を続けられる秒数。過ぎると最初の段へ戻る。
+        /// </summary>
+        public const float ComboWindowSeconds = 0.3f;
 
         private float phaseElapsedSeconds;
+        private CharacterActionSpec comboFirst;
+        private CharacterActionSpec comboNext;
+        private float comboWindowLeft;
+        private bool hasQueuedStep;
+        private CharacterDirection8 queuedDirection;
 
         public CharacterActionPhase Phase { get; private set; }
         public CharacterActionSpec CurrentSpec { get; private set; }
@@ -61,39 +75,33 @@ namespace FantasyRoyale.Gameplay.Characters
         }
 
         /// <summary>
-        /// 発生と持続の間は移動不可、硬直中は半速、待機中は通常速度を返す。
+        /// 実行中の移動の速さを返す。待機中は通常速度である。
         /// </summary>
-        public float MovementScale
-        {
-            get
-            {
-                switch (Phase)
-                {
-                    case CharacterActionPhase.Windup:
-                    case CharacterActionPhase.Active:
-                        return 0f;
-                    case CharacterActionPhase.Recovery:
-                        return RecoveryMovementScale;
-                    default:
-                        return 1f;
-                }
-            }
-        }
+        public float MovementScale => IsBusy ? ActingMovementScale : 1f;
 
         /// <summary>
-        /// 待機中だけActionを開始し、実行中の要求は受け付けない。
+        /// 待機中はActionを開始する。連撃を続けられる間に同じActionを押すと次の段になる。
+        /// 実行中は同じ連撃の次の段だけを予約し、他の要求は受け付けない。
         /// </summary>
         public bool TryStart(CharacterActionSpec spec, CharacterDirection8 direction)
         {
-            if (spec == null || IsBusy)
+            if (spec == null)
             {
                 return false;
             }
 
-            CurrentSpec = spec;
-            Direction = direction;
-            Phase = CharacterActionPhase.Windup;
-            phaseElapsedSeconds = 0f;
+            if (IsBusy)
+            {
+                return TryQueueNextStep(spec, direction);
+            }
+
+            var continues = comboWindowLeft > 0f && ReferenceEquals(spec, comboFirst);
+            if (!continues)
+            {
+                comboFirst = spec;
+            }
+
+            Begin(continues ? comboNext : spec, direction);
             return true;
         }
 
@@ -105,6 +113,12 @@ namespace FantasyRoyale.Gameplay.Characters
             if (float.IsNaN(deltaSeconds) || float.IsInfinity(deltaSeconds) || deltaSeconds < 0f)
             {
                 throw new ArgumentOutOfRangeException(nameof(deltaSeconds), "経過時間は0以上の有限値である必要があります。");
+            }
+
+            if (!IsBusy)
+            {
+                comboWindowLeft = Math.Max(0f, comboWindowLeft - deltaSeconds);
+                return default;
             }
 
             var enteredActive = false;
@@ -131,8 +145,18 @@ namespace FantasyRoyale.Gameplay.Characters
                         Phase = CharacterActionPhase.Recovery;
                         break;
                     default:
-                        Clear();
-                        finished = true;
+                        if (hasQueuedStep)
+                        {
+                            Begin(CurrentSpec.Next, queuedDirection);
+                        }
+                        else
+                        {
+                            comboNext = CurrentSpec.Next;
+                            comboWindowLeft = comboNext != null ? ComboWindowSeconds : 0f;
+                            Clear();
+                            finished = true;
+                        }
+
                         break;
                 }
             }
@@ -146,6 +170,32 @@ namespace FantasyRoyale.Gameplay.Characters
         public void Cancel()
         {
             Clear();
+            comboFirst = null;
+            comboNext = null;
+            comboWindowLeft = 0f;
+            hasQueuedStep = false;
+        }
+
+        private bool TryQueueNextStep(CharacterActionSpec spec, CharacterDirection8 direction)
+        {
+            if (hasQueuedStep || CurrentSpec.Next == null || !ReferenceEquals(spec, comboFirst))
+            {
+                return false;
+            }
+
+            hasQueuedStep = true;
+            queuedDirection = direction;
+            return true;
+        }
+
+        private void Begin(CharacterActionSpec spec, CharacterDirection8 direction)
+        {
+            CurrentSpec = spec;
+            Direction = direction;
+            Phase = CharacterActionPhase.Windup;
+            phaseElapsedSeconds = 0f;
+            comboWindowLeft = 0f;
+            hasQueuedStep = false;
         }
 
         private float GetPhaseDuration()

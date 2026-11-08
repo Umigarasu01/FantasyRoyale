@@ -1,0 +1,13 @@
+{
+  "status": "adopted for the armour parts",
+  "file": "hero-legs-lunge-diagonal-01.png",
+  "sha256": "10e41ebc725ea0dc7bb580f2ba4884ac54636957a135bec35c6475b7e82690d4",
+  "bytes": 1315153,
+  "tool": "openai-image skill, edit",
+  "model": "gpt-image-2.5-sunburst",
+  "size": "1536x1024",
+  "quality": "medium",
+  "n": 1,
+  "reference": "腰当て付きの踏み込みの脚の絵",
+  "prompt": "Image 1 is a pixel-art sprite sheet of the legs of a small chibi character for a top-down 2D game, in 2 rows and 4 columns. Redraw this sheet exactly, with the same layout, the same 8 figures in the same positions, the same size, the same pixel-art style and the same flat solid pure magenta background, RGB 255,0,255. Do not move, resize or redraw the legs. Every knee and boot stays on exactly the same pixels as in Image 1.\n\nChange only one thing: remove the belt and the blue skirt. Draw what was hidden behind them: plain tight dark trousers that cover the hips and the thighs, in a very dark neutral colour. The legs keep their pose. The top edge of each figure is a straight waist line, at the height of the belt in Image 1.\n\nKeep only the plain dark hips, the thighs, the knees and the boots.\n\nDo not include: a belt, a skirt, a waist guard, arms, hands, a torso, a head, weapons, shields, text, labels, numbers, grid lines, ground, shadows, dust, effects, borders, watermark, or any other object. No soft gradients, blur or painterly rendering."
+}

@@ -19,4 +19,5 @@ MonoBehaviour:
   upSide: {fileID: 21300000, guid: 96660af19cc868b4d84be4d2246fb614, type: 3}
   up: {fileID: 21300000, guid: f63f19d95c4895b4fbd9aed827937a25, type: 3}
   rotations: []
+  backRotations: []
   heldInFist: 0

@@ -1,0 +1,13 @@
+{
+  "status": "adopted for the armour parts",
+  "file": "hero-head-01.png",
+  "sha256": "b03f61ba1ff3c3b32e5a2cb152e2a67e1f6f831ab3bc737916f042aca9c29db7",
+  "bytes": 1290079,
+  "tool": "openai-image skill, edit",
+  "model": "gpt-image-2.5-sunburst",
+  "size": "1536x1024",
+  "quality": "medium",
+  "n": 1,
+  "reference": "hero-body-idle-01.pngとhero-body-idle-diagonal-01.pngの頭と肩を並べた絵",
+  "prompt": "Image 1 is a pixel-art sprite sheet of the head of a small chibi character for a top-down 2D game, seen from 5 sides: three figures in the top row and two in the bottom row. In the top row the figures face the viewer, face right, and face away. In the bottom row the figures face down and right, and up and right. Redraw this sheet with the same layout, the same 5 figures in the same positions, the same head size, the same pixel-art style and the same flat solid pure magenta background, RGB 255,0,255.\n\nEach figure in Image 1 is the head with the shoulders below it. Keep the head alone. Keep the helmet, the hair and the face in exactly the same place, and remove the scarf, the collar, the shoulders, the chest and the arms. Do not move, resize or redraw the head. In the figures that face away from the viewer, the head ends at the bottom rim of the helmet, with no hair below the helmet. Finish the bottom of each head with a clean dark outline.\n\nDo not include: shoulders, a torso, arms, hands, weapons, shields, text, labels, numbers, grid lines, ground, shadows, dust, effects, borders, watermark, or any other object. No soft gradients, blur or painterly rendering."
+}

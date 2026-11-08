@@ -1,0 +1,13 @@
+{
+  "status": "adopted for the six-frame bounding run",
+  "file": "hero-set-sandals-legs-run-diagonal-01.png",
+  "sha256": "c6cd6c7809452b70f8f1f1bb1fcd976540df96e4f3748d4830ac1ab1f20b268d",
+  "bytes": 1354901,
+  "tool": "openai-image skill, edit",
+  "model": "gpt-image-2.6-sunburst / gpt-image-2.5-sunburst",
+  "size": "1536x1024",
+  "quality": "medium",
+  "n": 1,
+  "reference": "hero-legs-run-diagonal-01.png",
+  "prompt": "Image 1 is a sprite sheet for a fantasy video game: the armoured leg pieces of a small toy-like chibi knight, in 2 rows and 6 columns of running poses: row 1 runs toward the viewer and to the lower right, row 2 runs away from the viewer and to the upper right. Each figure is a dark grey armour block at the top with two leg pieces below it. Redraw this sheet exactly, with the same layout, the same 12 figures in the same positions, the same size, the same chunky pixel-art style with the same pixel size, the same black outline, the same soft top-left light, and the same flat solid pure magenta background, RGB 255,0,255. Do not move, resize or re-pose the leg pieces. Every knee and foot stays on exactly the same pixels as in Image 1, and both leg pieces stay visible in every figure.\n\nKeep the dark grey armour block and the dark grey padded upper leg pieces exactly as they are.\n\nChange only the lower leg pieces and the feet, below the knees: replace the grey steel knee guards and the brown boots with light cream cloth wrappings wound in bands around each lower leg piece, from just below the knee down to the ankle, and simple brown leather sandals with thin straps over the top of the foot. Each sandal stands where the boot stands and is just as long.\n\nDo not include: arms, hands, a torso, a head, weapons, shields, text, labels, numbers, grid lines, ground, shadows, dust, effects, borders, watermark, or any other object. No soft gradients, blur or painterly rendering."
+}

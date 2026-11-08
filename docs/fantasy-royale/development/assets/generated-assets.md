@@ -13,31 +13,87 @@
 | forest-rural-01 | 同Directoryの`forest-rural-01.png` | 天幕、焚き火、水車小屋、見張り台、作業小屋、丸太、切り株、畑、柵 | `baf8c11fd56767596b12ccd9b7083b4bf389799c810aafee9672d720d8466386` |
 | forest-landmarks-01 | 同Directoryの`forest-landmarks-01.png` | 洞窟、坑道、岩壁、崩れた門、柱、祠、泉、魔物の巣、荷車 | `23df74604431fade7f32d097aed93e4712b497feda4c67dc594e27625dd4b9d5` |
 | forest-extras-01 | 同Directoryの`forest-extras-01.png` | 井戸、廃屋、薬草畑、作業台、木箱と樽、岩、倒木、掲示板、瓦礫 | `b87fab73e332d34a55a2abeeef054b655a40cad9b81e496f3fc68345ff5c6225` |
-| hero-body-run-01 | 同Directoryの`hero-body-run-01.png` | 走りシートから持ち物を除いた素手の体 | `baa8b23683e43edb6cba0f3c59ae04dfdfa150ff97ec64c9643d2058909f6d40` |
-| hero-body-run-diagonal-01 | 同Directoryの`hero-body-run-diagonal-01.png` | 斜めの走りの素手の体 | `26bedaaa9705632ee535748f43d161229c33fba5e67ebe19b25ea589d0afd745` |
+| hero-body-run-01 | 同Directoryの`hero-body-run-01.png` | 走りシートから持ち物を除いた素手の体。横の行は剣の腕を斜め後ろ下へ下ろして描き直した | `85bff8b620735decd92efbb510e47938fc104dab8d5ab6bbbf09bbd4a7585319` |
+| hero-body-run-diagonal-01 | 同Directoryの`hero-body-run-diagonal-01.png` | 斜めの走りの素手の体 | `c2a52e35afeb40d46bf28a289b24d3147ac35cde9bae46e5e092135f5027d784` |
 | hero-body-idle-01 | 同Directoryの`hero-body-idle-01.png` | 立ち姿の素手の体 | `c9ad1ec171f0764ced009375fcc9f7e53c1a90d75da5f8cb0fdcc6aff253ab16` |
 | hero-body-idle-diagonal-01 | 同Directoryの`hero-body-idle-diagonal-01.png` | 斜めの立ち姿の素手の体 | `43aade27f6a4e2aba9ac7941d3ea8781340b095b822d7d31cedec3df380ed6d7` |
-| hero-body-attack-01 | 同Directoryの`hero-body-attack-01.png` | 素手の体の攻撃3段階、正面、横、背面 | `6cd7ba8ea0e442030ad8ed373cb9ce0d085e659a21779c679f2967a137117739` |
-| hero-body-attack-diagonal-01 | 同Directoryの`hero-body-attack-diagonal-01.png` | 素手の体の攻撃3段階、斜め前、斜め後ろ | `82c32d71807aab0141296a079369a7f06f0a158d5be5130cc8b898a6e9fd66a0` |
+| hero-fist-01 | 同Directoryの`hero-fist-01.png` | 縦に通る見えない柄を握った手袋の拳。緑の濃淡で描いた。2026-11-08に剣を胴の拳の両端へ付ける形へ変え、今は使わない | `d8fc9aa6364812f1f0020a2a79c93bf94bf9d3d2ba35a5c12a0f619ac43392ce` |
 | hero-gear-01 | 同Directoryの`hero-gear-01.png` | 剣、盾、弓、矢筒の5方向の部品 | `0fa6502fe31cd304274b466451b9d935eefd028951072fff5292c93cb773d90d` |
 | forest-slime-01 | 同Directoryの`forest-slime-01.png` | 跳ねる紫のスライムの4コマ | `2c9b19d278822601cda0aa307682e4d07ab654215df8847d83678ca48a8d5196` |
 
 Prompt全文は同名のJSONで確認する。`Tools/MapAuthoring/forest_objects.py`が大きさと判定を持ち、シートから切り出す。木は`build_forest_parts.py`が切り出す。宝箱と敵はUnityが置くので、同じファイルの実行で`Assets/Art/Generated/ForestLook/Game/`へ書き出す。
 
-## 2026-11-07 革装備の全身セット
+## 2026-11-07 上半身と下半身に分けた攻撃
 
 状態: **[Forest Map Preview Debug Scene](../../design-docs/scenes/forest-map-preview-debug-scene.md)で使用**
+
+OpenAI Image APIの`gpt-image-2.5-sunburst`（editsのmedium、1536x1024）で生成した。保存先は`Assets/Art/Generated/ForestLook/`である。
+
+| Source | 保存先 | Prompt概要 | SHA-256 |
+| --- | --- | --- | --- |
+| hero-upper-swing-01 | 同Directoryの`hero-upper-swing-01.png` | 剣と盾を持った上半身の横切り4コマ、正面、横、背面 | `cf91fc19b41257033a2214421e65b7f96f578e91038528d0c88c0a8ffbc6ac87` |
+| hero-upper-swing-diagonal-01 | 同Directoryの`hero-upper-swing-diagonal-01.png` | 剣と盾を持った上半身の横切り4コマ、斜め前、斜め後ろ | `15b20841c0ebfedb80418caeafc6a44c948a10ba9afacdd419d745af90c49a17` |
+| hero-body-upper-swing-01 | 同Directoryの`hero-body-upper-swing-01.png` | 素手の上半身の横切り4コマ、正面、横、背面 | `bcbde8218d2b83b377bb06b1ec93f79b148d7ceb985fa2262c0332ba6911ef3e` |
+| hero-body-upper-swing-diagonal-01 | 同Directoryの`hero-body-upper-swing-diagonal-01.png` | 素手の上半身の横切り4コマ、斜め前、斜め後ろ | `6dc5549ff779d5a4feab220b145a29771fe1df029d8842f82e7b15c286415b3a` |
+
+Prompt全文は同名のJSONで確認する。`Tools/MapAuthoring/build_hero_frames.py`が手の位置と剣の角度を測り、`Hero/`、`Hand/`、`Smear/`へ書き出す。騎士の剣入りの絵と素手の絵は、部位へ分けた後も測定用に使う。
+
+## 2026-11-07 防具の部位
+
+状態: **[Forest Map Preview Debug Scene](../../design-docs/scenes/forest-map-preview-debug-scene.md)で使用**
+
+OpenAI Image APIの`gpt-image-2.5-sunburst`（editsのmedium、1536x1024）で生成した。保存先は`Assets/Art/Generated/ForestLook/`である。
+
+| Source | 保存先 | Prompt概要 | SHA-256 |
+| --- | --- | --- | --- |
+| hero-head-01 | 同Directoryの`hero-head-01.png` | 騎士の頭、5方向 | `b03f61ba1ff3c3b32e5a2cb152e2a67e1f6f831ab3bc737916f042aca9c29db7` |
+| hero-set-leather-head-01 | 同Directoryの`hero-set-leather-head-01.png` | 革のフード、5方向 | `69d6bfeb20177faa9d405fa0a13fe26eddd86c5327f118c5ed9facb35331d3a9` |
+| hero-set-bare-head-01 | 同Directoryの`hero-set-bare-head-01.png` | 素顔の頭、5方向 | `76a0f26bef3867c8aaa5d47246c7299972429522677dd653801a801027155682` |
+| hero-torso-run-01 | 同Directoryの`hero-torso-run-01.png` | 騎士の胴の走り、正面、横、背面 | `619e318c42cb8448c41608c37b451ea6d3e49178e0d8c8c0aac513b2637a3b41` |
+| hero-torso-run-diagonal-01 | 同Directoryの`hero-torso-run-diagonal-01.png` | 騎士の胴の走り、斜め | `b9b2e61d6d77be64d124bb7b77e96b340b736671f0d2e5234888d512d8ac06bb` |
+| hero-torso-idle-01 | 同Directoryの`hero-torso-idle-01.png` | 騎士の胴の立ち姿、正面、横、背面 | `74803ce5bcf290d3e14e00b4082b9e0dbe899186c385244d493f02e362863a15` |
+| hero-torso-idle-diagonal-01 | 同Directoryの`hero-torso-idle-diagonal-01.png` | 騎士の胴の立ち姿、斜め | `ea0b00073749386078c426c2a0f43855de95e7a045ab5bc20eaba4ba469463d5` |
+| hero-torso-swing-01 | 同Directoryの`hero-torso-swing-01.png` | 騎士の胴の横切り4コマ、正面、横、背面 | `454d40b0cc21f72d827da5e0c60d89a20eaa1eafa90775c519de26ccbe10f7b4` |
+| hero-torso-swing-diagonal-01 | 同Directoryの`hero-torso-swing-diagonal-01.png` | 騎士の胴の横切り4コマ、斜め | `ab14ef14b0bfc8610bafb8260595afbd73b50f66050711889d8bedf4d256fd46` |
+| hero-set-leather-torso-run-01 | 同Directoryの`hero-set-leather-torso-run-01.png` | 革の胴の走り、正面、横、背面 | `3addf1853ed464d85c4219a084ca333ee3b92d192db3a14227e66018615d30c0` |
+| hero-set-leather-torso-run-diagonal-01 | 同Directoryの`hero-set-leather-torso-run-diagonal-01.png` | 革の胴の走り、斜め | `9ae2b1b8f8f86b0ed054c9762991ace39e57cfd67020117abbb32f8986c4308f` |
+| hero-set-leather-torso-idle-01 | 同Directoryの`hero-set-leather-torso-idle-01.png` | 革の胴の立ち姿、正面、横、背面 | `287621ac082bdd6f194cdbdfb9794cf462667c4e5a3a4542d584204c6a74d12a` |
+| hero-set-leather-torso-idle-diagonal-01 | 同Directoryの`hero-set-leather-torso-idle-diagonal-01.png` | 革の胴の立ち姿、斜め | `d39c192dbf8351a82e1734ad120da6f62ffb67e1b9a6b58555bbf3620c8a9fb9` |
+| hero-set-leather-torso-swing-01 | 同Directoryの`hero-set-leather-torso-swing-01.png` | 革の胴の横切り4コマ、正面、横、背面 | `33cd6ffd191cbc1ff1a2be9200e9ec7866a327b827edbe26d64292b5a8389cde` |
+| hero-set-leather-torso-swing-diagonal-01 | 同Directoryの`hero-set-leather-torso-swing-diagonal-01.png` | 革の胴の横切り4コマ、斜め | `24ff68f9f551f9a98896c1cc9fb2831061033bcdc05075635bc7a64a7059f4ad` |
+| hero-legs-run-01 | 同Directoryの`hero-legs-run-01.png` | 足の走り、正面、横、背面 | `529aa09a6b6c5c0a6e3d4c68e9bff6bab0f9b9656da04382a0dcb427af8940e2` |
+| hero-legs-run-diagonal-01 | 同Directoryの`hero-legs-run-diagonal-01.png` | 足の走り、斜め | `c72f809601d9ceb17498177cd325099a079f8fd48f62c267d2f1d29e5b14e41e` |
+| hero-legs-idle-01 | 同Directoryの`hero-legs-idle-01.png` | 足の立ち姿、正面、横、背面 | `2ca30e56903d0b1f410968eacd4af448a4e88e39ce0757f33b8242f673b796e2` |
+| hero-legs-idle-diagonal-01 | 同Directoryの`hero-legs-idle-diagonal-01.png` | 足の立ち姿、斜め | `634c4ca3ecd59a785ae009a4ff10d4819be5cb6c7d6c3eb1b5cff98dbf7671e7` |
+| hero-legs-lunge-01 | 同Directoryの`hero-legs-lunge-01.png` | 止まって振るときの足、正面、横、背面 | `4f3866086c06f0544b304776b50fa9e716620bad61741af66601ca9dd96b24e1` |
+| hero-legs-lunge-diagonal-01 | 同Directoryの`hero-legs-lunge-diagonal-01.png` | 止まって振るときの足、斜め | `10e41ebc725ea0dc7bb580f2ba4884ac54636957a135bec35c6475b7e82690d4` |
+| hero-set-sandals-legs-idle-01 | 同Directoryの`hero-set-sandals-legs-idle-01.png` | 布巻きサンダルの立ち姿、正面、横、背面 | `cfb33ae9219c2e1578458df3a4115e185aded3b59970659405a4e235704a6587` |
+| hero-set-sandals-legs-idle-diagonal-01 | 同Directoryの`hero-set-sandals-legs-idle-diagonal-01.png` | 布巻きサンダルの立ち姿、斜め | `b473c7d63069c0b2ef9e657249227175e633f08ea4b164afc23ed10d284124ce` |
+| hero-set-sandals-legs-run-01 | 同Directoryの`hero-set-sandals-legs-run-01.png` | 布巻きサンダルの走り、正面、横、背面 | `9d2456a0228e9389cff2c316a1d2c052264c9aa3cb615a1a7700e3e99386fa87` |
+| hero-set-sandals-legs-run-diagonal-01 | 同Directoryの`hero-set-sandals-legs-run-diagonal-01.png` | 布巻きサンダルの走り、斜め | `c6cd6c7809452b70f8f1f1bb1fcd976540df96e4f3748d4830ac1ab1f20b268d` |
+| hero-set-sandals-legs-lunge-01 | 同Directoryの`hero-set-sandals-legs-lunge-01.png` | 布巻きサンダルの止まって振るときの足、正面、横、背面 | `afca64de1f041d240eb17f8a2129d96bd6e61e520446367970141ea5ef1a1370` |
+| hero-set-sandals-legs-lunge-diagonal-01 | 同Directoryの`hero-set-sandals-legs-lunge-diagonal-01.png` | 布巻きサンダルの止まって振るときの足、斜め | `721fb9ba4970b9353288ce5ade3a14aa5a3dd21eb72dafb1a4ca9038f4a90e63` |
+| hero-set-iron-boots-legs-idle-01 | 同Directoryの`hero-set-iron-boots-legs-idle-01.png` | 鉄の重靴の立ち姿、正面、横、背面 | `b610e81f07372de0e3b24ca05ab5d6c1a0e0e10c4b2a444a8f0273fed4a05548` |
+| hero-set-iron-boots-legs-idle-diagonal-01 | 同Directoryの`hero-set-iron-boots-legs-idle-diagonal-01.png` | 鉄の重靴の立ち姿、斜め | `4007005cbf11cd307cad32ff9bbfea7b45a85bb08f300e0cc9467a55334fb7d0` |
+| hero-set-iron-boots-legs-run-01 | 同Directoryの`hero-set-iron-boots-legs-run-01.png` | 鉄の重靴の走り、正面、横、背面 | `505c3e6a9c5d5a50cceb7e49b946b3eee7bae904d08e80ceb5383c1a00add543` |
+| hero-set-iron-boots-legs-run-diagonal-01 | 同Directoryの`hero-set-iron-boots-legs-run-diagonal-01.png` | 鉄の重靴の走り、斜め | `3444e270b1452eca45fba79b70f9a281f676b4fc071ec31cf4390caa5db0cc81` |
+| hero-set-iron-boots-legs-lunge-01 | 同Directoryの`hero-set-iron-boots-legs-lunge-01.png` | 鉄の重靴の止まって振るときの足、正面、横、背面 | `a466a3b7a72b088dd68adf082e03a640eb8e2bed682a270443b70b167c20e9e1` |
+| hero-set-iron-boots-legs-lunge-diagonal-01 | 同Directoryの`hero-set-iron-boots-legs-lunge-diagonal-01.png` | 鉄の重靴の止まって振るときの足、斜め | `9b9a3a2263afc777e0bedf31c144192c91af13156b5f373f42aad9c191853091` |
+
+Prompt全文は同名のJSONで確認する。`Tools/MapAuthoring/build_hero_frames.py`が`Hero/`と`Sets/<id>/`へ書き出す。`hero-part-template-01.png`はツールが頭、胴、足のシートから作る基準の絵で、シリーズ外の部位を試すときの参照である。
+
+## 2026-11-07 革装備の全身セット
+
+状態: 部位の絵の元として残している。表示はしない
 
 `hero-body-*`の各シートを参照画像にして、OpenAI Image APIの`gpt-image-2.5-sunburst`（editsのmedium、1536x1024、1枚約$0.024）で着替えさせた試作である。保存先は`Assets/Art/Generated/ForestLook/`である。
 
 | Source | 保存先 | Prompt概要 | SHA-256 |
 | --- | --- | --- | --- |
-| hero-set-leather-run-01 | 同Directoryの`hero-set-leather-run-01.png` | 革装備の全身セットの走り、正面、横、背面 | `d2745e8b600caffd046359daaff8289b94b0eba86f1b24084b1519dd147b165d` |
-| hero-set-leather-run-diagonal-01 | 同Directoryの`hero-set-leather-run-diagonal-01.png` | 革装備の全身セットの斜めの走り | `f79ef57fc9b1f9d1f0fbcd0805cc498954ef14ee1b77f917a3869d33b92fbfac` |
+| hero-set-leather-run-01 | 同Directoryの`hero-set-leather-run-01.png` | 革装備の全身セットの走り、正面、横、背面 | `0e3e41b7a7d4c098d506abfdbe7a3233b6923d2eef610d87d6407a70b7893f14` |
+| hero-set-leather-run-diagonal-01 | 同Directoryの`hero-set-leather-run-diagonal-01.png` | 革装備の全身セットの斜めの走り | `027e31ab144d4291b260b3fd442e3c0c42a35043b62c38f7d8ff463c7aea428c` |
 | hero-set-leather-idle-01 | 同Directoryの`hero-set-leather-idle-01.png` | 革装備の全身セットの立ち姿、正面、横、背面 | `b21363d532e80b6890ff4afde7352d8cd3b9d3b3e4b73dafeb3c932874a03031` |
 | hero-set-leather-idle-diagonal-01 | 同Directoryの`hero-set-leather-idle-diagonal-01.png` | 革装備の全身セットの斜めの立ち姿 | `1f169d571e955ec908dc36683695c2d49da0867e1443705b8ebaf7996337173d` |
-| hero-set-leather-attack-01 | 同Directoryの`hero-set-leather-attack-01.png` | 革装備の全身セットの攻撃3段階、正面、横、背面 | `06d94d98e1e4abf6aac1cd256be29ef754caf3020802139ced83714b96d99975` |
-| hero-set-leather-attack-diagonal-01 | 同Directoryの`hero-set-leather-attack-diagonal-01.png` | 革装備の全身セットの攻撃3段階、斜め前、斜め後ろ | `530e159d03f6f531f19f7318fb538e4f0d068aac45cfc20d548007caa2f5ac1c` |
 
 Prompt全文は同名のJSONで確認する。`Tools/MapAuthoring/build_hero_frames.py`が騎士のコマと同じ位置へ切り出し、`Sets/leather/`へ書き出す。
 
@@ -47,14 +103,33 @@ Prompt全文は同名のJSONで確認する。`Tools/MapAuthoring/build_hero_fra
 
 地図の騎士`hero_idle.png`を6倍にして参照画像とし、OpenAI Image APIの`gpt-image-2.5-sunburst`（editsのmedium、1536x1024）で正面、横、背面の3行4コマを生成した。立ち姿は同じ設定で、走りのシートも参照に加えて3方向を生成した。斜めの2方向は、走りと立ち姿のシートを参照にして別のシートで生成した。
 
+2026-11-07に、走りを歩幅が大きく両足が浮くコマのある1周6コマへ描き直した。剣と盾を持った走りは立ち姿と前の走りのシートを参照に生成し、斜めは新しい走りと前の斜めのシートを参照に生成した。持ち物のない体、胴、足、革、布巻きサンダル、鉄の重靴の走りは、前と同じ順の編集で作り直した。斜めの走りは、最初の生成で奥の脚が体の陰に隠れて片足に見えたので、両脚を描く指示を足して元絵から作り直した。さらに、足を手前へ出すコマがなく横向きを回しただけに見えたので、斜め前は足を手前へ、斜め後ろは奥へ踏み出し、奥行きに合わせて上下と大きさを変える指示で、もう一度作り直した。斜めの足は2歩とも同じ脚を出し、編集で入れ替えさせても、下書きに沿って描かせても、所有者の求める走りにならなかった。最終的に、剣と盾を持った斜めの走り`hero-run-diagonal-01`は、`gpt-image-2.6-sunburst`の画像編集でGIF（6コマ、1コマ60ミリ秒、512x512）として斜め前と斜め後ろを1本ずつ描かせ、そのコマを並べて作った。見本には、斜め前に正面の走り、斜め後ろに背面の走りの騎士を1体ずつ、見た目の見本として渡し、ポーズは写させずに動きを文章で指示した。指示には横向きの走りと同じ拍子（1・4コマ目でいちばん開き、3・6コマ目で両足が浮く）を入れ、2本ずつ描いて拍子を測り、合うものを所有者が選んだ。持ち物のない体、胴、足、革、革の胴、布巻きサンダル、鉄の重靴の斜めは、そこから前と同じ順の編集で作った。経緯は[地面を蹴る走りへの描き直し](../../exec-plans/active/bounding-run-cycle.md)にある。
+
 | Source | 保存先 | Prompt概要 | SHA-256 |
 | --- | --- | --- | --- |
-| hero-run-01 | `Assets/Art/Generated/ForestLook/hero-run-01.png` | マゼンタ背景の3方向4コマの走りシート | `1fedd70d882e815c4cce57fe536d223520ded9e6e9654dfcce72633406ed1b18` |
+| hero-run-01 | `Assets/Art/Generated/ForestLook/hero-run-01.png` | マゼンタ背景の3方向6コマの走りシート | `9d68c93d48b19180666082f8e2454006a91674eb46782c9a332ec1f07a9a6dfc` |
 | hero-idle-01 | 同Directoryの`hero-idle-01.png` | マゼンタ背景の足を揃えた3方向の立ち姿 | `d57f7c8ca12454f98698a19bcfa0e1132681638aa357aa985849e1569396b5b5` |
-| hero-run-diagonal-01 | 同Directoryの`hero-run-diagonal-01.png` | マゼンタ背景の斜め前と斜め後ろの4コマの走りシート | `5c27080d748e636b5f8e34f15b780a45a048318a77e81c02aa60c5391d9b9d7e` |
+| hero-run-diagonal-01 | 同Directoryの`hero-run-diagonal-01.png` | マゼンタ背景の斜め前と斜め後ろの6コマの走りシート | `fdf0a7e041b86d6761cd37b026960c96555f7433ea04d88f028a6a68e9ff3b81` |
 | hero-idle-diagonal-01 | 同Directoryの`hero-idle-diagonal-01.png` | マゼンタ背景の斜め前と斜め後ろの立ち姿 | `f7777525cb7b61b82535c2d3251a4e5c3d5bb566dae1a6c02893f5141ea24f13` |
 
 Prompt全文は同名のJSONで確認する。`Tools/MapAuthoring/build_hero_frames.py`が背景を抜いて地図の縮尺へ揃え、現在の騎士は`hero-body-*`の素手の体を使い、`hero-run-*`と`hero-idle-*`は描き直しの元絵で、ツールが手の位置と武器の角度を測るのにも使う。`Assets/Art/Generated/ForestLook/Hero/`へ走り20コマと立ち姿5枚、`Gear/`へ部品を書き出す。横と斜めは右寄りの向きだけを持ち、左寄りの向きは表示時に反転する。
+
+### 2026-11-08 片手剣の型の走り
+
+状態: **使用中。ツールが片手剣の型の走りの胴と手の位置を作る**
+
+走りの上半身を武器種ごとに持つ（[装備と動きの要件](../../product-specs/equipment-and-motion.md)）ための、片手剣の型の元絵である。剣入りの走り`hero-run-01`と`hero-run-diagonal-01`を、剣の腕、手、剣だけを描き直す編集で整え、そこから素手の体と胴を作った。直す所は背景色で消してから描かせ、消した所だけを元の絵へ戻した。手順と指示文は同名のJSON、判断の経緯は[地面を蹴る走りへの描き直し](../../exec-plans/active/bounding-run-cycle.md)にある。どれも`gpt-image-2.5-sunburst`の編集（medium、1536x1024）である。
+
+| Source | 保存先 | Prompt概要 | SHA-256 |
+| --- | --- | --- | --- |
+| hero-run-sword-01 | 同Directoryの`hero-run-sword-01.png` | 剣の腕を下ろし、拳、鍔、刃の順に順手で握る3方向の走り。横は手の甲を見せて刃を前下へ向ける | `f7ccab970eec4fa0757d443792db6c0043c45d708363a62f81604871ef0f8c00` |
+| hero-run-sword-diagonal-01 | 同Directoryの`hero-run-sword-diagonal-01.png` | 同じ握りの斜めの走り | `6017c0ba63b75bfd701a57646bc8c0a717c564f4d1fc93e2612cb66a6dbe7c29` |
+| hero-body-run-sword-01 | 同Directoryの`hero-body-run-sword-01.png` | `hero-run-sword-01`から剣と盾を除いた体。剣の拳は握った形で残す | `de1ed4610028d59a153ca29b54c75516a028a127903048fb229fd10f8b24ef62` |
+| hero-body-run-sword-diagonal-01 | 同Directoryの`hero-body-run-sword-diagonal-01.png` | 同じく斜め | `0fb7f4df4b08a1b8d63dad6e5506a2c6af3eb9005e2e5624c323ca2a5bf12a56` |
+| hero-torso-run-sword-01 | 同Directoryの`hero-torso-run-sword-01.png` | 騎士の片手剣の型の胴の走り。`hero-torso-run-01`を描き方の見本にした | `9aaf50b670f8ca6456c98eeb3258e467a049e01a4fd7a28a064c273430f625d5` |
+| hero-torso-run-sword-diagonal-01 | 同Directoryの`hero-torso-run-sword-diagonal-01.png` | 同じく斜め | `43642a6e68e8624395c205200032809382fbfda9548320fd7c1a398d6e5b08b4` |
+| hero-set-leather-torso-run-sword-01 | 同Directoryの`hero-set-leather-torso-run-sword-01.png` | 革の片手剣の型の胴の走り。騎士の片手剣の型の胴を、革の共通の走りの胴を見本に着替えさせた | `312af9dc20cd5e540a7bb23a9308de66969803db6daaace6d12cceacd266884f` |
+| hero-set-leather-torso-run-sword-diagonal-01 | 同Directoryの`hero-set-leather-torso-run-sword-diagonal-01.png` | 同じく斜め | `c242922934df8262971f9fc300ab078e408c8f9292e0d606145ed79a63ef9a4c` |
 
 ## 2026-11-05 森マップの画作り部品
 

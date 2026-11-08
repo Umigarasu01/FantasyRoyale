@@ -1,0 +1,13 @@
+{
+  "status": "adopted for the armour parts",
+  "file": "hero-set-leather-torso-swing-diagonal-01.png",
+  "sha256": "24ff68f9f551f9a98896c1cc9fb2831061033bcdc05075635bc7a64a7059f4ad",
+  "bytes": 1422023,
+  "tool": "openai-image skill, edit",
+  "model": "gpt-image-2.5-sunburst",
+  "size": "1536x1024",
+  "quality": "medium",
+  "n": 1,
+  "reference": "hero-torso-swing-diagonal-01.pngと革の立ち姿の胴",
+  "prompt": "Image 1 is a pixel-art sprite sheet of the torso of a small chibi character for a top-down 2D game, in 2 rows and 4 columns. Image 2 shows another outfit for the same body, while standing: a brown leather jerkin with shoulder guards, green sleeves, a green collar and a green waist cloth. Redraw Image 1 exactly, with the same layout, the same 8 figures in the same positions, the same size, the same pixel-art style and the same flat solid pure magenta background, RGB 255,0,255. Do not move or resize anything. Every arm and glove stays in exactly the same pose and on exactly the same pixels as in Image 1.\n\nChange only the clothes: dress every figure of Image 1 in the outfit of Image 2, with the same colours and the same materials as Image 2. Keep the brown gloves exactly as they are. Keep the inside of the collar opening very dark.\n\nDo not include: a head, a neck, thighs, knees, boots, weapons, shields, text, labels, numbers, grid lines, ground, shadows, dust, effects, borders, watermark, or any other object. No soft gradients, blur or painterly rendering."
+}

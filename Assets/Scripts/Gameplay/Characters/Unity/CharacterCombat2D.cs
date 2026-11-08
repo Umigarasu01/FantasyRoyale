@@ -96,6 +96,8 @@ namespace FantasyRoyale.Gameplay.Characters.Unity
         {
             if (!actionState.IsBusy)
             {
+                // 待機中も連撃を続けられる時間は減っていく。
+                actionState.Advance(Time.fixedDeltaTime);
                 return;
             }
 
@@ -106,10 +108,11 @@ namespace FantasyRoyale.Gameplay.Characters.Unity
                 return;
             }
 
-            // 一度の更新で終わるとCurrentSpecが空になるため、進める前に控える。
-            var spec = actionState.CurrentSpec;
-            var direction = actionState.Direction;
+            // 一度の更新で終わるとCurrentSpecが空になるため、進める前に控える。次の段へ続くと替わる。
+            var previous = actionState.CurrentSpec;
             var result = actionState.Advance(Time.fixedDeltaTime);
+            var spec = actionState.CurrentSpec ?? previous;
+            var direction = actionState.Direction;
             if (result.EnteredActive)
             {
                 Activate(spec, direction);

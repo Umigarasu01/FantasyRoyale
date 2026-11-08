@@ -53,10 +53,10 @@ namespace FantasyRoyale.Playtest.Tests.PlayMode
         }
 
         /// <summary>
-        /// 発生と持続の間は動けず、硬直中は半速になることを確認する。
+        /// 攻撃の発生と持続の間も足を止めずに動け、別のActionは割り込めないことを確認する。
         /// </summary>
         [UnityTest]
-        public IEnumerator Action_LimitsMovementByPhase()
+        public IEnumerator Action_KeepsMovingWhileAttacking()
         {
             yield return LoadPreview();
             var toTarget = DirectionToTarget();
@@ -67,26 +67,22 @@ namespace FantasyRoyale.Playtest.Tests.PlayMode
             Assert.That(
                 combat.TryStartAction(new CharacterActionCommand(CharacterActionSlot.Primary, CharacterDirection8.East)),
                 Is.True);
-            Assert.That(bootstrap.PlayerActor.MovementScale, Is.EqualTo(0f));
+            Assert.That(bootstrap.PlayerActor.MovementScale, Is.EqualTo(CharacterActionState.ActingMovementScale));
 
-            var lockedPosition = bootstrap.PlayerBody.position;
+            var startPosition = bootstrap.PlayerBody.position;
             while (combat.ActionState.Phase != CharacterActionPhase.Recovery)
             {
                 yield return new WaitForFixedUpdate();
-                if (combat.ActionState.Phase != CharacterActionPhase.Recovery)
-                {
-                    Assert.That(
-                        Vector2.Distance(bootstrap.PlayerBody.position, lockedPosition),
-                        Is.LessThan(0.001f),
-                        "発生と持続の間は移動しません。");
-                }
             }
 
-            Assert.That(bootstrap.PlayerActor.MovementScale, Is.EqualTo(CharacterActionState.RecoveryMovementScale));
             Assert.That(
-                combat.TryStartAction(new CharacterActionCommand(CharacterActionSlot.Primary, CharacterDirection8.East)),
+                Vector2.Distance(bootstrap.PlayerBody.position, startPosition),
+                Is.GreaterThan(0.1f),
+                "発生と持続の間も動きます。");
+            Assert.That(
+                combat.TryStartAction(new CharacterActionCommand(CharacterActionSlot.Special, CharacterDirection8.East)),
                 Is.False,
-                "実行中は割り込めません。");
+                "実行中は別のActionを割り込めません。");
             yield return WaitForIdle();
             Assert.That(bootstrap.PlayerActor.MovementScale, Is.EqualTo(1f));
             bootstrap.ClearMoveInputOverrideForTests();

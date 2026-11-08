@@ -1,0 +1,13 @@
+{
+  "status": "adopted for the armour parts",
+  "file": "hero-torso-idle-01.png",
+  "sha256": "74803ce5bcf290d3e14e00b4082b9e0dbe899186c385244d493f02e362863a15",
+  "bytes": 558349,
+  "tool": "openai-image skill, edit",
+  "model": "gpt-image-2.5-sunburst",
+  "size": "1536x1024",
+  "quality": "medium",
+  "n": 1,
+  "reference": "hero-body-idle-01.pngとhero-set-leather-idle-01.pngを1枚に並べて生成した上の行",
+  "prompt": "Image 1 is a pixel-art sprite sheet of two small chibi characters for a top-down 2D game, in 2 rows and 3 columns. Column 1 faces the viewer, column 2 faces right, column 3 faces away from the viewer. Each figure is cropped: the head is cut at the top of the image band and the legs are cut at the bottom. Redraw this sheet exactly, with the same layout, the same 6 figures in the same positions, the same size, the same pixel-art style and the same flat solid pure magenta background, RGB 255,0,255. Do not move, resize or redraw the body. Every shoulder, arm, glove, belt and waist guard stays on exactly the same pixels as in Image 1.\n\nChange only two things.\nFirst, remove what is left of the head: the helmet or hood, the hair, the face and the neck. Keep the collar or scarf at the base of the neck, and paint the inside of the collar opening a very dark colour. Where the head was, finish the top of the collar and the shoulders with a clean dark outline.\nSecond, remove the legs below the bottom edge of the waist guard: the thighs, the knees and the boots. Keep the whole belt and the whole waist guard or skirt, complete down to its bottom hem, and finish the hem with a clean dark outline.\n\nKeep only the collar, the shoulders, the chest, both arms with their gloves, the belt and the waist guard.\n\nDo not include: a head, a neck, thighs, knees, boots, weapons, shields, text, labels, numbers, grid lines, ground, shadows, dust, effects, borders, watermark, or any other object. No soft gradients, blur or painterly rendering."
+}

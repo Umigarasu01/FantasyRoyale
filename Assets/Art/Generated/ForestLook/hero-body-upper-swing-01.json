@@ -1,0 +1,13 @@
+{
+  "status": "adopted for the split attack",
+  "file": "hero-body-upper-swing-01.png",
+  "sha256": "bcbde8218d2b83b377bb06b1ec93f79b148d7ceb985fa2262c0332ba6911ef3e",
+  "bytes": 1592804,
+  "tool": "openai-image skill, edit",
+  "model": "gpt-image-2.5-sunburst",
+  "size": "1536x1024",
+  "quality": "medium",
+  "n": 1,
+  "reference": "hero-upper-swing-01.png",
+  "prompt": "Image 1 is a pixel-art sprite sheet of a small chibi knight for a top-down 2D game. Redraw this sheet exactly, with the same layout, the same number of characters in the same positions, the same poses, the same legs, the same arms, the same size, the same armour and helmet, the same pixel-art style and the same flat solid pure magenta background, RGB 255,0,255.\n\nChange only one thing: remove everything the knight carries. Remove the sword. Remove the blue shield. Both hands stay in exactly the same place as in Image 1, and are empty, drawn as closed brown leather gloves. Fill in the parts of the body and armour that were hidden behind the sword and shield.\n\nDo not change the legs, the arms or the body pose. Do not include: weapons, shields, text, labels, numbers, grid lines, ground, shadows, dust, effects, borders, watermark, or any other object. No soft gradients, blur or painterly rendering."
+}

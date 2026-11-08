@@ -18,6 +18,7 @@ namespace FantasyRoyale.Gameplay.Characters.Unity
     /// 体が手の位置と角度を持つので、新しい部品を足しても体のアニメーションはそのまま使える。
     /// 盾のように向きで見える面が変わる物は5方向の絵を持ち、剣のように変わらない物は角度ごとの絵を持つ。
     /// 各Spriteのpivotは、手や背中に付ける点へ合わせる。
+    /// 剣は握りが拳に隠れるので、鍔から先と柄頭の2つの絵に分けて持ち、拳の両端へ付ける。
     /// </summary>
     [CreateAssetMenu(
         fileName = "CharacterGear",
@@ -31,12 +32,13 @@ namespace FantasyRoyale.Gameplay.Characters.Unity
         [SerializeField] private Sprite upSide;
         [SerializeField] private Sprite up;
         [SerializeField] private Sprite[] rotations = new Sprite[0];
+        [SerializeField] private Sprite[] backRotations = new Sprite[0];
         [SerializeField] private bool heldInFist;
 
         public CharacterGearSlot Slot => slot;
 
         /// <summary>
-        /// 拳で握る部品か。握る部品には、体の拳を上から重ねる。
+        /// 拳で握る部品か。握る部品には、体の拳を上から重ねる。拳の両端へ分けて付ける部品は拳を重ねない。
         /// </summary>
         public bool HeldInFist => heldInFist;
 
@@ -46,13 +48,32 @@ namespace FantasyRoyale.Gameplay.Characters.Unity
         public bool Rotates => rotations.Length > 0;
 
         /// <summary>
+        /// 拳の両端へ分けて付ける部品か。角度ごとの絵が先の側（鍔から先）、もう1組が柄頭の側である。
+        /// 各Spriteのpivotは、拳に接する点に合わせてある。
+        /// </summary>
+        public bool IsSplitAtFist => Rotates && backRotations.Length > 0;
+
+        /// <summary>
         /// 先が指定の角度を向く絵を返す。東を0とする反時計回りの度数である。
         /// </summary>
         public Sprite GetRotatedSprite(float tipAngle)
         {
-            var step = 360f / rotations.Length;
-            var index = Mathf.RoundToInt(Mathf.Repeat(tipAngle, 360f) / step) % rotations.Length;
-            return rotations[index];
+            return Pick(rotations, tipAngle);
+        }
+
+        /// <summary>
+        /// 先が指定の角度を向くときの、柄頭の側の絵を返す。分けていない部品ではnullを返す。
+        /// </summary>
+        public Sprite GetBackRotatedSprite(float tipAngle)
+        {
+            return backRotations.Length > 0 ? Pick(backRotations, tipAngle) : null;
+        }
+
+        private static Sprite Pick(Sprite[] sprites, float tipAngle)
+        {
+            var step = 360f / sprites.Length;
+            var index = Mathf.RoundToInt(Mathf.Repeat(tipAngle, 360f) / step) % sprites.Length;
+            return sprites[index];
         }
 
         /// <summary>
@@ -96,6 +117,16 @@ namespace FantasyRoyale.Gameplay.Characters.Unity
                     CheckSprite($"{index}番目の角度", rotations[index], bodyPixelsPerUnit, problems);
                 }
 
+                if (backRotations.Length > 0 && backRotations.Length != rotations.Length)
+                {
+                    problems.Add($"{name}: 柄頭の側の絵が{backRotations.Length}角度分で、先の側の{rotations.Length}角度と違います。");
+                }
+
+                for (var index = 0; index < backRotations.Length; index++)
+                {
+                    CheckSprite($"柄頭の側の{index}番目の角度", backRotations[index], bodyPixelsPerUnit, problems);
+                }
+
                 return problems;
             }
 
@@ -125,6 +156,7 @@ namespace FantasyRoyale.Gameplay.Characters.Unity
             upSide = newUpSide;
             up = newUp;
             rotations = new Sprite[0];
+            backRotations = new Sprite[0];
         }
 
         /// <summary>
@@ -137,11 +169,13 @@ namespace FantasyRoyale.Gameplay.Characters.Unity
 
         /// <summary>
         /// Editor Builderと確認用Testから、付ける位置と角度ごとの絵を設定する。
+        /// 拳の両端へ分けて付ける部品は、柄頭の側の絵を同じ角度の数だけ渡す。
         /// </summary>
-        public void ConfigureRotations(CharacterGearSlot newSlot, Sprite[] newRotations)
+        public void ConfigureRotations(CharacterGearSlot newSlot, Sprite[] newRotations, Sprite[] newBackRotations = null)
         {
             Configure(newSlot, null, null, null, null, null);
             rotations = newRotations;
+            backRotations = newBackRotations ?? new Sprite[0];
         }
 
         private void CheckSprite(string view, Sprite sprite, float bodyPixelsPerUnit, List<string> problems)

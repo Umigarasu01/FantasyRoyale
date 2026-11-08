@@ -1,0 +1,13 @@
+{
+  "status": "adopted for the armour parts",
+  "file": "hero-torso-swing-diagonal-01.png",
+  "sha256": "ab14ef14b0bfc8610bafb8260595afbd73b50f66050711889d8bedf4d256fd46",
+  "bytes": 1456763,
+  "tool": "openai-image skill, edit",
+  "model": "gpt-image-2.5-sunburst",
+  "size": "1536x1024",
+  "quality": "medium",
+  "n": 1,
+  "reference": "hero-body-upper-swing-diagonal-01.pngと立ち姿の胴",
+  "prompt": "Image 1 is a pixel-art sprite sheet of the upper body of a small chibi knight for a top-down 2D game, in 2 rows and 4 columns. Image 2 shows the same character's torso while standing, with the whole belt and the whole waist guard. Redraw Image 1 exactly, with the same layout, the same 8 figures in the same positions, the same size, the same pixel-art style and the same flat solid pure magenta background, RGB 255,0,255. Do not move, resize or redraw the body. Every shoulder, arm and glove stays on exactly the same pixels as in Image 1, whatever pose it is in.\n\nChange only two things.\nFirst, remove the head: the helmet, the hair, the face and the neck. Keep the collar or scarf at the base of the neck, and paint the inside of the collar opening a very dark colour. Where the head was, finish the top of the collar and the shoulders with a clean dark outline. An arm or a glove that passed in front of the head stays.\nSecond, complete the bottom of each figure: below the belt, draw the whole waist guard as in Image 2, complete down to its bottom hem, with a clean dark outline. The figures in Image 1 stop soon after the belt. Add the missing part of the waist guard in every figure, hanging straight down.\n\nKeep only the collar, the shoulders, the chest, both arms with their gloves, the belt and the whole waist guard.\n\nDo not include: a head, a neck, thighs, knees, boots, weapons, shields, text, labels, numbers, grid lines, ground, shadows, dust, effects, borders, watermark, or any other object. No soft gradients, blur or painterly rendering."
+}

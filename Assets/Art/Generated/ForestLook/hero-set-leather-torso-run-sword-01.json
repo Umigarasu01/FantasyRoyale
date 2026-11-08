@@ -1,0 +1,13 @@
+{
+  "status": "leather torso of the sword type run",
+  "file": "hero-set-leather-torso-run-sword-01.png",
+  "sha256": "312af9dc20cd5e540a7bb23a9308de66969803db6daaace6d12cceacd266884f",
+  "bytes": 1575581,
+  "tool": "openai-image skill, edit",
+  "model": "gpt-image-2.5-sunburst",
+  "size": "1536x1024",
+  "quality": "medium",
+  "n": 1,
+  "reference": "hero-torso-run-sword-01.png, hero-set-leather-torso-run-01.png",
+  "prompt": "Image 1 is a pixel-art torso part sheet of a small chibi knight for a top-down 2D game, in 3 rows and 6 columns on a flat solid pure magenta background, RGB 255,0,255: only the torso of each figure, with the head and the legs taken away. Image 2 is the torso part sheet of the same character wearing leather armour, from a run where the arms swing.\n\nRedraw Image 1 exactly, with the same layout, the same 18 figures in the same positions, the same size, the same pixel-art style and the same magenta background. Do not move, resize or re-pose anything: every shoulder, arm, fist, belt and waist guard stays on exactly the same pixels as in Image 1. In every figure the arm on the sword side hangs down beside the body with its closed fist, as in Image 1, not as in Image 2.\n\nChange only the outfit: dress every figure in the leather armour of Image 2, with its colours, materials and details: brown leather shoulder pads and chest, the green hood collar with a very dark opening at the neck, brown leather sleeves and gloves, the belt, and the green waist skirt with gold trim. Keep the dark outline.\n\nDo not include: a head, a neck, legs, weapons, shields, text, labels, numbers, grid lines, ground, shadows, dust, effects, borders, watermark, or any other object. No soft gradients, blur or painterly rendering."
+}

@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6efe688f5bb642b89e53ca67e88818a0, type: 3}
+  m_Name: EquipmentCatalog
+  m_EditorClassIdentifier: FantasyRoyale.Gameplay.Characters.Unity::FantasyRoyale.Gameplay.Characters.Unity.CharacterEquipmentCatalog
+  armour:
+  - {fileID: 11400000, guid: bdb1d8e9baaa29c4994e865a0d2e6472, type: 2}
+  - {fileID: 11400000, guid: 195a92e3db7f1524784415734ab22d71, type: 2}
+  - {fileID: 11400000, guid: cc390ea0bdec12f4086b117bf22518b1, type: 2}
+  - {fileID: 11400000, guid: 3ee631b1125a4394cbc9f5f3756c7591, type: 2}
+  - {fileID: 11400000, guid: f6eea473d95a3ee449b88b62ce738f61, type: 2}
+  weapons:
+  - {fileID: 11400000, guid: 96c17b1f876826c4b97c61b3fa8b169d, type: 2}
+  - {fileID: 11400000, guid: e498aabb4ef948244819f2a6da12971b, type: 2}

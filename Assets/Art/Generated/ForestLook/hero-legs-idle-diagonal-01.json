@@ -1,0 +1,13 @@
+{
+  "status": "adopted for the armour parts",
+  "file": "hero-legs-idle-diagonal-01.png",
+  "sha256": "634c4ca3ecd59a785ae009a4ff10d4819be5cb6c7d6c3eb1b5cff98dbf7671e7",
+  "bytes": 1230625,
+  "tool": "openai-image skill, edit",
+  "model": "gpt-image-2.5-sunburst",
+  "size": "1536x1024",
+  "quality": "medium",
+  "n": 1,
+  "reference": "hero-body-idle-diagonal-01.png",
+  "prompt": "Image 1 is a pixel-art sprite sheet of a small chibi character for a top-down 2D game, in 1 row and 2 columns. Redraw this sheet exactly, with the same layout, the same 2 figures in the same positions, the same size, the same pixel-art style and the same flat solid pure magenta background, RGB 255,0,255. Do not move, resize or redraw the legs. Every knee and boot stays on exactly the same pixels as in Image 1.\n\nChange only one thing: keep the legs alone. Remove the head, the torso, both arms, the hands, the belt and the skirt or waist guard. Draw what was hidden behind them: plain tight dark trousers that cover the hips and the thighs, in a very dark neutral colour. The top edge of each figure is a straight waist line, at the height of the belt in Image 1.\n\nKeep only the plain dark hips, the thighs, the knees and the boots.\n\nDo not include: a belt, a skirt, a waist guard, arms, hands, a torso, a head, weapons, shields, text, labels, numbers, grid lines, ground, shadows, dust, effects, borders, watermark, or any other object. No soft gradients, blur or painterly rendering."
+}

@@ -1,0 +1,13 @@
+{
+  "status": "adopted for the armour parts",
+  "file": "hero-set-sandals-legs-idle-01.png",
+  "sha256": "cfb33ae9219c2e1578458df3a4115e185aded3b59970659405a4e235704a6587",
+  "bytes": 1245799,
+  "tool": "openai-image skill, edit",
+  "model": "gpt-image-2.5-sunburst",
+  "size": "1536x1024",
+  "quality": "medium",
+  "n": 1,
+  "reference": "hero-legs-idle-01.png",
+  "prompt": "Image 1 is a pixel-art sprite sheet of the legs of a small chibi character for a top-down 2D game, in one row of 3 figures standing still: the first faces the viewer, the second faces right, the third faces away from the viewer. Redraw this sheet exactly, with the same layout, the same 3 figures in the same positions, the same size, the same chunky pixel-art style with the same pixel size, the same black outline, the same soft top-left light, and the same flat solid pure magenta background, RGB 255,0,255. Do not move, resize or re-pose the legs. Every hip, knee and foot stays on exactly the same pixels as in Image 1.\n\nKeep the very dark plain trousers on the hips and the thighs exactly as they are, with the same straight waist line at the top of each figure.\n\nChange only the lower legs and the feet, below the knees: replace the silver knee guards and the brown boots with light cream cloth wrappings wound in bands around each shin, from just below the knee down to the ankle, and simple brown leather sandals with thin straps over the top of the foot. Each sandal stands on the same pixels as the boot it replaces and is just as long.\n\nDo not include: a belt, a skirt, a waist guard, arms, hands, a torso, a head, weapons, shields, text, labels, numbers, grid lines, ground, shadows, dust, effects, borders, watermark, or any other object. No soft gradients, blur or painterly rendering."
+}

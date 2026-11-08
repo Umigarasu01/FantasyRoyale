@@ -1,0 +1,13 @@
+{
+  "status": "settled for the sword type run; the tool does not read it yet",
+  "file": "hero-torso-run-sword-01.png",
+  "sha256": "9aaf50b670f8ca6456c98eeb3258e467a049e01a4fd7a28a064c273430f625d5",
+  "bytes": 1617953,
+  "tool": "openai-image skill, edit",
+  "model": "gpt-image-2.5-sunburst",
+  "size": "1536x1024",
+  "quality": "medium",
+  "n": 1,
+  "reference": "hero-body-run-sword-01.png, hero-torso-run-01.png",
+  "prompt": "Step 1: Whole sheet edit of the empty-handed body, with the old torso sheet as the drawing model\n\nImage 1 is a pixel-art run sheet of a small chibi knight for a top-down 2D game: 3 rows of 6 figures on a flat solid pure magenta background, RGB 255,0,255. The top row runs toward the viewer, the middle row runs to the right, the bottom row runs away from the viewer. He is empty-handed. Image 2 is a torso part sheet of the same knight from another run: only his torso, with the head and the legs taken away.\n\nMake the torso part sheet for image 1, drawn the way image 2 is drawn. For each of the 18 figures of image 1, keep only the torso:\n- Keep the shoulder guards, the chest armour, the blue collar, both arms with both closed gloved fists, the belt and the blue skirt down to its lower hem.\n- Take away the head and the helmet. The blue collar is left with a dark empty opening at the neck, like in image 2.\n- Take away the legs below the skirt's hem. Where the legs were, there is only magenta background.\n- Keep the arms and the fists exactly in the poses of image 1, not the poses of image 2: in every figure the arm on his sword side hangs down beside the body with its closed fist, and the other arm is bent in front of the body with its closed fist. The fists are empty, with no knob or pommel sticking out.\n- Keep the same layout, the same size and the same positions as the figures of image 1.\n\nNo sword and no shield. No soft gradients, blur or painterly rendering. Do not include text, labels, numbers, grid lines, ground, shadows or effects."
+}

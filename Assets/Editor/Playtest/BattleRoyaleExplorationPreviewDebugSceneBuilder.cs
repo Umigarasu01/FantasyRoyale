@@ -190,7 +190,7 @@ namespace FantasyRoyale.Editor.Playtest
             if (sword == null)
             {
                 sword = ScriptableObject.CreateInstance<CharacterActionDefinition>();
-                sword.ConfigureMelee("sword-slash", 20, new CharacterActionTiming(0.1f, 0.1f, 0.2f), 1.4f, 120f);
+                sword.ConfigureMelee("sword-slash", 20, new CharacterActionTiming(0.1f, 0.1f, 0.2f), 1.4f, 180f);
                 AssetDatabase.CreateAsset(sword, SwordActionPath);
             }
 
@@ -204,13 +204,14 @@ namespace FantasyRoyale.Editor.Playtest
 
             return new[]
             {
-                LoadOrCreateEquipmentDefinition(SwordEquipmentPath, "剣", sword, bow),
-                LoadOrCreateEquipmentDefinition(BowEquipmentPath, "弓", bow, sword)
+                LoadOrCreateEquipmentDefinition(SwordEquipmentPath, "sword", "剣", sword, bow),
+                LoadOrCreateEquipmentDefinition(BowEquipmentPath, "bow", "弓", bow, sword)
             };
         }
 
         private static CharacterEquipmentDefinition LoadOrCreateEquipmentDefinition(
             string path,
+            string id,
             string displayName,
             CharacterActionDefinition primary,
             CharacterActionDefinition special)
@@ -219,6 +220,7 @@ namespace FantasyRoyale.Editor.Playtest
             if (equipment == null)
             {
                 equipment = ScriptableObject.CreateInstance<CharacterEquipmentDefinition>();
+                equipment.SetId(id);
                 equipment.Configure(displayName, primary, special);
                 AssetDatabase.CreateAsset(equipment, path);
             }

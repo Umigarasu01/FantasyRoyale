@@ -1,0 +1,212 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c1ea30060f510345bfdaff166e8701b, type: 3}
+  m_Name: sandals
+  m_EditorClassIdentifier: FantasyRoyale.Gameplay.Characters.Unity::FantasyRoyale.Gameplay.Characters.Unity.CharacterSpriteSetDefinition
+  id: sandals
+  displayName: "\u5E03\u5DFB\u304D\u30B5\u30F3\u30C0\u30EB"
+  framesPerSecond: 17
+  down:
+    idle: {fileID: 0}
+    run: []
+    idleAnchors:
+      mainHand: {x: -0.2703125, y: 0.471875}
+      offHand: {x: 0.2890625, y: 0.378125}
+      back: {x: 0, y: 0.653125}
+      mainHandAngle: 243.2
+      mainHandOver: {fileID: 21300000, guid: 401a21242ceb72e46879a19718e19a30, type: 3}
+      offHandOver: {fileID: 21300000, guid: 6262f9304f720ef4d86f7d7279219412, type: 3}
+      head: {x: -0, y: 1.009375}
+      mainHandFront: 0.0515625
+      mainHandBack: -0.0453125
+    runAnchors: []
+    idleLegs: {fileID: 21300000, guid: 3b33c61edf0f9b34ba293611045e2303, type: 3}
+    runLegs:
+    - {fileID: 21300000, guid: 61550488936c30e4d998a955bf737030, type: 3}
+    - {fileID: 21300000, guid: cf7f59e4281e16f49b150a1b125bd888, type: 3}
+    - {fileID: 21300000, guid: 4b7c4923fe42dcd49936a227ca54ca11, type: 3}
+    - {fileID: 21300000, guid: b5bf98ed860109442a819dadad9a0c90, type: 3}
+    - {fileID: 21300000, guid: 758e391a28e0f6c4aaedce1bf7d237e0, type: 3}
+    - {fileID: 21300000, guid: 373d8584827b07f42ad5550cbe5c1089, type: 3}
+    motions:
+    - motion: 1
+      frames: []
+      anchors: []
+      smears: []
+      standLegs:
+      - {fileID: 21300000, guid: 00f192d17b889844eb219dbe7b07f070, type: 3}
+      - {fileID: 21300000, guid: ad733b36af41c4941b5dcbdc54f535de, type: 3}
+      - {fileID: 21300000, guid: 3e9da65df68ee9f4ea8e6f687019c70e, type: 3}
+      - {fileID: 21300000, guid: eae2bc6e4536887458118668fc99003e, type: 3}
+      standHeads:
+      - {x: 0, y: 1.06875}
+      - {x: 0, y: 0.93125}
+      - {x: 0, y: 0.815625}
+      - {x: 0, y: 0.93125}
+    head: {fileID: 0}
+    weaponRuns: []
+  downSide:
+    idle: {fileID: 0}
+    run: []
+    idleAnchors:
+      mainHand: {x: -0.2359375, y: 0.459375}
+      offHand: {x: 0.253125, y: 0.3828125}
+      back: {x: -0.0625, y: 0.653125}
+      mainHandAngle: 243.7
+      mainHandOver: {fileID: 21300000, guid: 693a38a2e06a0c9439e9bcc8c1884b95, type: 3}
+      offHandOver: {fileID: 21300000, guid: 5e25cf75a222da241a284061494fe39a, type: 3}
+      head: {x: 0.0125, y: 1.01875}
+      mainHandFront: 0.0484375
+      mainHandBack: -0.0515625
+    runAnchors: []
+    idleLegs: {fileID: 21300000, guid: a6c2fc601287d1043893bd61972dde09, type: 3}
+    runLegs:
+    - {fileID: 21300000, guid: ae94dc1b2dee8aa419e2c621961aa2e9, type: 3}
+    - {fileID: 21300000, guid: 946317958fe7e30438101ed5b4975889, type: 3}
+    - {fileID: 21300000, guid: 650d7951cc3805647b61443d7a19b12e, type: 3}
+    - {fileID: 21300000, guid: 094d52472d6d46f4291f400f73acccdd, type: 3}
+    - {fileID: 21300000, guid: ae9beda2c47580148b2646c265c74d8f, type: 3}
+    - {fileID: 21300000, guid: 554ced5aa2f8fdf44b99c26f26e02baa, type: 3}
+    motions:
+    - motion: 1
+      frames: []
+      anchors: []
+      smears: []
+      standLegs:
+      - {fileID: 21300000, guid: a515db0a339c7504787ada922ec16668, type: 3}
+      - {fileID: 21300000, guid: 03126dfd4394ea64e97146ad32ebb300, type: 3}
+      - {fileID: 21300000, guid: 3171ae86a7e07e843ae92dd12ae359e9, type: 3}
+      - {fileID: 21300000, guid: 61e051ef54a8d1d4f810c0e5e692ba1d, type: 3}
+      standHeads:
+      - {x: -0.04375, y: 1.015625}
+      - {x: 0.065625, y: 0.90625}
+      - {x: 0.1328125, y: 0.8125}
+      - {x: 0.0765625, y: 0.90625}
+    head: {fileID: 0}
+    weaponRuns: []
+  side:
+    idle: {fileID: 0}
+    run: []
+    idleAnchors:
+      mainHand: {x: -0.165625, y: 0.378125}
+      offHand: {x: 0.18125, y: 0.3859375}
+      back: {x: -0.125, y: 0.634375}
+      mainHandAngle: 310.5
+      mainHandOver: {fileID: 21300000, guid: 61bb5204a519919449e3a1adf1fd6047, type: 3}
+      offHandOver: {fileID: 21300000, guid: b546c8230a59e1b428f6dc1c2eb7b59c, type: 3}
+      head: {x: 0.0125, y: 1.0109375}
+      mainHandFront: 0.0484375
+      mainHandBack: -0.0421875
+    runAnchors: []
+    idleLegs: {fileID: 21300000, guid: e093a2f432d277747b8b89802d0dd791, type: 3}
+    runLegs:
+    - {fileID: 21300000, guid: c242553714227eb428f0d8d1bddfc213, type: 3}
+    - {fileID: 21300000, guid: bbbcfef66fb57414ca6d27c37d2f8a35, type: 3}
+    - {fileID: 21300000, guid: 8a2974cd64228d648af4ea21b8df7a0f, type: 3}
+    - {fileID: 21300000, guid: bbee05fae8e5e484f9dc5b616fc3a0b6, type: 3}
+    - {fileID: 21300000, guid: f24bda14c30d1ed4591c06bb53b8ee8b, type: 3}
+    - {fileID: 21300000, guid: 028390183e2a90c4982b0fcabec1c443, type: 3}
+    motions:
+    - motion: 1
+      frames: []
+      anchors: []
+      smears: []
+      standLegs:
+      - {fileID: 21300000, guid: bac32ece3d23e614cb04cb9718d032b5, type: 3}
+      - {fileID: 21300000, guid: b3db70a91e0daed419a1e8411b2d4057, type: 3}
+      - {fileID: 21300000, guid: f4e7eed756a837642bfb220319bb44a5, type: 3}
+      - {fileID: 21300000, guid: 2b180f0d27d011743bde73c823d0bef0, type: 3}
+      standHeads:
+      - {x: -0.0625, y: 1}
+      - {x: 0.09375, y: 0.953125}
+      - {x: 0.1875, y: 0.90625}
+      - {x: 0.109375, y: 0.953125}
+    head: {fileID: 0}
+    weaponRuns: []
+  upSide:
+    idle: {fileID: 0}
+    run: []
+    idleAnchors:
+      mainHand: {x: 0.2234375, y: 0.4421875}
+      offHand: {x: -0.2484375, y: 0.49375}
+      back: {x: -0.046875, y: 0.653125}
+      mainHandAngle: 299.2
+      mainHandOver: {fileID: 21300000, guid: 497ab09d8c0fddd458e6449553975c34, type: 3}
+      offHandOver: {fileID: 21300000, guid: 0d01b267b71b64749ba8150101061f90, type: 3}
+      head: {x: 0.0046875, y: 1.021875}
+      mainHandFront: 0.053125
+      mainHandBack: -0.05
+    runAnchors: []
+    idleLegs: {fileID: 21300000, guid: 9d6e066301e334440a08ab777ebb99e8, type: 3}
+    runLegs:
+    - {fileID: 21300000, guid: 0e2b67a02f9f2f44e8815bea2b55f1de, type: 3}
+    - {fileID: 21300000, guid: 9ca97c468d095e148bf099b5e5f1ba9d, type: 3}
+    - {fileID: 21300000, guid: 856d6448ae5c7fc478c8b51345570bc5, type: 3}
+    - {fileID: 21300000, guid: 67aa0c9822046a845bfa1adb6aa90b14, type: 3}
+    - {fileID: 21300000, guid: 26a1490fdf96e9e4699e7a3a3c9b6a17, type: 3}
+    - {fileID: 21300000, guid: cdef4c889a9a3a64696840be479fed5f, type: 3}
+    motions:
+    - motion: 1
+      frames: []
+      anchors: []
+      smears: []
+      standLegs:
+      - {fileID: 21300000, guid: 676e86e39ff0ad9469fb33f60aa7963b, type: 3}
+      - {fileID: 21300000, guid: 2743bff5c46e4e14e827d64cd81ccbaa, type: 3}
+      - {fileID: 21300000, guid: 8aa413776327ebe4a9bcfd0758670e72, type: 3}
+      - {fileID: 21300000, guid: b290ce6bcc0e415489ca2aac78a4743f, type: 3}
+      standHeads:
+      - {x: -0.04375, y: 0.984375}
+      - {x: 0.065625, y: 1.03125}
+      - {x: 0.1328125, y: 1.015625}
+      - {x: 0.0765625, y: 1.0625}
+    head: {fileID: 0}
+    weaponRuns: []
+  up:
+    idle: {fileID: 0}
+    run: []
+    idleAnchors:
+      mainHand: {x: 0.2796875, y: 0.465625}
+      offHand: {x: -0.2953125, y: 0.384375}
+      back: {x: 0, y: 0.653125}
+      mainHandAngle: 298.1
+      mainHandOver: {fileID: 21300000, guid: 5587ee97ae8f4ee4085973a98b8a8750, type: 3}
+      offHandOver: {fileID: 21300000, guid: 04649867fbd12ea4083c68efc0e51729, type: 3}
+      head: {x: 0.0109375, y: 1.009375}
+      mainHandFront: 0.103125
+      mainHandBack: 0.00625
+    runAnchors: []
+    idleLegs: {fileID: 21300000, guid: 41fe95b321341474c9575affeea95df1, type: 3}
+    runLegs:
+    - {fileID: 21300000, guid: abb21a0f1e3ae134d85c8d2cb45ac08e, type: 3}
+    - {fileID: 21300000, guid: 859b5a4e0ae8e5447bbb5b813bd0d8f6, type: 3}
+    - {fileID: 21300000, guid: 28e4b561890319440999fa0c6afa88ec, type: 3}
+    - {fileID: 21300000, guid: 99636be949b82c044ab56d6633a62fc5, type: 3}
+    - {fileID: 21300000, guid: 82e82179f7a7153408f07834acb1a252, type: 3}
+    - {fileID: 21300000, guid: a887edf1aaa91fe46821f182e4a5bbf6, type: 3}
+    motions:
+    - motion: 1
+      frames: []
+      anchors: []
+      smears: []
+      standLegs:
+      - {fileID: 21300000, guid: b06a8a4804583e0489625c9f8a0d8566, type: 3}
+      - {fileID: 21300000, guid: bbf29e711a9aee24f880e07c746d4987, type: 3}
+      - {fileID: 21300000, guid: 323ac4410d1e6b043b8da66cea72baef, type: 3}
+      - {fileID: 21300000, guid: 9f05b8e2b66a9c24dadb5fdf5af49f5b, type: 3}
+      standHeads:
+      - {x: 0, y: 0.99375}
+      - {x: 0, y: 1.06875}
+      - {x: 0, y: 1.090625}
+      - {x: 0, y: 1.1}
+    head: {fileID: 0}
+    weaponRuns: []

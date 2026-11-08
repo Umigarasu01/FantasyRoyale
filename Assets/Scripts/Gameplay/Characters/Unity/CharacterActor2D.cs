@@ -15,13 +15,27 @@ namespace FantasyRoyale.Gameplay.Characters.Unity
         [SerializeField, Min(0.1f)] private float movementSpeed = 5f;
         [SerializeField] private Vector2 footColliderSize = new Vector2(0.48f, 0.55f);
         [SerializeField] private Vector2 footColliderOffset = new Vector2(0f, 0.22f);
+        [SerializeField, Min(0.01f)] private float jumpHeight = 0.5f;
+        [SerializeField, Min(0.05f)] private float jumpSeconds = 0.42f;
+
+        // 斜めの2つのキーは同時には離れない。斜めから隣の向きへ変わっても、この間は斜めの向きを保つ。
+        // その間に止まれば斜めの向きのまま立つので、止まって斜めへ振れる。
+        private const float DiagonalReleaseWaitSeconds = 0.08f;
 
         private Rigidbody2D body;
         private CapsuleCollider2D footCollider;
         private CharacterMoveCommand moveCommand;
         private float movementScale = 1f;
+        private CharacterJump jump;
+        private CharacterDirection8? releasedFacing;
+        private float releasedAt;
 
         public CharacterHealth Health { get; private set; }
+
+        /// <summary>
+        /// 跳躍の状態。見た目だけの跳躍なので、足元の位置と当たり判定は変えない。
+        /// </summary>
+        public CharacterJump Jump => jump;
         public Rigidbody2D Body => body;
         public CapsuleCollider2D FootCollider => footCollider;
         public CharacterMoveCommand MoveCommand => moveCommand;
@@ -29,7 +43,7 @@ namespace FantasyRoyale.Gameplay.Characters.Unity
         public float MovementScale => movementScale;
 
         /// <summary>
-        /// 最後に移動した向き。止まっている間の攻撃方向になる。
+        /// 最後に移動した向き。止まっている間の攻撃方向になる。斜めのキーが少しずれて離れても斜めのまま残る。
         /// </summary>
         public CharacterDirection8 Facing { get; private set; } = CharacterDirection8.South;
 
@@ -51,16 +65,60 @@ namespace FantasyRoyale.Gameplay.Characters.Unity
             movementSpeed = newMovementSpeed;
             moveCommand = CharacterMoveCommand.None;
             movementScale = 1f;
+            jump = new CharacterJump(jumpHeight, jumpSeconds);
+        }
+
+        /// <summary>
+        /// 生きていて地上にいれば跳ぶ。跳んでいる間も今までどおり動け、攻撃もできる。
+        /// </summary>
+        public bool TryJump()
+        {
+            return Health != null && Health.IsAlive && jump != null && jump.TryStart();
         }
 
         /// <summary>
         /// 入力元を区別せず最新Commandを保持し、次のFixedUpdateで一度だけ同じ規則を適用する。
-        /// 攻撃中で動けない間も、入力された向きは記録する。
+        /// 攻撃中で動けない間も、入力された向きは記録する。斜めから隣の向きへの変化は少し待ってから向きに入れる。
         /// </summary>
         public void SetMoveCommand(CharacterMoveCommand command)
         {
             moveCommand = command;
-            Facing = CharacterDirections.FromVector(command.Horizontal, command.Vertical, Facing);
+            var wanted = CharacterDirections.FromVector(command.Horizontal, command.Vertical, Facing);
+            if (IsDiagonalRelease(Facing, wanted))
+            {
+                if (releasedFacing != wanted)
+                {
+                    releasedFacing = wanted;
+                    releasedAt = Time.time;
+                }
+
+                return;
+            }
+
+            Facing = wanted;
+            releasedFacing = null;
+        }
+
+        /// <summary>
+        /// 斜めの向きから、片方のキーを離した隣の向きへ変わったかを判定する。
+        /// 8方向は東から順に並ぶので、奇数が斜めで、差が1なら隣である。
+        /// </summary>
+        private static bool IsDiagonalRelease(CharacterDirection8 shown, CharacterDirection8 wanted)
+        {
+            var step = ((int)wanted - (int)shown + 8) % 8;
+            return (int)shown % 2 == 1 && (step == 1 || step == 7);
+        }
+
+        /// <summary>
+        /// 隣の向きへ動き続けて待つ時間を過ぎたら、その向きにする。止まれば斜めの向きのまま残る。
+        /// </summary>
+        private void ApplyReleasedFacing()
+        {
+            if (releasedFacing.HasValue && moveCommand.IsMoving && Time.time - releasedAt >= DiagonalReleaseWaitSeconds)
+            {
+                Facing = releasedFacing.Value;
+                releasedFacing = null;
+            }
         }
 
         /// <summary>
@@ -89,6 +147,26 @@ namespace FantasyRoyale.Gameplay.Characters.Unity
             footCollider.direction = CapsuleDirection2D.Vertical;
             footCollider.size = footColliderSize;
             footCollider.offset = footColliderOffset;
+        }
+
+        /// <summary>
+        /// 跳躍は見た目の動きなので、描く間隔で進める。倒れたらすぐに着地させる。
+        /// </summary>
+        private void Update()
+        {
+            ApplyReleasedFacing();
+            if (jump == null)
+            {
+                return;
+            }
+
+            if (Health == null || !Health.IsAlive)
+            {
+                jump.Land();
+                return;
+            }
+
+            jump.Advance(Time.deltaTime);
         }
 
         /// <summary>
