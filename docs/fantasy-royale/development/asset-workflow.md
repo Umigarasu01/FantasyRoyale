@@ -40,7 +40,19 @@ Unity確認は、Repositoryではなく検証用Project`C:/Users/umiga/Documents
 
 宝箱と敵はUnityが置く絵なので、`Tools/MapAuthoring/`で`python forest_objects.py`を実行して書き出す。
 
-設置物の絵は、草地の切り抜きと既存のシートを参照にして、3行3列のシートで生成する。`Tools/MapAuthoring/forest_objects.py`の一覧へ、シートの位置、地図での幅、足元、判定を足す。大きさは高さ72pxの騎士を基準にする。配置は`forest_layout.py`の`FACILITIES`で持つ。
+設置物の絵は、草地の切り抜きと既存のシートを参照にして、3行3列のシートで生成する。騎士に描き方を揃えて描く案は[設置物のデザイン規約](../product-specs/art/prop-design.md)にあり、確認を待っている。`Tools/MapAuthoring/forest_objects.py`の一覧へ、シートの位置、地図での幅、足元、判定を足す。大きさは高さ72pxの騎士を基準にする。配置は`forest_layout.py`の`FACILITIES`で持つ。
+
+### 騎士に合わせた宝箱
+
+`Tools/MapAuthoring/`で`python build_chest_frames.py [--preview <webp>]`を実行する。`Assets/Art/Generated/ForestLook/`の`prop-chest-01`、`03`、`04`、`05`から、`Chest/`へ55枚を書き出す。数秒で終わり、出力は決まった結果になる。`--preview`を付けると、騎士と並べて開ける動きと光のループを繰り返すWebPも書く。
+
+| ファイル | 中身 |
+| --- | --- |
+| `chest-closed.png`、`chest-half.png`、`chest-open.png` | 閉じた箱、半開きの箱、開いた空の箱 |
+| `chest-burst-<色>.png` | 半開きの箱に重ねる、開く瞬間の光 |
+| `chest-light-<色>-<0〜11>.png` | 開いた箱に重ねる、中の光とレア度の飾りの12コマ（1コマ100 ms） |
+
+色は`white`、`blue`、`purple`、`gold`で、どの色をどのレア度に当てるかはまだ決めていない。全て60×96 pixelの同じ大きさで、箱の胴の下端の中央が画像の下端の中央にある。光の絵は、箱の絵と同じ位置に重ねる。ゲームの宝箱（`Game/chest-*.png`）はまだこの絵に替えておらず、Unityの取り込み設定（64 PPU、Point、非圧縮、足元のPivot）も組み込むときに決める。描き方と動きの決まりは[設置物のデザイン規約](../product-specs/art/prop-design.md)にある。
 
 ## 装備の見た目を足す
 

@@ -1,0 +1,15 @@
+{
+  "status": "candidate",
+  "generated": "2026-11-08",
+  "file": "prop-chest-01.png",
+  "sha256": "1102aa69730eb0b5994266be1cd44050b6164691459463ac9f430008241ec6f5",
+  "bytes": 1324269,
+  "tool": "openai-image skill, edit",
+  "model": "gpt-image-2.5-sunburst",
+  "size": "1536x1024",
+  "quality": "medium",
+  "n": 2,
+  "reference": "hero-idle-01.png column 1 (front knight) kept at its original size and position, columns 2 and 3 cleared to magenta",
+  "scale": "knight 530 px tall in the sheet -> 0.135, the hero idle scale; shrink() of build_hero_frames.py",
+  "prompt": "Image 1 shows the knight of a top-down 2D pixel-art fantasy action game, standing in the left column on a flat pure magenta background. Keep the knight in the left column exactly as it is: the same position, size and pixels.\n\nDraw two new objects for the same game in the empty middle and right columns, in exactly the knight's art style and at exactly the knight's pixel size: every pixel-art dot of the new objects is the same size as the dots of the knight.\n\nStyle rules, taken from the knight:\n- A continuous near-black outline, one dot thick, around the whole silhouette.\n- Flat cel shading: 3 or 4 clean tones for each material plus a small bright highlight. Light comes from the upper left.\n- Clean chunky clusters of dots. No noise, no grain texture, no dithering, no scratches.\n- The same saturated colours as the knight: warm brown wood like the knight's leather gloves and boots, shiny gold like the knight's trim, bright steel grey like the helmet.\n- The same slightly-from-above three-quarter front view as the knight.\n- Bold, simple and readable shapes with few details, like the knight.\n\nMiddle column: a closed wooden treasure chest seen from the front and slightly from above, at the same camera angle as the knight, so the curved top of the rounded lid is clearly visible. Gold metal bands on the corners and edges, and a gold lock plate with a keyhole in the centre of the front.\nRight column: the same treasure chest opened, at the same angle. The lid is swung up and back so its inside is visible, and the chest is filled with shiny gold coins.\n\nSize: the chest is small next to the knight. The top of the closed chest reaches the knight's belt, about half the knight's height. The chest is a little narrower than the knight's shoulders. Both chests stand on the same ground line as the knight's feet.\n\nDo not include: ground, grass, moss, dirt, shadows on the background, text, letters, labels, borders, grid lines, or any other object. Everything outside the three objects stays completely flat solid pure magenta, RGB 255,0,255."
+}

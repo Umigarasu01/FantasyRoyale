@@ -1,0 +1,15 @@
+{
+  "status": "candidate",
+  "generated": "2026-11-08",
+  "file": "prop-chest-04.png",
+  "sha256": "a1447ec8e5b2e75b930d6d36d583afca9a220e5d8435f8a595acd44e4a45cfe9",
+  "bytes": 1326709,
+  "tool": "openai-image skill, edit",
+  "model": "gpt-image-2.5-sunburst",
+  "size": "1536x1024",
+  "quality": "medium",
+  "n": 2,
+  "reference": "prop-chest-02.png",
+  "scale": "knight 529 px tall -> 0.1353; the inner glow is the difference between the right and middle chests",
+  "prompt": "Image 1 is a sheet from a top-down 2D pixel-art fantasy action game: the knight in the left column, an empty open treasure chest in the middle column, and the same open chest with light shining out of it in the right column.\n\nMake a new sheet in exactly the same pixel-art style, at exactly the same pixel size, with the three objects in the same places.\n\nLeft column: keep the knight exactly as it is.\n\nMiddle column: the empty open chest from the middle column of Image 1, exactly as it is, with no light.\n\nRight column: the same empty open chest, identical to the middle column, with a warm glow from inside it: the floor and inner walls of the chest are lit up bright white and pale gold, the light also brightens the inside of the raised lid and the top inner edges of the box, and a low dome of light rises only a little above the opening, never higher than the lid. No beams, no rays, no sparkles. The light belongs to the chest: it comes from inside it and lights up the chest itself.\n\nThe light is white and pale gold, drawn with 2 or 3 flat tones in clean chunky clusters of dots, the same dot size as the knight. The light has no outline.\n\nStyle rules, taken from the knight:\n- A continuous near-black outline, one dot thick, around the whole silhouette of the chest.\n- Flat cel shading: 3 or 4 clean tones for each material plus a small bright highlight.\n- Clean chunky clusters of dots. No noise, no grain texture, no dithering.\n- The same saturated colours as the knight.\n- The same slightly-from-above three-quarter front view as the knight.\n\nDo not include: coins, items, ground, grass, shadows on the background, soft gradients, blur, haze, text, letters, labels, borders, grid lines, or any other object. Everything outside the three objects stays completely flat solid pure magenta, RGB 255,0,255."
+}

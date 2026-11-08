@@ -1,0 +1,16 @@
+{
+  "status": "not used: the light drawn apart from the chest looked pasted on; replaced by the inner glow of prop-chest-04",
+  "generated": "2026-11-08",
+  "file": "prop-chest-light-01.png",
+  "sha256": "a50114c046b2c0096880891f8a2c4558c0b5cc39d64eb3dae951e75e95c786f1",
+  "bytes": 98923,
+  "tool": "images edit through the openai-image skill's request helpers (output_format gif)",
+  "model": "gpt-image-2.6-sunburst",
+  "size": "512x512",
+  "quality": "medium",
+  "n": 2,
+  "frames": "6 frames of 100 ms, laid left to right in this sheet on a transparent background (first of two GIFs)",
+  "reference": "prop-chest-02.png crop (970,240,1530,800): the open chest with its still light",
+  "scale": "0.1; the bottom of the beams sits 22 px above the chest's bottom",
+  "prompt": "Create a looping pixel-art animation of magical light for a top-down 2D fantasy action game.\n\nImage 1 shows an open treasure chest with light shining up out of it. Animate only that light. Draw only the light: leave out the chest itself completely, so where the chest is there is only the background.\n\nThe light keeps the same place, size and shape as in Image 1: a few vertical beams that fan out a little as they rise from the opening of the chest, and three or four small four-pointed sparkles around them. It is a gentle, calm shimmer that loops smoothly:\n- The beams flicker softly: each beam grows a little taller and shrinks back, out of step with the others, and their brightness pulses.\n- The sparkles twinkle one after another: each one appears as a single dot, grows into a four-pointed star, and shrinks back, at slightly different places around the beams.\n- The bottom of the beams stays on one line in every frame, where the opening of the chest would be.\n\nUse the same chunky pixel-art style and the same dot size as Image 1. The light is white in the centre and very pale yellow at its edges, drawn with 2 or 3 flat tones in clean clusters of dots. No outline, no soft gradient, no blur, no haze.\n\nFlat solid pure magenta background, RGB 255,0,255, in every frame. No chest, no coins, no ground, no shadow, no text, no border."
+}

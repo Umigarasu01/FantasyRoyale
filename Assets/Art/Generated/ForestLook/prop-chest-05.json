@@ -1,0 +1,15 @@
+{
+  "status": "candidate",
+  "generated": "2026-11-08",
+  "file": "prop-chest-05.png",
+  "sha256": "9945e7b858fec57686b42fea3cf62e05407543062f60cde0ca24ff52056c47c2",
+  "bytes": 1340865,
+  "tool": "openai-image skill, edit",
+  "model": "gpt-image-2.5-sunburst",
+  "size": "1536x1024",
+  "quality": "medium",
+  "n": 2,
+  "reference": "four copies of the glowing chest from prop-chest-04 (right column) at its size, one in each of four columns on magenta",
+  "scale": "the chest's width matched to prop-chest-04 -> 0.1353; each effect is the difference from column 1",
+  "prompt": "Image 1 shows the same open treasure chest four times, in four evenly spaced columns, from a top-down 2D pixel-art fantasy action game. A warm light glows from inside the chest.\n\nMake a new sheet in exactly the same pixel-art style, at exactly the same pixel size, with the four chests in the same places. Every chest and its inner glow stay exactly the same as in Image 1. Columns 2, 3 and 4 each add one more light effect on top of the glowing chest, coming out of its opening:\n\nColumn 1: the glowing chest exactly as it is, with nothing added.\nColumn 2: seven or eight small glowing dots and tiny four-pointed sparkles float up out of the opening, scattered up to about the height of the lid above it.\nColumn 3: short rays of light fan out sideways and a little upward from the opening, a little wider than the chest but no higher than the top of the lid. The rays stay well inside the column.\nColumn 4: a single narrow pillar of light rises straight up out of the opening, about a third as wide as the chest, reaching about as high again above the lid as the whole chest is tall.\n\nThe added light is white and pale gold, drawn with 2 or 3 flat tones in clean chunky clusters of dots, the same dot size as the chest. The light has no outline. Clean chunky clusters of dots, no noise, no dithering.\n\nDo not include: coins, items, ground, grass, shadows on the background, soft gradients, blur, haze, text, letters, labels, borders, grid lines, or any other object. Everything outside the four chests and their light stays completely flat solid pure magenta, RGB 255,0,255."
+}

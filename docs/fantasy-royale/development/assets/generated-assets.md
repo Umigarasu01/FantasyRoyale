@@ -1,5 +1,23 @@
 # GeneratedAssets
 
+## 2026-11-08 騎士に合わせた宝箱
+
+状態: **候補**。ゲームの宝箱`Game/chest-*.png`は置き換えていない。
+
+[設置物のデザイン規約](../../product-specs/art/prop-design.md)（案）を確かめるために描いた。OpenAI Image APIの`gpt-image-2.5-sunburst`（editsのmedium、1536x1024、2枚のうち1枚目）で、騎士の立ち姿の正面を元の大きさのまま左の列に置いた画像を参照にしている。
+
+| Source | 保存先 | Prompt概要 | SHA-256 |
+| --- | --- | --- | --- |
+| prop-chest-01 | `Assets/Art/Generated/ForestLook/prop-chest-01.png` | 左の列に騎士、真ん中に閉じた宝箱、右に金貨の入った開いた宝箱 | `1102aa69730eb0b5994266be1cd44050b6164691459463ac9f430008241ec6f5` |
+| prop-chest-02 | `Assets/Art/Generated/ForestLook/prop-chest-02.png` | prop-chest-01を参照に、左の列に騎士、真ん中に開いて空の宝箱、右に同じ箱から光が出ている絵（2枚のうち1枚目） | `fac38b0c3858d8eda1faa42faecc3c10b42abfcb3635474920225ec0322f2c4f` |
+
+| prop-chest-03 | `Assets/Art/Generated/ForestLook/prop-chest-03.png` | prop-chest-02を参照に、左の列に騎士、真ん中に蓋が半分開いた宝箱、右に同じ箱の隙間から光が飛び出す絵（2枚のうち1枚目） | `670663f0d484b82437e80eba0dd3dd9e91de01bf2a198d7056e53be96f5a5b51` |
+| prop-chest-light-01 | `Assets/Art/Generated/ForestLook/prop-chest-light-01.png` | prop-chest-02の光る箱を見本に、光だけを描いた6コマのGIF（`gpt-image-2.6-sunburst`、512×512、1コマ100 ms、2本のうち1本目）を、透明な背景の横並びのシートにした。箱から浮いて見えたので使わない | `a50114c046b2c0096880891f8a2c4558c0b5cc39d64eb3dae951e75e95c786f1` |
+| prop-chest-04 | `Assets/Art/Generated/ForestLook/prop-chest-04.png` | prop-chest-02を参照に、左の列に騎士、真ん中に空の開いた箱、右に同じ箱の内側と蓋の裏が光る絵（2枚のうち1枚目） | `a1447ec8e5b2e75b930d6d36d583afca9a220e5d8435f8a595acd44e4a45cfe9` |
+| prop-chest-05 | `Assets/Art/Generated/ForestLook/prop-chest-05.png` | prop-chest-04の光る箱を4つ並べた画像を参照に、2〜4番目へ立ち上る粒、横へ広がる光、光の柱を足した絵（2枚のうち2枚目） | `9945e7b858fec57686b42fea3cf62e05407543062f60cde0ca24ff52056c47c2` |
+
+Prompt全文は同名のJSONで確認する。騎士と同じ0.135倍で縮めると、閉じた箱が38×33 pixel、半開きの箱が36×43 pixel、開いて空の箱が36×45 pixelになる。閉じた箱はprop-chest-01から、半開きの箱と開く瞬間の光はprop-chest-03から切り出す。開く瞬間の光は右の絵と真ん中の絵の差から取り出す。何か入っている箱の光は、prop-chest-04の差から中の光を、prop-chest-05の1番目との差から飾りを取り出し、開いた箱の絵もprop-chest-04から切り出す。光は白、青、紫、金の4色へ塗り替える。prop-chest-02は参照に使っただけで、ゲーム用の絵には切り出さない。`Tools/MapAuthoring/build_chest_frames.py`が切り出して`Chest/`へ55枚を書き出す。使い方は[Asset導入・生成Workflow](../asset-workflow.md#騎士に合わせた宝箱)にある。
+
 ## 2026-11-06 森マップの設置物の描き直し
 
 状態: **森マップで使用**

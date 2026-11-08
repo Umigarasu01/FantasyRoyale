@@ -1,0 +1,15 @@
+{
+  "status": "candidate",
+  "generated": "2026-11-08",
+  "file": "prop-chest-03.png",
+  "sha256": "670663f0d484b82437e80eba0dd3dd9e91de01bf2a198d7056e53be96f5a5b51",
+  "bytes": 1333096,
+  "tool": "openai-image skill, edit",
+  "model": "gpt-image-2.5-sunburst",
+  "size": "1536x1024",
+  "quality": "medium",
+  "n": 2,
+  "reference": "prop-chest-02.png (knight, empty open chest, the same chest with light)",
+  "scale": "knight 529 px tall in the sheet -> 0.1353; the burst is the difference between the right and middle chests",
+  "prompt": "Image 1 is a sheet from a top-down 2D pixel-art fantasy action game: the knight in the left column, an empty open treasure chest in the middle column, and the same open chest with light shining out of it in the right column.\n\nMake a new sheet in exactly the same pixel-art style, at exactly the same pixel size, with the three objects in the same places.\n\nLeft column: keep the knight exactly as it is.\n\nMiddle column: the same chest, with exactly the same box, size, colours and angle, but with its lid only half open: the lid is raised about halfway, tilted up at an angle of about 45 degrees, between closed and fully open. Under the raised front edge of the lid there is a wedge-shaped dark opening into the empty chest. The box itself does not change.\n\nRight column: the same half-open chest, identical to the middle column, with bright magical light spilling out of the wedge-shaped opening under the lid: a short burst of light and a few short rays escaping from the opening. The light is white in the centre and very pale yellow at its edges, drawn with 2 or 3 flat tones in clean chunky clusters of dots, the same dot size as the knight. The light has no outline.\n\nStyle rules, taken from the knight:\n- A continuous near-black outline, one dot thick, around the whole silhouette of the chest.\n- Flat cel shading: 3 or 4 clean tones for each material plus a small bright highlight. Light comes from the upper left.\n- Clean chunky clusters of dots. No noise, no grain texture, no dithering, no scratches.\n- The same saturated colours as the knight.\n- The same slightly-from-above three-quarter front view as the knight.\n\nDo not include: coins, items, ground, grass, shadows on the background, soft gradients, blur, haze, glow fog, text, letters, labels, borders, grid lines, or any other object. Everything outside the three objects stays completely flat solid pure magenta, RGB 255,0,255."
+}

@@ -21,6 +21,7 @@
 - [Prototype Milestones](product-specs/prototype-milestones.md)
 - [Art Direction](product-specs/art/art-direction.md)
 - [防具の部位デザイン規約](product-specs/art/armor-part-design.md)
+- [設置物のデザイン規約](product-specs/art/prop-design.md)（案）
 - [Map Plan](product-specs/art/map-plan.md)
 - [Object Plan](product-specs/art/object-plan.md)
 - [Tileset Plan](product-specs/art/tileset-plan.md)
