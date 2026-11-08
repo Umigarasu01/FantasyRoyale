@@ -417,7 +417,7 @@ namespace FantasyRoyale.Gameplay.Characters.Tests.Editor
         {
             var fist = CreateSprite(64f);
             var hands = new CharacterSpriteAnchors(Vector2.zero, Vector2.zero, Vector2.zero, 0f, fist, fist);
-            var motion = new CharacterMotionFrames(CharacterActionMotion.Swing, new[] { fist }, new[] { hands }, new Sprite[1]);
+            var motion = new CharacterMotionFrames(CharacterActionMotion.Swing, new[] { fist }, new[] { hands });
             var view = new CharacterSpriteView(fist, new[] { fist }, hands, new[] { hands }, fist, new Sprite[0], new[] { motion });
             var body = ScriptableObject.CreateInstance<CharacterSpriteSetDefinition>();
             created.Add(body);
@@ -486,7 +486,7 @@ namespace FantasyRoyale.Gameplay.Characters.Tests.Editor
             var fist = CreateSprite(64f);
             var hands = new CharacterSpriteAnchors(Vector2.zero, Vector2.zero, Vector2.zero, 0f, fist, fist);
             var motion = new CharacterMotionFrames(
-                CharacterActionMotion.Swing, new[] { fist }, new[] { hands }, new Sprite[1], new Sprite[1], new Vector2[1]);
+                CharacterActionMotion.Swing, new[] { fist }, new[] { hands }, new Sprite[1], new Vector2[1]);
             var view = new CharacterSpriteView(fist, new[] { fist }, hands, new[] { hands }, fist, new[] { fist }, new[] { motion });
             var body = ScriptableObject.CreateInstance<CharacterSpriteSetDefinition>();
             created.Add(body);

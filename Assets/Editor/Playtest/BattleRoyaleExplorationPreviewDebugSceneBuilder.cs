@@ -190,7 +190,7 @@ namespace FantasyRoyale.Editor.Playtest
             if (sword == null)
             {
                 sword = ScriptableObject.CreateInstance<CharacterActionDefinition>();
-                sword.ConfigureMelee("sword-slash", 20, new CharacterActionTiming(0.1f, 0.1f, 0.2f), 1.4f, 180f);
+                sword.ConfigureMelee("sword-slash", 20, new CharacterActionTiming(0.1f, 0.1f, 0.2f), 1f, 180f);
                 AssetDatabase.CreateAsset(sword, SwordActionPath);
             }
 

@@ -320,6 +320,58 @@ namespace FantasyRoyale.Playtest.Tests.PlayMode
         }
 
         /// <summary>
+        /// 剣は斬撃の届く所までしか当たらない。斬撃の縁のすぐ内に体がある敵には当たり、すぐ外の敵には当たらない。
+        /// 斬撃は剣を振る高さにあるので、下の敵は近く、上の敵は遠くまで届く。
+        /// </summary>
+        [UnityTest]
+        public IEnumerator ForestMap_SwordHitsWhereTheSlashReaches()
+        {
+            yield return LoadForest();
+            var enemy = preview.GetEnemyActor(0);
+            var health = enemy.Health;
+            var range = preview.PlayerCombat.Loadout.Get(CharacterActionSlot.Primary).Range;
+            var swing = preview.PlayerCombat.MeleeOffset.y;
+            const float margin = 0.1f;
+
+            // 下の敵は体の上端、上の敵は足元が斬撃の縁に来る距離を基準にする。
+            var belowEdge = range - swing + ForestMapPreviewDebug.EnemyBodySize.y;
+            yield return Swing(enemy, CharacterDirection8.South, belowEdge + margin);
+            Assert.That(health.CurrentHealth, Is.EqualTo(health.MaximumHealth), "斬撃の外の下の敵には当たりません。");
+            yield return Swing(enemy, CharacterDirection8.South, belowEdge - margin);
+            Assert.That(health.CurrentHealth, Is.LessThan(health.MaximumHealth), "斬撃の内の下の敵には当たります。");
+
+            health.RestoreHealth(health.MaximumHealth);
+            var aboveEdge = range + swing;
+            yield return Swing(enemy, CharacterDirection8.North, aboveEdge + margin);
+            Assert.That(health.CurrentHealth, Is.EqualTo(health.MaximumHealth), "斬撃の外の上の敵には当たりません。");
+            yield return Swing(enemy, CharacterDirection8.North, aboveEdge - margin);
+            Assert.That(health.CurrentHealth, Is.LessThan(health.MaximumHealth), "斬撃の内の上の敵には当たります。");
+        }
+
+        /// <summary>
+        /// 開けた村の広場で、騎士を敵から指定の向きの反対へ離して置き、敵の方へ一振りする。敵が動いても距離を保つ。
+        /// </summary>
+        private IEnumerator Swing(CharacterActor2D enemy, CharacterDirection8 direction, float distance)
+        {
+            CharacterDirections.ToUnitVector(direction, out var x, out var y);
+            var away = new Vector2(-x, -y) * distance;
+            enemy.Body.position = preview.SpawnPosition + Vector2.up;
+            preview.PlayerActor.Body.position = enemy.Body.position + away;
+            yield return new WaitForFixedUpdate();
+            Assert.That(
+                preview.PlayerCombat.TryStartAction(new CharacterActionCommand(CharacterActionSlot.Primary, direction)),
+                Is.True);
+            while (preview.PlayerCombat.ActionState.IsBusy)
+            {
+                preview.PlayerActor.Body.position = enemy.Body.position + away;
+                yield return new WaitForFixedUpdate();
+            }
+
+            // 連撃を続けられる間を過ぎ、次も一段目から振る。
+            yield return new WaitForSeconds(0.5f);
+        }
+
+        /// <summary>
         /// 宝箱からコインが手に入り、開けた宝箱と遠い宝箱は開かない。
         /// </summary>
         [UnityTest]
@@ -379,6 +431,7 @@ namespace FantasyRoyale.Playtest.Tests.PlayMode
 
         /// <summary>
         /// 剣を振ると上半身のコマが重なり、剣はコマごとの角度で腕と一緒に動き、盾は動かず、終わると元の絵へ戻る。
+        /// 判定のある間は、判定の距離を外側の縁とする斬撃が、判定の起点の真上に出る。
         /// </summary>
         [UnityTest]
         public IEnumerator ForestMap_SwordSwingsThroughAttackPose()
@@ -391,11 +444,14 @@ namespace FantasyRoyale.Playtest.Tests.PlayMode
             var idleTorso = animator.GetUpperSprite();
             var command = new CharacterActionCommand(CharacterActionSlot.Primary, CharacterDirection8.East);
             Assert.That(preview.PlayerCombat.TryStartAction(command), Is.True);
+            var range = preview.PlayerCombat.ActionState.CurrentSpec.Range;
 
             var bodies = new HashSet<Sprite>();
             var swords = new HashSet<Sprite>();
             var shields = new HashSet<Vector2>();
-            var smears = 0;
+            var slashes = new HashSet<Sprite>();
+            var slashInWindup = false;
+            var slashPosition = Vector2.zero;
             var timeoutAt = Time.time + 2f;
             while (preview.PlayerCombat.ActionState.IsBusy && Time.time < timeoutAt)
             {
@@ -406,7 +462,13 @@ namespace FantasyRoyale.Playtest.Tests.PlayMode
                     swords.Add(animator.GetGearSprite(CharacterGearSlot.MainHand));
                     var shield = animator.GetGearPosition(CharacterGearSlot.OffHand) - animator.GetUpperPosition();
                     shields.Add(new Vector2(Mathf.Round(shield.x * 1000f), Mathf.Round(shield.y * 1000f)));
-                    smears += animator.GetSmearSprite() != null ? 1 : 0;
+                    var slash = animator.GetSlashSprite();
+                    if (slash != null)
+                    {
+                        slashes.Add(slash);
+                        slashPosition = animator.GetSlashPosition();
+                        slashInWindup |= preview.PlayerCombat.ActionState.Phase == CharacterActionPhase.Windup;
+                    }
                 }
             }
 
@@ -414,10 +476,17 @@ namespace FantasyRoyale.Playtest.Tests.PlayMode
             Assert.That(bodies.Count, Is.GreaterThanOrEqualTo(3), "上半身のコマが進みます。");
             Assert.That(swords.Count, Is.GreaterThanOrEqualTo(3), "剣はコマごとに角度が変わります。");
             Assert.That(shields.Count, Is.EqualTo(1), "振る間、盾は上半身に対して動きません。");
-            Assert.That(smears, Is.GreaterThan(0), "速い間は残像が出ます。");
+            Assert.That(slashes.Count, Is.EqualTo(1), "判定のある間は斬撃が出ます。");
+            Assert.That(slashInWindup, Is.False, "構えの間は斬撃を出しません。");
+            var extent = new List<Sprite>(slashes)[0].bounds.extents.x;
+            Assert.That(extent, Is.InRange(range, range + 2f / CharacterSlashSprites.PixelsPerUnit), "斬撃の外側の縁は判定の距離です。");
+            var melee = preview.PlayerCombat.MeleeOffset;
+            Assert.That(Vector2.Distance(slashPosition, melee), Is.LessThan(0.01f), "斬撃は判定の扇の中心に出ます。");
+            Assert.That(melee.y, Is.GreaterThan(preview.PlayerActor.FootCollider.offset.y), "判定の扇は剣を振る高さにあります。");
             yield return null;
             Assert.That(playerRenderer.sprite, Is.SameAs(idle), "終わると通常の絵へ戻ります。");
             Assert.That(animator.GetUpperSprite(), Is.SameAs(idleTorso), "胴も通常の絵へ戻ります。");
+            Assert.That(animator.GetSlashSprite(), Is.Null, "終わると斬撃は消えます。");
         }
 
         /// <summary>

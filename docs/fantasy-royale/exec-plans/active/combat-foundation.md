@@ -49,6 +49,7 @@
 - Preview BootstrapはRigidbody2Dを直接移動せず、Production Actorを使う。
 - 装備状態はCoreの`CharacterLoadout`が持ち、ScriptableObjectの定義は`CharacterActionSpec`へ変換して渡す。
 - 持続0の飛び道具も発動を逃さないよう、`CharacterActionState`は一度の時間更新で通過した段階を全て報告する。
+- 2026-11-08、所有者の判断で、近接攻撃の判定は斬撃のエフェクトで表す。扇の中心を足元から剣を振る高さ（`CharacterCombat2D.MeleeOrigin`）へ移し、相手は見えている体の大きさの範囲で受ける。Coreの`IsInMeleeArea`は変えていない。攻撃範囲は武器ごとのActionが持つ。下の表の剣の範囲は最初の値で、今は距離1.0、180度である。詳細は[Forest Map Preview Debug Scene](../../design-docs/scenes/forest-map-preview-debug-scene.md#攻撃の判定と斬撃)にある。
 - 矢はRigidbodyを持たず、毎回の移動区間をCircleCastで先に調べる。
 - 近接攻撃は壁を貫通する。壁で止めるかは、戦闘を触ってから判断する。
 

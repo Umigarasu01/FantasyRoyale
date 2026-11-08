@@ -28,8 +28,7 @@ Writes, for the hero in Hero/ and for every other part in Sets/<id>/:
     hero-torso-sword-<view>-<index>.png, hero-torso-swing-<view>-<index>.png, hero-legs-idle-<view>.png,
     hero-legs-<view>-<index>.png, hero-legs-lunge-<view>-<index>.png
 and hero-part-template-01.png, Hero/anchors.json, Hand/<frame>-main.png, Hand/<frame>-off.png,
-Smear/hero-upper-swing-<view>-<index>.png, Gear/<item>-<view>.png, Gear/<item>-rot-<index>.png,
-Gear/sword-pommel-rot-<index>.png, Gear/gear.json
+Gear/<item>-<view>.png, Gear/<item>-rot-<index>.png, Gear/sword-pommel-rot-<index>.png, Gear/gear.json
 
 A generated sheet of a part can sit a little away from the whole hero, so every torso and leg frame is
 moved to where it matches the whole frame best. Every head is moved so its chin sits at the knight's:
@@ -65,7 +64,6 @@ FOREST = os.path.join(ROOT, "Assets", "Art", "Generated", "ForestLook")
 HERO = os.path.join(FOREST, "Hero")
 GEAR = os.path.join(FOREST, "Gear")
 HAND = os.path.join(FOREST, "Hand")
-SMEAR = os.path.join(FOREST, "Smear")
 SETS = os.path.join(FOREST, "Sets")
 
 # Each sheet draws the hero at its own size. The scales match every helmet to about 28 pixels.
@@ -187,13 +185,6 @@ HELMET_MAX_TINT = 50
 UPPER_WIDTH = 208
 UPPER_HEIGHT = 192
 UPPER_HEAD = (104, 88)
-
-# The smear follows the blade between two frames, from this far along it to its tip, in map pixels.
-SMEAR_START = 9
-SMEAR_TIP = 28
-SMEAR_STEPS = 8
-SMEAR_COLOUR = (235, 245, 255)
-SMEAR_MAX_ALPHA = 190
 
 # The sheets of the parts besides the hero's own. The name in them is the part's id: its folder in Sets/
 # and its entry in the game's list of equipment, so a new part only needs its sheets.
@@ -744,27 +735,6 @@ def build_lunge(part="hero", folder=HERO):
     return stances
 
 
-def smear_sprite(before, after):
-    """The band the blade sweeps between two frames, fading towards the older end."""
-    canvas = Image.new("RGBA", (UPPER_WIDTH, UPPER_HEIGHT), (0, 0, 0, 0))
-    pen = ImageDraw.Draw(canvas)
-    turn = (after["angle"] - before["angle"] + 180) % 360 - 180
-
-    def blade_point(share, reach):
-        radians = math.radians(before["angle"] + turn * share)
-        x = before["grip"][0] + (after["grip"][0] - before["grip"][0]) * share
-        y = before["grip"][1] + (after["grip"][1] - before["grip"][1]) * share
-        return x + math.cos(radians) * reach, y - math.sin(radians) * reach
-
-    for index in range(SMEAR_STEPS):
-        first, last = index / SMEAR_STEPS, (index + 1) / SMEAR_STEPS
-        strength = 0.35 + 0.65 * last
-        pen.polygon(
-            [blade_point(first, SMEAR_TIP), blade_point(last, SMEAR_TIP), blade_point(last, SMEAR_START), blade_point(first, SMEAR_START)],
-            fill=(*SMEAR_COLOUR, int(SMEAR_MAX_ALPHA * strength)))
-    return canvas
-
-
 def load_with_held(file):
     held_file = file.replace("hero-body-", "hero-")
     body = key_magenta(Image.open(os.path.join(FOREST, file)))
@@ -810,7 +780,6 @@ def build_body():
     for every frame where the sheet with the sword holds the grip, the blade's angle, the view and the kind of pose."""
     os.makedirs(HERO, exist_ok=True)
     os.makedirs(HAND, exist_ok=True)
-    os.makedirs(SMEAR, exist_ok=True)
     frames = {}
     placements = {}
     idles = {}
@@ -877,15 +846,13 @@ def build_body():
             off_hand = (statistics.mean(item["shield"][0] for item in read), statistics.mean(item["shield"][1] for item in read))
             idle = entries[f"hero-idle-{view}"]
             back = {"x": round(idle["back"]["x"] - idle["head"]["x"], 1), "y": round(idle["back"]["y"] - idle["head"]["y"], 1)}
-            for column, (name, item) in enumerate(zip(names, read)):
+            for name, item in zip(names, read):
                 frames[name] = item["frame"]
                 placements[name] = item["placement"]
                 grips[name] = (item["grip"], round(item["angle"], 1), view, "swing")
                 main_hand = glove_near(item["frame"], item["grip"])
                 fist_sprite(item["frame"], main_hand).save(os.path.join(HAND, name + "-main.png"))
                 fist_sprite(item["frame"], off_hand).save(os.path.join(HAND, name + "-off.png"))
-                if column > 0:
-                    smear_sprite(read[column - 1], item).save(os.path.join(SMEAR, name + ".png"))
                 data["frames"].append({
                     "name": name,
                     "mainHand": upper_point(main_hand),

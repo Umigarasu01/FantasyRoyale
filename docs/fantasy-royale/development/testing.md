@@ -156,6 +156,8 @@ FantasyRoyale.MapAuthoringKit.Editor.ForestRestartAssetBuilder.BuildScene(
 
 ## 現在の基準
 
+2026-11-08、近接攻撃の判定を斬撃で表し、片手剣の距離を1.0にした後、所有者の開いているEditorでUnity MCPから実行: EditMode 326 / 326成功、PlayMode 39件中34件成功。失敗した5件は従来と同じStudyAのSetUp失敗である。PlayModeは`run_tests`の`async_tests`をtrueにしないと、Playへ入るときのDomain Reloadで要求が切れる。`capture_game_view`の`save_path`は`Assets/`からの相対で書き出されてImportされるので、撮影後に`AssetDatabase.DeleteAsset`で消す。
+
 2026-11-08、斜めのキーが少しずれて離れても止まったまま斜めへ振れるよう、向きを保つ決まりを`CharacterActor2D`へ移した後、一時複製のProjectでのBatchmode実行: EditMode 324 / 324成功、PlayMode 38件中33件成功。失敗した5件は従来と同じStudyAのSetUp失敗である。
 
 2026-11-08、片手剣の型の走りの胴と、剣を鍔から先と柄頭に分けて胴の拳の両端へ付ける形を入れ、緑の拳を外した後、一時複製のProjectでのBatchmode実行: EditMode 324 / 324成功、PlayMode 37件中32件成功。失敗した5件は従来と同じStudyAのSetUp失敗である。戻した後の`check_asset_references.py`は参照切れ0件。本体のEditorでの見え方は未確認である。

@@ -41,7 +41,6 @@ MonoBehaviour:
     - motion: 1
       frames: []
       anchors: []
-      smears: []
       standLegs:
       - {fileID: 21300000, guid: c10bf64078d5c29449fdd79f22b908fb, type: 3}
       - {fileID: 21300000, guid: a30ed7dd5edde47488dd3701dc276ae9, type: 3}
@@ -80,7 +79,6 @@ MonoBehaviour:
     - motion: 1
       frames: []
       anchors: []
-      smears: []
       standLegs:
       - {fileID: 21300000, guid: 0e72cf958a8d70f47a13742796432d9d, type: 3}
       - {fileID: 21300000, guid: 25353b2e287e82a45af06664474bcc2a, type: 3}
@@ -119,7 +117,6 @@ MonoBehaviour:
     - motion: 1
       frames: []
       anchors: []
-      smears: []
       standLegs:
       - {fileID: 21300000, guid: 3c91e3c54bbd9e649948567d2c92f275, type: 3}
       - {fileID: 21300000, guid: f9020a7e8316cd74f9f92025c5acfcd0, type: 3}
@@ -158,7 +155,6 @@ MonoBehaviour:
     - motion: 1
       frames: []
       anchors: []
-      smears: []
       standLegs:
       - {fileID: 21300000, guid: 5f23bb8309b7c7f4cadfb0c67045285c, type: 3}
       - {fileID: 21300000, guid: 0e1226d11673a3a46bf94cbb7f39bfae, type: 3}
@@ -197,7 +193,6 @@ MonoBehaviour:
     - motion: 1
       frames: []
       anchors: []
-      smears: []
       standLegs:
       - {fileID: 21300000, guid: fd42698b2c1481a4dbdffa6b22878591, type: 3}
       - {fileID: 21300000, guid: 89cfa7141e01fb44381f4cabe32eaf5c, type: 3}

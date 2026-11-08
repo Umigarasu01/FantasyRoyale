@@ -42,6 +42,7 @@ namespace FantasyRoyale.Gameplay.Characters.Unity
         private CharacterActor2D actor;
         private ContactFilter2D overlapFilter;
         private LayerMask wallMask;
+        private float? swingHeight;
 
         public event Action<CharacterActionSpec, CharacterDirection8> ActionActivated;
         public event Action<CharacterHitEvent> HitApplied;
@@ -51,9 +52,33 @@ namespace FantasyRoyale.Gameplay.Characters.Unity
         public CharacterLoadout Loadout { get; private set; }
 
         /// <summary>
-        /// 足元ではなく体の中心付近を攻撃の起点にする。
+        /// 足元ではなく体の中心付近を攻撃の起点にする。飛び道具はここから放つ。
         /// </summary>
         public Vector2 AttackOrigin => actor.Body.position + actor.FootCollider.offset;
+
+        /// <summary>
+        /// 近接攻撃の扇の中心の、足元からの位置。斬撃もここを中心に描くので、見えている斬撃がそのまま判定になる。
+        /// 振る高さを決めていなければ、足元の判定の中心である。
+        /// </summary>
+        public Vector2 MeleeOffset => new Vector2(actor.FootCollider.offset.x, swingHeight ?? actor.FootCollider.offset.y);
+
+        /// <summary>
+        /// 近接攻撃の扇の中心。
+        /// </summary>
+        public Vector2 MeleeOrigin => actor.Body.position + MeleeOffset;
+
+        /// <summary>
+        /// 武器を振る高さを、足元からのUnity単位で決める。体の絵で剣が回る中心の高さに合わせる。
+        /// </summary>
+        public void SetSwingHeight(float height)
+        {
+            if (float.IsNaN(height) || float.IsInfinity(height))
+            {
+                throw new ArgumentOutOfRangeException(nameof(height), "振る高さは有限の値である必要があります。");
+            }
+
+            swingHeight = height;
+        }
 
         /// <summary>
         /// 装備状態と、飛び道具を止める壁のLayerを注入する。
@@ -142,10 +167,11 @@ namespace FantasyRoyale.Gameplay.Characters.Unity
 
         /// <summary>
         /// 距離内の候補をPhysicsで集め、形の判定と多重命中の防止はCoreへ任せる。
+        /// 扇は振る高さに置き、相手の当たり範囲と比べる。相手の当たり範囲は見えている体に合わせる。
         /// </summary>
         private void ResolveMeleeHits(CharacterActionSpec spec, CharacterDirection8 direction)
         {
-            var origin = AttackOrigin;
+            var origin = MeleeOrigin;
             overlapBuffer.Clear();
             Physics2D.OverlapCircle(origin, spec.Range, overlapFilter, overlapBuffer);
             for (var index = 0; index < overlapBuffer.Count; index++)

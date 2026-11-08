@@ -34,6 +34,12 @@ namespace FantasyRoyale.Playtest
         // 足元ではなく体の中心を画面の中央に置く。
         private const float CameraTargetHeight = 0.5f;
 
+        // 騎士の剣は足元から48 pixelほどの高さを中心に回る。近接攻撃の扇と斬撃はここに置く。
+        private const float HeroSwingHeight = 0.75f;
+
+        // スライムの攻撃を受ける範囲。足元の判定より大きい、見えている体の大きさにする。
+        public static readonly Vector2 EnemyBodySize = new Vector2(0.85f, 0.75f);
+
         // 敵と宝箱の仮の数値。遊びながら調整する。
         private const int EnemyHealthPoints = 40;
         private const float EnemySpeed = 3f;
@@ -446,6 +452,7 @@ namespace FantasyRoyale.Playtest
 
             PlayerCombat = PlayerObject.AddComponent<CharacterCombat2D>();
             PlayerCombat.Initialize(new CharacterLoadout(null, null), LayerMask.GetMask(MapCollisionLayerName));
+            PlayerCombat.SetSwingHeight(HeroSwingHeight);
             EquipIndex(equipmentIndex);
             PlayerCombat.HitApplied += OnHitApplied;
             PlayerAnimator.BindCombat(PlayerCombat);
@@ -538,6 +545,10 @@ namespace FantasyRoyale.Playtest
             enemyObject.AddComponent<CharacterSpriteAnimator2D>().Initialize(enemySprites);
             var hurtbox = enemyObject.AddComponent<CharacterHurtbox2D>();
             hurtbox.Initialize(health);
+            var body = enemyObject.AddComponent<BoxCollider2D>();
+            body.isTrigger = true;
+            body.size = EnemyBodySize;
+            body.offset = new Vector2(0f, EnemyBodySize.y * 0.5f);
             var chase = enemyObject.AddComponent<CharacterChaseController2D>();
             chase.Initialize(
                 new CharacterChaseBrain(spot.x, spot.y, EnemyNoticeRange, EnemyLeashRange, EnemyStopRange),

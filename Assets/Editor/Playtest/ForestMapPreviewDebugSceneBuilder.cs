@@ -32,7 +32,6 @@ namespace FantasyRoyale.Editor.Playtest
         private const string SetsDataFolder = "Assets/Data/Gameplay/Characters/Sets";
         private const string GearFolder = "Assets/Art/Generated/ForestLook/Gear";
         private const string HandFolder = "Assets/Art/Generated/ForestLook/Hand";
-        private const string SmearFolder = "Assets/Art/Generated/ForestLook/Smear";
         private const string GameFolder = "Assets/Art/Generated/ForestLook/Game";
         private const string SwordActionPath = "Assets/Data/Gameplay/Actions/SwordSlash.asset";
         private const string SwordSecondStepPath = "Assets/Data/Gameplay/Actions/SwordSlash2.asset";
@@ -255,8 +254,8 @@ namespace FantasyRoyale.Editor.Playtest
         private static void LinkSwordCombo()
         {
             var first = AssetDatabase.LoadAssetAtPath<CharacterActionDefinition>(SwordActionPath);
-            var second = LoadOrCreateSwordStep(SwordSecondStepPath, "sword-slash-2", 20, new CharacterActionTiming(0.1f, 0.1f, 0.2f), 1.4f, 180f);
-            var third = LoadOrCreateSwordStep(SwordThirdStepPath, "sword-slash-3", 35, new CharacterActionTiming(0.12f, 0.1f, 0.3f), 1.4f, 180f);
+            var second = LoadOrCreateSwordStep(SwordSecondStepPath, "sword-slash-2", 20, new CharacterActionTiming(0.1f, 0.1f, 0.2f), 1f, 180f);
+            var third = LoadOrCreateSwordStep(SwordThirdStepPath, "sword-slash-3", 35, new CharacterActionTiming(0.12f, 0.1f, 0.3f), 1f, 180f);
             first.SetNextInCombo(second);
             second.SetNextInCombo(third);
             EditorUtility.SetDirty(first);
@@ -408,10 +407,6 @@ namespace FantasyRoyale.Editor.Playtest
                     {
                         ImportIfPresent($"{folder}/hero-torso-swing-{view}-{frame}.png", UpperPivot);
                         ImportIfPresent($"{folder}/hero-legs-lunge-{view}-{frame}.png", LungePivot);
-                        if (frame > 0)
-                        {
-                            ImportSprite($"{SmearFolder}/hero-upper-swing-{view}-{frame}.png", UpperPivot);
-                        }
                     }
                 }
             }
@@ -506,13 +501,10 @@ namespace FantasyRoyale.Editor.Playtest
 
             var swing = LoadFrames(folder, $"hero-torso-swing-{view}", HeroSwingFrameCount);
             var standLegs = LoadFrames(folder, $"hero-legs-lunge-{view}", HeroSwingFrameCount);
-            var smears = new Sprite[swing.Length];
             var swingAnchors = new CharacterSpriteAnchors[swing.Length];
             for (var frame = 0; frame < swing.Length; frame++)
             {
-                var name = $"hero-upper-swing-{view}-{frame}";
-                smears[frame] = frame > 0 ? AssetDatabase.LoadAssetAtPath<Sprite>($"{SmearFolder}/{name}.png") : null;
-                swingAnchors[frame] = anchors[name];
+                swingAnchors[frame] = anchors[$"hero-upper-swing-{view}-{frame}"];
             }
 
             var standHeads = new Vector2[standLegs.Length];
@@ -525,7 +517,7 @@ namespace FantasyRoyale.Editor.Playtest
             var idleLegs = AssetDatabase.LoadAssetAtPath<Sprite>($"{folder}/hero-legs-idle-{view}.png");
             var head = AssetDatabase.LoadAssetAtPath<Sprite>($"{folder}/hero-head-{view}.png");
             var motions = swing.Length > 0 || standLegs.Length > 0
-                ? new[] { new CharacterMotionFrames(CharacterActionMotion.Swing, swing, swingAnchors, smears, standLegs, standHeads) }
+                ? new[] { new CharacterMotionFrames(CharacterActionMotion.Swing, swing, swingAnchors, standLegs, standHeads) }
                 : new CharacterMotionFrames[0];
 
             // 片手剣の型の走りの胴。剣の腕を下ろして拳を握った胴で、手の位置は共有の値である。

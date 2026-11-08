@@ -57,7 +57,7 @@ PlayerStart付近に確認用の的を置く。HPは100で、倒すと2秒後に
 | 特殊Action | K | 右Click |
 | 装備の切り替え | 1、2 | なし |
 
-剣の装備は通常攻撃が剣で特殊Actionが弓、弓の装備はその逆である。斬撃、矢、的の色の変化はRuntime生成の仮表示である。このSceneは承認済みの森マップではなく、従来のReference Mapを読む。
+剣の装備は通常攻撃が剣で特殊Actionが弓、弓の装備はその逆である。斬撃、矢、的の色の変化はRuntime生成の仮表示である。斬撃は森のSceneと同じ`CharacterSlashSprites`の絵で、判定と同じ位置と大きさに出す。このSceneの操作役は振る高さを決めていないので、扇の中心は足元の判定の中心である。このSceneは承認済みの森マップではなく、従来のReference Mapを読む。
 
 検証用Project`UnityVisualValidation`にも同じ名前のSceneがあるが、古いコピーなので攻撃は入っていない。攻撃はRepositoryのProjectで確認する。
 

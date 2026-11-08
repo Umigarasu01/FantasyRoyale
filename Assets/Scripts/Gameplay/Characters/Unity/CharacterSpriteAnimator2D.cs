@@ -9,7 +9,7 @@ namespace FantasyRoyale.Gameplay.Characters.Unity
     /// 装備の部品は体の手と背中の位置へ毎Frame重ねるので、部品を替えてもアニメーションは保たれる。
     /// 部位で着替える体は足、胴、頭の3層で表す。足と胴はコマごとの絵で、頭は兜の位置へ付く1枚の絵である。
     /// 攻撃中は胴が動きの型の上半身に替わる。足は走っていれば走りのコマを続け、止まっていれば型の踏み込みのコマを見せる。
-    /// 武器はコマごとの手の位置と角度で腕と一緒に動く。
+    /// 武器はコマごとの手の位置と角度で腕と一緒に動く。近接攻撃では、当たり判定と同じ扇の斬撃を出す。
     /// 足、胴、頭の3層の体は、足元へいつも影を出す。走って足が着くコマと着地では、足元に砂ぼこりを出す。
     /// 跳んでいる間は、足元を残して全ての層を持ち上げ、影を小さくする。足のコマは踏み切った時のまま止める。
     /// 表示だけを担当し、移動や判定には影響しない。
@@ -20,18 +20,18 @@ namespace FantasyRoyale.Gameplay.Characters.Unity
     public sealed class CharacterSpriteAnimator2D : MonoBehaviour
     {
         private const int AttackFrameCount = 4;
-        private const float SmearRecoveryShare = 0.3f;
+        private const float SlashFadeShare = 0.3f;
         private const int StandDeepFrame = 2;
         private const float StandHoldShare = 0.5f;
 
-        // 体より手前に重ねる順。足の上へ柄頭、胴、背を向けて振る剣、頭、盾の手の部品、残像、武器、拳の順に積む。
+        // 体より手前に重ねる順。足の上へ柄頭、胴、背を向けて振る剣、頭、盾の手の部品、斬撃、武器、拳の順に積む。
         // 柄頭は胴の下なので、腕に隠れる所は見えない。背を向けて走る剣も胴の下へ回し、拳の下から出す。
         private const int UnderUpperOrder = 1;
         private const int UpperOrder = 2;
         private const int UnderHeadOrder = 3;
         private const int HeadOrder = 4;
         private const int OffHandOrder = 5;
-        private const int SmearOrder = 6;
+        private const int SlashOrder = 6;
         private const int MainHandOrder = 7;
         private const int HandOverOrder = 8;
 
@@ -70,7 +70,7 @@ namespace FantasyRoyale.Gameplay.Characters.Unity
         private CharacterCombat2D combat;
         private SpriteRenderer upperRenderer;
         private SpriteRenderer headRenderer;
-        private SpriteRenderer smearRenderer;
+        private SpriteRenderer slashRenderer;
         private Transform lift;
         private SpriteRenderer airLegsRenderer;
         private SpriteRenderer shadowRenderer;
@@ -251,11 +251,19 @@ namespace FantasyRoyale.Gameplay.Characters.Unity
         }
 
         /// <summary>
-        /// 今の残像の絵を返す。出ていなければnullを返す。
+        /// 今の斬撃の絵を返す。出ていなければnullを返す。
         /// </summary>
-        public Sprite GetSmearSprite()
+        public Sprite GetSlashSprite()
         {
-            return smearRenderer != null && smearRenderer.enabled ? smearRenderer.sprite : null;
+            return slashRenderer != null && slashRenderer.enabled ? slashRenderer.sprite : null;
+        }
+
+        /// <summary>
+        /// 斬撃の扇の中心の、体の足元から見た位置を返す。
+        /// </summary>
+        public Vector2 GetSlashPosition()
+        {
+            return slashRenderer != null ? (Vector2)(slashRenderer.transform.position - transform.position) : Vector2.zero;
         }
 
         /// <summary>
@@ -323,7 +331,7 @@ namespace FantasyRoyale.Gameplay.Characters.Unity
             lift = liftObject.transform;
             upperRenderer = CreateLayer("UpperBody");
             headRenderer = CreateLayer("Head");
-            smearRenderer = CreateLayer("Smear");
+            slashRenderer = CreateLayer("Slash");
             airLegsRenderer = CreateLayer("AirLegs");
             shadowRenderer = CreateLayer("Shadow");
             shadowRenderer.transform.SetParent(transform, false);
@@ -600,7 +608,7 @@ namespace FantasyRoyale.Gameplay.Characters.Unity
             }
 
             isAttacking = false;
-            smearRenderer.enabled = false;
+            slashRenderer.enabled = false;
             var facing = UpdateShownFacing();
             spriteRenderer.flipX = IsLeftFacing(facing);
 
@@ -675,13 +683,7 @@ namespace FantasyRoyale.Gameplay.Characters.Unity
             var position = new Vector3(spriteRenderer.flipX ? -head.x : head.x, head.y, 0f);
             ShowLayer(upperRenderer, motion.Frames[frame], position);
             ShowHead(state.Direction, head);
-            var smear = frame < motion.Smears.Length && ShowsSmear(state) ? motion.Smears[frame] : null;
-            smearRenderer.enabled = smear != null;
-            if (smear != null)
-            {
-                ShowLayer(smearRenderer, smear, position);
-            }
-
+            ShowSlash(state);
             var anchors = motion.Anchors[frame];
             isAttacking = true;
             ApplyParts(state.Direction, anchors, HeldAngle(anchors), head);
@@ -765,12 +767,44 @@ namespace FantasyRoyale.Gameplay.Characters.Unity
         }
 
         /// <summary>
-        /// 残像は動きの速い間だけ見せる。硬直に入ると少しで消す。
+        /// 近接攻撃の当たり判定を斬撃で見せる。扇の中心、外側の縁の距離、扇の幅のどれも判定と同じである。
+        /// 走っても体についていく。左向きは絵が反転して振る向きが逆になるので、斬撃の上下も入れ替える。
         /// </summary>
-        private static bool ShowsSmear(CharacterActionState state)
+        private void ShowSlash(CharacterActionState state)
         {
-            return state.Phase == CharacterActionPhase.Active
-                   || (state.Phase == CharacterActionPhase.Recovery && state.PhaseProgress < SmearRecoveryShare);
+            var spec = state.CurrentSpec;
+            var strength = SlashStrength(state);
+            slashRenderer.enabled = spec.Kind == CharacterActionKind.Melee && strength > 0f;
+            if (!slashRenderer.enabled)
+            {
+                return;
+            }
+
+            slashRenderer.sharedMaterial = spriteRenderer.sharedMaterial;
+            slashRenderer.sortingLayerID = spriteRenderer.sortingLayerID;
+            slashRenderer.sprite = CharacterSlashSprites.Get(spec.Range, spec.ArcDegrees);
+            slashRenderer.flipX = false;
+            slashRenderer.flipY = IsLeftFacing(state.Direction);
+            var colour = spriteRenderer.color;
+            colour.a *= strength;
+            slashRenderer.color = colour;
+            slashRenderer.transform.localPosition = combat.MeleeOffset;
+            slashRenderer.transform.localRotation = Quaternion.Euler(0f, 0f, (int)state.Direction * 45f);
+        }
+
+        /// <summary>
+        /// 判定のある持続の間ははっきり見せ、硬直に入ると少しで薄れて消す。
+        /// </summary>
+        private static float SlashStrength(CharacterActionState state)
+        {
+            if (state.Phase == CharacterActionPhase.Active)
+            {
+                return 1f;
+            }
+
+            return state.Phase == CharacterActionPhase.Recovery && state.PhaseProgress < SlashFadeShare
+                ? 1f - state.PhaseProgress / SlashFadeShare
+                : 0f;
         }
 
         private void ShowLayer(SpriteRenderer layer, Sprite sprite, Vector3 position)
@@ -848,9 +882,9 @@ namespace FantasyRoyale.Gameplay.Characters.Unity
             upperRenderer.sortingOrder = spriteRenderer.sortingOrder + UpperOrder;
             headRenderer.sortingOrder = spriteRenderer.sortingOrder + HeadOrder;
             var mainHand = parts.TryGetValue(CharacterGearSlot.MainHand, out var main) ? main.Gear : null;
-            var smearBehind = IsBehind(CharacterGearSlot.MainHand, shownPartFacing);
-            var smearOrder = mainHand != null && mainHand.IsSplitAtFist && smearBehind ? SplitBladeOrder() : smearBehind ? -1 : SmearOrder;
-            smearRenderer.sortingOrder = spriteRenderer.sortingOrder + smearOrder;
+            var slashBehind = IsBehind(CharacterGearSlot.MainHand, shownPartFacing);
+            var slashOrder = mainHand != null && mainHand.IsSplitAtFist && slashBehind ? SplitBladeOrder() : slashBehind ? -1 : SlashOrder;
+            slashRenderer.sortingOrder = spriteRenderer.sortingOrder + slashOrder;
             foreach (var pair in parts)
             {
                 // 振った剣は盾の手前を通る。

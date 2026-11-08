@@ -36,7 +36,7 @@ OpenAI Image APIの`gpt-image-2.5-sunburst`（editsのmedium、1536x1024）で�
 | hero-body-upper-swing-01 | 同Directoryの`hero-body-upper-swing-01.png` | 素手の上半身の横切り4コマ、正面、横、背面 | `bcbde8218d2b83b377bb06b1ec93f79b148d7ceb985fa2262c0332ba6911ef3e` |
 | hero-body-upper-swing-diagonal-01 | 同Directoryの`hero-body-upper-swing-diagonal-01.png` | 素手の上半身の横切り4コマ、斜め前、斜め後ろ | `6dc5549ff779d5a4feab220b145a29771fe1df029d8842f82e7b15c286415b3a` |
 
-Prompt全文は同名のJSONで確認する。`Tools/MapAuthoring/build_hero_frames.py`が手の位置と剣の角度を測り、`Hero/`、`Hand/`、`Smear/`へ書き出す。騎士の剣入りの絵と素手の絵は、部位へ分けた後も測定用に使う。
+Prompt全文は同名のJSONで確認する。`Tools/MapAuthoring/build_hero_frames.py`が手の位置と剣の角度を測り、`Hero/`と`Hand/`へ書き出す。2026-11-08に斬撃を武器の判定から作るよう替え、残像の`Smear/`は削除した。騎士の剣入りの絵と素手の絵は、部位へ分けた後も測定用に使う。
 
 ## 2026-11-07 防具の部位
 

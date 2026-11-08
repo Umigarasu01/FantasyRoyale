@@ -141,11 +141,6 @@ MonoBehaviour:
         head: {x: 0, y: 0}
         mainHandFront: 0.028125
         mainHandBack: -0.034375
-      smears:
-      - {fileID: 0}
-      - {fileID: 21300000, guid: 2fde6b22d728ccc41928ee503ab3f315, type: 3}
-      - {fileID: 21300000, guid: 902562c66633ca840ae87c28373ea9dc, type: 3}
-      - {fileID: 21300000, guid: 3eb883c75b505174599af1895a5ddcde, type: 3}
       standLegs:
       - {fileID: 21300000, guid: 11b26ee5b429d60428ebd8812e5dfb6e, type: 3}
       - {fileID: 21300000, guid: 5e03b2bcb2cfe534b9f468857f03f2bb, type: 3}
@@ -347,11 +342,6 @@ MonoBehaviour:
         head: {x: 0, y: 0}
         mainHandFront: 0.053125
         mainHandBack: -0.0484375
-      smears:
-      - {fileID: 0}
-      - {fileID: 21300000, guid: 83a0f8a69546be244bb10ce0b4f05c96, type: 3}
-      - {fileID: 21300000, guid: 79f95cf4cb75d99459220a04cb30b26d, type: 3}
-      - {fileID: 21300000, guid: 2cdc072bc4fca244782b54e1ccd22106, type: 3}
       standLegs:
       - {fileID: 21300000, guid: 882661d0e268bd74aa39a8dbf17c7899, type: 3}
       - {fileID: 21300000, guid: d4596504b22226a4386aa540788334e9, type: 3}
@@ -553,11 +543,6 @@ MonoBehaviour:
         head: {x: 0, y: 0}
         mainHandFront: 0.04375
         mainHandBack: -0.05
-      smears:
-      - {fileID: 0}
-      - {fileID: 21300000, guid: 6a7b8ed733691fa4a93a118621fbddf8, type: 3}
-      - {fileID: 21300000, guid: 6a9161d15d46dc04e8a8d6195ddcc337, type: 3}
-      - {fileID: 21300000, guid: 5493430c324d1144db5b2f254c2082d0, type: 3}
       standLegs:
       - {fileID: 21300000, guid: ce16cae2350c6b64388af6f3d4bd7f5f, type: 3}
       - {fileID: 21300000, guid: acb66d2a6e681ad429f6746bb92126bc, type: 3}
@@ -759,11 +744,6 @@ MonoBehaviour:
         head: {x: 0, y: 0}
         mainHandFront: 0.040625
         mainHandBack: -0.05
-      smears:
-      - {fileID: 0}
-      - {fileID: 21300000, guid: c0fa396b81f38b346b546d3c0acf0500, type: 3}
-      - {fileID: 21300000, guid: d6e89a8fe7e6bd34186ac2528a99aa2d, type: 3}
-      - {fileID: 21300000, guid: 3e29ae35494ea4e49b3ad94712ae7e3f, type: 3}
       standLegs:
       - {fileID: 21300000, guid: 08f81283e72589545a36cac5a212023b, type: 3}
       - {fileID: 21300000, guid: ef257d7387e0eb34d9e7ec59b8d361c2, type: 3}
@@ -965,11 +945,6 @@ MonoBehaviour:
         head: {x: 0, y: 0}
         mainHandFront: 0.0390625
         mainHandBack: -0.0390625
-      smears:
-      - {fileID: 0}
-      - {fileID: 21300000, guid: 3ab7c51c79fe3a04fbb2bc51a64b3cae, type: 3}
-      - {fileID: 21300000, guid: f089125dfabcf7d44bc699125f940869, type: 3}
-      - {fileID: 21300000, guid: 5bebc3b1447cd964eb31aa0bb4ec6ead, type: 3}
       standLegs:
       - {fileID: 21300000, guid: 6c4e319d669e82e4eb1aea82319ab266, type: 3}
       - {fileID: 21300000, guid: 944f7e6a2fc7aa840b3ef1fe5cd8b8b8, type: 3}

@@ -19,7 +19,7 @@ MonoBehaviour:
   windupSeconds: 0.12
   activeSeconds: 0.1
   recoverySeconds: 0.3
-  range: 1.4
+  range: 1
   arcDegrees: 180
   projectileSpeed: 12
   nextInCombo: {fileID: 0}

@@ -88,8 +88,8 @@ namespace FantasyRoyale.Gameplay.Characters.Unity
     }
 
     /// <summary>
-    /// 1方向分の、動きの型1つの上半身のコマと手の位置、残像、止まって振るときの脚。
-    /// 走っている間の脚は走りのコマを続けるので持たない。
+    /// 1方向分の、動きの型1つの上半身のコマと手の位置、止まって振るときの脚。
+    /// 走っている間の脚は走りのコマを続けるので持たない。斬撃は武器ごとの判定から作るので、体の絵には持たない。
     /// </summary>
     [Serializable]
     public sealed class CharacterMotionFrames
@@ -97,12 +97,11 @@ namespace FantasyRoyale.Gameplay.Characters.Unity
         [SerializeField] private CharacterActionMotion motion;
         [SerializeField] private Sprite[] frames = new Sprite[0];
         [SerializeField] private CharacterSpriteAnchors[] anchors = new CharacterSpriteAnchors[0];
-        [SerializeField] private Sprite[] smears = new Sprite[0];
         [SerializeField] private Sprite[] standLegs = new Sprite[0];
         [SerializeField] private Vector2[] standHeads = new Vector2[0];
 
-        public CharacterMotionFrames(CharacterActionMotion motion, Sprite[] frames, CharacterSpriteAnchors[] anchors, Sprite[] smears)
-            : this(motion, frames, anchors, smears, new Sprite[0], new Vector2[0])
+        public CharacterMotionFrames(CharacterActionMotion motion, Sprite[] frames, CharacterSpriteAnchors[] anchors)
+            : this(motion, frames, anchors, new Sprite[0], new Vector2[0])
         {
         }
 
@@ -110,14 +109,12 @@ namespace FantasyRoyale.Gameplay.Characters.Unity
             CharacterActionMotion motion,
             Sprite[] frames,
             CharacterSpriteAnchors[] anchors,
-            Sprite[] smears,
             Sprite[] standLegs,
             Vector2[] standHeads)
         {
             this.motion = motion;
             this.frames = frames;
             this.anchors = anchors;
-            this.smears = smears;
             this.standLegs = standLegs;
             this.standHeads = standHeads;
         }
@@ -125,11 +122,6 @@ namespace FantasyRoyale.Gameplay.Characters.Unity
         public CharacterActionMotion Motion => motion;
         public Sprite[] Frames => frames;
         public CharacterSpriteAnchors[] Anchors => anchors;
-
-        /// <summary>
-        /// コマごとの残像。動きの遅いコマはnullである。
-        /// </summary>
-        public Sprite[] Smears => smears;
 
         /// <summary>
         /// 止まって振るときの脚のコマ。持たない型は立ち姿の脚のまま振る。
