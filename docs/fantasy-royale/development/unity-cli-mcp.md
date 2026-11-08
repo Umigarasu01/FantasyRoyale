@@ -4,10 +4,10 @@
 
 2026-09-07に公式Unity CLI方式へ移行。CLIは `1.0.0-beta.8`、Packageは `com.unity.pipeline` `0.6.0-exp.1`。
 CLI実体: `C:\Users\umiga\AppData\Local\Unity\bin\unity.exe`。
-Codex設定: `C:\Users\umiga\.codex\config.toml`。旧設定のバックアップは同Directoryの `config.toml.unity-migration-20260907-000452.bak`。
+Claude Code設定: Repository直下の `.mcp.json`（Git管理外）。Codexを使っていた時の設定は `C:\Users\umiga\.codex\config.toml` に残り、旧設定のバックアップは同Directoryの `config.toml.unity-migration-20260907-000452.bak`。
 
 接続名は `unity-mcp-fantasyroyale`。`mcp --project-path C:\Users\umiga\Repository\FantasyRoyale` で対象Projectを固定する。他Project用の接続で操作しない。
-Unityを開いてPackage解決・Compileが終わった後に利用する。既存のCodexタスクでToolが出ない場合はアプリ再起動後に確認する。
+Unityを開いてPackage解決・Compileが終わった後に利用する。`.mcp.json`を変えた後やToolが出ない場合は、Claude Codeのセッションを開き直して確認する。
 
 ## 確認コマンド
 
@@ -20,7 +20,7 @@ unity command editor_status --project-path 'C:\Users\umiga\Repository\FantasyRoy
 ```
 
 `projectPath`が対象と一致し、`compiling=false`かつ`status=ready`であることを確認してから操作する。
-`unity mcp configure codex`は標準名 `unity` を使うため、3プロジェクトの固定設定を無条件で上書きしない。
+`unity mcp configure`の自動設定は標準名 `unity` を使う（codex向けで確認）ため使わず、接続名を固定した設定を手で書く。
 
 ## 移行時の注意
 
@@ -44,3 +44,7 @@ Forest Restartの再生成・Test手順は[Build・Test手順](testing.md)を参
 ## 検証結果（2026-09-07）
 
 MCP stdioのinitialize、tools/list（149件）、tools/callのeditor_statusに成功。対象projectPath一致、status=ready、compiling=falseを確認。Codex設定はCLIのmcp getでも読み取り済み。ゲーム全体のTestは未実施。
+
+## Claude Codeへの切替（2026-11-08）
+
+`.mcp.json`はCodex時代のRepository内設定を写した旧`relay_win.exe --mcp`のままで、UnityのToolが出ていなかった。上の構成へ直し、接続名を`unity-mcp-fantasyroyale`にした。同じCommandでMCP stdioのinitializeとtools/list（149件）に成功。CLI実体は`1.0.0-beta.13`になっていた。

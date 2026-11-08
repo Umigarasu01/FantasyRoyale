@@ -2,7 +2,8 @@
 
 ## Purpose
 
-このファイルは、Codexがこのリポジトリで作業するための恒久的なルールとKnowledgeへの入口を定義する。
+このファイルは、AIエージェントがこのリポジトリで作業するための恒久的なルールとKnowledgeへの入口を定義する。
+どのエージェントにも共通するルールだけを書き、ツール固有の差分は各ツールのファイル（Claude Codeは`CLAUDE.md`）へ書く。
 
 このファイルを百科事典にしない。
 詳細な仕様・設計・判断・手順は適切なリポジトリ内ドキュメントへ配置する。
@@ -266,7 +267,7 @@ Obsidianの以下の機能は利用してよい:
 
 ## Knowledge Improvement Loop
 
-Codexの失敗やReview Feedbackを単発修正だけで終わらせない。
+エージェントの失敗やReview Feedbackを単発修正だけで終わらせない。
 
 原因を以下に分類する:
 
@@ -276,11 +277,11 @@ Implementation Bug
 不足していたProject Knowledge
 → `docs/fantasy-royale/`を更新する
 
-同種のCodex Mistakeが繰り返される
-→ 最小限のRuleを最も近い`AGENTS.md`へ追加する
+同種のエージェントのMistakeが繰り返される
+→ 最小限のRuleを最も近いルールファイルへ追加する（共通ならこのファイル、Claude Code固有なら`CLAUDE.md`）
 
 繰り返される作業Procedure
-→ `.agents/skills/`へのSkill化を検討する
+→ Skill化を検討する（置き場所は下の[Skills](#skills)）
 
 機械的に検出できるInvariant
 → Test / Lint / Static Analysis / CIで強制する
@@ -295,7 +296,7 @@ Implementation Bug
 
 Repository-specific Skills:
 
-`.agents/skills/`
+`.claude/skills/<skill-name>/SKILL.md`（Claude Codeが読み込む場所）
 
 Skill化に適した例:
 
