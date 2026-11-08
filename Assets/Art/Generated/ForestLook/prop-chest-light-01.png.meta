@@ -1,0 +1,741 @@
+fileFormatVersion: 2
+guid: ab024a777eb03c44882ce70cd697413f
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -6876871795556688951
+    second: prop-chest-light-01_0
+  - first:
+      213: -3215943463095402294
+    second: prop-chest-light-01_1
+  - first:
+      213: -5221509159068206590
+    second: prop-chest-light-01_2
+  - first:
+      213: -98981515324492441
+    second: prop-chest-light-01_3
+  - first:
+      213: -5142110535738174298
+    second: prop-chest-light-01_4
+  - first:
+      213: -6607247791612394617
+    second: prop-chest-light-01_5
+  - first:
+      213: -8708622429216079090
+    second: prop-chest-light-01_6
+  - first:
+      213: 3497876956325656297
+    second: prop-chest-light-01_7
+  - first:
+      213: -2928451490131945224
+    second: prop-chest-light-01_8
+  - first:
+      213: 1207610690550221292
+    second: prop-chest-light-01_9
+  - first:
+      213: 3137698658056965420
+    second: prop-chest-light-01_10
+  - first:
+      213: 5086754015246310539
+    second: prop-chest-light-01_11
+  - first:
+      213: -1168989830352991655
+    second: prop-chest-light-01_12
+  - first:
+      213: -3532730630013621669
+    second: prop-chest-light-01_13
+  - first:
+      213: 4791104803325321809
+    second: prop-chest-light-01_14
+  - first:
+      213: -5307778906974192451
+    second: prop-chest-light-01_15
+  - first:
+      213: 5773279095097959433
+    second: prop-chest-light-01_16
+  - first:
+      213: 5992135711291853294
+    second: prop-chest-light-01_17
+  - first:
+      213: 5501154727755720169
+    second: prop-chest-light-01_18
+  - first:
+      213: -246836570655448218
+    second: prop-chest-light-01_19
+  - first:
+      213: -4233949380583616245
+    second: prop-chest-light-01_20
+  - first:
+      213: -3785900469250153527
+    second: prop-chest-light-01_21
+  - first:
+      213: -4329172249729321201
+    second: prop-chest-light-01_22
+  - first:
+      213: 3478112163689434158
+    second: prop-chest-light-01_23
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: prop-chest-light-01_0
+      rect:
+        serializedVersion: 2
+        x: 132
+        y: 63
+        width: 250
+        height: 385
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9cbd0f389817090a0800000000000000
+      internalID: -6876871795556688951
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: prop-chest-light-01_1
+      rect:
+        serializedVersion: 2
+        x: 631
+        y: 389
+        width: 60
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ac08578857cae53d0800000000000000
+      internalID: -3215943463095402294
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: prop-chest-light-01_2
+      rect:
+        serializedVersion: 2
+        x: 643
+        y: 63
+        width: 252
+        height: 410
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 20a7a46a5197987b0800000000000000
+      internalID: -5221509159068206590
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: prop-chest-light-01_3
+      rect:
+        serializedVersion: 2
+        x: 860
+        y: 358
+        width: 53
+        height: 59
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 765f0c316d850aef0800000000000000
+      internalID: -98981515324492441
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: prop-chest-light-01_4
+      rect:
+        serializedVersion: 2
+        x: 1151
+        y: 411
+        width: 48
+        height: 53
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6a4588936bd83a8b0800000000000000
+      internalID: -5142110535738174298
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: prop-chest-light-01_5
+      rect:
+        serializedVersion: 2
+        x: 1155
+        y: 68
+        width: 252
+        height: 415
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 78385f5e3275e44a0800000000000000
+      internalID: -6607247791612394617
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: prop-chest-light-01_6
+      rect:
+        serializedVersion: 2
+        x: 1363
+        y: 367
+        width: 72
+        height: 81
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e0383977a02c42780800000000000000
+      internalID: -8708622429216079090
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: prop-chest-light-01_7
+      rect:
+        serializedVersion: 2
+        x: 1669
+        y: 68
+        width: 250
+        height: 383
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9e6b0d92f84fa8030800000000000000
+      internalID: 3497876956325656297
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: prop-chest-light-01_8
+      rect:
+        serializedVersion: 2
+        x: 1882
+        y: 355
+        width: 56
+        height: 66
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8f8d8b4a2ec0c57d0800000000000000
+      internalID: -2928451490131945224
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: prop-chest-light-01_9
+      rect:
+        serializedVersion: 2
+        x: 2180
+        y: 65
+        width: 250
+        height: 353
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ce9c53d568b42c010800000000000000
+      internalID: 1207610690550221292
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: prop-chest-light-01_10
+      rect:
+        serializedVersion: 2
+        x: 2396
+        y: 349
+        width: 54
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c2d84b52e485b8b20800000000000000
+      internalID: 3137698658056965420
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: prop-chest-light-01_11
+      rect:
+        serializedVersion: 2
+        x: 2691
+        y: 65
+        width: 252
+        height: 378
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b8c5c8a73d7c79640800000000000000
+      internalID: 5086754015246310539
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: prop-chest-light-01_12
+      rect:
+        serializedVersion: 2
+        x: 79
+        y: 245
+        width: 46
+        height: 52
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 95a04cf51f9e6cfe0800000000000000
+      internalID: -1168989830352991655
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: prop-chest-light-01_13
+      rect:
+        serializedVersion: 2
+        x: 390
+        y: 248
+        width: 47
+        height: 49
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b5a65ee853839fec0800000000000000
+      internalID: -3532730630013621669
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: prop-chest-light-01_14
+      rect:
+        serializedVersion: 2
+        x: 605
+        y: 272
+        width: 17
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 152afdb2f6c6d7240800000000000000
+      internalID: 4791104803325321809
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: prop-chest-light-01_15
+      rect:
+        serializedVersion: 2
+        x: 903
+        y: 251
+        width: 50
+        height: 55
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dbcfd77b43bf656b0800000000000000
+      internalID: -5307778906974192451
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: prop-chest-light-01_16
+      rect:
+        serializedVersion: 2
+        x: 1110
+        y: 271
+        width: 39
+        height: 40
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 904a084bfbece1050800000000000000
+      internalID: 5773279095097959433
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: prop-chest-light-01_17
+      rect:
+        serializedVersion: 2
+        x: 1427
+        y: 271
+        width: 14
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ee9cb758ea7582350800000000000000
+      internalID: 5992135711291853294
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: prop-chest-light-01_18
+      rect:
+        serializedVersion: 2
+        x: 1614
+        y: 247
+        width: 51
+        height: 57
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9e5275a1417085c40800000000000000
+      internalID: 5501154727755720169
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: prop-chest-light-01_19
+      rect:
+        serializedVersion: 2
+        x: 2126
+        y: 247
+        width: 50
+        height: 57
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 663a180627f039cf0800000000000000
+      internalID: -246836570655448218
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: prop-chest-light-01_20
+      rect:
+        serializedVersion: 2
+        x: 2438
+        y: 247
+        width: 51
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b011455887dfd35c0800000000000000
+      internalID: -4233949380583616245
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: prop-chest-light-01_21
+      rect:
+        serializedVersion: 2
+        x: 2638
+        y: 251
+        width: 47
+        height: 52
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9c32c5fe497c57bc0800000000000000
+      internalID: -3785900469250153527
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: prop-chest-light-01_22
+      rect:
+        serializedVersion: 2
+        x: 2950
+        y: 247
+        width: 51
+        height: 59
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f07b76b96c0bbe3c0800000000000000
+      internalID: -4329172249729321201
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: prop-chest-light-01_23
+      rect:
+        serializedVersion: 2
+        x: 1940
+        y: 255
+        width: 14
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e2c8ca5c59cb44030800000000000000
+      internalID: 3478112163689434158
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      prop-chest-light-01_0: -6876871795556688951
+      prop-chest-light-01_1: -3215943463095402294
+      prop-chest-light-01_10: 3137698658056965420
+      prop-chest-light-01_11: 5086754015246310539
+      prop-chest-light-01_12: -1168989830352991655
+      prop-chest-light-01_13: -3532730630013621669
+      prop-chest-light-01_14: 4791104803325321809
+      prop-chest-light-01_15: -5307778906974192451
+      prop-chest-light-01_16: 5773279095097959433
+      prop-chest-light-01_17: 5992135711291853294
+      prop-chest-light-01_18: 5501154727755720169
+      prop-chest-light-01_19: -246836570655448218
+      prop-chest-light-01_2: -5221509159068206590
+      prop-chest-light-01_20: -4233949380583616245
+      prop-chest-light-01_21: -3785900469250153527
+      prop-chest-light-01_22: -4329172249729321201
+      prop-chest-light-01_23: 3478112163689434158
+      prop-chest-light-01_3: -98981515324492441
+      prop-chest-light-01_4: -5142110535738174298
+      prop-chest-light-01_5: -6607247791612394617
+      prop-chest-light-01_6: -8708622429216079090
+      prop-chest-light-01_7: 3497876956325656297
+      prop-chest-light-01_8: -2928451490131945224
+      prop-chest-light-01_9: 1207610690550221292
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

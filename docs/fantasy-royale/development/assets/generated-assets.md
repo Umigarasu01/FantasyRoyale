@@ -18,6 +18,22 @@
 
 Prompt全文は同名のJSONで確認する。騎士と同じ0.135倍で縮めると、閉じた箱が38×33 pixel、半開きの箱が36×43 pixel、開いて空の箱が36×45 pixelになる。閉じた箱はprop-chest-01から、半開きの箱と開く瞬間の光はprop-chest-03から切り出す。開く瞬間の光は右の絵と真ん中の絵の差から取り出す。何か入っている箱の光は、prop-chest-04の差から中の光を、prop-chest-05の1番目との差から飾りを取り出し、開いた箱の絵もprop-chest-04から切り出す。光は白、青、紫、金の4色へ塗り替える。prop-chest-02は参照に使っただけで、ゲーム用の絵には切り出さない。`Tools/MapAuthoring/build_chest_frames.py`が切り出して`Chest/`へ55枚を書き出す。使い方は[Asset導入・生成Workflow](../asset-workflow.md#騎士に合わせた宝箱)にある。
 
+## 2026-11-09 騎士に合わせたお店
+
+状態: **候補**。ゲームの屋台（`market-stall`）は置き換えていない。
+
+[設置物のデザイン規約](../../product-specs/art/prop-design.md#お店)の4案を描いた。OpenAI Image APIの`gpt-image-2.5-sunburst`（editsのmedium、1536x1024）で、騎士の立ち姿の正面を元の大きさのまま左の列に置いた画像を参照にしている。
+
+| Source | 保存先 | Prompt概要 | SHA-256 |
+| --- | --- | --- | --- |
+| prop-shop-01 | `Assets/Art/Generated/ForestLook/prop-shop-01.png` | 左の列に騎士、真ん中に屋台、右に行商人の荷馬車 | `8e80bc694ebae73e3987451666462b8e1df7451fa2411c8b931dd39490811e9c` |
+| prop-shop-02 | `Assets/Art/Generated/ForestLook/prop-shop-02.png` | 左の列に騎士、真ん中にガラクタの露店、右に小さな店小屋（選ばなかった） | `1a7ddb0f86b33d55a9c7aa39cb0b1e138aeffbbddfbac4704b2b874a3f38749e` |
+
+| prop-shophouse-01 | `Assets/Art/Generated/ForestLook/prop-shophouse-01.png` | 中心街のイメージ図を参照に、武器屋、防具屋、魔法屋、道具屋の4軒を1行4列で描いた（2枚のうち2枚目） | `4df9c2af04f41ec667b045c649466050244d8646395fa2c57161600e8603fd70` |
+| central-town-concept | `Tools/MapAuthoring/Inputs/central-town-concept.png` | 大通りの中心街のイメージ図。所有者が3案から選んだ形の見本で、ゲーム用の絵ではない | `c299b8f73fcc505523802e06f9e16471a14e73c0da53438ac8765aad81a558ed` |
+
+Prompt全文は同名のJSONで確認する。`Tools/MapAuthoring/build_town_sprites.py`が、屋台、露店、お店の家4軒を`Town/`へ切り出す。中心街を仮の絵で地図へ組み込むための切り出しで、絵は後で描き直す。
+
 ## 2026-11-06 森マップの設置物の描き直し
 
 状態: **森マップで使用**

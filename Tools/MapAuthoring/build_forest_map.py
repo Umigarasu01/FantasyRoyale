@@ -365,6 +365,60 @@ class Spacing:
 
 
 # --- Forest shape ---------------------------------------------------------------------------
+def paved_mask():
+    """The town's paving on the map as a mask."""
+    mask = Image.new("L", (W, H))
+    draw = ImageDraw.Draw(mask)
+    for kind, a, b, c, d in L.PAVED:
+        if kind == "rect":
+            draw.rectangle((*to_px(a, d), *to_px(c, b)), fill=255)
+        else:
+            draw.ellipse((*to_px(a - c, b + d), *to_px(a + c, b - d)), fill=255)
+    return mask
+
+
+# Placeholder cobbles until the town's paving is drawn: rows of stones in turn, each a little different in
+# tone, lit from the upper left, with dark joints and a light curb along the edge.
+COBBLE_TONES = ((166, 156, 140), (152, 143, 128), (176, 166, 150), (140, 134, 124), (160, 148, 128))
+COBBLE_JOINT = (82, 74, 64)
+COBBLE_ROW = 10
+CURB = 5
+CURB_TONE = (192, 184, 168)
+CURB_LINE = (70, 62, 54)
+
+
+def paving(ground, mask):
+    box = mask.getbbox()
+    if not box:
+        return
+    local = random.Random(SEED + 90)
+    width, height = box[2] - box[0], box[3] - box[1]
+    stones = Image.new("RGB", (width, height), COBBLE_JOINT)
+    px = stones.load()
+    for row, top in enumerate(range(0, height, COBBLE_ROW)):
+        left = -(row % 2) * 8 - local.randint(0, 4)
+        while left < width:
+            span = local.randint(12, 18)
+            base = local.choice(COBBLE_TONES)
+            shift = local.randint(-6, 6)
+            for y in range(top + 1, min(top + COBBLE_ROW, height)):
+                for x in range(max(0, left + 1), min(left + span, width)):
+                    edge_top, edge_left = y == top + 1, x == left + 1
+                    edge_bottom, edge_right = y == top + COBBLE_ROW - 1, x == left + span - 1
+                    if (edge_top or edge_bottom) and (edge_left or edge_right):
+                        continue
+                    light = 22 if edge_top or edge_left else -22 if edge_bottom or edge_right else 0
+                    px[x, y] = tuple(max(0, min(255, c + shift + light)) for c in base)
+            left += span
+    local_mask = mask.crop(box)
+    inner = local_mask.filter(ImageFilter.MinFilter(2 * CURB + 1))
+    curb = ImageChops.subtract(local_mask, inner)
+    outline = ImageChops.subtract(local_mask, local_mask.filter(ImageFilter.MinFilter(3)))
+    stones.paste(Image.new("RGB", (width, height), CURB_TONE), (0, 0), curb)
+    stones.paste(Image.new("RGB", (width, height), CURB_LINE), (0, 0), outline)
+    ground.paste(stones, box[:2], local_mask)
+
+
 def forest_shape(facilities, curves, river):
     """Decide the open ground on the whole map at low resolution. Returns the forest mask."""
     scale = PPU / SMALL
@@ -582,6 +636,9 @@ def main():
         a, b = to_px(cx - rx, cy + ry)
         c, d = to_px(cx + rx, cy - ry)
         draw.ellipse((a, b, c, d), fill=255)
+    paved = paved_mask()
+    roads = ImageChops.lighter(roads, paved)
+    draw = ImageDraw.Draw(roads)
     for bx, by in bridges:
         for cx in (bx - 215, bx + 215):
             draw.ellipse((cx - 110, by - 80, cx + 110, by + 80), fill=255)
@@ -676,6 +733,7 @@ def main():
             draw.ellipse((item["x"] - 68, item["y"] - 126, item["x"] + 68, item["y"] - 8), fill=255)
     floor_mask = ImageChops.lighter(ragged(crowns, 4, 0.8, SEED + 9, (16, 5)), deep)
     ground.paste(floor, (0, 0), floor_mask)
+    paving(ground, paved)
 
     # Water, banks and bridges.
     under = water

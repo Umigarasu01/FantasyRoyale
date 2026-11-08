@@ -42,6 +42,12 @@ Unity確認は、Repositoryではなく検証用Project`C:/Users/umiga/Documents
 
 設置物の絵は、草地の切り抜きと既存のシートを参照にして、3行3列のシートで生成する。騎士に描き方を揃えて描く案は[設置物のデザイン規約](../product-specs/art/prop-design.md)にあり、確認を待っている。`Tools/MapAuthoring/forest_objects.py`の一覧へ、シートの位置、地図での幅、足元、判定を足す。大きさは高さ72pxの騎士を基準にする。配置は`forest_layout.py`の`FACILITIES`で持つ。
 
+### 中心街
+
+中心街のお店の絵は、`Tools/MapAuthoring/`で`python build_town_sprites.py`を実行して`Assets/Art/Generated/ForestLook/Town/`へ書き出す。屋台と露店は騎士の倍率で、お店の家は平面図の家の幅（3.4単位）になる倍率で縮める。地図生成は`forest_objects.py`の`TOWN_OBJECTS`からこの絵を読むので、地図を作る前に実行しておく。絵は仮で、後で描き直す。
+
+大通りと広場の石畳は、`forest_layout.py`の`PAVED`の形を、`build_forest_map.py`の`paving`が仮の石の並びで塗る。石畳も後で描き直す。
+
 ### 騎士に合わせた宝箱
 
 `Tools/MapAuthoring/`で`python build_chest_frames.py [--preview <webp>]`を実行する。`Assets/Art/Generated/ForestLook/`の`prop-chest-01`、`03`、`04`、`05`から、`Chest/`へ55枚を書き出す。数秒で終わり、出力は決まった結果になる。`--preview`を付けると、騎士と並べて開ける動きと光のループを繰り返すWebPも書く。

@@ -1,0 +1,15 @@
+{
+  "status": "candidate: the junk dealer's rug (town) was chosen; the shop hut was not",
+  "generated": "2026-11-09",
+  "file": "prop-shop-02.png",
+  "sha256": "1a7ddb0f86b33d55a9c7aa39cb0b1e138aeffbbddfbac4704b2b874a3f38749e",
+  "bytes": 1532855,
+  "tool": "openai-image skill, edit",
+  "model": "gpt-image-2.5-sunburst",
+  "size": "1536x1024",
+  "quality": "medium",
+  "n": 1,
+  "reference": "hero-idle-01.png column 1 (front knight) at its original size and position, the other columns magenta",
+  "scale": "cut each shop as a connected blob; shrink by 0.135 x 530 / the drawn knight's height",
+  "prompt": "Image 1 shows the knight of a top-down 2D pixel-art fantasy action game, standing in the left column on a flat pure magenta background. Keep the knight in the left column exactly as it is: the same position, size and pixels.\n\nDraw two different designs for a shop where the player buys items, in the empty middle and right columns, in exactly the knight's art style and at exactly the knight's pixel size: every pixel-art dot is the same size as the dots of the knight. Each shop has a friendly merchant character with the same chibi proportions as the knight: the same big head, the same head size and the same height as the knight. Everything stands on the same ground line as the knight's feet, and stays inside its own column.\n\nStyle rules, taken from the knight:\n- A continuous near-black outline, one dot thick, around every silhouette.\n- Flat cel shading: 3 or 4 clean tones for each material plus a small bright highlight. Light comes from the upper left.\n- Clean chunky clusters of dots. No noise, no grain texture, no dithering, no scratches.\n- The same saturated colours as the knight: warm brown wood, shiny gold, bright steel grey, and clear cloth colours.\n- The same slightly-from-above three-quarter front view as the knight, so the tops of counters and roofs are visible.\n- Bold, simple and readable shapes with few details, like the knight.\n\nMiddle column: a junk dealer's street stall: a patterned rug spread on the ground, wider than the knight's shoulders, with old goods laid out on it: a rusty sword, an old helmet, clay pots, a scroll, a small chest and a ring. A merchant with a turban and a long beard sits cross-legged behind the rug, facing the viewer.\n\nRight column: a small shop hut, about one and a half times as tall as the knight and about twice as wide as the knight's shoulders: wooden walls, a small tiled roof, a wide open window with a counter at the front, and a hanging sign showing only a picture of a potion bottle. The merchant leans out of the window over the counter, facing the viewer.\n\nDo not include: text, letters, numbers, labels on signs, ground, grass, floor, shadows on the background, borders, grid lines, or any other object. Everything outside the drawn shops stays completely flat solid pure magenta, RGB 255,0,255."
+}

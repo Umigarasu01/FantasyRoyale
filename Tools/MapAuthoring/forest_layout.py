@@ -1,8 +1,13 @@
 """Fixed layout of the forest base map. World units, x to the east, y to the north.
 
-The map is 144 x 108. A central village connects to an outer ring road by spokes, so the
+The map is 144 x 108. A central town connects to an outer ring road by spokes, so the
 main roads have no dead ends. A river crosses the map in a gentle S with three bridges.
 Each region has its own landmark. Only short spurs to special sites end in a dead end.
+
+The town is a paved main street from west to east with a round square in the middle. Its shops stand on
+the north side facing the street: in a top-down view a building rises above its foot, so a tall building
+south of the street would hide it. The south side holds low things only. The plan is in
+docs/fantasy-royale/exec-plans/active/central-town.md.
 """
 import math
 
@@ -17,23 +22,20 @@ RIVER = [
 BRIDGES = [(99, 84), (93, 52), (89, 20)]
 
 ROADS = {
-    "west-spine": [(18, 52), (30, 47.5), (44, 51), (50, 52.5), (60, 53)],
-    "east-spine": [(60, 53), (72, 50), (82, 51.5), (87, 52), (93, 52), (99, 52), (106, 52), (118, 50.5), (130, 54)],
+    "west-spine": [(18, 52), (30, 47.5), (37, 50.6), (41, 52)],
+    "east-spine": [(79, 52), (87, 52), (93, 52), (99, 52), (106, 52), (118, 50.5), (130, 54)],
     "north-spoke": [(50, 52.5), (48, 62), (49, 72), (55, 83), (62, 92)],
-    "south-spoke": [(66, 51), (66, 40), (58, 27), (58, 14)],
+    "south-spoke": [(60, 44), (60.8, 37), (58, 27), (58, 14)],
     "ring-northwest": [(18, 52), (20, 66), (27, 79), (42, 90), (62, 92)],
     "ring-northeast": [(62, 92), (78, 88.5), (90, 84.5), (93, 84), (99, 84), (105, 84), (108, 84), (120, 82), (129, 70), (130, 54)],
     "ring-southeast": [(130, 54), (132, 38), (125, 26), (110, 21), (95, 20), (89, 20), (83, 20), (70, 16), (58, 14)],
     "ring-southwest": [(58, 14), (44, 13), (28, 20), (17, 34), (18, 52)],
-    "inn-walk": [(60, 53), (60, 59)],
     "cave-spur": [(48.6, 66), (41, 65), (33, 66.5)],
     "logging-spur": [(59, 29), (49, 30), (41, 34)],
     "mine-spur": [(34, 16.8), (36, 26)],
     "shrine-spur": [(118, 50.5), (115, 58), (113, 68.5)],
     "nest-spur": [(118, 50.5), (115, 45), (112, 42)],
     "farm-spur": [(114, 83.3), (116, 87), (118, 91)],
-    "hut-west-walk": [(43, 57.4), (43.4, 54), (44, 51)],
-    "hut-east-walk": [(74, 57.4), (74, 54), (73.5, 50.2)],
     "shed-walk": [(28, 27.6), (31, 25.6), (36, 24.2)],
 }
 
@@ -54,19 +56,31 @@ CLEARINGS = [
     (40, 34, 10, 7),       # logging
 ]
 
+# The town's paving: ("rect", left, bottom, right, top) or ("ellipse", centre x, centre y, radius x, radius y).
+PAVED = [
+    ("rect", 40, 50, 80, 54),        # main street
+    ("ellipse", 60, 52, 6.5, 4.2),   # square
+    ("rect", 58.5, 54, 61.5, 59.5),  # north street, up to the inn
+    ("rect", 58.5, 43, 61.5, 50),    # south street, down to the south road
+    # Short walks from the street up to each shop's counter.
+    ("rect", 43.3, 54, 44.7, 55.6), ("rect", 52.3, 54, 53.7, 55.8),
+    ("rect", 66.8, 54, 68.2, 55.8), ("rect", 72.3, 54, 73.7, 55.6),
+]
+
 # Bare ground where people gather: centre x, centre y, radius x, radius y.
 PLAZAS = [
-    (60, 52.8, 4.6, 2.0), (54, 51.8, 2.6, 1.3), (66, 51.4, 2.6, 1.3), (30, 83.5, 2.6, 1.4), (90, 85.6, 2.6, 1.2),
+    (30, 83.5, 2.6, 1.4), (90, 85.6, 2.6, 1.2),
     (113, 22.8, 3.4, 1.2), (36, 24, 2.2, 1.2), (33.5, 65.4, 2, 1), (113, 67.6, 1.8, 1), (41, 34, 1.8, 0.9), (118, 90, 1.5, 0.9),
 ]
 
 # Facilities: prototype id, foot x, foot y.
 FACILITIES = [
-    # Village.
-    ("inn", 60, 60), ("timber-hut", 74, 58), ("timber-hut", 43, 58),
-    ("market-stall", 50, 47.5), ("market-stall", 55, 45.5), ("fountain", 61, 46), ("well", 72, 46.5),
-    ("crate-stack", 46.8, 46.6), ("barrel", 64.6, 59.6), ("crate", 55.2, 59.8), ("notice-board", 56, 55.4),
-    ("signpost", 62.4, 55), ("loaded-cart", 77.5, 48.4), ("tool-bench", 78.5, 56.5),
+    # Town. Shop houses on the north side of the main street, the stall and the rug at the square's north
+    # corners, the inn at the end of the north street, and low things south of the street.
+    ("weapon-shop", 44, 55.6), ("armour-shop", 53, 55.8), ("town-stall", 56.4, 55.2), ("town-inn", 60, 60),
+    ("town-rug", 63.6, 55.0), ("magic-shop", 67.5, 55.8), ("item-shop", 73, 55.6),
+    ("fountain", 60, 52), ("notice-board", 56, 48.8), ("well", 66.5, 48.6),
+    ("barrel", 47.6, 55.4), ("crate", 76.6, 55.4), ("crate-stack", 77.8, 47.6), ("barrel", 42.2, 47.8),
     # Checkpoint.
     ("watchtower", 14, 57), ("fence", 10.5, 53.5), ("crate", 16.8, 56),
     # Camp.

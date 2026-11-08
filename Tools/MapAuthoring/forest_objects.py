@@ -64,6 +64,22 @@ OBJECTS = {
     "fallen-log": (EXTRAS, 2, 0, 170, 6, 0.5, 0.9),
     "notice-board": (EXTRAS, 2, 1, 110, 6, 0.3, 0.8),
     "rubble": (EXTRAS, 2, 2, 150, 6, 0.6, 0.85),
+    # The central town's inn: the village inn shrunk to the plan's width until the town is drawn anew.
+    "town-inn": (VILLAGE, 0, 0, 333, 6, 1.5, 0.94),
+}
+
+# The central town's shops, already cut at their size by build_town_sprites.py into Town/.
+# id: file, foot in pixels above the sprite's bottom, depth of the blocking area in world units, and the
+# share of the width that blocks. A shop house blocks its counter and the goods beside it; the player
+# stands in front of the counter to buy.
+TOWN = os.path.join(SOURCE, "Town")
+TOWN_OBJECTS = {
+    "weapon-shop": ("weapon-shop.png", 4, 1.0, 0.9),
+    "armour-shop": ("armour-shop.png", 4, 1.0, 0.9),
+    "magic-shop": ("magic-shop.png", 4, 1.0, 0.9),
+    "item-shop": ("item-shop.png", 4, 1.0, 0.9),
+    "town-stall": ("town-stall.png", 2, 0.5, 0.85),
+    "town-rug": ("town-rug.png", 2, 0.5, 0.85),
 }
 
 
@@ -139,16 +155,18 @@ def load_sprites():
             round((column + 1) * cell_width), round((row + 1) * cell_height),
         ))
         sprites[name] = fit(main_item(cell), width)
+    for name, (file, *_rest) in TOWN_OBJECTS.items():
+        sprites[name] = Image.open(os.path.join(TOWN, file)).convert("RGBA")
     return sprites
 
 
 def foot(name):
-    return OBJECTS[name][4]
+    return TOWN_OBJECTS[name][1] if name in TOWN_OBJECTS else OBJECTS[name][4]
 
 
 def bodies(name, sprite):
     """Blocking rectangles as x, y, width, height in world units from the foot, y going up."""
-    depth, share = OBJECTS[name][5], OBJECTS[name][6]
+    depth, share = TOWN_OBJECTS[name][2:4] if name in TOWN_OBJECTS else OBJECTS[name][5:7]
     if depth <= 0:
         return []
     width = sprite.width / PPU

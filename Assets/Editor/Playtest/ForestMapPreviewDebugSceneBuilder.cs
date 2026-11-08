@@ -60,8 +60,8 @@ namespace FantasyRoyale.Editor.Playtest
         private const float EnemyPivotY = 4f / 76f;
         private const float ChestPivotY = 0.08f;
 
-        // 村の広場を開始位置にする。
-        private static readonly Vector2 SpawnPosition = new Vector2(60f, 51f);
+        // 中心街の広場の南の出口を開始位置にする。広場の真ん中は噴水なので、周りの開けた所に立つ。
+        private static readonly Vector2 SpawnPosition = new Vector2(60f, 47f);
 
         // 敵の置き場所の候補。魔物の巣を中心に、砦、鉱山、洞窟、廃屋、祠の周りから試合ごとに選ぶ。
         private static readonly Vector2[] EnemySpots =
@@ -81,11 +81,16 @@ namespace FantasyRoyale.Editor.Playtest
             new Vector2(18f, 40f), new Vector2(100f, 62f), new Vector2(68f, 20f)
         };
 
-        // 屋台の手前。ここでEを押すとショップが開く。
-        private static readonly Vector2[] ShopSpots = { new Vector2(50f, 46f), new Vector2(55f, 44f) };
+        // 中心街のお店の手前。ここでEを押すとショップが開く。武器屋、防具屋、屋台、露店、魔法屋、道具屋の順。
+        // 品揃えはまだ分けておらず、どのお店でも同じショップが開く。
+        private static readonly Vector2[] ShopSpots =
+        {
+            new Vector2(44f, 54.8f), new Vector2(53f, 55f), new Vector2(56.4f, 54.4f),
+            new Vector2(63.6f, 54.2f), new Vector2(67.5f, 55f), new Vector2(73f, 54.8f)
+        };
 
-        // 回復できる場所。村の噴水と祠の泉の手前に立つ。
-        private static readonly Vector2[] HealingSpots = { new Vector2(61f, 44.6f), new Vector2(120f, 64f) };
+        // 回復できる場所。中心街の噴水と祠の泉の手前に立つ。
+        private static readonly Vector2[] HealingSpots = { new Vector2(60f, 50.8f), new Vector2(120f, 64f) };
 
         [Serializable] private class MapObject { public string part; public int x; public int y; public int sort; }
         [Serializable] private class MapTile { public string file; public int x; public int y; }

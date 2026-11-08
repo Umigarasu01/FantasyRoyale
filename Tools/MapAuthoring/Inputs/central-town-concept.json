@@ -1,0 +1,14 @@
+{
+  "status": "chosen by the owner on 2026-11-09 as the shape of the central town (main street); a concept picture, not a game sprite",
+  "generated": "2026-11-09",
+  "file": "central-town-concept.png",
+  "sha256": "c299b8f73fcc505523802e06f9e16471a14e73c0da53438ac8765aad81a558ed",
+  "bytes": 3298936,
+  "tool": "openai-image skill, edit",
+  "model": "gpt-image-2.5-sunburst",
+  "size": "1536x1024",
+  "quality": "medium",
+  "n": 1,
+  "reference": "the knight (hero-idle-01.png column 1), prop-shop-01.png, prop-shop-02.png, and a crop of the forest map's ground",
+  "prompt": "Images 1 to 3 show the art style of a top-down 2D pixel-art fantasy action game: Image 1 is the player's knight, Images 2 and 3 are shops drawn in the same style (a market stall with a red and white awning, a travelling merchant's cart, and a junk dealer's rug). Image 4 is the grass and dirt road ground of the game's forest map.\n\nDraw a concept picture of the central town of the game's map, seen from slightly above at a three-quarter angle, the same angle as the knight, filling the whole picture. The town sits in the middle of a forest meadow; use the ground of Image 4 for the grass and the dirt roads around the town, with stone paving inside the town.\n\nEvery building, prop and person is drawn exactly in the style of Images 1 to 3: a near-black outline one dot thick, flat cel shading with 3 or 4 tones, chunky clean dots, saturated colours, bold simple shapes. People have the same chibi proportions as the knight. Draw the knight from Image 1 standing in the town at the same size relative to the buildings as in the game: a door is about as tall as the knight, and a two-storey house is about three times as tall as the knight.\n\nThe town must contain: the market stall from Image 2 and the junk dealer's rug from Image 3, an inn with a sign showing only a bed, a stone fountain, a well, a notice board, three or four small houses, barrels, crates, flower boxes and lamp posts.\n\nLayout: one wide stone-paved main street runs from the left edge to the right edge of the picture. Shops and houses line both sides of the street, facing it: the inn, the market stall, the junk dealer's rug and the houses. Where a smaller street crosses it in the middle there is a small square with the fountain and the notice board.\n\nNo text, letters or numbers anywhere, also not on signs. No user interface, no frame, no border."
+}

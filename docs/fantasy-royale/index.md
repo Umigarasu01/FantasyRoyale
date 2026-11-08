@@ -48,6 +48,7 @@
 - 進行中: [地面を蹴る走りへの描き直し](exec-plans/active/bounding-run-cycle.md)
 - 進行中: [片手剣の型の走りと剣の付け方の組み込み](exec-plans/active/sword-type-pose.md)
 - 進行中: [森林マップの空間構成改善](exec-plans/active/forest-composition-improvement.md)
+- 進行中: [中心街](exec-plans/active/central-town.md)
 - 完了済み: [Knowledge Base移行](exec-plans/completed/knowledge-base-migration.md)
 - 完了済み: [森林素材の再制作と自動配置検証](exec-plans/completed/forest-art-restart.md)
 - 完了済み: [森マップの画作り基準](exec-plans/completed/forest-look-lock.md)
