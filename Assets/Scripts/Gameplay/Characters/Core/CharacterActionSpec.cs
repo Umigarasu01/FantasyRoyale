@@ -8,7 +8,12 @@ namespace FantasyRoyale.Gameplay.Characters
     public enum CharacterActionSlot
     {
         Primary = 0,
-        Special = 1
+        Special = 1,
+
+        /// <summary>
+        /// メイン武器で選んでいる魔法。魔法は武器の定義でなく、武器にはめた物が決める。
+        /// </summary>
+        Magic = 2
     }
 
     /// <summary>

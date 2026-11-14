@@ -1,0 +1,385 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1600 2070" width="1600" height="2070" font-family="'PixelMplus12','Yu Gothic UI','Meiryo',sans-serif">
+<defs>
+<symbol id="i-sword" viewBox="0 0 80 80"><line x1="22" y1="58" x2="60" y2="20" stroke="#dcdce4" stroke-width="7" stroke-linecap="round"/><line x1="20" y1="44" x2="36" y2="60" stroke="#c9a24a" stroke-width="5" stroke-linecap="round"/><line x1="14" y1="66" x2="24" y2="56" stroke="#7a4f2a" stroke-width="6" stroke-linecap="round"/></symbol>
+<symbol id="i-msword" viewBox="0 0 80 80"><line x1="22" y1="58" x2="60" y2="20" stroke="#b9a8f0" stroke-width="7" stroke-linecap="round"/><line x1="20" y1="44" x2="36" y2="60" stroke="#c9a24a" stroke-width="5" stroke-linecap="round"/><line x1="14" y1="66" x2="24" y2="56" stroke="#4a3a7a" stroke-width="6" stroke-linecap="round"/><circle cx="28" cy="52" r="4" fill="#9a6ae0"/></symbol>
+<symbol id="i-staff" viewBox="0 0 80 80"><line x1="22" y1="70" x2="50" y2="24" stroke="#8a5a2e" stroke-width="7" stroke-linecap="round"/><circle cx="54" cy="18" r="11" fill="#9a6ae0" stroke="#c9a24a" stroke-width="3"/><circle cx="50" cy="14" r="3" fill="#e6d8ff"/></symbol>
+<symbol id="i-shield" viewBox="0 0 80 80"><path d="M40 12 L64 20 L62 46 Q58 62 40 70 Q22 62 18 46 L16 20 Z" fill="#3f6aa8" stroke="#c9a24a" stroke-width="3"/><line x1="40" y1="22" x2="40" y2="60" stroke="#dcdce4" stroke-width="5"/><line x1="26" y1="36" x2="54" y2="36" stroke="#dcdce4" stroke-width="5"/></symbol>
+<symbol id="i-helm" viewBox="0 0 80 80"><path d="M18 50 Q18 16 40 16 Q62 16 62 50 L62 60 L18 60 Z" fill="#9aa0aa" stroke="#5b6068" stroke-width="3"/><rect x="24" y="38" width="32" height="6" fill="#2a2d33"/></symbol>
+<symbol id="i-armour" viewBox="0 0 80 80"><path d="M16 24 L30 16 L50 16 L64 24 L60 40 L54 38 L54 66 L26 66 L26 38 L20 40 Z" fill="#9aa0aa" stroke="#5b6068" stroke-width="3"/></symbol>
+<symbol id="i-boots" viewBox="0 0 80 80"><path d="M18 20 L32 20 L32 50 L40 54 L40 62 L18 62 Z" fill="#6e4a2c" stroke="#3e2915" stroke-width="3"/><path d="M44 20 L58 20 L58 50 L66 54 L66 62 L44 62 Z" fill="#6e4a2c" stroke="#3e2915" stroke-width="3"/></symbol>
+<symbol id="i-bow" viewBox="0 0 80 80"><path d="M26 12 Q66 40 26 68" fill="none" stroke="#a5713a" stroke-width="6" stroke-linecap="round"/><line x1="26" y1="12" x2="26" y2="68" stroke="#e8e2d0" stroke-width="2"/></symbol>
+<symbol id="i-potion" viewBox="0 0 80 80"><rect x="33" y="12" width="14" height="16" fill="#cfc6b0"/><circle cx="40" cy="48" r="20" fill="#c8323a" stroke="#e8e2d0" stroke-width="3"/><circle cx="33" cy="42" r="5" fill="#f08a8f"/></symbol>
+<symbol id="i-gem" viewBox="0 0 80 80"><path d="M24 30 L34 16 L46 16 L56 30 L40 66 Z" fill="#9a6ae0" stroke="#e6d8ff" stroke-width="2"/><path d="M24 30 L56 30 M34 16 L40 30 L46 16 M40 30 L40 66" fill="none" stroke="#e6d8ff" stroke-width="1.5" opacity="0.7"/></symbol>
+<symbol id="i-relic" viewBox="0 0 80 80"><path d="M22 30 L38 16 L58 24 L62 46 L48 64 L26 58 L16 44 Z" fill="#7a5a3a" stroke="#4a3420" stroke-width="3"/><circle cx="44" cy="38" r="6" fill="#a8835a"/></symbol>
+<symbol id="i-slash" viewBox="0 0 80 80"><path d="M16 56 Q30 16 66 22" fill="none" stroke="#bfe0ff" stroke-width="8" stroke-linecap="round"/><path d="M22 62 Q40 30 64 34" fill="none" stroke="#6fa8e8" stroke-width="4" stroke-linecap="round"/></symbol>
+<symbol id="i-spin" viewBox="0 0 80 80"><path d="M62 40 A22 22 0 1 1 52 22" fill="none" stroke="#bfe0ff" stroke-width="7" stroke-linecap="round"/><path d="M44 12 L58 20 L46 30 Z" fill="#bfe0ff"/></symbol>
+<symbol id="i-arrows" viewBox="0 0 80 80"><g stroke="#e8e2d0" stroke-width="4" stroke-linecap="round"><line x1="14" y1="26" x2="62" y2="26"/><line x1="14" y1="40" x2="62" y2="40"/><line x1="14" y1="54" x2="62" y2="54"/></g><g fill="#bfe0ff"><path d="M60 20 L70 26 L60 32 Z"/><path d="M60 34 L70 40 L60 46 Z"/><path d="M60 48 L70 54 L60 60 Z"/></g></symbol>
+<symbol id="i-fire" viewBox="0 0 80 80"><path d="M40 12 Q60 34 56 50 Q52 66 40 66 Q28 66 24 50 Q22 36 34 26 Q34 40 40 42 Q44 30 40 12 Z" fill="#e8642a"/><circle cx="40" cy="54" r="8" fill="#ffd25a"/></symbol>
+<symbol id="i-ice" viewBox="0 0 80 80"><path d="M40 10 L58 40 L40 70 L22 40 Z" fill="#7cc8f0" stroke="#e8f6ff" stroke-width="3"/><path d="M40 10 L40 70 M22 40 L58 40" stroke="#e8f6ff" stroke-width="2" opacity="0.7"/></symbol>
+<symbol id="i-bolt" viewBox="0 0 80 80"><path d="M46 8 L20 44 L38 44 L30 72 L60 32 L42 32 Z" fill="#f4d03f" stroke="#a8860f" stroke-width="2"/></symbol>
+<symbol id="i-wind" viewBox="0 0 80 80"><path d="M12 30 L50 30 Q62 30 62 20 Q62 12 54 12" fill="none" stroke="#7fd69a" stroke-width="6" stroke-linecap="round"/><path d="M12 46 L60 46 Q70 46 70 56 Q70 66 60 66" fill="none" stroke="#7fd69a" stroke-width="6" stroke-linecap="round"/></symbol>
+</defs>
+<rect width="1600" height="2070" fill="#1a1a1e"/>
+<text x="40" y="42" font-size="24" fill="#f2efe6" text-anchor="start" font-weight="bold">A. HUD（画面の下の真ん中）。魔法の枠が0、2、6の武器で並べた</text>
+<rect x="40" y="60" width="1520" height="600" rx="6" fill="#3f5b3c"/>
+<line x1="800" y1="88" x2="800" y2="628" stroke="#cfd8c8" stroke-width="1.5" stroke-dasharray="5 6" opacity="0.7"/>
+<text x="800" y="80" font-size="13" fill="#cfd8c8" text-anchor="middle">画面の中心</text>
+<line x1="60" y1="258" x2="1540" y2="258" stroke="#cfd8c8" stroke-width="1" opacity="0.25"/>
+<line x1="60" y1="448" x2="1540" y2="448" stroke="#cfd8c8" stroke-width="1" opacity="0.25"/>
+<rect x="610" y="146" width="88" height="88" rx="10" fill="#0f0f12" stroke="#c9a24a" stroke-width="2"/>
+<use href="#i-sword" xlink:href="#i-sword" x="614" y="150" width="80" height="80"/>
+<rect x="600" y="136" width="22" height="22" rx="5" fill="#f2efe6"/>
+<text x="611.0" y="152.5" font-size="15" fill="#111" text-anchor="middle" font-weight="bold">J</text>
+<rect x="722" y="154" width="72" height="72" rx="8" fill="#0f0f12" stroke="#c9a24a" stroke-width="2"/>
+<use href="#i-slash" xlink:href="#i-slash" x="726" y="158" width="64" height="64"/>
+<rect x="712" y="144" width="22" height="22" rx="5" fill="#f2efe6"/>
+<text x="723.0" y="160.5" font-size="15" fill="#111" text-anchor="middle" font-weight="bold">K</text>
+<rect x="918" y="154" width="72" height="72" rx="8" fill="#0f0f12" stroke="#c9a24a" stroke-width="2"/>
+<use href="#i-potion" xlink:href="#i-potion" x="922" y="158" width="64" height="64"/>
+<rect x="908" y="144" width="22" height="22" rx="5" fill="#f2efe6"/>
+<text x="919.0" y="160.5" font-size="15" fill="#111" text-anchor="middle" font-weight="bold">;</text>
+<rect x="976" y="144" width="22" height="22" rx="5" fill="#f2efe6"/>
+<text x="987.0" y="160.5" font-size="15" fill="#111" text-anchor="middle" font-weight="bold">P</text>
+<rect x="918" y="92" width="28" height="28" rx="5" fill="#0f0f12" stroke="#e8c36a" stroke-width="3"/>
+<use href="#i-potion" xlink:href="#i-potion" x="921" y="95" width="22" height="22"/>
+<rect x="952" y="92" width="28" height="28" rx="5" fill="#0f0f12" stroke="#c9a24a" stroke-width="1.5"/>
+<use href="#i-bow" xlink:href="#i-bow" x="955" y="95" width="22" height="22"/>
+<rect x="986" y="92" width="28" height="28" rx="5" fill="#0f0f12" stroke="#c9a24a" stroke-width="1.5"/>
+<use href="#i-gem" xlink:href="#i-gem" x="989" y="95" width="22" height="22"/>
+<rect x="1020" y="92" width="28" height="28" rx="5" fill="#0f0f12" stroke="#c9a24a" stroke-width="1.5"/>
+<use href="#i-relic" xlink:href="#i-relic" x="1023" y="95" width="22" height="22"/>
+<rect x="1054" y="92" width="28" height="28" rx="5" fill="#0f0f12" stroke="#c9a24a" stroke-width="1.5"/>
+<text x="1240" y="184" font-size="15" fill="#e6eadf" text-anchor="start">剣</text>
+<text x="1240" y="206" font-size="15" fill="#e6eadf" text-anchor="start">魔法の枠0</text>
+<rect x="610" y="336" width="88" height="88" rx="10" fill="#0f0f12" stroke="#c9a24a" stroke-width="2"/>
+<use href="#i-msword" xlink:href="#i-msword" x="614" y="340" width="80" height="80"/>
+<rect x="600" y="326" width="22" height="22" rx="5" fill="#f2efe6"/>
+<text x="611.0" y="342.5" font-size="15" fill="#111" text-anchor="middle" font-weight="bold">J</text>
+<rect x="722" y="344" width="72" height="72" rx="8" fill="#0f0f12" stroke="#c9a24a" stroke-width="2"/>
+<use href="#i-spin" xlink:href="#i-spin" x="726" y="348" width="64" height="64"/>
+<rect x="712" y="334" width="22" height="22" rx="5" fill="#f2efe6"/>
+<text x="723.0" y="350.5" font-size="15" fill="#111" text-anchor="middle" font-weight="bold">K</text>
+<circle cx="856" cy="380" r="38" fill="#0f0f12" stroke="#c9a24a" stroke-width="2"/>
+<use href="#i-fire" xlink:href="#i-fire" x="825" y="349" width="62" height="62"/>
+<rect x="808" y="332" width="22" height="22" rx="5" fill="#f2efe6"/>
+<text x="819.0" y="348.5" font-size="15" fill="#111" text-anchor="middle" font-weight="bold">L</text>
+<rect x="880" y="332" width="22" height="22" rx="5" fill="#f2efe6"/>
+<text x="891.0" y="348.5" font-size="15" fill="#111" text-anchor="middle" font-weight="bold">O</text>
+<circle cx="846" cy="296" r="14" fill="#0f0f12" stroke="#e8c36a" stroke-width="3"/>
+<use href="#i-fire" xlink:href="#i-fire" x="835" y="285" width="22" height="22"/>
+<circle cx="880" cy="296" r="14" fill="#0f0f12" stroke="#c9a24a" stroke-width="1.5"/>
+<use href="#i-ice" xlink:href="#i-ice" x="869" y="285" width="22" height="22"/>
+<circle cx="880" cy="296" r="13" fill="#000" opacity="0.62"/>
+<rect x="918" y="344" width="72" height="72" rx="8" fill="#0f0f12" stroke="#c9a24a" stroke-width="2"/>
+<use href="#i-potion" xlink:href="#i-potion" x="922" y="348" width="64" height="64"/>
+<rect x="908" y="334" width="22" height="22" rx="5" fill="#f2efe6"/>
+<text x="919.0" y="350.5" font-size="15" fill="#111" text-anchor="middle" font-weight="bold">;</text>
+<rect x="976" y="334" width="22" height="22" rx="5" fill="#f2efe6"/>
+<text x="987.0" y="350.5" font-size="15" fill="#111" text-anchor="middle" font-weight="bold">P</text>
+<rect x="918" y="282" width="28" height="28" rx="5" fill="#0f0f12" stroke="#e8c36a" stroke-width="3"/>
+<use href="#i-potion" xlink:href="#i-potion" x="921" y="285" width="22" height="22"/>
+<rect x="952" y="282" width="28" height="28" rx="5" fill="#0f0f12" stroke="#c9a24a" stroke-width="1.5"/>
+<use href="#i-bow" xlink:href="#i-bow" x="955" y="285" width="22" height="22"/>
+<rect x="986" y="282" width="28" height="28" rx="5" fill="#0f0f12" stroke="#c9a24a" stroke-width="1.5"/>
+<use href="#i-gem" xlink:href="#i-gem" x="989" y="285" width="22" height="22"/>
+<rect x="1020" y="282" width="28" height="28" rx="5" fill="#0f0f12" stroke="#c9a24a" stroke-width="1.5"/>
+<use href="#i-relic" xlink:href="#i-relic" x="1023" y="285" width="22" height="22"/>
+<rect x="1054" y="282" width="28" height="28" rx="5" fill="#0f0f12" stroke="#c9a24a" stroke-width="1.5"/>
+<text x="1240" y="374" font-size="15" fill="#e6eadf" text-anchor="start">魔法剣</text>
+<text x="1240" y="396" font-size="15" fill="#e6eadf" text-anchor="start">魔法の枠2</text>
+<rect x="610" y="526" width="88" height="88" rx="10" fill="#0f0f12" stroke="#c9a24a" stroke-width="2"/>
+<use href="#i-staff" xlink:href="#i-staff" x="614" y="530" width="80" height="80"/>
+<rect x="600" y="516" width="22" height="22" rx="5" fill="#f2efe6"/>
+<text x="611.0" y="532.5" font-size="15" fill="#111" text-anchor="middle" font-weight="bold">J</text>
+<rect x="722" y="534" width="72" height="72" rx="8" fill="#0f0f12" stroke="#c9a24a" stroke-width="2"/>
+<use href="#i-arrows" xlink:href="#i-arrows" x="726" y="538" width="64" height="64"/>
+<rect x="712" y="524" width="22" height="22" rx="5" fill="#f2efe6"/>
+<text x="723.0" y="540.5" font-size="15" fill="#111" text-anchor="middle" font-weight="bold">K</text>
+<circle cx="856" cy="570" r="38" fill="#0f0f12" stroke="#c9a24a" stroke-width="2"/>
+<use href="#i-fire" xlink:href="#i-fire" x="825" y="539" width="62" height="62"/>
+<circle cx="856" cy="570" r="36" fill="#000" opacity="0.62"/>
+<text x="856" y="576" font-size="16" fill="#f2efe6" text-anchor="middle">待ち</text>
+<rect x="808" y="522" width="22" height="22" rx="5" fill="#f2efe6"/>
+<text x="819.0" y="538.5" font-size="15" fill="#111" text-anchor="middle" font-weight="bold">L</text>
+<rect x="880" y="522" width="22" height="22" rx="5" fill="#f2efe6"/>
+<text x="891.0" y="538.5" font-size="15" fill="#111" text-anchor="middle" font-weight="bold">O</text>
+<circle cx="710" cy="486" r="14" fill="#0f0f12" stroke="#c9a24a" stroke-width="1.5"/>
+<use href="#i-bolt" xlink:href="#i-bolt" x="699" y="475" width="22" height="22"/>
+<circle cx="744" cy="486" r="14" fill="#0f0f12" stroke="#e8c36a" stroke-width="3"/>
+<use href="#i-fire" xlink:href="#i-fire" x="733" y="475" width="22" height="22"/>
+<circle cx="744" cy="486" r="13" fill="#000" opacity="0.62"/>
+<circle cx="778" cy="486" r="14" fill="#0f0f12" stroke="#c9a24a" stroke-width="1.5"/>
+<use href="#i-wind" xlink:href="#i-wind" x="767" y="475" width="22" height="22"/>
+<circle cx="812" cy="486" r="14" fill="#0f0f12" stroke="#c9a24a" stroke-width="1.5"/>
+<use href="#i-ice" xlink:href="#i-ice" x="801" y="475" width="22" height="22"/>
+<circle cx="846" cy="486" r="14" fill="#0f0f12" stroke="#c9a24a" stroke-width="1.5"/>
+<circle cx="880" cy="486" r="14" fill="#0f0f12" stroke="#c9a24a" stroke-width="1.5"/>
+<rect x="918" y="534" width="72" height="72" rx="8" fill="#0f0f12" stroke="#c9a24a" stroke-width="2"/>
+<use href="#i-relic" xlink:href="#i-relic" x="922" y="538" width="64" height="64"/>
+<rect x="908" y="524" width="22" height="22" rx="5" fill="#f2efe6"/>
+<text x="919.0" y="540.5" font-size="15" fill="#111" text-anchor="middle" font-weight="bold">;</text>
+<rect x="976" y="524" width="22" height="22" rx="5" fill="#f2efe6"/>
+<text x="987.0" y="540.5" font-size="15" fill="#111" text-anchor="middle" font-weight="bold">P</text>
+<rect x="918" y="472" width="28" height="28" rx="5" fill="#0f0f12" stroke="#c9a24a" stroke-width="1.5"/>
+<use href="#i-potion" xlink:href="#i-potion" x="921" y="475" width="22" height="22"/>
+<rect x="952" y="472" width="28" height="28" rx="5" fill="#0f0f12" stroke="#c9a24a" stroke-width="1.5"/>
+<use href="#i-bow" xlink:href="#i-bow" x="955" y="475" width="22" height="22"/>
+<rect x="986" y="472" width="28" height="28" rx="5" fill="#0f0f12" stroke="#c9a24a" stroke-width="1.5"/>
+<use href="#i-gem" xlink:href="#i-gem" x="989" y="475" width="22" height="22"/>
+<rect x="1020" y="472" width="28" height="28" rx="5" fill="#0f0f12" stroke="#e8c36a" stroke-width="3"/>
+<use href="#i-relic" xlink:href="#i-relic" x="1023" y="475" width="22" height="22"/>
+<rect x="1054" y="472" width="28" height="28" rx="5" fill="#0f0f12" stroke="#c9a24a" stroke-width="1.5"/>
+<rect x="1088" y="472" width="28" height="28" rx="5" fill="#0f0f12" stroke="#c9a24a" stroke-width="1.5"/>
+<rect x="1122" y="472" width="28" height="28" rx="5" fill="#0f0f12" stroke="#c9a24a" stroke-width="1.5"/>
+<text x="1240" y="564" font-size="15" fill="#e6eadf" text-anchor="start">杖</text>
+<text x="1240" y="586" font-size="15" fill="#e6eadf" text-anchor="start">魔法の枠6（2つ空き）</text>
+<text x="1240" y="608" font-size="15" fill="#e6eadf" text-anchor="start">カバン7</text>
+<text x="684" y="490" font-size="13" fill="#e6eadf" text-anchor="end">武器の魔法</text>
+<text x="1162" y="490" font-size="13" fill="#e6eadf" text-anchor="start">カバン</text>
+<text x="654" y="646" font-size="14" fill="#f2efe6" text-anchor="middle">メイン武器</text>
+<text x="758" y="646" font-size="14" fill="#f2efe6" text-anchor="middle">固有の技</text>
+<text x="856" y="646" font-size="14" fill="#f2efe6" text-anchor="middle">魔法</text>
+<text x="954" y="646" font-size="14" fill="#f2efe6" text-anchor="middle">アイテム</text>
+<text x="40" y="690" font-size="15" fill="#cfcabd" text-anchor="start">・大きな4つの枠は右手のキーと同じ順（J、K、L、;）で、いつも同じ位置にある。魔法の小さな列は左へ、カバンの小さな列は右へ伸びるので、数が変わっても大きな枠は動かない。</text>
+<text x="40" y="714" font-size="15" fill="#cfcabd" text-anchor="start">・L、;で選んでいる物を使い、その真上のO、Pで次へ切り替える。小さな列の金の太い縁が、選んでいる物である。魔法の枠のない武器では、魔法の枠を出さない。</text>
+<text x="40" y="770" font-size="24" fill="#f2efe6" text-anchor="start" font-weight="bold">B. キーの配置（キーボード）。2026-11-13に所有者が決めた</text>
+<rect x="40" y="786" width="1520" height="330" rx="6" fill="#141418" stroke="#2c2c33" stroke-width="1"/>
+<rect x="80" y="804" width="52" height="52" rx="7" fill="#23384f" stroke="#3a3a42" stroke-width="1.5"/>
+<text x="88" y="825" font-size="17" fill="#cfd8e8" text-anchor="start" font-weight="bold">1</text>
+<text x="106.0" y="848" font-size="12" fill="#cfd8e8" text-anchor="middle">選ぶ</text>
+<rect x="138" y="804" width="52" height="52" rx="7" fill="#23384f" stroke="#3a3a42" stroke-width="1.5"/>
+<text x="146" y="825" font-size="17" fill="#cfd8e8" text-anchor="start" font-weight="bold">2</text>
+<text x="164.0" y="848" font-size="12" fill="#cfd8e8" text-anchor="middle">選ぶ</text>
+<rect x="196" y="804" width="52" height="52" rx="7" fill="#23384f" stroke="#3a3a42" stroke-width="1.5"/>
+<text x="204" y="825" font-size="17" fill="#cfd8e8" text-anchor="start" font-weight="bold">3</text>
+<text x="222.0" y="848" font-size="12" fill="#cfd8e8" text-anchor="middle">選ぶ</text>
+<rect x="254" y="804" width="52" height="52" rx="7" fill="#23384f" stroke="#3a3a42" stroke-width="1.5"/>
+<text x="262" y="825" font-size="17" fill="#cfd8e8" text-anchor="start" font-weight="bold">4</text>
+<text x="280.0" y="848" font-size="12" fill="#cfd8e8" text-anchor="middle">選ぶ</text>
+<rect x="312" y="804" width="52" height="52" rx="7" fill="#23384f" stroke="#3a3a42" stroke-width="1.5"/>
+<text x="320" y="825" font-size="17" fill="#cfd8e8" text-anchor="start" font-weight="bold">5</text>
+<text x="338.0" y="848" font-size="12" fill="#cfd8e8" text-anchor="middle">選ぶ</text>
+<rect x="370" y="804" width="52" height="52" rx="7" fill="#23384f" stroke="#3a3a42" stroke-width="1.5"/>
+<text x="378" y="825" font-size="17" fill="#cfd8e8" text-anchor="start" font-weight="bold">6</text>
+<text x="396.0" y="848" font-size="12" fill="#cfd8e8" text-anchor="middle">選ぶ</text>
+<rect x="428" y="804" width="52" height="52" rx="7" fill="#23384f" stroke="#3a3a42" stroke-width="1.5"/>
+<text x="436" y="825" font-size="17" fill="#cfd8e8" text-anchor="start" font-weight="bold">7</text>
+<text x="454.0" y="848" font-size="12" fill="#cfd8e8" text-anchor="middle">選ぶ</text>
+<rect x="486" y="804" width="52" height="52" rx="7" fill="#23384f" stroke="#3a3a42" stroke-width="1.5"/>
+<text x="494" y="825" font-size="17" fill="#cfd8e8" text-anchor="start" font-weight="bold">8</text>
+<text x="512.0" y="848" font-size="12" fill="#cfd8e8" text-anchor="middle">選ぶ</text>
+<rect x="544" y="804" width="52" height="52" rx="7" fill="#23384f" stroke="#3a3a42" stroke-width="1.5"/>
+<text x="552" y="825" font-size="17" fill="#cfd8e8" text-anchor="start" font-weight="bold">9</text>
+<text x="570.0" y="848" font-size="12" fill="#cfd8e8" text-anchor="middle">選ぶ</text>
+<rect x="602" y="804" width="52" height="52" rx="7" fill="#1c1c21" stroke="#3a3a42" stroke-width="1.5"/>
+<text x="610" y="825" font-size="17" fill="#4a4740" text-anchor="start" font-weight="bold">0</text>
+<rect x="80" y="862" width="80" height="52" rx="7" fill="#2f5582" stroke="#3a3a42" stroke-width="1.5"/>
+<text x="88" y="883" font-size="17" fill="#f2efe6" text-anchor="start" font-weight="bold">Tab</text>
+<text x="120.0" y="906" font-size="12" fill="#f2efe6" text-anchor="middle">持ち物</text>
+<rect x="166" y="862" width="52" height="52" rx="7" fill="#1c1c21" stroke="#3a3a42" stroke-width="1.5"/>
+<text x="174" y="883" font-size="17" fill="#4a4740" text-anchor="start" font-weight="bold">Q</text>
+<rect x="224" y="862" width="52" height="52" rx="7" fill="#3f6b48" stroke="#3a3a42" stroke-width="1.5"/>
+<text x="232" y="883" font-size="17" fill="#f2efe6" text-anchor="start" font-weight="bold">W</text>
+<text x="250.0" y="906" font-size="12" fill="#f2efe6" text-anchor="middle">移動</text>
+<rect x="282" y="862" width="52" height="52" rx="7" fill="#2f5582" stroke="#3a3a42" stroke-width="1.5"/>
+<text x="290" y="883" font-size="17" fill="#f2efe6" text-anchor="start" font-weight="bold">E</text>
+<text x="308.0" y="906" font-size="12" fill="#f2efe6" text-anchor="middle">調べる</text>
+<rect x="340" y="862" width="52" height="52" rx="7" fill="#1c1c21" stroke="#3a3a42" stroke-width="1.5"/>
+<text x="348" y="883" font-size="17" fill="#4a4740" text-anchor="start" font-weight="bold">R</text>
+<rect x="398" y="862" width="52" height="52" rx="7" fill="#1c1c21" stroke="#3a3a42" stroke-width="1.5"/>
+<text x="406" y="883" font-size="17" fill="#4a4740" text-anchor="start" font-weight="bold">T</text>
+<rect x="456" y="862" width="52" height="52" rx="7" fill="#1c1c21" stroke="#3a3a42" stroke-width="1.5"/>
+<text x="464" y="883" font-size="17" fill="#4a4740" text-anchor="start" font-weight="bold">Y</text>
+<rect x="514" y="862" width="52" height="52" rx="7" fill="#202026" stroke="#3a3a42" stroke-width="1.5" stroke-dasharray="4 4"/>
+<text x="522" y="883" font-size="17" fill="#8d887c" text-anchor="start" font-weight="bold">U</text>
+<text x="540.0" y="906" font-size="12" fill="#8d887c" text-anchor="middle">空き</text>
+<rect x="572" y="862" width="52" height="52" rx="7" fill="#202026" stroke="#3a3a42" stroke-width="1.5" stroke-dasharray="4 4"/>
+<text x="580" y="883" font-size="17" fill="#8d887c" text-anchor="start" font-weight="bold">I</text>
+<text x="598.0" y="906" font-size="12" fill="#8d887c" text-anchor="middle">空き</text>
+<rect x="630" y="862" width="52" height="52" rx="7" fill="#5e4a1e" stroke="#e8c36a" stroke-width="1.5"/>
+<text x="638" y="883" font-size="17" fill="#f3dfa8" text-anchor="start" font-weight="bold">O</text>
+<text x="656.0" y="906" font-size="12" fill="#f3dfa8" text-anchor="middle">切替</text>
+<rect x="688" y="862" width="52" height="52" rx="7" fill="#5e4a1e" stroke="#e8c36a" stroke-width="1.5"/>
+<text x="696" y="883" font-size="17" fill="#f3dfa8" text-anchor="start" font-weight="bold">P</text>
+<text x="714.0" y="906" font-size="12" fill="#f3dfa8" text-anchor="middle">切替</text>
+<rect x="80" y="920" width="96" height="52" rx="7" fill="#1c1c21" stroke="#3a3a42" stroke-width="1.5"/>
+<text x="88" y="941" font-size="17" fill="#4a4740" text-anchor="start" font-weight="bold">Caps</text>
+<rect x="182" y="920" width="52" height="52" rx="7" fill="#3f6b48" stroke="#3a3a42" stroke-width="1.5"/>
+<text x="190" y="941" font-size="17" fill="#f2efe6" text-anchor="start" font-weight="bold">A</text>
+<text x="208.0" y="964" font-size="12" fill="#f2efe6" text-anchor="middle">移動</text>
+<rect x="240" y="920" width="52" height="52" rx="7" fill="#3f6b48" stroke="#3a3a42" stroke-width="1.5"/>
+<text x="248" y="941" font-size="17" fill="#f2efe6" text-anchor="start" font-weight="bold">S</text>
+<text x="266.0" y="964" font-size="12" fill="#f2efe6" text-anchor="middle">移動</text>
+<rect x="298" y="920" width="52" height="52" rx="7" fill="#3f6b48" stroke="#3a3a42" stroke-width="1.5"/>
+<text x="306" y="941" font-size="17" fill="#f2efe6" text-anchor="start" font-weight="bold">D</text>
+<text x="324.0" y="964" font-size="12" fill="#f2efe6" text-anchor="middle">移動</text>
+<rect x="356" y="920" width="52" height="52" rx="7" fill="#1c1c21" stroke="#3a3a42" stroke-width="1.5"/>
+<text x="364" y="941" font-size="17" fill="#4a4740" text-anchor="start" font-weight="bold">F</text>
+<rect x="414" y="920" width="52" height="52" rx="7" fill="#1c1c21" stroke="#3a3a42" stroke-width="1.5"/>
+<text x="422" y="941" font-size="17" fill="#4a4740" text-anchor="start" font-weight="bold">G</text>
+<rect x="472" y="920" width="52" height="52" rx="7" fill="#1c1c21" stroke="#3a3a42" stroke-width="1.5"/>
+<text x="480" y="941" font-size="17" fill="#4a4740" text-anchor="start" font-weight="bold">H</text>
+<rect x="530" y="920" width="52" height="52" rx="7" fill="#8a6a20" stroke="#e8c36a" stroke-width="1.5"/>
+<text x="538" y="941" font-size="17" fill="#f2efe6" text-anchor="start" font-weight="bold">J</text>
+<text x="556.0" y="964" font-size="12" fill="#f2efe6" text-anchor="middle">攻撃</text>
+<rect x="588" y="920" width="52" height="52" rx="7" fill="#8a6a20" stroke="#e8c36a" stroke-width="1.5"/>
+<text x="596" y="941" font-size="17" fill="#f2efe6" text-anchor="start" font-weight="bold">K</text>
+<text x="614.0" y="964" font-size="12" fill="#f2efe6" text-anchor="middle">技</text>
+<rect x="646" y="920" width="52" height="52" rx="7" fill="#8a6a20" stroke="#e8c36a" stroke-width="1.5"/>
+<text x="654" y="941" font-size="17" fill="#f2efe6" text-anchor="start" font-weight="bold">L</text>
+<text x="672.0" y="964" font-size="12" fill="#f2efe6" text-anchor="middle">魔法</text>
+<rect x="704" y="920" width="52" height="52" rx="7" fill="#8a6a20" stroke="#e8c36a" stroke-width="1.5"/>
+<text x="712" y="941" font-size="17" fill="#f2efe6" text-anchor="start" font-weight="bold">;</text>
+<text x="730.0" y="964" font-size="12" fill="#f2efe6" text-anchor="middle">アイテム</text>
+<rect x="80" y="978" width="124" height="52" rx="7" fill="#1c1c21" stroke="#3a3a42" stroke-width="1.5"/>
+<text x="88" y="999" font-size="17" fill="#4a4740" text-anchor="start" font-weight="bold">Shift</text>
+<rect x="210" y="978" width="52" height="52" rx="7" fill="#1c1c21" stroke="#3a3a42" stroke-width="1.5"/>
+<text x="218" y="999" font-size="17" fill="#4a4740" text-anchor="start" font-weight="bold">Z</text>
+<rect x="268" y="978" width="52" height="52" rx="7" fill="#1c1c21" stroke="#3a3a42" stroke-width="1.5"/>
+<text x="276" y="999" font-size="17" fill="#4a4740" text-anchor="start" font-weight="bold">X</text>
+<rect x="326" y="978" width="52" height="52" rx="7" fill="#1c1c21" stroke="#3a3a42" stroke-width="1.5"/>
+<text x="334" y="999" font-size="17" fill="#4a4740" text-anchor="start" font-weight="bold">C</text>
+<rect x="384" y="978" width="52" height="52" rx="7" fill="#1c1c21" stroke="#3a3a42" stroke-width="1.5"/>
+<text x="392" y="999" font-size="17" fill="#4a4740" text-anchor="start" font-weight="bold">V</text>
+<rect x="442" y="978" width="52" height="52" rx="7" fill="#1c1c21" stroke="#3a3a42" stroke-width="1.5"/>
+<text x="450" y="999" font-size="17" fill="#4a4740" text-anchor="start" font-weight="bold">B</text>
+<rect x="500" y="978" width="52" height="52" rx="7" fill="#1c1c21" stroke="#3a3a42" stroke-width="1.5"/>
+<text x="508" y="999" font-size="17" fill="#4a4740" text-anchor="start" font-weight="bold">N</text>
+<rect x="558" y="978" width="52" height="52" rx="7" fill="#1c1c21" stroke="#3a3a42" stroke-width="1.5"/>
+<text x="566" y="999" font-size="17" fill="#4a4740" text-anchor="start" font-weight="bold">M</text>
+<rect x="290" y="1036" width="300" height="52" rx="7" fill="#2f5582" stroke="#3a3a42" stroke-width="1.5"/>
+<text x="298" y="1057" font-size="17" fill="#f2efe6" text-anchor="start" font-weight="bold">Space</text>
+<text x="440.0" y="1080" font-size="12" fill="#f2efe6" text-anchor="middle">跳躍</text>
+<text x="820" y="820" font-size="17" fill="#c9a24a" text-anchor="start">左手（WASDから離さない）</text>
+<text x="820" y="852" font-size="15" fill="#e6e1d4" text-anchor="start">W A S D　移動</text>
+<text x="820" y="880" font-size="15" fill="#e6e1d4" text-anchor="start">Space　跳躍</text>
+<text x="820" y="908" font-size="15" fill="#e6e1d4" text-anchor="start">E　調べる、開ける、店に入る</text>
+<text x="820" y="936" font-size="15" fill="#e6e1d4" text-anchor="start">Tab　持ち物の画面</text>
+<text x="820" y="964" font-size="15" fill="#e6e1d4" text-anchor="start">1〜9　カバンの枠を選ぶ（補助）</text>
+<text x="1180" y="820" font-size="17" fill="#c9a24a" text-anchor="start">右手（下の段で使い、真上で切り替える）</text>
+<text x="1180" y="852" font-size="15" fill="#e6e1d4" text-anchor="start">J　通常攻撃</text>
+<text x="1180" y="880" font-size="15" fill="#e6e1d4" text-anchor="start">K　固有の技</text>
+<text x="1180" y="908" font-size="15" fill="#e6e1d4" text-anchor="start">L　魔法を唱える ／ O　切り替え</text>
+<text x="1180" y="936" font-size="15" fill="#e6e1d4" text-anchor="start">;　アイテムを使う ／ P　切り替え</text>
+<text x="1180" y="964" font-size="15" fill="#e6e1d4" text-anchor="start">U、I　空き（後で使う）</text>
+<text x="820" y="1020" font-size="14" fill="#cfcabd" text-anchor="start">マウスとゲームパッドは案。マウスは左のクリックで通常攻撃、右のクリックで固有の技。</text>
+<text x="820" y="1044" font-size="14" fill="#cfcabd" text-anchor="start">ゲームパッドは、右の肩で技、右の引き金で魔法、左の引き金でアイテム、</text>
+<text x="820" y="1066" font-size="14" fill="#cfcabd" text-anchor="start">十字キーの上下で魔法、左右でアイテムを切り替える。</text>
+<text x="40" y="1150" font-size="24" fill="#f2efe6" text-anchor="start" font-weight="bold">C. 持ち物の画面（Tabで開く。ゲームは止めず、騎士だけが止まる）</text>
+<rect x="40" y="1170" width="1520" height="855" rx="6" fill="#3f5b3c"/>
+<rect x="40" y="1170" width="1520" height="855" rx="6" fill="#000" opacity="0.6"/>
+<rect x="62" y="1190" width="250" height="56" rx="10" fill="#0f0f12" stroke="#c9a24a" stroke-width="2"/>
+<circle cx="88" cy="1218" r="11" fill="#c8323a" stroke="#c9a24a" stroke-width="1.5"/>
+<circle cx="116" cy="1218" r="11" fill="#c8323a" stroke="#c9a24a" stroke-width="1.5"/>
+<circle cx="144" cy="1218" r="11" fill="#c8323a" stroke="#c9a24a" stroke-width="1.5"/>
+<circle cx="172" cy="1218" r="11" fill="#c8323a" stroke="#c9a24a" stroke-width="1.5"/>
+<circle cx="212" cy="1218" r="12" fill="#d9a83a" stroke="#8a6a20" stroke-width="2"/>
+<text x="234" y="1226" font-size="22" fill="#f2efe6" text-anchor="start" font-weight="bold">24</text>
+<rect x="200" y="1270" width="1200" height="730" rx="16" fill="#0d0d10" stroke="#c9a24a" stroke-width="2"/>
+<text x="232" y="1313" font-size="26" fill="#f2efe6" text-anchor="start" font-weight="bold">持ち物</text>
+<rect x="1322" y="1288" width="52" height="30" rx="5" fill="#f2efe6"/>
+<text x="1348.0" y="1309.0" font-size="16" fill="#111" text-anchor="middle" font-weight="bold">Tab</text>
+<text x="1312" y="1309" font-size="17" fill="#f2efe6" text-anchor="end">閉じる</text>
+<text x="232" y="1358" font-size="18" fill="#c9a24a" text-anchor="start">装備</text>
+<rect x="240" y="1376" width="80" height="80" rx="10" fill="#0f0f12" stroke="#c9a24a" stroke-width="2"/>
+<use href="#i-helm" xlink:href="#i-helm" x="244" y="1380" width="72" height="72"/>
+<rect x="240" y="1486" width="80" height="80" rx="10" fill="#0f0f12" stroke="#c9a24a" stroke-width="2"/>
+<use href="#i-armour" xlink:href="#i-armour" x="244" y="1490" width="72" height="72"/>
+<rect x="240" y="1596" width="80" height="80" rx="10" fill="#0f0f12" stroke="#c9a24a" stroke-width="2"/>
+<use href="#i-boots" xlink:href="#i-boots" x="244" y="1600" width="72" height="72"/>
+<rect x="580" y="1431" width="80" height="80" rx="10" fill="#0f0f12" stroke="#c9a24a" stroke-width="2"/>
+<use href="#i-sword" xlink:href="#i-sword" x="584" y="1435" width="72" height="72"/>
+<rect x="580" y="1541" width="80" height="80" rx="10" fill="#0f0f12" stroke="#c9a24a" stroke-width="2"/>
+<use href="#i-shield" xlink:href="#i-shield" x="584" y="1545" width="72" height="72"/>
+<text x="280" y="1474" font-size="14" fill="#cfcabd" text-anchor="middle">頭</text>
+<text x="280" y="1584" font-size="14" fill="#cfcabd" text-anchor="middle">胴</text>
+<text x="280" y="1694" font-size="14" fill="#cfcabd" text-anchor="middle">足</text>
+<text x="620" y="1529" font-size="14" fill="#cfcabd" text-anchor="middle">メイン武器</text>
+<text x="620" y="1639" font-size="14" fill="#cfcabd" text-anchor="middle">オフハンド</text>
+<circle cx="450" cy="1440" r="38" fill="#34343c"/>
+<rect x="400" y="1482" width="100" height="120" rx="20" fill="#34343c"/>
+<rect x="410" y="1606" width="34" height="70" rx="8" fill="#34343c"/>
+<rect x="456" y="1606" width="34" height="70" rx="8" fill="#34343c"/>
+<text x="450" y="1700" font-size="14" fill="#8d887c" text-anchor="middle">今の見た目</text>
+<rect x="690" y="1431" width="80" height="190" rx="10" fill="#0f0f12" stroke="#c9a24a" stroke-width="2" stroke-dasharray="7 5"/>
+<use href="#i-bow" xlink:href="#i-bow" x="694" y="1490" width="72" height="72"/>
+<text x="730" y="1640" font-size="13" fill="#8d887c" text-anchor="middle">例: 両手の武器は</text>
+<text x="730" y="1658" font-size="13" fill="#8d887c" text-anchor="middle">2つの枠を1つに</text>
+<text x="730" y="1676" font-size="13" fill="#8d887c" text-anchor="middle">まとめる</text>
+<text x="232" y="1740" font-size="18" fill="#c9a24a" text-anchor="start">固有の技</text>
+<rect x="240" y="1760" width="68" height="68" rx="8" fill="#0f0f12" stroke="#c9a24a" stroke-width="2"/>
+<use href="#i-slash" xlink:href="#i-slash" x="244" y="1764" width="60" height="60"/>
+<rect x="230" y="1750" width="22" height="22" rx="5" fill="#f2efe6"/>
+<text x="241.0" y="1766.5" font-size="15" fill="#111" text-anchor="middle" font-weight="bold">K</text>
+<text x="274" y="1846" font-size="13" fill="#8d887c" text-anchor="middle">外せない</text>
+<text x="334" y="1740" font-size="18" fill="#c9a24a" text-anchor="start">魔法（この剣は3つ）</text>
+<circle cx="368" cy="1794" r="34" fill="#0f0f12" stroke="#e8c36a" stroke-width="4"/>
+<use href="#i-fire" xlink:href="#i-fire" x="341" y="1767" width="54" height="54"/>
+<circle cx="444" cy="1794" r="34" fill="#0f0f12" stroke="#c9a24a" stroke-width="2"/>
+<use href="#i-ice" xlink:href="#i-ice" x="417" y="1767" width="54" height="54"/>
+<circle cx="520" cy="1794" r="34" fill="#0f0f12" stroke="#c9a24a" stroke-width="2"/>
+<rect x="328" y="1748" width="22" height="22" rx="5" fill="#f2efe6"/>
+<text x="339.0" y="1764.5" font-size="15" fill="#111" text-anchor="middle" font-weight="bold">L</text>
+<text x="590" y="1786" font-size="13" fill="#8d887c" text-anchor="start">枠の数は武器で決まる（0〜6）</text>
+<text x="590" y="1806" font-size="13" fill="#8d887c" text-anchor="start">Lの印が、Lで唱える物</text>
+<text x="232" y="1872" font-size="18" fill="#c9a24a" text-anchor="start">カバン</text>
+<text x="300" y="1872" font-size="13" fill="#8d887c" text-anchor="start">番号は数字キーで選ぶ番号。;の印が、;で使う物</text>
+<rect x="240" y="1888" width="68" height="68" rx="8" fill="#0f0f12" stroke="#c9a24a" stroke-width="2"/>
+<use href="#i-potion" xlink:href="#i-potion" x="244" y="1892" width="60" height="60"/>
+<rect x="230" y="1878" width="22" height="22" rx="5" fill="#f2efe6"/>
+<text x="241.0" y="1894.5" font-size="15" fill="#111" text-anchor="middle" font-weight="bold">1</text>
+<rect x="318" y="1888" width="68" height="68" rx="8" fill="#0f0f12" stroke="#e8c36a" stroke-width="4"/>
+<use href="#i-bow" xlink:href="#i-bow" x="322" y="1892" width="60" height="60"/>
+<rect x="308" y="1878" width="22" height="22" rx="5" fill="#f2efe6"/>
+<text x="319.0" y="1894.5" font-size="15" fill="#111" text-anchor="middle" font-weight="bold">2</text>
+<rect x="396" y="1888" width="68" height="68" rx="8" fill="#0f0f12" stroke="#c9a24a" stroke-width="2"/>
+<use href="#i-gem" xlink:href="#i-gem" x="400" y="1892" width="60" height="60"/>
+<rect x="386" y="1878" width="22" height="22" rx="5" fill="#f2efe6"/>
+<text x="397.0" y="1894.5" font-size="15" fill="#111" text-anchor="middle" font-weight="bold">3</text>
+<rect x="474" y="1888" width="68" height="68" rx="8" fill="#0f0f12" stroke="#c9a24a" stroke-width="2"/>
+<use href="#i-relic" xlink:href="#i-relic" x="478" y="1892" width="60" height="60"/>
+<rect x="464" y="1878" width="22" height="22" rx="5" fill="#f2efe6"/>
+<text x="475.0" y="1894.5" font-size="15" fill="#111" text-anchor="middle" font-weight="bold">4</text>
+<rect x="552" y="1888" width="68" height="68" rx="8" fill="#0f0f12" stroke="#c9a24a" stroke-width="2"/>
+<rect x="542" y="1878" width="22" height="22" rx="5" fill="#f2efe6"/>
+<text x="553.0" y="1894.5" font-size="15" fill="#111" text-anchor="middle" font-weight="bold">5</text>
+<rect x="294" y="1944" width="22" height="22" rx="5" fill="#f2efe6"/>
+<text x="305.0" y="1960.5" font-size="15" fill="#111" text-anchor="middle" font-weight="bold">;</text>
+<rect x="630" y="1888" width="68" height="68" rx="8" fill="none" stroke="#6b6455" stroke-width="2" stroke-dasharray="6 6"/>
+<rect x="708" y="1888" width="68" height="68" rx="8" fill="none" stroke="#6b6455" stroke-width="2" stroke-dasharray="6 6"/>
+<text x="630" y="1980" font-size="13" fill="#8d887c" text-anchor="start">点線: カバンで増える枠</text>
+<rect x="830" y="1340" width="540" height="630" rx="12" fill="#121216" stroke="#c9a24a" stroke-width="1.5"/>
+<rect x="858" y="1368" width="150" height="150" rx="10" fill="#0f0f12" stroke="#c9a24a" stroke-width="2"/>
+<use href="#i-bow" xlink:href="#i-bow" x="868" y="1378" width="130" height="130"/>
+<text x="1032" y="1408" font-size="26" fill="#f2efe6" text-anchor="start" font-weight="bold">狩人の弓</text>
+<rect x="1032" y="1422" width="130" height="5" fill="#4a8fe0"/>
+<text x="1032" y="1458" font-size="16" fill="#cfcabd" text-anchor="start">両手の武器（メイン武器とオフハンド）</text>
+<text x="858" y="1562" font-size="17" fill="#e6e1d4" text-anchor="start">遠くの敵を矢で射る。</text>
+<text x="858" y="1588" font-size="17" fill="#e6e1d4" text-anchor="start">メイン武器とオフハンドを1つで埋める。</text>
+<text x="858" y="1642" font-size="16" fill="#cfcabd" text-anchor="start">強さ</text>
+<text x="858" y="1678" font-size="16" fill="#cfcabd" text-anchor="start">届く距離</text>
+<rect x="950" y="1630" width="300" height="12" rx="6" fill="#2a2a30"/>
+<rect x="950" y="1630" width="190" height="12" rx="6" fill="#e8e2d0"/>
+<text x="1266" y="1643" font-size="17" fill="#e05a5a" text-anchor="start" font-weight="bold">-2</text>
+<rect x="950" y="1666" width="300" height="12" rx="6" fill="#2a2a30"/>
+<rect x="950" y="1666" width="270" height="12" rx="6" fill="#e8e2d0"/>
+<text x="1266" y="1679" font-size="17" fill="#6fd17a" text-anchor="start" font-weight="bold">+6</text>
+<text x="858" y="1732" font-size="16" fill="#cfcabd" text-anchor="start">固有の技</text>
+<rect x="950" y="1710" width="32" height="32" rx="8" fill="#0f0f12" stroke="#c9a24a" stroke-width="2"/>
+<use href="#i-arrows" xlink:href="#i-arrows" x="951" y="1711" width="30" height="30"/>
+<text x="994" y="1732" font-size="15" fill="#e6e1d4" text-anchor="start">連射（3本の矢を続けて射る）</text>
+<text x="858" y="1776" font-size="16" fill="#cfcabd" text-anchor="start">魔法の枠</text>
+<circle cx="966" cy="1770" r="16" fill="#0f0f12" stroke="#c9a24a" stroke-width="2"/>
+<use href="#i-bolt" xlink:href="#i-bolt" x="957" y="1761" width="18" height="18"/>
+<circle cx="1004" cy="1770" r="16" fill="#0f0f12" stroke="#c9a24a" stroke-width="2"/>
+<text x="1032" y="1776" font-size="15" fill="#e6e1d4" text-anchor="start">2つ。雷が入っている</text>
+<text x="858" y="1824" font-size="15" fill="#e8c36a" text-anchor="start">持ち替えると、今の剣と盾はカバンへ入る</text>
+<text x="858" y="1848" font-size="15" fill="#e8c36a" text-anchor="start">魔法は、入っている武器と一緒に動く</text>
+<rect x="858" y="1898" width="34" height="34" rx="5" fill="#f2efe6"/>
+<text x="875.0" y="1921.5" font-size="17" fill="#111" text-anchor="middle" font-weight="bold">J</text>
+<text x="902" y="1922" font-size="17" fill="#f2efe6" text-anchor="start">持ち替える</text>
+<rect x="1052" y="1898" width="34" height="34" rx="5" fill="#f2efe6"/>
+<text x="1069.0" y="1921.5" font-size="17" fill="#111" text-anchor="middle" font-weight="bold">Q</text>
+<text x="1096" y="1922" font-size="17" fill="#f2efe6" text-anchor="start">捨てる</text>
+<text x="40" y="2052" font-size="15" fill="#8d887c" text-anchor="start">配置の下書きで、見た目は黒漆の決まりに従う。アイコン、名前、数値、ゲームパッドのボタン、捨てるキー（Q）は仮。魔法は武器にはめ、技は武器ごとに固有、オフハンドはボタンなし（2026-11-11）、魔法は唱えると切り替え、Bのキーボードの配置（2026-11-13）。どれも所有者が決めた。</text>
+</svg>

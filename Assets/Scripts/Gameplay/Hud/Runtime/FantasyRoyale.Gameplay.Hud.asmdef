@@ -1,0 +1,7 @@
+{
+  "name": "FantasyRoyale.Gameplay.Hud",
+  "rootNamespace": "FantasyRoyale.Gameplay.Hud",
+  "references": [
+    "UnityEngine.UI"
+  ]
+}

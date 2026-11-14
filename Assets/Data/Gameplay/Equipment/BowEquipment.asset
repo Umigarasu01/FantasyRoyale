@@ -19,3 +19,5 @@ MonoBehaviour:
   gear:
   - {fileID: 11400000, guid: 95d28f71d705b114191308cacf4e211f, type: 2}
   - {fileID: 11400000, guid: 051dab60d72c3df4db0fa8f48ca00b44, type: 2}
+  handUse: 1
+  magicSlotCount: 1

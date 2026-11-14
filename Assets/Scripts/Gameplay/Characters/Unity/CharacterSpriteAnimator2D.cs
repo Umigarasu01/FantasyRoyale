@@ -10,6 +10,7 @@ namespace FantasyRoyale.Gameplay.Characters.Unity
     /// 部位で着替える体は足、胴、頭の3層で表す。足と胴はコマごとの絵で、頭は兜の位置へ付く1枚の絵である。
     /// 攻撃中は胴が動きの型の上半身に替わる。足は走っていれば走りのコマを続け、止まっていれば型の踏み込みのコマを見せる。
     /// 武器はコマごとの手の位置と角度で腕と一緒に動く。近接攻撃では、当たり判定と同じ扇の斬撃を出す。
+    /// HPが減ると、体と部品の全ての層が少しの間赤くなる。持ち主は体の色を`Tint`で決める。
     /// 足、胴、頭の3層の体は、足元へいつも影を出す。走って足が着くコマと着地では、足元に砂ぼこりを出す。
     /// 跳んでいる間は、足元を残して全ての層を持ち上げ、影を小さくする。足のコマは踏み切った時のまま止める。
     /// 表示だけを担当し、移動や判定には影響しない。
@@ -23,6 +24,10 @@ namespace FantasyRoyale.Gameplay.Characters.Unity
         private const float SlashFadeShare = 0.3f;
         private const int StandDeepFrame = 2;
         private const float StandHoldShare = 0.5f;
+
+        // 被弾の赤。持ち主の色へ掛けて、体と部品の全ての層へ同じ色を付ける。前半は赤いまま、後半で元の色へ戻る。
+        private const float HitFlashSeconds = 0.2f;
+        private static readonly Color HitFlashColour = new Color(1f, 0.3f, 0.3f);
 
         // 体より手前に重ねる順。足の上へ柄頭、胴、背を向けて振る剣、頭、盾の手の部品、斬撃、武器、拳の順に積む。
         // 柄頭は胴の下なので、腕に隠れる所は見えない。背を向けて走る剣も胴の下へ回し、拳の下から出す。
@@ -82,8 +87,22 @@ namespace FantasyRoyale.Gameplay.Characters.Unity
         private float runSeconds;
         private CharacterActionMotion? weaponKind;
         private readonly Dictionary<CharacterGearSlot, GearPart> parts = new Dictionary<CharacterGearSlot, GearPart>();
+        private CharacterHealth watchedHealth;
+        private int lastHealth;
+        private float hitFlashRemaining;
 
         public bool IsRunning { get; private set; }
+
+        /// <summary>
+        /// 持ち主が決める体の色。倒れたときの灰色や、ダメージを受けない間の点滅に使う。被弾の赤はこの色へ重ねる。
+        /// 体のSpriteRendererの色は毎Frameこの色から作り直すので、SpriteRendererの色を直接変えない。
+        /// </summary>
+        public Color Tint { get; set; } = Color.white;
+
+        /// <summary>
+        /// HPが減って、体が赤くなっている間はtrueである。
+        /// </summary>
+        public bool IsHitFlashing => hitFlashRemaining > 0f;
 
         /// <summary>
         /// 表示に使うSpriteの定義を注入し、すぐに現在の状態を反映する。全ての部位がこの定義の絵になる。
@@ -352,6 +371,14 @@ namespace FantasyRoyale.Gameplay.Characters.Unity
             AdvanceDust(Time.deltaTime);
         }
 
+        /// <summary>
+        /// 隠れている間は時間が進まないので、倒されて消えた敵が戻ったときに赤が残らないよう止める。
+        /// </summary>
+        private void OnDisable()
+        {
+            hitFlashRemaining = 0f;
+        }
+
         private void OnDestroy()
         {
             // 砂ぼこりは体と一緒に動かないようSceneの直下に置くので、体と一緒に片付ける。
@@ -597,6 +624,10 @@ namespace FantasyRoyale.Gameplay.Characters.Unity
         /// </summary>
         private void Refresh(float deltaSeconds)
         {
+            // 部品の層は体の色を写すので、先に体の色を決める。
+            UpdateHitFlash(deltaSeconds);
+            spriteRenderer.color = Tint * HitFlashTint();
+
             IsRunning = actor.MoveCommand.IsMoving
                         && actor.MovementScale > 0f
                         && actor.Health != null
@@ -785,7 +816,8 @@ namespace FantasyRoyale.Gameplay.Characters.Unity
             slashRenderer.sprite = CharacterSlashSprites.Get(spec.Range, spec.ArcDegrees);
             slashRenderer.flipX = false;
             slashRenderer.flipY = IsLeftFacing(state.Direction);
-            var colour = spriteRenderer.color;
+            // 斬撃は判定を見せる物なので、被弾しても赤くしない。
+            var colour = Tint;
             colour.a *= strength;
             slashRenderer.color = colour;
             slashRenderer.transform.localPosition = combat.MeleeOffset;
@@ -805,6 +837,44 @@ namespace FantasyRoyale.Gameplay.Characters.Unity
             return state.Phase == CharacterActionPhase.Recovery && state.PhaseProgress < SlashFadeShare
                 ? 1f - state.PhaseProgress / SlashFadeShare
                 : 0f;
+        }
+
+        /// <summary>
+        /// HPが前に見た時より減っていれば、赤くする時間を始める。剣、矢、触れたときのダメージのどれでも同じである。
+        /// 回復と復活では赤くしない。
+        /// </summary>
+        private void UpdateHitFlash(float deltaSeconds)
+        {
+            var health = actor.Health;
+            if (!ReferenceEquals(health, watchedHealth))
+            {
+                watchedHealth = health;
+                lastHealth = health?.CurrentHealth ?? 0;
+                hitFlashRemaining = 0f;
+                return;
+            }
+
+            if (health == null)
+            {
+                return;
+            }
+
+            hitFlashRemaining = Mathf.Max(0f, hitFlashRemaining - deltaSeconds);
+            if (health.CurrentHealth < lastHealth)
+            {
+                hitFlashRemaining = HitFlashSeconds;
+            }
+
+            lastHealth = health.CurrentHealth;
+        }
+
+        /// <summary>
+        /// 今の被弾の色。赤くする時間の前半は赤いまま、後半で白へ戻る。白は色を変えない。
+        /// </summary>
+        private Color HitFlashTint()
+        {
+            var share = Mathf.Clamp01(hitFlashRemaining / HitFlashSeconds * 2f);
+            return Color.Lerp(Color.white, HitFlashColour, share);
         }
 
         private void ShowLayer(SpriteRenderer layer, Sprite sprite, Vector3 position)

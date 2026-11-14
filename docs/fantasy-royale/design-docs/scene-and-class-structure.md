@@ -142,6 +142,12 @@ flowchart TD
 
 `FantasyRoyale.Gameplay.Events.Runtime`は`FantasyRoyale.Gameplay.Characters.Core`と`FantasyRoyale.MapAuthoringKit.Runtime`を参照する。Definition実型からHandlerを引くRuntime Dictionary、純C#の実行Context / Result、成功後OneShot更新に加え、ID・重み・有効数・Seedだけを扱う`MapEventPlacementSelector`を持つ。GameObject、Transform、UI、Effect、Audioは操作しない。Handlerは本番`ICharacterHealthTarget`を操作し、Message / Effect / Audio Cue IDを返す。Unity側Presenterが実表示へ変換する。
 
+所持品とMPは`FantasyRoyale.Gameplay.Characters.Core`が持つ（2026-11-13、[所持品と魔法のExecPlan](../exec-plans/completed/inventory-and-magic.md)）。`CharacterItem`は手に入れた物1つで、定義のid、種類、埋める枠、魔法の枠（数は武器ごとで0もある）、選んでいる魔法を持つ。同じ定義から作った物でも、入っている魔法は1つごとに別である。`CharacterInventory`は着けている装備（頭、胴、足、メイン武器、オフハンド）、使用枠、カバンを持ち、一体の装備は埋める枠をまとめて着け外しする。`CharacterMana`はMP、`CharacterCooldown`は固有の技の待ち時間である。どれもUnityの定義Assetを知らず、idで定義へつなぐのは呼ぶ側である。`CharacterLoadout`は通常攻撃、特殊Action（固有の技）、選んでいる魔法の3つのActionを持つ。
+
+`FantasyRoyale.Gameplay.Characters.Unity`の`CharacterEquipmentDefinition`は持つ手（`CharacterHandUse`）と魔法の枠の数を持ち、`CreateItem`で持ち物を作る。盾のようなオフハンドも同じ型で、`CharacterEquipmentCatalog`は武器と`OffHands`を分けて集める。魔法は`CharacterMagicDefinition`（id、名前、MP、唱えるAction）である。`HumanCharacterActionInputAdapter`は唱える操作を攻撃と同じAction Commandとして読み、`HumanInventoryInputAdapter`は魔法の切り替え、使用枠の数字キー、持ち物の画面、画面の上下左右と決めるキーを1フレーム分まとめて読む。MPを確かめて使うのはActionを始める呼び出し側で、`CharacterCombat2D`はMPを持たない。
+
+`FantasyRoyale.Gameplay.Hud`は`UnityEngine.UI`だけを参照する。`GameHud`はScreen Space OverlayのCanvasを自分で組み、呼ぶ側から渡されたHP、最大HP、ハート1つ分のHP、MP、コイン、吹き出しの画面位置だけを表示する。下の技とアイテムの枠（`LoadoutBar`）、持ち物の画面（`InventoryScreen`）、店の画面（`ShopScreen`）も、渡された値の型（`LoadoutBarModel`、`InventoryScreenModel`、`ShopScreenModel`）だけを表示し、魔法と使用枠とカバンの枠の数は渡された数だけ並べる。Gameplay CoreやPlaytestを参照せず、ゲームの状態を書き換えない。ハート1つ分のHPのような仮のルールは呼ぶ側が持つ。見た目の決まりは[UIのデザイン方針](../product-specs/art/ui-design.md)にある。
+
 ## Exploration Preview Debug
 
 状態: **Event Pool抽選・本番Character Health・本番移動経路を検証完了 / 一時Playtest足場**
@@ -151,7 +157,7 @@ flowchart TD
 - `Assets/Scenes/Playtest/GbaForestBattleRoyaleExplorationPreviewDebug.unity`
 - Additive読込: `Assets/Scenes/MapAuthoring/GbaForestBattleRoyaleReference.unity`
 
-`FantasyRoyale.Playtest.Runtime`は`FantasyRoyale.MapAuthoringKit.Runtime`、`FantasyRoyale.Gameplay.Characters.Core`、`FantasyRoyale.Gameplay.Characters.Unity`、`FantasyRoyale.Gameplay.Events.Runtime`、`Unity.InputSystem`を参照する。Reference Sceneを変更・複製せず、Playtest SceneのBootstrapが次をRuntimeで接続する。
+`FantasyRoyale.Playtest.Runtime`は`FantasyRoyale.MapAuthoringKit.Runtime`、`FantasyRoyale.Gameplay.Characters.Core`、`FantasyRoyale.Gameplay.Characters.Unity`、`FantasyRoyale.Gameplay.Events.Runtime`、`FantasyRoyale.Gameplay.Hud`、`Unity.InputSystem`を参照する。Reference Sceneを変更・複製せず、Playtest SceneのBootstrapが次をRuntimeで接続する。
 
 - `Player/Move` ActionのRuntime複製 → `HumanCharacterMoveInputAdapter` → 純C# `CharacterMoveCommand` → `CharacterActor2D` → Dynamic `Rigidbody2D.MovePosition`。
 - 本番Actorの足元`CapsuleCollider2D` → Reference SceneのMapCollision Layer（CollisionTilemap + CollisionBody）。

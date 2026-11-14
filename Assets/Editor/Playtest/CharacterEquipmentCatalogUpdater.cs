@@ -42,13 +42,17 @@ namespace FantasyRoyale.Editor.Playtest
                 .Where(part => !string.IsNullOrEmpty(part.Id))
                 .OrderBy(part => part.Id, StringComparer.Ordinal)
                 .ToArray();
-            var weapons = LoadAll<CharacterEquipmentDefinition>()
+            var equipment = LoadAll<CharacterEquipmentDefinition>()
                 .Where(HasId)
                 .OrderBy(weapon => weapon.Id, StringComparer.Ordinal)
                 .ToArray();
-            if (!armour.SequenceEqual(catalog.Armour) || !weapons.SequenceEqual(catalog.Weapons))
+            var weapons = equipment.Where(item => !item.IsOffHand).ToArray();
+            var offHands = equipment.Where(item => item.IsOffHand).ToArray();
+            if (!armour.SequenceEqual(catalog.Armour)
+                || !weapons.SequenceEqual(catalog.Weapons)
+                || !offHands.SequenceEqual(catalog.OffHands))
             {
-                catalog.Configure(armour, weapons);
+                catalog.Configure(armour, weapons, offHands);
                 EditorUtility.SetDirty(catalog);
                 AssetDatabase.SaveAssetIfDirty(catalog);
             }

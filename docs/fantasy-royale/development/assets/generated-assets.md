@@ -18,6 +18,17 @@
 
 Prompt全文は同名のJSONで確認する。騎士と同じ0.135倍で縮めると、閉じた箱が38×33 pixel、半開きの箱が36×43 pixel、開いて空の箱が36×45 pixelになる。閉じた箱はprop-chest-01から、半開きの箱と開く瞬間の光はprop-chest-03から切り出す。開く瞬間の光は右の絵と真ん中の絵の差から取り出す。何か入っている箱の光は、prop-chest-04の差から中の光を、prop-chest-05の1番目との差から飾りを取り出し、開いた箱の絵もprop-chest-04から切り出す。光は白、青、紫、金の4色へ塗り替える。prop-chest-02は参照に使っただけで、ゲーム用の絵には切り出さない。`Tools/MapAuthoring/build_chest_frames.py`が切り出して`Chest/`へ55枚を書き出す。使い方は[Asset導入・生成Workflow](../asset-workflow.md#騎士に合わせた宝箱)にある。
 
+## 2026-11-09 HUDのコインとハート
+
+状態: **使用中**。`Tools/UiAuthoring/build_hud_sprites.py`が切り抜いて縮め、`Assets/Art/Generated/Hud/hud-coin.png`と`hud-heart-*.png`にする。
+
+所有者がもっとリアルなコインにとし、続けてハートも揃えるとしたので描いた。どちらもOpenAI Image APIの`gpt-image-2.5-flare`（generationsのhigh、1024x1024、透明な背景、2枚ずつ）。Promptの全文は同じ場所のJSONにある。コインは1枚目を使い、もう1枚は王冠がユリの形で、画像の端で切れていたので使わない。
+
+| Source | 保存先 | Prompt概要 | SHA-256 |
+| --- | --- | --- | --- |
+| hud-coin-source | `Tools/UiAuthoring/Inputs/hud-coin-source.png` | 斜め4分の3から見た磨いた金貨。刻みの入った側面、粒の縁取り、三つの尖りの王冠の浮き彫り。文字なし、透明な背景 | `10c39afbd3789aac12efe0dabc81455f59f4f77607c03de405d547292d98d250` |
+| hud-heart-source | `Tools/UiAuthoring/Inputs/hud-heart-source.png` | 正面から見た左右対称の、細い金の縁にはめた透明なガラスのハート。中に赤い芯が封じ込められ、芯の周りに透明なガラスの帯、表面に窓の映り込み。文字なし、透明な背景（2枚のうち2枚目）。空と半分のハートはツールがここから作る。同じ日に一度使った赤いエナメルのハート（`743fbc47…`）を置き換えた | `2ac5664e4948b6a209a90ef0deb125f840c404d53e33006658513466c6042cda` |
+
 ## 2026-11-09 騎士に合わせたお店
 
 状態: **候補**。ゲームの屋台（`market-stall`）は置き換えていない。
@@ -29,6 +40,7 @@ Prompt全文は同名のJSONで確認する。騎士と同じ0.135倍で縮め�
 | prop-shop-01 | `Assets/Art/Generated/ForestLook/prop-shop-01.png` | 左の列に騎士、真ん中に屋台、右に行商人の荷馬車 | `8e80bc694ebae73e3987451666462b8e1df7451fa2411c8b931dd39490811e9c` |
 | prop-shop-02 | `Assets/Art/Generated/ForestLook/prop-shop-02.png` | 左の列に騎士、真ん中にガラクタの露店、右に小さな店小屋（選ばなかった） | `1a7ddb0f86b33d55a9c7aa39cb0b1e138aeffbbddfbac4704b2b874a3f38749e` |
 
+| prop-shop-03 | `Assets/Art/Generated/ForestLook/prop-shop-03.png` | 半分の大きさの騎士を左の列に置き、騎士と同じ大きさの商人がいる大きな屋台と露店を描いた（2枚のうち2枚目）。prop-shop-01と02の屋台と露店を置き換えた | `1930838c1c78fcd5336ba3caa978a95d813093f7cd457008212bc123a9b7e364` |
 | prop-shophouse-01 | `Assets/Art/Generated/ForestLook/prop-shophouse-01.png` | 中心街のイメージ図を参照に、武器屋、防具屋、魔法屋、道具屋の4軒を1行4列で描いた（2枚のうち2枚目） | `4df9c2af04f41ec667b045c649466050244d8646395fa2c57161600e8603fd70` |
 | central-town-concept | `Tools/MapAuthoring/Inputs/central-town-concept.png` | 大通りの中心街のイメージ図。所有者が3案から選んだ形の見本で、ゲーム用の絵ではない | `c299b8f73fcc505523802e06f9e16471a14e73c0da53438ac8765aad81a558ed` |
 

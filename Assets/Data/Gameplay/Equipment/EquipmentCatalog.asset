@@ -21,3 +21,5 @@ MonoBehaviour:
   weapons:
   - {fileID: 11400000, guid: 96c17b1f876826c4b97c61b3fa8b169d, type: 2}
   - {fileID: 11400000, guid: e498aabb4ef948244819f2a6da12971b, type: 2}
+  offHands:
+  - {fileID: 11400000, guid: bf1c44fe764cd6149afe2beb704fc474, type: 2}

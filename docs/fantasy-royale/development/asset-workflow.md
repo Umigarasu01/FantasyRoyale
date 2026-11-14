@@ -44,7 +44,7 @@ Unity確認は、Repositoryではなく検証用Project`C:/Users/umiga/Documents
 
 ### 中心街
 
-中心街のお店の絵は、`Tools/MapAuthoring/`で`python build_town_sprites.py`を実行して`Assets/Art/Generated/ForestLook/Town/`へ書き出す。屋台と露店は騎士の倍率で、お店の家は平面図の家の幅（3.4単位）になる倍率で縮める。地図生成は`forest_objects.py`の`TOWN_OBJECTS`からこの絵を読むので、地図を作る前に実行しておく。絵は仮で、後で描き直す。
+中心街のお店の絵は、`Tools/MapAuthoring/`で`python build_town_sprites.py`を実行して`Assets/Art/Generated/ForestLook/Town/`へ書き出す。店の人は全て騎士と同じ大きさにする。屋台と露店は騎士の倍率で、お店の家は店主の頭が騎士の兜と同じ幅になる倍率（0.5）で縮める。地図生成は`forest_objects.py`の`TOWN_OBJECTS`からこの絵を読むので、地図を作る前に実行しておく。絵は仮で、後で描き直す。
 
 大通りと広場の石畳は、`forest_layout.py`の`PAVED`の形を、`build_forest_map.py`の`paving`が仮の石の並びで塗る。石畳も後で描き直す。
 
@@ -59,6 +59,24 @@ Unity確認は、Repositoryではなく検証用Project`C:/Users/umiga/Documents
 | `chest-light-<色>-<0〜11>.png` | 開いた箱に重ねる、中の光とレア度の飾りの12コマ（1コマ100 ms） |
 
 色は`white`、`blue`、`purple`、`gold`で、どの色をどのレア度に当てるかはまだ決めていない。全て60×96 pixelの同じ大きさで、箱の胴の下端の中央が画像の下端の中央にある。光の絵は、箱の絵と同じ位置に重ねる。ゲームの宝箱（`Game/chest-*.png`）はまだこの絵に替えておらず、Unityの取り込み設定（64 PPU、Point、非圧縮、足元のPivot）も組み込むときに決める。描き方と動きの決まりは[設置物のデザイン規約](../product-specs/art/prop-design.md)にある。
+
+## HUDの絵
+
+`Tools/UiAuthoring/`で`python build_hud_sprites.py [--preview <png>]`を実行する。`Assets/Art/Generated/Hud/`へ、枠、ハート3種、コイン、Eキー、吹き出しの三角、店の画面の選んだ行の金の囲み、矢印、無地のキー、金の矢印のカーソル、下の装備の枠の丸い魔法の枠と丸い選びの縁、MPの玉（満ちた物と空の物）を書き出す。コインとハート以外はPILで図形として4倍の大きさで描いて縮める。コインとハートは、画像生成で一度だけ描いた`Tools/UiAuthoring/Inputs/hud-coin-source.png`と`hud-heart-source.png`を切り抜いて縮める。生成の条件とPromptは同じ場所のJSONにある。数秒で終わり、出力は決まった結果になる。`--preview`を付けると、全てを1920×1080の画面での大きさで並べた確認用の絵も書く。
+
+絵は1920×1080の画面の2倍の解像度で描く。Editorの`HudSpritePostprocessor`が、このFolderのPNGにSprite、Pixels Per Unit 200、Bilinear、Mipmapなし、無圧縮を当て、枠（`hud-panel.png`）には9分割の境界32 pixelを付ける。Canvasは100 Pixels Per Unitなので、絵は画面上で半分の大きさに映る。
+
+このProjectは線形の色空間で描くので、暗い半透明の色は数値より下が透けて見える。黒漆の地は不透明にする。
+
+満ちたハートの赤い芯は色で見つける（赤の色相と十分な彩度。赤に囲まれた映り込みも含める）。空のハートは芯の中を、赤い所ほど暗く（明るさ0.32倍まで）、色のない灰色に塗り替える。映り込みは明るさを保って白くなり、芯の外の透明なガラスの帯はそのまま残る。半分のハートは右半分だけを塗り替える。元の絵の金の縁の外にある薄い光のにじみは、不透明度の低い所を切って消す。生成し直すハートは、透明なガラスの中の赤い芯と金の縁で、正面から見て左右対称に描かせる。
+
+店の画面の仮の絵は、`Tools/UiAuthoring/`で`python build_shop_art.py`を実行して書き出す。店主の顔（`Hud/Keepers/`）は店の絵から切り出して4倍にし、品物のアイコン（`Hud/Icons/`）は防具の正面の部位、武器の部品、屋台の赤い瓶から切り出して、128 pixelの枠に収まる最大の整数倍にする。`HudSpritePostprocessor`は`Keepers/`だけをPoint filterで取り込む。Builderは2つのFolderの絵を全て`Assets/Data/Hud/ShopArt.asset`へまとめるので、絵を足したら名前（`icon-<防具の組>-<head|torso|legs>`、`icon-weapon-<武器やオフハンド>`、`icon-magic-<魔法>`、`icon-skill-<武器>`、`keeper-<店の絵>`）を合わせる。盾は盾の部品の絵から切り出す。魔法と固有の技の仮のアイコンはゲームに絵がないので、16 pixelの小さなドット絵をPILで描いて同じように拡大する（2026-11-13）。空の装備の枠に薄く出す影の絵（slot-head、slot-torso、slot-legs、slot-main-hand、slot-off-hand）は、騎士の頭、胴、足と剣、盾のアイコンを1色で塗りつぶして作る。
+
+カーソルの形は`CURSOR_SHAPE`の点の並びで、先頭の点が矢印の先端（指す位置）である。形を変えたら、`GameHud`の`CursorTip`も同じ位置（左下からの割合）に合わせる。
+
+コインやハートを描き直すときは、元の絵を生成し直して`Inputs/`の画像と記録を置き換え、このツールを実行する。透明な背景で生成すれば、ツールが不透明な範囲で切り抜く。
+
+森の確認用SceneのBuilderが、これらの絵から`Assets/Data/Hud/GameHudSkin.asset`を作り直してHUDへ渡す。絵を描き直したら、Builderを実行し直さなくても同じAssetが新しい絵を指す。見た目の決まりは[UIのデザイン方針](../product-specs/art/ui-design.md)にある。
 
 ## 装備の見た目を足す
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using FantasyRoyale.Gameplay.Characters;
 using FantasyRoyale.Gameplay.Characters.Unity;
+using FantasyRoyale.Gameplay.Hud;
 using FantasyRoyale.MapAuthoringKit;
 using FantasyRoyale.Playtest;
 using UnityEditor;
@@ -38,6 +39,20 @@ namespace FantasyRoyale.Editor.Playtest
         private const string SwordThirdStepPath = "Assets/Data/Gameplay/Actions/SwordSlash3.asset";
         private const string SwordEquipmentPath = "Assets/Data/Gameplay/Equipment/SwordEquipment.asset";
         private const string BowEquipmentPath = "Assets/Data/Gameplay/Equipment/BowEquipment.asset";
+        private const string ShieldEquipmentPath = "Assets/Data/Gameplay/Equipment/ShieldEquipment.asset";
+        private const string MagicDataFolder = "Assets/Data/Gameplay/Magic";
+        // 仮の魔法の枠の数。剣は2つ、両手の弓は1つ。触りながら調整する。
+        private const int SwordMagicSlots = 2;
+        private const int BowMagicSlots = 1;
+        private const string HudSpriteFolder = "Assets/Art/Generated/Hud";
+        private const string HudDataFolder = "Assets/Data/Hud";
+        private const string HudSkinPath = "Assets/Data/Hud/GameHudSkin.asset";
+        // HUDの数字のピクセルフォント。元の格子は12 pixel。提供元とライセンスはdocs/.../external-assets.mdにある。
+        private const string HudNumberFontPath = "Assets/Art/External/itouhiro/PixelMplus/PixelMplus12-Bold.ttf";
+        private const int HudNumberFontCell = 12;
+        private const string HudTextFontPath = "Assets/Art/External/itouhiro/PixelMplus/PixelMplus12-Regular.ttf";
+        private const string ShopArtPath = "Assets/Data/Hud/ShopArt.asset";
+        private static readonly string[] ShopArtFolders = { "Assets/Art/Generated/Hud/Icons", "Assets/Art/Generated/Hud/Keepers" };
         private const string HealingFountainPath = "Assets/Data/MapAuthoring/Events/HealingFountainBasic.asset";
         private const string InputActionsPath = "Assets/InputSystem_Actions.inputactions";
         private const float PixelsPerUnit = 64f;
@@ -89,6 +104,12 @@ namespace FantasyRoyale.Editor.Playtest
             new Vector2(63.6f, 54.2f), new Vector2(67.5f, 55f), new Vector2(73f, 54.8f)
         };
 
+        // 店ごとの店主。店の絵の名前で、`ShopSpots`と同じ順番に並べる。顔は`Hud/Keepers/keeper-<名前>.png`。
+        private static readonly string[] ShopKeeperIds =
+        {
+            "weapon-shop", "armour-shop", "town-stall", "town-rug", "magic-shop", "item-shop"
+        };
+
         // 回復できる場所。中心街の噴水と祠の泉の手前に立つ。
         private static readonly Vector2[] HealingSpots = { new Vector2(60f, 50.8f), new Vector2(120f, 64f) };
 
@@ -131,8 +152,12 @@ namespace FantasyRoyale.Editor.Playtest
             LinkSwordCombo();
             var sword = AssetDatabase.LoadAssetAtPath<CharacterEquipmentDefinition>(SwordEquipmentPath);
             var bow = AssetDatabase.LoadAssetAtPath<CharacterEquipmentDefinition>(BowEquipmentPath);
-            sword.SetGear(new[] { gear["sword"], gear["shield"] });
+            sword.SetGear(new[] { gear["sword"] });
+            sword.ConfigureHands(CharacterHandUse.OneHanded, SwordMagicSlots);
             bow.SetGear(new[] { gear["bow"], gear["quiver"] });
+            bow.ConfigureHands(CharacterHandUse.TwoHanded, BowMagicSlots);
+            var shield = LoadOrCreateShield(gear["shield"]);
+            var magics = LoadOrCreateMagics();
             EditorUtility.SetDirty(sword);
             EditorUtility.SetDirty(bow);
             AssetDatabase.SaveAssets();
@@ -220,6 +245,9 @@ namespace FantasyRoyale.Editor.Playtest
                 AssetDatabase.LoadAssetAtPath<HealingFountainEventDefinition>(HealingFountainPath),
                 HealingSpots,
                 ShopSpots);
+            bootstrap.ConfigureInventory(shield, magics);
+            bootstrap.ConfigureHud(LoadOrCreateHudSkin());
+            bootstrap.ConfigureShops(LoadOrCreateShopArt(), ShopKeeperIds);
 
             if (!EditorSceneManager.SaveScene(scene, ScenePath, false))
             {
@@ -248,9 +276,80 @@ namespace FantasyRoyale.Editor.Playtest
                 {
                     problems.AddRange(part.FindEquipmentProblems(weapon));
                 }
+
+                foreach (var offHand in catalog.OffHands)
+                {
+                    problems.AddRange(part.FindEquipmentProblems(offHand));
+                }
             }
 
             return problems;
+        }
+
+        /// <summary>
+        /// 剣と分けて持つ盾の定義を作る。盾は反対の手の部品だけを持ち、通常攻撃も魔法の枠も持たない。
+        /// </summary>
+        private static CharacterEquipmentDefinition LoadOrCreateShield(CharacterGearDefinition shieldGear)
+        {
+            var shield = AssetDatabase.LoadAssetAtPath<CharacterEquipmentDefinition>(ShieldEquipmentPath);
+            if (shield == null)
+            {
+                shield = ScriptableObject.CreateInstance<CharacterEquipmentDefinition>();
+                shield.SetId("shield");
+                shield.Configure("盾", null, null);
+                AssetDatabase.CreateAsset(shield, ShieldEquipmentPath);
+            }
+
+            shield.SetGear(new[] { shieldGear });
+            shield.ConfigureHands(CharacterHandUse.OffHand, 0);
+            EditorUtility.SetDirty(shield);
+            return shield;
+        }
+
+        /// <summary>
+        /// 仮の魔法を作る。唱える動きの絵はまだないので、弓と同じ射る型の飛び道具にする。調整した数値は作り直しても残す。
+        /// </summary>
+        private static CharacterMagicDefinition[] LoadOrCreateMagics()
+        {
+            if (!AssetDatabase.IsValidFolder(MagicDataFolder))
+            {
+                AssetDatabase.CreateFolder("Assets/Data/Gameplay", "Magic");
+            }
+
+            return new[]
+            {
+                LoadOrCreateMagic("Fire", "fire", "炎の弾", 12, 22, 9f),
+                LoadOrCreateMagic("Ice", "ice", "氷のつぶて", 8, 14, 14f)
+            };
+        }
+
+        private static CharacterMagicDefinition LoadOrCreateMagic(
+            string fileName,
+            string id,
+            string displayName,
+            int manaCost,
+            int damage,
+            float projectileSpeed)
+        {
+            var actionPath = $"{MagicDataFolder}/{fileName}Action.asset";
+            var action = AssetDatabase.LoadAssetAtPath<CharacterActionDefinition>(actionPath);
+            if (action == null)
+            {
+                action = ScriptableObject.CreateInstance<CharacterActionDefinition>();
+                action.ConfigureProjectile($"magic-{id}", damage, new CharacterActionTiming(0.2f, 0f, 0.3f), 6f, projectileSpeed);
+                AssetDatabase.CreateAsset(action, actionPath);
+            }
+
+            var magicPath = $"{MagicDataFolder}/{fileName}Magic.asset";
+            var magic = AssetDatabase.LoadAssetAtPath<CharacterMagicDefinition>(magicPath);
+            if (magic == null)
+            {
+                magic = ScriptableObject.CreateInstance<CharacterMagicDefinition>();
+                magic.Configure(id, displayName, manaCost, action);
+                AssetDatabase.CreateAsset(magic, magicPath);
+            }
+
+            return magic;
         }
 
         /// <summary>
@@ -487,6 +586,99 @@ namespace FantasyRoyale.Editor.Playtest
             definition.Configure(EnemyFramesPerSecond, view, view, view, view, view);
             EditorUtility.SetDirty(definition);
             return definition;
+        }
+
+        /// <summary>
+        /// `Tools/UiAuthoring/build_hud_sprites.py`の出力からHUDの絵の定義を作り直す。
+        /// </summary>
+        private static HudSkin LoadOrCreateHudSkin()
+        {
+            Sprite Load(string name)
+            {
+                var path = $"{HudSpriteFolder}/{name}.png";
+                var sprite = AssetDatabase.LoadAssetAtPath<Sprite>(path);
+                if (sprite == null)
+                {
+                    throw new InvalidOperationException($"HUDの絵がありません: {path}");
+                }
+
+                return sprite;
+            }
+
+            if (!AssetDatabase.IsValidFolder(HudDataFolder))
+            {
+                AssetDatabase.CreateFolder("Assets/Data", "Hud");
+            }
+
+            var numberFont = AssetDatabase.LoadAssetAtPath<Font>(HudNumberFontPath);
+            if (numberFont == null)
+            {
+                throw new InvalidOperationException($"HUDの数字のフォントがありません: {HudNumberFontPath}");
+            }
+
+            var skin = AssetDatabase.LoadAssetAtPath<HudSkin>(HudSkinPath);
+            if (skin == null)
+            {
+                skin = ScriptableObject.CreateInstance<HudSkin>();
+                AssetDatabase.CreateAsset(skin, HudSkinPath);
+            }
+
+            skin.Configure(
+                Load("hud-panel"),
+                Load("hud-heart-full"),
+                Load("hud-heart-half"),
+                Load("hud-heart-empty"),
+                Load("hud-coin"),
+                Load("hud-key-f"),
+                Load("hud-pointer"),
+                numberFont,
+                HudNumberFontCell);
+            skin.ConfigureShop(
+                AssetDatabase.LoadAssetAtPath<Font>(HudTextFontPath),
+                Load("hud-select"),
+                Load("hud-arrow"),
+                Load("hud-key"),
+                Load("hud-cursor"));
+            skin.ConfigureLoadout(
+                Load("hud-slot-round"),
+                Load("hud-select-round"),
+                Load("hud-mana-full"),
+                Load("hud-mana-empty"));
+            EditorUtility.SetDirty(skin);
+            return skin;
+        }
+
+        /// <summary>
+        /// `Tools/UiAuthoring/build_shop_art.py`が書いた店主の顔と品物のアイコンを、名前で引ける一覧にする。
+        /// </summary>
+        private static HudIconLibrary LoadOrCreateShopArt()
+        {
+            var sprites = new List<Sprite>();
+            foreach (var guid in AssetDatabase.FindAssets("t:Sprite", ShopArtFolders))
+            {
+                var sprite = AssetDatabase.LoadAssetAtPath<Sprite>(AssetDatabase.GUIDToAssetPath(guid));
+                if (sprite != null)
+                {
+                    sprites.Add(sprite);
+                }
+            }
+
+            if (sprites.Count == 0)
+            {
+                throw new InvalidOperationException("店の絵がありません。Tools/UiAuthoring/build_shop_art.pyを実行してください。");
+            }
+
+            var library = AssetDatabase.LoadAssetAtPath<HudIconLibrary>(ShopArtPath);
+            if (library == null)
+            {
+                library = ScriptableObject.CreateInstance<HudIconLibrary>();
+                AssetDatabase.CreateAsset(library, ShopArtPath);
+            }
+
+            sprites.Sort((a, b) => string.CompareOrdinal(a.name, b.name));
+            library.Configure(sprites.ToArray());
+            EditorUtility.SetDirty(library);
+            return library;
         }
 
         private static Sprite LoadChestSprite(string name)

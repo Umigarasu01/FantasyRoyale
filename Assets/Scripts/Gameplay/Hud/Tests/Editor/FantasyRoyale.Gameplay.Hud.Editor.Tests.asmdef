@@ -1,0 +1,13 @@
+{
+  "name": "FantasyRoyale.Gameplay.Hud.Editor.Tests",
+  "rootNamespace": "FantasyRoyale.Gameplay.Hud.Tests.Editor",
+  "references": [
+    "FantasyRoyale.Gameplay.Hud"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ],
+  "optionalUnityReferences": [
+    "TestAssemblies"
+  ]
+}

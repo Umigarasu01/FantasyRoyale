@@ -11,6 +11,7 @@
 - 速く走れる靴のように、足の枠へ性能を持たせる案がある。枠ごとの役割と性能、部位ごとに売るかは未確定である。
 - 装備はidで引く。idを持つ装備は全装備の一覧へ自動で載り、個別の登録は要らない。
 - 確認用に、一覧の全ての武器と防具を部位ごとに自由に切り替えられる。買わなくても、代金なしで身につけられる。
+- 武器はそれぞれ固有の技を持つ（2026-11-11、所有者）。体の動きを武器種の動きから使い回すかは決めていない。所持品の決まりは[所持品](inventory.md)にある。
 
 ## 武器種と動き
 
@@ -61,6 +62,7 @@
 | 鉄の重靴 | `iron-boots` | シートと`Sets/`のFolderの名前 |
 | 剣 | `sword` | 定義Assetへ入れる |
 | 弓 | `bow` | 定義Assetへ入れる |
+| 盾 | `shield` | 定義Assetへ入れる。2026-11-13に剣の定義から分けた、オフハンドの装備 |
 
 防具と武器で同じidは使わない。同じidがあるとScene Builderは止まる。
 
@@ -94,6 +96,7 @@
 ## 関連Document
 
 - [Prototype方針](prototype-direction.md)
+- [所持品](inventory.md)（メイン武器とオフハンド、一体の装備、武器の固有の技、魔法の枠）
 - [全身セットと武器の動きの型](../exec-plans/active/armor-sets-and-weapon-motions.md)
 - [片手剣の三段コンボと走りながらの攻撃](../exec-plans/active/sword-combo-and-running-attack.md)
 - [2Dスプライトの装備差分の手法](../references/sprite-equipment-layering.md)

@@ -26,7 +26,7 @@ Playtest SceneにはBootstrapだけを保存する。Play開始後、Reference M
 6. 仮Playerを`WorldObjects` / Order 0 / Pivotへ置き、Map内の木、崖、Props、背の高い装飾と同じ足元Yソートへ参加させる。
 7. Reference Sceneの6 `PoolCandidate`をSocket ID入力へ変換し、Event PoolとPreview Seed `20260807`から3地点の配置Planを生成する。
 8. PlanのEvent Definition IDをPoolとCatalogへ照合し、有効Socketだけを近接候補として登録する。
-9. `Player/Interact`のE押下で、足元から最寄りの未使用EventSocketを選ぶ。
+9. `Player/Interact`のF押下（2026-11-13にEからFへ移した）で、足元から最寄りの未使用EventSocketを選ぶ。
 10. `MapEventExecutionService`がDefinition型RegistryからHandlerを検索し、`HealingFountainEventHandler`が本番`CharacterHealth`へ回復量を適用する。
 11. 成功時だけSocket ID単位のRuntime DictionaryへOneShot状態を保存し、PresenterがMessage KeyをHUD文言へ変換する。
 
@@ -54,7 +54,7 @@ PlayerStart付近に確認用の的を置く。HPは100で、倒すと2秒後に
 | 操作 | Keyboard | Mouse |
 | --- | --- | --- |
 | 通常攻撃 | J、Enter | 左Click |
-| 特殊Action | K | 右Click |
+| 特殊Action | Q（2026-11-13にKから移した） | 右Click |
 | 装備の切り替え | 1、2 | なし |
 
 剣の装備は通常攻撃が剣で特殊Actionが弓、弓の装備はその逆である。斬撃、矢、的の色の変化はRuntime生成の仮表示である。斬撃は森のSceneと同じ`CharacterSlashSprites`の絵で、判定と同じ位置と大きさに出す。このSceneの操作役は振る高さを決めていないので、扇の中心は足元の判定の中心である。このSceneは承認済みの森マップではなく、従来のReference Mapを読む。

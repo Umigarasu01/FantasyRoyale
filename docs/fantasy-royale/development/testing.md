@@ -71,6 +71,32 @@ $testResult.results | Where-Object Status -ne Passed
 
 EditMode終了後、`--mode playmode`で同じ手順を実行する。結果を取得してから次のTestを始める。
 
+## 森の確認用SceneをBatchmodeで作り直して撮る
+
+Editorを閉じているときは、Scene Builderを`-executeMethod`で呼んで森の確認用Sceneを作り直す。
+
+```powershell
+& 'C:\Program Files\Unity\Hub\Editor\6000.4.3f1\Editor\Unity.exe' `
+  -batchmode -nographics -quit `
+  -projectPath 'C:\Users\umiga\Repository\FantasyRoyale' `
+  -executeMethod FantasyRoyale.Editor.Playtest.ForestMapPreviewDebugSceneBuilder.BuildScene `
+  -logFile 'C:\Users\umiga\Repository\FantasyRoyale\Logs\BuildForest.log'
+```
+
+HUDの見た目は、名前で選んだときだけ動く`ForestMapHudCaptureDebug`で撮る。描画が要るので`-nographics`を付けない。1920×1080の絵が`Logs/HudCapture/`へ書かれる。
+
+```powershell
+& 'C:\Program Files\Unity\Hub\Editor\6000.4.3f1\Editor\Unity.exe' `
+  -batchmode -automated `
+  -projectPath 'C:\Users\umiga\Repository\FantasyRoyale' `
+  -runTests -testPlatform PlayMode `
+  -testFilter FantasyRoyale.Playtest.Tests.PlayMode.ForestMapHudCaptureDebug.CaptureLoadoutBar `
+  -testResults 'C:\Users\umiga\Repository\FantasyRoyale\Logs\CaptureResults.xml' `
+  -logFile 'C:\Users\umiga\Repository\FantasyRoyale\Logs\Capture.log'
+```
+
+`-nographics`を付けたBatchmodeの画面は2560×1440で、`ForestMap_HudFollowsHealthCoinsAndUseTargets`のピクセルフォントの大きさの検査が失敗する（2026-11-13）。Editorの画面では確かめていない。
+
 ## 仮想Keyboardの入力が届かないとき
 
 `InputTestFixture`の`Press`がPlayMode Testで効かず、`InputSystem.onEvent`にも現れない場合は、Input Systemの時刻による破棄を疑う。Input SystemはEditを抜けてからPlayへ入るまでの時刻を持つ入力を捨てる。この時刻はEditor起動からの秒数で、Test用の時計も0付近から同じ範囲を通るため、実行のたびに一部のTestだけが失敗する。`Time.realtimeSinceStartup`もPlay開始付近から数えるので、同じ範囲を通る。
@@ -155,6 +181,16 @@ FantasyRoyale.MapAuthoringKit.Editor.ForestRestartAssetBuilder.BuildScene(
 40 Seedの論理Planと代表4 Sceneを現行の構成規則で生成する。結果は`Assets/Art/Map/ForestRestart/QA/generation-validation.json`。実Scene未検証の36 Seedは`sceneValidated=false`で区別する。QAは同じDirectoryの`composition-seed-{seed}-*.png`へ保存される。以前の40Plan / 4Sceneの成功数を、再実行せず今回の変更後の結果として扱わない。
 
 ## 現在の基準
+
+2026-11-10、被弾すると体が赤くなる演出を`CharacterSpriteAnimator2D`へ入れた後、所有者の開いているEditorでUnity MCPから実行: EditMode 337 / 337成功、PlayModeは`ForestMapPreviewPlayModeTests` 28 / 28、`PreviewDebugCombatPlayModeTests` 5 / 5、`BattleRoyaleExplorationPreviewDebugPlayModeTests` 4 / 4成功。StudyAの5件は実行していない。
+
+2026-11-11、店の画面をマウスで使えるようにし、金の矢印のカーソルを足した後、所有者の開いているEditorでUnity MCPから実行: EditMode 337 / 337成功、PlayModeは`ForestMapPreviewPlayModeTests`だけを実行して29 / 29成功。
+
+2026-11-10、店の画面（`ShopScreen`）と仮の品揃えを森の確認用Sceneに入れた後、所有者の開いているEditorでUnity MCPから実行: EditMode 337 / 337成功、PlayModeは`ForestMapPreviewPlayModeTests`だけを実行して27 / 27成功。
+
+2026-11-09、HUDの数字をピクセルフォント（PixelMplus12 Bold）にし、画面の倍率に合わせて大きさを整数倍へ直す`PixelFontSizing`を足した後、所有者の開いているEditorでUnity MCPから実行: EditMode 337 / 337成功、PlayModeは`ForestMapPreviewPlayModeTests`だけを実行して26 / 26成功。900pの見え方は`UnityEditor.PlayModeWindow.SetCustomRenderingResolution`でゲーム画面を1600×900にして確かめ、1920×1080へ戻した。
+
+2026-11-09、黒漆のHUD（`FantasyRoyale.Gameplay.Hud`と、そのEditMode Test Assembly）を足し、森の確認用Sceneへ組み込んだ後、所有者の開いているEditorでUnity MCPから実行: EditMode 330 / 330成功、PlayModeは`ForestMapPreviewPlayModeTests`だけを実行して26 / 26成功。他のPlayMode Test（探索Preview、StudyA）は実行していない。Screen Space OverlayのCanvasは`capture_game_view`に写らないので、HUDの見た目は実行中だけCanvasをScreen Space Cameraへ替え、Play Modeを一時停止して`screenshot`で撮った。
 
 2026-11-08、近接攻撃の判定を斬撃で表し、片手剣の距離を1.0にした後、所有者の開いているEditorでUnity MCPから実行: EditMode 326 / 326成功、PlayMode 39件中34件成功。失敗した5件は従来と同じStudyAのSetUp失敗である。PlayModeは`run_tests`の`async_tests`をtrueにしないと、Playへ入るときのDomain Reloadで要求が切れる。`capture_game_view`の`save_path`は`Assets/`からの相対で書き出されてImportされるので、撮影後に`AssetDatabase.DeleteAsset`で消す。
 

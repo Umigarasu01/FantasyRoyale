@@ -4,17 +4,17 @@ Usage:
     python build_town_sprites.py
 
 Reads from Assets/Art/Generated/ForestLook:
-    prop-shop-01.png       knight | market stall | travelling merchant's cart
-    prop-shop-02.png       knight | junk dealer's rug | shop hut (not used)
+    prop-shop-03.png       knight at half size | market stall | junk dealer's rug
     prop-shophouse-01.png  weapon shop | armour shop | magic shop | item shop
 
 Writes to Assets/Art/Generated/ForestLook/Town:
     town-stall.png, town-rug.png, weapon-shop.png, armour-shop.png, magic-shop.png, item-shop.png
 
-The stall and the rug are drawn beside the knight, so they are shrunk by the knight's own scale. A shop can
-reach into the knight's column, so each is cut as one connected blob, and the knight is measured on its own
-blob. The shop houses were drawn without the knight; they are shrunk so their buildings come out as wide as
-the plan's houses. Their sheet has a purple roof, which the forest's magenta key removes, so it is keyed
+Every person in the town is as big as the knight: a head about as wide as the knight's helmet, 28 pixels.
+The stall and the rug are drawn beside the knight, so they are shrunk by the knight's own scale; the knight
+is drawn at half size there, so the stall fits on the sheet. A shop can reach into the knight's column, so
+each is cut as one connected blob, and the knight is measured on its own blob. The shop houses were drawn
+without the knight; they are shrunk so their shopkeepers' heads come out as wide as the knight's. Their sheet has a purple roof, which the forest's magenta key removes, so it is keyed
 only where a pixel is nearly pure magenta. These are first sprites for placing the town: the drawings will be
 refined later. forest_objects.py lists them with their feet and blocking areas. Output is deterministic.
 """
@@ -32,13 +32,13 @@ OUT = os.path.join(FOREST, "Town")
 # The knight of hero-idle-01.png is 530 pixels tall and is shrunk by 0.135.
 KNIGHT_HEIGHT = 530
 KNIGHT_SCALE = 0.135
-# The shop houses come out 3.4 units wide, the width of a house in the town plan.
-HOUSE_SCALE = 0.618
+# The shopkeepers' heads come out about 26 pixels wide, as wide as the knight's helmet. The houses are then
+# 2.7 units wide and 3.5 units tall, about three times the knight's height.
+HOUSE_SCALE = 0.5
 HOUSES = ("weapon-shop", "armour-shop", "magic-shop", "item-shop")
 # Shops beside the knight: sheet, and the file of each blob left to right after the knight.
 BESIDE_KNIGHT = (
-    ("prop-shop-01.png", ("town-stall", None)),
-    ("prop-shop-02.png", ("town-rug", None)),
+    ("prop-shop-03.png", ("town-stall", "town-rug")),
 )
 BLOB_STEP = 4  # blobs are found on the alpha shrunk by this much
 PINK = 25  # red and blue both this far above green: a pixel mixed with the magenta background

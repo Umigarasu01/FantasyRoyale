@@ -273,7 +273,9 @@ namespace FantasyRoyale.Gameplay.Characters.Tests.Editor
             {
                 var weapon = AssetDatabase.LoadAssetAtPath<CharacterEquipmentDefinition>(AssetDatabase.GUIDToAssetPath(guid));
                 Assert.That(weapon.Id, Is.Not.Empty, weapon.name);
-                Assert.That(catalog.FindWeapon(weapon.Id), Is.SameAs(weapon));
+                // 盾のようなオフハンドは、武器と分けて一覧へ載る。
+                var listed = weapon.IsOffHand ? catalog.FindOffHand(weapon.Id) : catalog.FindWeapon(weapon.Id);
+                Assert.That(listed, Is.SameAs(weapon));
             }
         }
 

@@ -10,15 +10,18 @@ namespace FantasyRoyale.Gameplay.Characters.Unity
     {
         private readonly InputAction primaryAction;
         private readonly InputAction specialAction;
+        private readonly InputAction magicAction;
         private bool isEnabled;
 
         /// <summary>
-        /// 通常攻撃と特殊ActionのButtonを受け取り、Assetの所有権を奪わず入力変換だけを担当する。
+        /// 通常攻撃、特殊Action（固有の技）、魔法を唱えるButtonを受け取り、Assetの所有権を奪わず入力変換だけを担当する。
+        /// 魔法のButtonを持たない入力元はnullを渡す。
         /// </summary>
-        public HumanCharacterActionInputAdapter(InputAction primaryAction, InputAction specialAction)
+        public HumanCharacterActionInputAdapter(InputAction primaryAction, InputAction specialAction, InputAction magicAction = null)
         {
             this.primaryAction = primaryAction ?? throw new ArgumentNullException(nameof(primaryAction));
             this.specialAction = specialAction ?? throw new ArgumentNullException(nameof(specialAction));
+            this.magicAction = magicAction;
         }
 
         /// <summary>
@@ -33,11 +36,12 @@ namespace FantasyRoyale.Gameplay.Characters.Unity
 
             primaryAction.Enable();
             specialAction.Enable();
+            magicAction?.Enable();
             isEnabled = true;
         }
 
         /// <summary>
-        /// Buttonを押した瞬間だけ、現在の向きを持つCommandを返す。同時押しは通常攻撃を優先する。
+        /// Buttonを押した瞬間だけ、現在の向きを持つCommandを返す。同時押しは通常攻撃、技、魔法の順に優先する。
         /// </summary>
         public bool TryReadCommand(CharacterDirection8 facing, out CharacterActionCommand command)
         {
@@ -59,6 +63,12 @@ namespace FantasyRoyale.Gameplay.Characters.Unity
                 return true;
             }
 
+            if (magicAction != null && magicAction.WasPressedThisFrame())
+            {
+                command = new CharacterActionCommand(CharacterActionSlot.Magic, facing);
+                return true;
+            }
+
             return false;
         }
 
@@ -74,6 +84,7 @@ namespace FantasyRoyale.Gameplay.Characters.Unity
 
             primaryAction.Disable();
             specialAction.Disable();
+            magicAction?.Disable();
             isEnabled = false;
         }
     }

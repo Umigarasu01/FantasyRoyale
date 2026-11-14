@@ -6,6 +6,7 @@
     "FantasyRoyale.Gameplay.Characters.Unity",
     "FantasyRoyale.MapAuthoringKit.Runtime",
     "FantasyRoyale.Gameplay.Events.Runtime",
+    "FantasyRoyale.Gameplay.Hud",
     "Unity.InputSystem"
   ]
 }

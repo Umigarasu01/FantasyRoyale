@@ -127,7 +127,7 @@ namespace FantasyRoyale.Playtest.Tests.PlayMode
             yield return Face(-toTarget);
             var startingHealth = bootstrap.PreviewTargetHealth.CurrentHealth;
 
-            yield return TapKey(keyboard.kKey);
+            yield return TapKey(keyboard.qKey);
             Assert.That(bootstrap.PlayerCombat.ActionState.CurrentSpec.Id, Is.EqualTo("bow-shot"));
             yield return WaitForIdle();
             yield return WaitForSeconds(0.6f);

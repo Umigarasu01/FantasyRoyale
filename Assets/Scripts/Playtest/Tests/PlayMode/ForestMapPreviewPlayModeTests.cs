@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using FantasyRoyale.Gameplay.Characters;
 using FantasyRoyale.Gameplay.Characters.Unity;
+using FantasyRoyale.Gameplay.Hud;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -320,6 +321,67 @@ namespace FantasyRoyale.Playtest.Tests.PlayMode
         }
 
         /// <summary>
+        /// HPが減ると、騎士は体と部品の全ての層が、敵は体が少しの間赤くなり、元の色へ戻る。斬撃は赤くならない。
+        /// </summary>
+        [UnityTest]
+        public IEnumerator ForestMap_DamageFlashesTheBodyRed()
+        {
+            yield return LoadForest();
+            yield return null;
+            var animator = preview.PlayerAnimator;
+            Assert.That(animator.IsHitFlashing, Is.False);
+
+            // 振っている最中に被弾させ、斬撃が出ている間の色も確かめる。
+            Assert.That(
+                preview.PlayerCombat.TryStartAction(new CharacterActionCommand(CharacterActionSlot.Primary, CharacterDirection8.East)),
+                Is.True);
+            while (preview.PlayerCombat.ActionState.Phase != CharacterActionPhase.Active)
+            {
+                yield return null;
+            }
+
+            preview.PlayerHealth.ApplyDamage(10);
+            yield return null;
+            Assert.That(animator.IsHitFlashing, Is.True, "HPが減ると赤くなります。");
+            var layers = 0;
+            foreach (var layer in preview.PlayerObject.GetComponentsInChildren<SpriteRenderer>())
+            {
+                if (!layer.enabled || layer.sprite == null || layer.gameObject.name == "Shadow")
+                {
+                    continue;
+                }
+
+                if (layer.sprite == animator.GetSlashSprite())
+                {
+                    Assert.That(layer.color.g, Is.EqualTo(1f).Within(0.01f), "斬撃は赤くしません。");
+                    continue;
+                }
+
+                layers++;
+                Assert.That(layer.color.r, Is.EqualTo(1f).Within(0.01f), $"{layer.gameObject.name}は赤くなります。");
+                Assert.That(layer.color.g, Is.LessThan(0.5f), $"{layer.gameObject.name}は赤くなります。");
+            }
+
+            Assert.That(layers, Is.GreaterThanOrEqualTo(4), "足、胴、頭、剣と盾の層が赤くなります。");
+            Assert.That(animator.GetSlashSprite(), Is.Not.Null, "持続の間は斬撃が出ています。");
+
+            var enemy = preview.GetEnemyActor(0);
+            var enemyRenderer = enemy.GetComponent<SpriteRenderer>();
+            enemy.Health.ApplyDamage(10);
+            yield return null;
+            Assert.That(enemyRenderer.color.g, Is.LessThan(0.5f), "敵も赤くなります。");
+
+            yield return new WaitForSeconds(0.3f);
+            Assert.That(animator.IsHitFlashing, Is.False);
+            Assert.That(preview.PlayerObject.GetComponent<SpriteRenderer>().color, Is.EqualTo(Color.white), "騎士は元の色へ戻ります。");
+            Assert.That(enemyRenderer.color, Is.EqualTo(Color.white), "敵も元の色へ戻ります。");
+
+            preview.PlayerHealth.RestoreHealth(10);
+            yield return null;
+            Assert.That(animator.IsHitFlashing, Is.False, "回復では赤くなりません。");
+        }
+
+        /// <summary>
         /// 剣は斬撃の届く所までしか当たらない。斬撃の縁のすぐ内に体がある敵には当たり、すぐ外の敵には当たらない。
         /// 斬撃は剣を振る高さにあるので、下の敵は近く、上の敵は遠くまで届く。
         /// </summary>
@@ -413,7 +475,7 @@ namespace FantasyRoyale.Playtest.Tests.PlayMode
             Assert.That(preview.TryOpenShop(), Is.True);
             Assert.That(preview.TryBuyBow(), Is.False, "コインが足りなければ買えません。");
 
-            preview.AddCoinsForTests(25);
+            preview.AddCoins(25);
             Assert.That(preview.TryBuyBow(), Is.True);
             Assert.That(preview.Coins, Is.EqualTo(5));
             Assert.That(preview.CurrentEquipmentName, Is.EqualTo("弓"));
@@ -427,6 +489,192 @@ namespace FantasyRoyale.Playtest.Tests.PlayMode
             Assert.That(animator.GetHandOverSprite(CharacterGearSlot.MainHand), Is.Null);
             Assert.That(animator.GetHandOverSprite(CharacterGearSlot.OffHand), Is.Not.Null, "弓は拳で握ります。");
             Assert.That(preview.TryBuyBow(), Is.False, "同じ物は買えません。");
+        }
+
+        /// <summary>
+        /// 左上のHUDのハートとコインがHPとコインに追従する。お店の前ではEキーの吹き出しがお店の上に出て、
+        /// ショップを開くと消える。開始位置の近くには使える物がないので、吹き出しは出ない。
+        /// </summary>
+        [UnityTest]
+        public IEnumerator ForestMap_HudFollowsHealthCoinsAndUseTargets()
+        {
+            yield return LoadForest();
+            yield return null;
+            var hud = preview.Hud;
+            Assert.That(hud, Is.Not.Null, "BuilderがHUDの絵を渡します。");
+            Assert.That(hud.HeartCount, Is.EqualTo(5), "HP 100は仮の規則でハート5つです。");
+            Assert.That(hud.GetHeartFill(4), Is.EqualTo(HeartFill.Full));
+            Assert.That(hud.CoinText, Is.EqualTo("0"));
+            Assert.That(hud.NumberFont.name, Is.EqualTo("PixelMplus12-Bold"), "数字はピクセルフォントで描きます。");
+            var scale = hud.GetComponent<Canvas>().scaleFactor;
+            var screenSize = hud.NumberFontSize * scale;
+            Assert.That(Mathf.Abs(screenSize - Mathf.Round(screenSize / 12f) * 12f), Is.LessThan(0.5f),
+                "画面上で元の12 pixelの格子の整数倍に描きます。");
+            Assert.That(hud.IsPromptVisible, Is.False, "開始位置の近くには使える物がありません。");
+
+            preview.PlayerHealth.ApplyDamage(30);
+            preview.AddCoins(12);
+            yield return null;
+            Assert.That(hud.GetHeartFill(2), Is.EqualTo(HeartFill.Full));
+            Assert.That(hud.GetHeartFill(3), Is.EqualTo(HeartFill.Half), "HP 70はハート3つ半です。");
+            Assert.That(hud.GetHeartFill(4), Is.EqualTo(HeartFill.Empty));
+            Assert.That(hud.CoinText, Is.EqualTo("12"));
+
+            preview.PlayerActor.Body.position = preview.GetShopPosition(2);
+            preview.PlayerObject.transform.position = preview.GetShopPosition(2);
+            yield return new WaitForFixedUpdate();
+            yield return null;
+            Assert.That(preview.TryGetUseTarget(out var anchor), Is.True);
+            Assert.That(hud.IsPromptVisible, Is.True, "屋台の前では吹き出しが出ます。");
+            var expected = (Vector2)preview.GameplayCamera.WorldToScreenPoint(anchor);
+            Assert.That(Vector2.Distance(hud.PromptScreenPosition, expected), Is.LessThan(1f), "吹き出しは屋台の上を指します。");
+            Assert.That(anchor.y, Is.GreaterThan(preview.GetShopPosition(2).y), "吹き出しは立つ位置より上に出ます。");
+
+            Assert.That(preview.TryOpenShop(), Is.True);
+            yield return null;
+            Assert.That(hud.IsPromptVisible, Is.False, "ショップを開いている間は出しません。");
+        }
+
+        /// <summary>
+        /// お店の前で開くと、店主の顔と名前、商品の一覧、選んだ商品の説明、自分の持ち物が出る。
+        /// 買うとコインが減り、持ち替えや着替えが持ち物の枠と袋に出る。店ごとに店主が替わり、店にいる間は騎士が動かない。
+        /// </summary>
+        [UnityTest]
+        public IEnumerator ForestMap_ShopScreenShowsKeeperGoodsAndInventory()
+        {
+            yield return LoadForest();
+            yield return null;
+            var shop = preview.Hud.Shop;
+            Assert.That(shop.IsVisible, Is.False);
+
+            preview.PlayerActor.Body.position = preview.GetShopPosition(0);
+            preview.PlayerObject.transform.position = preview.GetShopPosition(0);
+            yield return new WaitForFixedUpdate();
+            Assert.That(preview.TryOpenShop(), Is.True);
+            yield return null;
+            Assert.That(shop.IsVisible, Is.True);
+            Assert.That(shop.KeeperNameText, Is.EqualTo("武器屋"));
+            Assert.That(shop.KeeperPortrait, Is.Not.Null, "武器屋の店主の顔が出ます。");
+            Assert.That(shop.RowCount, Is.EqualTo(Mathf.Min(ShopScreen.VisibleRows, preview.ShopItemCount)));
+            Assert.That(shop.GetRowName(0), Is.EqualTo("回復薬"));
+            Assert.That(shop.WeaponIcon.name, Is.EqualTo("icon-weapon-sword"), "持ち物の武器の枠に剣が出ます。");
+
+            var start = preview.PlayerObject.transform.position;
+            preview.SetMoveInputOverrideForTests(Vector2.right);
+            for (var frame = 0; frame < 10; frame++)
+            {
+                yield return new WaitForFixedUpdate();
+            }
+
+            preview.ClearMoveInputOverrideForTests();
+            Assert.That(Vector2.Distance(preview.PlayerObject.transform.position, start), Is.GreaterThan(0.05f), "店にいる間も騎士は動けます。");
+            Assert.That(preview.IsShopOpen, Is.True, "届く所の中なら、店は開いたままです。");
+            Assert.That(preview.Hud.Loadout.IsVisible, Is.False, "店を開いている間は下の枠を隠します。");
+            Assert.That(shop.OffHandIcon.name, Is.EqualTo("icon-weapon-shield"), "右の枠に盾も出ます。");
+
+            yield return SelectShopItem("弓");
+            Assert.That(preview.TryBuySelected(), Is.False);
+            yield return null;
+            Assert.That(shop.MessageText, Is.EqualTo("コインが足りない"));
+
+            preview.AddCoins(25);
+            Assert.That(preview.TryBuySelected(), Is.True);
+            yield return null;
+            Assert.That(preview.Coins, Is.EqualTo(5));
+            Assert.That(shop.WeaponIcon.name, Is.EqualTo("icon-weapon-bow"), "買った弓に持ち替えます。");
+            Assert.That(shop.GetBagIcon(0).name, Is.EqualTo("icon-weapon-sword"), "剣はカバンに入ります。");
+            Assert.That(shop.OffHandIcon, Is.Null, "両手の弓では、オフハンドの枠に絵を出しません。");
+            Assert.That(shop.IsOffHandGreyed, Is.True, "オフハンドの枠を灰色にします。");
+            Assert.That(shop.IsOffHandPlaceholderVisible, Is.True, "灰色のオフハンドには、盾の影を薄く出します。");
+            Assert.That(shop.IsHeadPlaceholderVisible, Is.False, "着けている頭には影の絵を出しません。");
+            Assert.That(preview.Inventory.GetBagItem(1).Id, Is.EqualTo("shield"), "両手の弓なので、盾もカバンに入ります。");
+            Assert.That(shop.GetRowStatus(preview.ShopSelectedIndex - shop.FirstRow), Is.EqualTo("装備中"));
+
+            yield return SelectShopItem("革（頭）");
+            preview.AddCoins(10);
+            Assert.That(preview.TryBuySelected(), Is.True);
+            yield return null;
+            Assert.That(shop.HeadIcon.name, Is.EqualTo("icon-leather-head"), "買った革の頭を着ます。");
+            Assert.That(shop.GetBagIcon(2).name, Is.EqualTo("icon-knight-head"), "脱いだ騎士の頭はカバンに入ります。");
+
+            preview.PlayerActor.Body.position = preview.SpawnPosition;
+            preview.PlayerObject.transform.position = preview.SpawnPosition;
+            yield return new WaitForFixedUpdate();
+            yield return null;
+            yield return null;
+            Assert.That(preview.IsShopOpen, Is.False, "店の届く所を出ると閉じます。");
+            Assert.That(shop.IsVisible, Is.False);
+
+            preview.PlayerActor.Body.position = preview.GetShopPosition(4);
+            preview.PlayerObject.transform.position = preview.GetShopPosition(4);
+            yield return new WaitForFixedUpdate();
+            Assert.That(preview.TryOpenShop(), Is.True);
+            yield return null;
+            Assert.That(shop.KeeperNameText, Is.EqualTo("魔法屋"), "店ごとに店主が替わります。");
+            preview.CloseShop();
+        }
+
+        /// <summary>
+        /// 金の矢印のカーソルは先端が指す位置に出る。店の画面では、行の上でマウスを動かすとその品物を選び、
+        /// 行を押して選び、買うキーを押して買い、ホイールで送り、閉じるキーを押して閉じる。キーは乗ると光る。
+        /// </summary>
+        [UnityTest]
+        public IEnumerator ForestMap_ShopScreenWorksWithTheMouse()
+        {
+            yield return LoadForest();
+            yield return null;
+            var hud = preview.Hud;
+            var shop = hud.Shop;
+            hud.ShowCursor(new Vector2(200f, 300f));
+            Assert.That(hud.IsCursorVisible, Is.True);
+            Assert.That(Vector2.Distance(hud.CursorScreenPosition, new Vector2(200f, 300f)), Is.LessThan(1f), "カーソルの先端が指す位置に来ます。");
+
+            preview.PlayerActor.Body.position = preview.GetShopPosition(0);
+            preview.PlayerObject.transform.position = preview.GetShopPosition(0);
+            yield return new WaitForFixedUpdate();
+            Assert.That(preview.TryOpenShop(), Is.True);
+            yield return null;
+
+            preview.HandleShopPointer(shop.GetRowScreenCentre(3), false, 0f);
+            yield return null;
+            Assert.That(preview.ShopSelectedIndex, Is.EqualTo(shop.FirstRow + 3), "行の上でマウスを動かすと選びます。");
+            Assert.That(shop.SelectedNameText, Is.EqualTo(shop.GetRowName(3)));
+
+            preview.HandleShopPointer(shop.GetRowScreenCentre(3), false, 0f);
+            preview.SelectShopItem(1);
+            preview.HandleShopPointer(shop.GetRowScreenCentre(3), false, 0f);
+            Assert.That(preview.ShopSelectedIndex, Is.EqualTo(shop.FirstRow + 4), "止まったマウスはキーボードで選んだ品物を取り返しません。");
+
+            preview.HandleShopPointer(shop.BuyScreenCentre, false, 0f);
+            Assert.That(shop.Hovered, Is.EqualTo(ShopHitKind.Buy), "買うキーに乗ると光ります。");
+
+            var bowRow = -1;
+            for (var row = 0; row < shop.RowCount; row++)
+            {
+                if (shop.GetRowName(row) == "弓")
+                {
+                    bowRow = row;
+                }
+            }
+
+            Assert.That(bowRow, Is.GreaterThanOrEqualTo(0));
+            preview.HandleShopPointer(shop.GetRowScreenCentre(bowRow), true, 0f);
+            yield return null;
+            Assert.That(shop.SelectedNameText, Is.EqualTo("弓"));
+            preview.AddCoins(25);
+            preview.HandleShopPointer(shop.BuyScreenCentre, true, 0f);
+            yield return null;
+            Assert.That(preview.Coins, Is.EqualTo(5), "買うキーを押すと買います。");
+            Assert.That(preview.CurrentEquipmentName, Is.EqualTo("弓"));
+
+            var before = preview.ShopSelectedIndex;
+            preview.HandleShopPointer(shop.BuyScreenCentre, false, -1f);
+            Assert.That(preview.ShopSelectedIndex, Is.EqualTo((before + 1) % preview.ShopItemCount), "ホイールを下へ回すと次の品物を選びます。");
+
+            preview.HandleShopPointer(shop.CloseScreenCentre, true, 0f);
+            yield return null;
+            Assert.That(preview.IsShopOpen, Is.False, "閉じるキーを押すと閉じます。");
+            Assert.That(shop.IsVisible, Is.False);
         }
 
         /// <summary>
@@ -844,20 +1092,206 @@ namespace FantasyRoyale.Playtest.Tests.PlayMode
         }
 
         /// <summary>
-        /// 回復薬はHPが減っているときだけ買え、その場で回復する。
+        /// 回復薬は買うと使用枠に入り、数字キーの番号で使うと回復する。HPが減っていなければ使わずに残す。
+        /// 使用枠がいっぱいなら、買った回復薬はカバンへ入る。
         /// </summary>
         [UnityTest]
-        public IEnumerator ForestMap_PotionHealsWhenHurt()
+        public IEnumerator ForestMap_PotionGoesToAQuickSlotAndHealsWhenUsed()
         {
             yield return LoadForest();
-            preview.AddCoinsForTests(5);
-            Assert.That(preview.TryBuyPotion(), Is.False, "HPが減っていなければ買いません。");
-            Assert.That(preview.Coins, Is.EqualTo(5));
+            preview.AddCoins(5);
+            Assert.That(preview.TryBuyPotion(), Is.True);
+            Assert.That(preview.Coins, Is.EqualTo(0));
+            Assert.That(preview.Inventory.GetQuickItem(0).Id, Is.EqualTo(ForestMapPreviewDebug.PotionItemId), "買った回復薬は使用枠に入ります。");
+            Assert.That(preview.Inventory.CountFreeBagSlots(), Is.EqualTo(preview.Inventory.BagCapacity), "カバンには入りません。");
+            Assert.That(preview.TryUseQuickSlot(0), Is.False, "HPが減っていなければ飲みません。");
+            Assert.That(preview.Inventory.GetQuickItem(0), Is.Not.Null);
 
             preview.PlayerHealth.ApplyDamage(50);
-            Assert.That(preview.TryBuyPotion(), Is.True);
+            Assert.That(preview.TryUseQuickSlot(0), Is.True);
             Assert.That(preview.PlayerHealth.CurrentHealth, Is.EqualTo(80));
-            Assert.That(preview.Coins, Is.EqualTo(0));
+            Assert.That(preview.Inventory.CountFreeQuickSlots(), Is.EqualTo(preview.Inventory.QuickCapacity), "飲んだ回復薬はなくなります。");
+
+            preview.AddCoins(5 * (preview.Inventory.QuickCapacity + 1));
+            for (var index = 0; index <= preview.Inventory.QuickCapacity; index++)
+            {
+                Assert.That(preview.TryBuyPotion(), Is.True);
+            }
+
+            Assert.That(preview.Inventory.FindInBag(ForestMapPreviewDebug.PotionItemId), Is.Zero, "使用枠がいっぱいなら、カバンへ入ります。");
+        }
+
+        /// <summary>
+        /// 剣は初めから炎の弾を持ち、MPを使って唱える。カバンの魔法を使うと剣の空いた枠へはまり、切り替えて唱えられる。
+        /// MPが足りなければ唱えない。両手の弓へ持ち替えると剣の魔法は剣に残り、戻すと選んでいた魔法のままである。
+        /// </summary>
+        [UnityTest]
+        public IEnumerator ForestMap_MagicUsesManaAndStaysWithTheWeapon()
+        {
+            yield return LoadForest();
+            var loadout = preview.PlayerCombat.Loadout;
+            Assert.That(preview.Inventory.MainWeapon.MagicSlotCount, Is.EqualTo(2));
+            Assert.That(loadout.Get(CharacterActionSlot.Magic).Id, Is.EqualTo("magic-fire"));
+
+            var fullMana = preview.Mana.Current;
+            Assert.That(preview.TryCastMagic(), Is.True);
+            Assert.That(preview.Mana.Current, Is.LessThan(fullMana), "唱えるとMPを使います。");
+            for (var frame = 0; frame < 60 && preview.PlayerCombat.ActionState.IsBusy; frame++)
+            {
+                yield return new WaitForFixedUpdate();
+            }
+
+            Assert.That(preview.Inventory.TryAddToBag(new CharacterItem("ice", CharacterItemKind.Magic)), Is.Zero);
+            Assert.That(preview.TryUseBagItem(0), Is.True, "カバンの魔法は剣の空いた枠へはまります。");
+            Assert.That(preview.Inventory.SelectNextMagic(), Is.EqualTo(1));
+            Assert.That(loadout.Get(CharacterActionSlot.Magic).Id, Is.EqualTo("magic-ice"));
+
+            preview.Mana.TrySpend(preview.Mana.Current);
+            Assert.That(preview.TryCastMagic(), Is.False, "MPが足りなければ唱えません。");
+            Assert.That(preview.LastMessage, Is.EqualTo("MPが足りない"));
+
+            preview.AddCoins(20);
+            Assert.That(preview.TryBuyBow(), Is.True);
+            Assert.That(preview.CurrentEquipmentName, Is.EqualTo("弓"));
+            Assert.That(loadout.Get(CharacterActionSlot.Magic), Is.Null, "弓の魔法の枠は空です。");
+
+            var swordSlot = preview.Inventory.FindInBag("sword");
+            Assert.That(swordSlot, Is.GreaterThanOrEqualTo(0));
+            Assert.That(preview.TryUseBagItem(swordSlot), Is.True);
+            Assert.That(preview.CurrentEquipmentName, Is.EqualTo("剣"));
+            Assert.That(loadout.Get(CharacterActionSlot.Magic).Id, Is.EqualTo("magic-ice"), "剣の魔法は剣に残ります。");
+        }
+
+        /// <summary>
+        /// HUDに武器は出さない。下の段にカバンのアイテムを並べ、その上に固有の技と魔法を置く。
+        /// 魔法の枠の数が2から1へ変わっても、大きな枠の位置は動かない。MPはハートの下の玉で見せ、唱えると減る。
+        /// 固有の技は使うと待ち時間が始まり、覆いが時間で減って消えるまで使えない。
+        /// </summary>
+        [UnityTest]
+        public IEnumerator ForestMap_LoadoutBarFollowsTheInventory()
+        {
+            yield return LoadForest();
+            yield return null;
+            var hud = preview.Hud;
+            var bar = hud.Loadout;
+            Assert.That(bar.MagicSlotCount, Is.EqualTo(2), "剣の魔法の枠は2つです。");
+            Assert.That(bar.MagicIcon.name, Is.EqualTo("icon-magic-fire"), "選んでいる魔法がLの枠に出ます。");
+            Assert.That(bar.ItemSlotCount, Is.EqualTo(preview.Inventory.QuickCapacity), "下の段は使用枠です。");
+            Assert.That(bar.ItemIcon, Is.Null, "カバンは空で始まります。");
+            Assert.That(hud.ManaOrbCount, Is.EqualTo(4), "MP 40は玉4つです。");
+            Assert.That(hud.LitManaOrbs, Is.EqualTo(4));
+
+            var centres = new Vector2[3];
+            for (var index = 0; index < centres.Length; index++)
+            {
+                centres[index] = bar.GetBigSlotScreenCentre(index);
+            }
+
+            Assert.That(preview.TryCastMagic(), Is.True);
+            yield return null;
+            Assert.That(hud.LitManaOrbs, Is.LessThan(4), "唱えるとMPの玉が減ります。");
+            Assert.That(bar.IsMagicDimmed, Is.True, "唱えている間は魔法の枠を暗くします。");
+            for (var frame = 0; frame < 60 && preview.PlayerCombat.ActionState.IsBusy; frame++)
+            {
+                yield return new WaitForFixedUpdate();
+            }
+
+            Assert.That(bar.SkillCooldownFill, Is.Zero, "技はすぐ使えます。");
+            Assert.That(preview.TryUseSkill(), Is.True);
+            yield return null;
+            Assert.That(bar.SkillCooldownFill, Is.GreaterThan(0.8f), "使った技は待ち時間の覆いで暗くなります。");
+            Assert.That(preview.TryUseSkill(), Is.False, "待ち時間の間は使えません。");
+            yield return new WaitForSeconds(1f);
+            Assert.That(bar.SkillCooldownFill, Is.LessThan(0.8f).And.GreaterThan(0f), "覆いは時間で減ります。");
+            yield return new WaitForSeconds(2.5f);
+            Assert.That(bar.SkillCooldownFill, Is.Zero, "待ち時間が終わると覆いが消えます。");
+            Assert.That(preview.SkillCooldown.IsReady, Is.True);
+
+            preview.AddCoins(25);
+            Assert.That(preview.TryBuyPotion(), Is.True);
+            Assert.That(preview.TryBuyBow(), Is.True);
+            yield return null;
+            Assert.That(preview.CurrentEquipmentName, Is.EqualTo("弓"));
+            Assert.That(bar.MagicSlotCount, Is.EqualTo(1), "弓の魔法の枠は1つです。");
+            Assert.That(bar.MagicIcon, Is.Null, "弓の魔法の枠は空です。");
+            Assert.That(bar.ItemIcon.name, Is.EqualTo("icon-potion"), "選んでいるアイテムが;の枠に出ます。");
+            Assert.That(preview.Inventory.FindInBag("sword"), Is.GreaterThanOrEqualTo(0), "外した剣はカバンに入り、下の段には出ません。");
+            Assert.That(bar.GetItemIcon(1), Is.Null);
+            for (var index = 0; index < centres.Length; index++)
+            {
+                Assert.That(Vector2.Distance(bar.GetBigSlotScreenCentre(index), centres[index]), Is.LessThan(0.5f), "枠の数が変わっても大きな枠は動きません。");
+            }
+        }
+
+        /// <summary>
+        /// Tabの持ち物の画面は、装備5つ、固有の技、魔法の枠、カバンを並べる。開いている間も騎士は動ける。
+        /// 上下左右で隣の枠へ移り、決めるとカバンの弓を着け、剣の魔法をカバンへ外す。
+        /// </summary>
+        [UnityTest]
+        public IEnumerator ForestMap_InventoryScreenEquipsAndKeepsTheKnightMoving()
+        {
+            yield return LoadForest();
+            yield return null;
+            var screen = preview.Hud.Inventory;
+            preview.OpenInventory();
+            yield return null;
+            Assert.That(screen.IsVisible, Is.True);
+            Assert.That(screen.CellCount, Is.EqualTo(5 + 1 + 2 + preview.Inventory.QuickCapacity + preview.Inventory.BagCapacity), "剣は魔法の枠が2つです。");
+            Assert.That(screen.IsOffHandGreyed, Is.False, "片手の剣と盾では、オフハンドを灰色にしません。");
+            for (var slot = 0; slot < InventoryScreen.EquipmentCount; slot++)
+            {
+                Assert.That(screen.IsPlaceholderVisible(screen.FindCell(InventoryCellKind.Equipment, slot)), Is.False, "着けている枠には影の絵を出しません。");
+            }
+
+            var start = preview.PlayerObject.transform.position;
+            preview.SetMoveInputOverrideForTests(Vector2.right);
+            for (var frame = 0; frame < 10; frame++)
+            {
+                yield return new WaitForFixedUpdate();
+            }
+
+            preview.ClearMoveInputOverrideForTests();
+            Assert.That(Vector2.Distance(preview.PlayerObject.transform.position, start), Is.GreaterThan(0.05f), "開いている間も騎士は動けます。");
+
+            var head = screen.FindCell(InventoryCellKind.Equipment, 0);
+            var torso = screen.FindCell(InventoryCellKind.Equipment, 1);
+            Assert.That(screen.GetCellScreenCentre(screen.FindCell(InventoryCellKind.Equipment, 3)).x,
+                Is.GreaterThan(screen.GetCellScreenCentre(torso).x), "メイン武器は右です。");
+            Assert.That(screen.Navigate(head, Vector2.down), Is.EqualTo(torso), "装備は体の形に並び、頭の下は胴です。");
+            Assert.That(screen.Navigate(torso, Vector2.down), Is.EqualTo(screen.FindCell(InventoryCellKind.Equipment, 2)), "胴の下は足です。");
+            Assert.That(screen.Navigate(torso, Vector2.right), Is.EqualTo(screen.FindCell(InventoryCellKind.Equipment, 3)), "胴の右はメイン武器です。");
+            Assert.That(screen.Navigate(torso, Vector2.left), Is.EqualTo(screen.FindCell(InventoryCellKind.Equipment, 4)), "胴の左はオフハンドです。");
+            var firstMagic = screen.FindCell(InventoryCellKind.Magic, 0);
+            Assert.That(screen.Navigate(screen.FindCell(InventoryCellKind.Skill, 0), Vector2.right), Is.EqualTo(firstMagic), "技の右は魔法です。");
+            Assert.That(screen.Navigate(screen.FindCell(InventoryCellKind.Equipment, 2), Vector2.down), Is.EqualTo(screen.FindCell(InventoryCellKind.Quick, 1)), "足の下は使用枠です。");
+            Assert.That(screen.Navigate(screen.FindCell(InventoryCellKind.Quick, 0), Vector2.down), Is.EqualTo(screen.FindCell(InventoryCellKind.Bag, 0)), "使用枠の下はカバンです。");
+
+            preview.SelectInventoryCell(firstMagic);
+            yield return null;
+            Assert.That(screen.DetailNameText, Is.EqualTo("炎の弾"));
+            Assert.That(preview.ActivateInventoryCell(), Is.True, "剣の魔法をカバンへ外します。");
+            Assert.That(preview.Inventory.GetBagItem(0).Id, Is.EqualTo("fire"));
+
+            preview.Inventory.TryAddToBag(preview.EquipmentCatalog.FindWeapon("bow").CreateItem());
+            preview.SelectInventoryCell(screen.FindCell(InventoryCellKind.Bag, 1));
+            yield return null;
+            Assert.That(screen.ActionLabelText, Is.EqualTo("着ける"));
+            Assert.That(preview.ActivateInventoryCell(), Is.True);
+            yield return null;
+            Assert.That(preview.CurrentEquipmentName, Is.EqualTo("弓"));
+            Assert.That(screen.CellCount, Is.EqualTo(5 + 1 + 1 + preview.Inventory.QuickCapacity + preview.Inventory.BagCapacity), "弓の魔法の枠は1つです。");
+            Assert.That(screen.GetCellIcon(4), Is.Null, "両手の弓では、オフハンドの枠に絵を出しません。");
+            Assert.That(screen.IsOffHandGreyed, Is.True, "オフハンドの枠を灰色にします。");
+            Assert.That(screen.IsPlaceholderVisible(screen.FindCell(InventoryCellKind.Equipment, 4)), Is.True, "灰色のオフハンドには、盾の影を薄く出します。");
+
+            preview.SelectInventoryCell(screen.FindCell(InventoryCellKind.Equipment, 0));
+            Assert.That(preview.ActivateInventoryCell(), Is.True, "頭の防具をカバンへ外します。");
+            yield return null;
+            Assert.That(screen.IsPlaceholderVisible(screen.FindCell(InventoryCellKind.Equipment, 0)), Is.True, "空いた頭の枠に影の絵を出します。");
+
+            preview.CloseInventory();
+            yield return null;
+            Assert.That(screen.IsVisible, Is.False);
         }
 
         /// <summary>
@@ -881,6 +1315,105 @@ namespace FantasyRoyale.Playtest.Tests.PlayMode
         }
 
         /// <summary>
+        /// デバッグの所持金はコインを増やして減らし、0枚より少なくはならない。
+        /// </summary>
+        [UnityTest]
+        public IEnumerator ForestMap_DebugAddsAndRemovesCoins()
+        {
+            yield return LoadForest();
+            preview.AddCoins(100);
+            Assert.That(preview.Coins, Is.EqualTo(100));
+            preview.AddCoins(-10);
+            Assert.That(preview.Coins, Is.EqualTo(90));
+            preview.AddCoins(-1000);
+            Assert.That(preview.Coins, Is.EqualTo(0), "0枚より少なくはなりません。");
+        }
+
+        /// <summary>
+        /// デバッグのHP全回復は、減ったHPを最大まで戻す。減っていなければ何もしない。
+        /// </summary>
+        [UnityTest]
+        public IEnumerator ForestMap_DebugRestoresFullHealth()
+        {
+            yield return LoadForest();
+            Assert.That(preview.RestorePlayerHealth(), Is.False, "HPが減っていなければ戻しません。");
+
+            preview.PlayerHealth.ApplyDamage(70);
+            Assert.That(preview.RestorePlayerHealth(), Is.True);
+            Assert.That(preview.PlayerHealth.CurrentHealth, Is.EqualTo(preview.PlayerHealth.MaximumHealth));
+        }
+
+        /// <summary>
+        /// デバッグの「敵を全部倒す」は、出ている敵を全て倒し、1体ごとにコインを渡す。
+        /// </summary>
+        [UnityTest]
+        public IEnumerator ForestMap_DebugDefeatsAllEnemies()
+        {
+            yield return LoadForest();
+            Assert.That(preview.DefeatAllEnemies(), Is.EqualTo(preview.EnemyCount));
+            for (var index = 0; index < preview.EnemyCount; index++)
+            {
+                Assert.That(preview.GetEnemyActor(index).gameObject.activeSelf, Is.False, "倒した敵は消えます。");
+            }
+
+            Assert.That(preview.Coins, Is.EqualTo(preview.EnemyCount));
+            Assert.That(preview.DefeatAllEnemies(), Is.EqualTo(0), "倒した敵はもう一度倒しません。");
+        }
+
+        /// <summary>
+        /// 無敵の間は敵に触れてもHPが減らず、切ると減る。
+        /// </summary>
+        [UnityTest]
+        public IEnumerator ForestMap_InvincibleHeroTakesNoContactDamage()
+        {
+            yield return LoadForest();
+            var enemy = preview.GetEnemyActor(0);
+            preview.IsInvincible = true;
+
+            // 接触の間隔は1秒なので、2秒半触れ続ければ無敵でなければ2回以上当たる。
+            var untilAt = Time.time + 2.5f;
+            while (Time.time < untilAt)
+            {
+                preview.PlayerActor.Body.position = enemy.Body.position + Vector2.right * 0.7f;
+                yield return new WaitForFixedUpdate();
+            }
+
+            Assert.That(preview.PlayerHealth.CurrentHealth, Is.EqualTo(preview.PlayerHealth.MaximumHealth), "無敵の間はHPが減りません。");
+
+            preview.IsInvincible = false;
+            var timeoutAt = Time.time + 4f;
+            while (preview.PlayerHealth.CurrentHealth == preview.PlayerHealth.MaximumHealth && Time.time < timeoutAt)
+            {
+                preview.PlayerActor.Body.position = enemy.Body.position + Vector2.right * 0.7f;
+                yield return new WaitForFixedUpdate();
+            }
+
+            Assert.That(preview.PlayerHealth.CurrentHealth, Is.LessThan(preview.PlayerHealth.MaximumHealth), "無敵を切るとHPが減ります。");
+        }
+
+        /// <summary>
+        /// ワンパンの間は、剣の一振りで敵を倒す。切っているときの一振りでは倒れない。
+        /// </summary>
+        [UnityTest]
+        public IEnumerator ForestMap_OneHitKillDefeatsEnemyWithOneSwing()
+        {
+            yield return LoadForest();
+            var enemy = preview.GetEnemyActor(0);
+            var health = enemy.Health;
+
+            yield return Swing(enemy, CharacterDirection8.West, 0.9f);
+            Assert.That(health.CurrentHealth, Is.LessThan(health.MaximumHealth), "一振りが当たります。");
+            Assert.That(health.IsAlive, Is.True, "ワンパンを切っていれば一振りでは倒れません。");
+
+            health.RestoreHealth(health.MaximumHealth);
+            preview.IsOneHitKill = true;
+            yield return Swing(enemy, CharacterDirection8.West, 0.9f);
+            Assert.That(health.IsAlive, Is.False, "ワンパンの間は一振りで倒れます。");
+            Assert.That(enemy.gameObject.activeSelf, Is.False, "倒した敵は消えます。");
+            Assert.That(preview.Coins, Is.EqualTo(1));
+        }
+
+        /// <summary>
         /// 敵と宝箱は候補から決まった数だけ置かれる。
         /// </summary>
         [UnityTest]
@@ -889,6 +1422,20 @@ namespace FantasyRoyale.Playtest.Tests.PlayMode
             yield return LoadForest();
             Assert.That(preview.EnemyCount, Is.EqualTo(12));
             Assert.That(preview.ChestCount, Is.EqualTo(4));
+        }
+
+        /// <summary>
+        /// 店の品物を名前が一致するまで送る。
+        /// </summary>
+        private IEnumerator SelectShopItem(string name)
+        {
+            for (var step = 0; step < preview.ShopItemCount && preview.Hud.Shop.SelectedNameText != name; step++)
+            {
+                preview.SelectShopItem(1);
+                yield return null;
+            }
+
+            Assert.That(preview.Hud.Shop.SelectedNameText, Is.EqualTo(name));
         }
 
         private IEnumerator MoveNextTo(Vector2 position)
@@ -923,6 +1470,9 @@ namespace FantasyRoyale.Playtest.Tests.PlayMode
             {
                 yield return null;
             }
+
+            // 本物のマウスを動かしても結果が変わらないよう、マウスはTestが渡す位置だけを使う。
+            preview.SetMouseIgnoredForTests(true);
         }
 
         /// <summary>

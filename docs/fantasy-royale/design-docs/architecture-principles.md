@@ -25,6 +25,7 @@ FantasyRoyaleのGameplay実装で維持する、CoreとUnityの責務境界を�
 - `FantasyRoyale.Gameplay.Characters.Core`: `CharacterHealth`、`CharacterMoveCommand`、8方向、`CharacterActionSpec`、`CharacterActionState`、`CharacterLoadout`、`CharacterHitTracker`などの純C#状態と契約。
 - `FantasyRoyale.Gameplay.Characters.Unity`: Character CoreとInput System / 2D Physicsの接続。ActionとEquipmentの定義Asset、`CharacterCombat2D`、`CharacterProjectile2D`、`CharacterHurtbox2D`を含む。
 - `FantasyRoyale.Gameplay.Events.Runtime`: Event Handler、共通実行結果、OneShot状態更新、Event Pool抽選。
+- `FantasyRoyale.Gameplay.Hud`: 画面に重ねるHUD。uGUIだけを参照し、ゲームの状態を読まずに渡された値を表示する。HPからハートを決める純C#の`HeartGauge`、ピクセルフォントの大きさを画面の倍率から決める`PixelFontSizing`、絵とフォントをまとめる`HudSkin`、名前から絵を引く`HudIconLibrary`、Canvasを組む`GameHud`、店の画面の`ShopScreen`と渡す値の型（`ShopScreenModel`など）を含む。
 - `FantasyRoyale.MapAuthoringKit.Runtime`: Map Sceneへ保存する制作契約とScriptableObject定義。
 - `FantasyRoyale.Playtest.Runtime`: Production経路を実Sceneで確認する`PreviewDebug`足場。
 

@@ -3,7 +3,8 @@
   "rootNamespace": "FantasyRoyale.Gameplay.Characters.Tests.Editor",
   "references": [
     "FantasyRoyale.Gameplay.Characters.Core",
-    "FantasyRoyale.Gameplay.Characters.Unity"
+    "FantasyRoyale.Gameplay.Characters.Unity",
+    "Unity.InputSystem"
   ],
   "includePlatforms": [
     "Editor"

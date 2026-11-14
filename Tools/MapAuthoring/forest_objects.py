@@ -78,8 +78,8 @@ TOWN_OBJECTS = {
     "armour-shop": ("armour-shop.png", 4, 1.0, 0.9),
     "magic-shop": ("magic-shop.png", 4, 1.0, 0.9),
     "item-shop": ("item-shop.png", 4, 1.0, 0.9),
-    "town-stall": ("town-stall.png", 2, 0.5, 0.85),
-    "town-rug": ("town-rug.png", 2, 0.5, 0.85),
+    "town-stall": ("town-stall.png", 2, 0.7, 0.85),
+    "town-rug": ("town-rug.png", 2, 0.6, 0.7),
 }
 
 

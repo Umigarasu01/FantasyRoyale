@@ -10,9 +10,15 @@ namespace FantasyRoyale.Gameplay.Characters.Unity
     {
         [SerializeField] private CharacterSpriteSetDefinition[] armour = new CharacterSpriteSetDefinition[0];
         [SerializeField] private CharacterEquipmentDefinition[] weapons = new CharacterEquipmentDefinition[0];
+        [SerializeField] private CharacterEquipmentDefinition[] offHands = new CharacterEquipmentDefinition[0];
 
         public IReadOnlyList<CharacterSpriteSetDefinition> Armour => armour;
         public IReadOnlyList<CharacterEquipmentDefinition> Weapons => weapons;
+
+        /// <summary>
+        /// 盾のように反対の手だけに持つ装備。武器の一覧とは分ける。
+        /// </summary>
+        public IReadOnlyList<CharacterEquipmentDefinition> OffHands => offHands;
 
         /// <summary>
         /// 指定の部位の絵を持つ防具を返す。
@@ -121,16 +127,44 @@ namespace FantasyRoyale.Gameplay.Characters.Unity
                 }
             }
 
+            foreach (var item in offHands)
+            {
+                if (!seen.Add(item.Id))
+                {
+                    problems.Add($"{item.name}: id「{item.Id}」は他の装備と同じです。");
+                }
+            }
+
             return problems;
         }
 
         /// <summary>
         /// Editorから、集めた定義を設定する。
         /// </summary>
-        public void Configure(CharacterSpriteSetDefinition[] newArmour, CharacterEquipmentDefinition[] newWeapons)
+        public void Configure(
+            CharacterSpriteSetDefinition[] newArmour,
+            CharacterEquipmentDefinition[] newWeapons,
+            CharacterEquipmentDefinition[] newOffHands = null)
         {
             armour = newArmour;
             weapons = newWeapons;
+            offHands = newOffHands ?? new CharacterEquipmentDefinition[0];
+        }
+
+        /// <summary>
+        /// idのオフハンドの装備を返す。なければnullである。
+        /// </summary>
+        public CharacterEquipmentDefinition FindOffHand(string id)
+        {
+            foreach (var item in offHands)
+            {
+                if (item.Id == id)
+                {
+                    return item;
+                }
+            }
+
+            return null;
         }
     }
 }

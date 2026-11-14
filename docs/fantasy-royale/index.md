@@ -18,10 +18,12 @@
 - [ゲーム企画](product-specs/game-concept.md)
 - [Prototype方針](product-specs/prototype-direction.md)
 - [装備と動きの要件](product-specs/equipment-and-motion.md)
+- [所持品](product-specs/inventory.md)（案）
 - [Prototype Milestones](product-specs/prototype-milestones.md)
 - [Art Direction](product-specs/art/art-direction.md)
 - [防具の部位デザイン規約](product-specs/art/armor-part-design.md)
 - [設置物のデザイン規約](product-specs/art/prop-design.md)（案）
+- [UIのデザイン方針](product-specs/art/ui-design.md)（案）
 - [Map Plan](product-specs/art/map-plan.md)
 - [Object Plan](product-specs/art/object-plan.md)
 - [Tileset Plan](product-specs/art/tileset-plan.md)
@@ -49,6 +51,9 @@
 - 進行中: [片手剣の型の走りと剣の付け方の組み込み](exec-plans/active/sword-type-pose.md)
 - 進行中: [森林マップの空間構成改善](exec-plans/active/forest-composition-improvement.md)
 - 進行中: [中心街](exec-plans/active/central-town.md)
+- 完了済み: [所持品と魔法](exec-plans/completed/inventory-and-magic.md)
+- 完了済み: [黒漆のHUD](exec-plans/completed/game-hud.md)
+- 完了済み: [店の画面](exec-plans/completed/shop-screen.md)
 - 完了済み: [Knowledge Base移行](exec-plans/completed/knowledge-base-migration.md)
 - 完了済み: [森林素材の再制作と自動配置検証](exec-plans/completed/forest-art-restart.md)
 - 完了済み: [森マップの画作り基準](exec-plans/completed/forest-look-lock.md)
