@@ -25,6 +25,9 @@ namespace FantasyRoyale.Gameplay.Characters.Unity
         private const int StandDeepFrame = 2;
         private const float StandHoldShare = 0.5f;
 
+        // 立ち止まっている間の呼吸。1周の後半だけ、足を残して胴、頭、持ち物を1 pixel下げる。
+        private const float BreathSeconds = 1.2f;
+
         // 被弾の赤。持ち主の色へ掛けて、体と部品の全ての層へ同じ色を付ける。前半は赤いまま、後半で元の色へ戻る。
         private const float HitFlashSeconds = 0.2f;
         private static readonly Color HitFlashColour = new Color(1f, 0.3f, 0.3f);
@@ -85,6 +88,7 @@ namespace FantasyRoyale.Gameplay.Characters.Unity
         private CharacterDirection8 shownFacing = CharacterDirection8.South;
         private CharacterDirection8 shownPartFacing = CharacterDirection8.South;
         private float runSeconds;
+        private float idleSeconds;
         private CharacterActionMotion? weaponKind;
         private readonly Dictionary<CharacterGearSlot, GearPart> parts = new Dictionary<CharacterGearSlot, GearPart>();
         private CharacterHealth watchedHealth;
@@ -262,7 +266,7 @@ namespace FantasyRoyale.Gameplay.Characters.Unity
         }
 
         /// <summary>
-        /// 攻撃中の上半身の、足元から見た兜の位置を返す。攻撃していなければゼロを返す。
+        /// 足に対する胴の層の位置を返す。攻撃中は兜の位置、立ち止まっている間は呼吸で下げた量、それ以外はゼロである。
         /// </summary>
         public Vector2 GetUpperPosition()
         {
@@ -635,6 +639,7 @@ namespace FantasyRoyale.Gameplay.Characters.Unity
 
             if (TryShowAttack(deltaSeconds))
             {
+                idleSeconds = 0f;
                 return;
             }
 
@@ -653,19 +658,38 @@ namespace FantasyRoyale.Gameplay.Characters.Unity
                 var anchors = frame < runAnchors.Length ? runAnchors[frame] : view.IdleAnchors;
                 ShowBody(facing, runFrames[frame], frame < legs.RunLegs.Length ? legs.RunLegs[frame] : null, anchors);
                 ApplyParts(facing, anchors, HeldAngle(anchors));
+                idleSeconds = 0f;
                 return;
             }
 
             runSeconds = 0f;
             lastRunFrame = -1;
-            ShowBody(facing, view.Idle, legs.IdleLegs, view.IdleAnchors);
-            ApplyParts(facing, view.IdleAnchors, HeldAngle(view.IdleAnchors));
+            var breath = legs.IdleLegs != null ? Breathe(view.Idle, deltaSeconds) : Vector2.zero;
+            ShowBody(facing, view.Idle, legs.IdleLegs, view.IdleAnchors, breath);
+            ApplyParts(facing, view.IdleAnchors, HeldAngle(view.IdleAnchors), breath);
+        }
+
+        /// <summary>
+        /// 立ち止まってからの時間を進め、呼吸で上半身を下げる量を返す。止まった直後は元の高さから始める。
+        /// 足は動かさないので、体全体の絵を1枚で見せる敵は呼吸しない。跳んでいる間も止める。
+        /// </summary>
+        private Vector2 Breathe(Sprite torso, float deltaSeconds)
+        {
+            idleSeconds += deltaSeconds;
+            if (IsAirborne || torso == null)
+            {
+                return Vector2.zero;
+            }
+
+            var exhaling = idleSeconds % BreathSeconds >= BreathSeconds / 2f;
+            return exhaling ? new Vector2(0f, -1f / torso.pixelsPerUnit) : Vector2.zero;
         }
 
         /// <summary>
         /// 足のコマがあれば足、胴、頭の3層で見せ、なければ体全体の絵を1枚で見せる。
+        /// upperOffsetは足に対して胴と頭をずらす量である。
         /// </summary>
-        private void ShowBody(CharacterDirection8 facing, Sprite torso, Sprite legs, CharacterSpriteAnchors anchors)
+        private void ShowBody(CharacterDirection8 facing, Sprite torso, Sprite legs, CharacterSpriteAnchors anchors, Vector2 upperOffset = default)
         {
             if (legs == null)
             {
@@ -676,8 +700,8 @@ namespace FantasyRoyale.Gameplay.Characters.Unity
             }
 
             spriteRenderer.sprite = legs;
-            ShowLayer(upperRenderer, torso, Vector3.zero);
-            ShowHead(facing, anchors.Head);
+            ShowLayer(upperRenderer, torso, upperOffset);
+            ShowHead(facing, anchors.Head + upperOffset);
         }
 
         private void ShowHead(CharacterDirection8 facing, Vector2 position)

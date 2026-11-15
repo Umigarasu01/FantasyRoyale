@@ -182,6 +182,8 @@ FantasyRoyale.MapAuthoringKit.Editor.ForestRestartAssetBuilder.BuildScene(
 
 ## 現在の基準
 
+2026-11-15、立ち止まったときの呼吸を`CharacterSpriteAnimator2D`へ入れた後、所有者の開いているEditorでUnity MCPから実行: EditMode 374 / 374成功、PlayModeは`ForestMapPreviewPlayModeTests` 39 / 39成功（追加した`ForestMap_StandingStillBreathes`を含む）。実Playで騎士の胴、頭、剣、盾が1 pixel上下し、足が動かないことを`capture_game_view`で確かめた。`capture_game_view`の`save_path`は`Assets/`の下へ書くので、撮った後に外へ移す。
+
 2026-11-14、攻撃のヒットバックとアーマーを加えた後、所有者の開いているEditorでUnity MCPから実行: EditMode 373 / 373成功、PlayMode 54件中48件成功。失敗6件はStudyAの5件と、`ExplorationPreview_HealingFountainUsesAdjustedSocketAndRuntimeState`である。後者は前のコミットで`Player/Interact`を`<Keyboard>/f`へ変えたのに、Testが`<Keyboard>/e`を期待しているためで、今回の変更とは関係しない。PlayMode Testで自分のObjectを原点付近に置くと、前のTestが読み込んだMapのSceneが残っていて壁に当たることがある。`CharacterKnockbackPlayModeTests`は遠く（5000, 5000）で戦わせている。同日スライムを軽くした後、`FantasyRoyale.Gameplay.Characters`のEditMode 114 / 114成功、追加した`ForestMap_SlimeIsLightAndFliesFarWhenHit`成功。直前の全PlayMode実行では、このTestの測り始め以外の失敗は上と同じ6件だった。同日、倒した敵がゴールドを落として拾う形にした後、`ForestMapPreviewPlayModeTests` 38 / 38成功（`ForestMap_SwordDefeatsEnemyAndGoldIsPickedUp`で落ちる、離れていれば残る、近づくと吸い寄せて拾う、所持金が増えるを確かめる）。2026-11-15、ゴールドを6〜10枚散らばらせ、回る絵へ替えた後、`ForestMapPreviewPlayModeTests` 38 / 38成功。実Play中にスライムを倒し、散らばる、止まる、吸い込まれる様子を`capture_game_view`で確かめた（時間を0.15〜0.25倍にして撮った）。同日、粗いドットとキラッと光る演出へ替えた後も38 / 38成功。このときEditorが裏にあってPlayのフレームが進まなかったので、確認の間だけ`EditorApplication.update`へ`QueuePlayerLoopUpdate`を足して進め、撮影後に外した。
 
 2026-11-10、被弾すると体が赤くなる演出を`CharacterSpriteAnimator2D`へ入れた後、所有者の開いているEditorでUnity MCPから実行: EditMode 337 / 337成功、PlayModeは`ForestMapPreviewPlayModeTests` 28 / 28、`PreviewDebugCombatPlayModeTests` 5 / 5、`BattleRoyaleExplorationPreviewDebugPlayModeTests` 4 / 4成功。StudyAの5件は実行していない。

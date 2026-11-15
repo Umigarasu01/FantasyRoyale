@@ -1099,6 +1099,34 @@ namespace FantasyRoyale.Playtest.Tests.PlayMode
         }
 
         /// <summary>
+        /// 立ち止まると、足を残して胴と頭と持ち物が1 pixelだけ下がり、また戻る。
+        /// </summary>
+        [UnityTest]
+        public IEnumerator ForestMap_StandingStillBreathes()
+        {
+            yield return LoadForest();
+            yield return null;
+            var playerRenderer = preview.PlayerObject.GetComponent<SpriteRenderer>();
+            var animator = preview.PlayerAnimator;
+            var legs = playerRenderer.sprite;
+            var pixel = 1f / animator.GetUpperSprite().pixelsPerUnit;
+            var hand = animator.GetGearPosition(CharacterGearSlot.MainHand) - animator.GetUpperPosition();
+
+            var heights = new HashSet<float>();
+            var endAt = Time.time + 2f;
+            while (heights.Count < 2 && Time.time < endAt)
+            {
+                yield return null;
+                heights.Add(animator.GetUpperPosition().y);
+                Assert.That(playerRenderer.sprite, Is.SameAs(legs), "足は動きません。");
+                Assert.That(animator.GetUpperPosition().x, Is.EqualTo(0f), "上下だけに動きます。");
+                Assert.That(Vector2.Distance(animator.GetGearPosition(CharacterGearSlot.MainHand) - animator.GetUpperPosition(), hand), Is.LessThan(0.0001f), "剣は胴と一緒に動きます。");
+            }
+
+            Assert.That(heights, Is.EquivalentTo(new[] { 0f, -pixel }), "1 pixelだけ下がります。");
+        }
+
+        /// <summary>
         /// 部位を着替えると、その部位の絵だけが替わり、武器は同じ手の位置に残り、攻撃もその部位の絵で動く。
         /// </summary>
         [UnityTest]
@@ -1112,7 +1140,8 @@ namespace FantasyRoyale.Playtest.Tests.PlayMode
             var knightTorso = animator.GetUpperSprite();
             var knightHead = animator.GetHeadSprite();
             var sword = animator.GetGearSprite(CharacterGearSlot.MainHand);
-            var hand = animator.GetGearPosition(CharacterGearSlot.MainHand);
+            // 立ち止まると呼吸で胴ごと上下するので、手の位置は胴から測る。
+            var hand = animator.GetGearPosition(CharacterGearSlot.MainHand) - animator.GetUpperPosition();
             Assert.That(preview.GetArmourName(CharacterArmourSlot.Torso), Is.EqualTo("騎士"));
 
             Assert.That(preview.TryEquipArmour(CharacterArmourSlot.Torso, "leather"), Is.True);
@@ -1122,7 +1151,7 @@ namespace FantasyRoyale.Playtest.Tests.PlayMode
             Assert.That(animator.GetHeadSprite(), Is.SameAs(knightHead), "頭はそのままです。");
             Assert.That(playerRenderer.sprite, Is.SameAs(legs), "足はそのままです。");
             Assert.That(animator.GetGearSprite(CharacterGearSlot.MainHand), Is.SameAs(sword), "剣はそのままです。");
-            Assert.That(animator.GetGearPosition(CharacterGearSlot.MainHand), Is.EqualTo(hand), "手の位置は同じです。");
+            Assert.That(Vector2.Distance(animator.GetGearPosition(CharacterGearSlot.MainHand) - animator.GetUpperPosition(), hand), Is.LessThan(0.0001f), "手の位置は同じです。");
 
             Assert.That(preview.TryEquipArmour(CharacterArmourSlot.Head, "leather"), Is.True);
             yield return null;
