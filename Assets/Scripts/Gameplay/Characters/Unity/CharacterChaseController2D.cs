@@ -67,7 +67,9 @@ namespace FantasyRoyale.Gameplay.Characters.Unity
             var self = actor.Body.position;
             var other = target.Body.position;
             actor.SetMoveCommand(brain.Decide(self.x, self.y, other.x, other.y, targetHealth.IsAlive));
+            // 押し戻されている間は怯んでいるので、触れてもダメージを与えない。
             if (ContactEnabled
+                && !actor.IsKnockedBack
                 && targetHealth.IsAlive
                 && Time.time >= nextContactAt
                 && Vector2.Distance(self, other) <= contactRange)

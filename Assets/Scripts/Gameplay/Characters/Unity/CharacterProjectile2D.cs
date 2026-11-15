@@ -90,7 +90,9 @@ namespace FantasyRoyale.Gameplay.Characters.Unity
                     return false;
                 }
 
-                HitApplied?.Invoke(new CharacterHitEvent(Spec, hurtbox, result));
+                // 飛び道具は飛んできた向きへ押す。
+                var knockedBack = hurtbox.TryKnockBack(Direction, Spec.Knockback);
+                HitApplied?.Invoke(new CharacterHitEvent(Spec, hurtbox, result, knockedBack));
                 return true;
             }
 

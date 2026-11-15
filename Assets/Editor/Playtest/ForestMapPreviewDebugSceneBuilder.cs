@@ -74,6 +74,10 @@ namespace FantasyRoyale.Editor.Playtest
         private const float EnemyFramesPerSecond = 7f;
         private const float EnemyPivotY = 4f / 76f;
         private const float ChestPivotY = 0.08f;
+        // ゴールドの絵は28 pxの正方形で、縁取りの下端が下から2 pxにある。
+        private const int GoldFrameCount = 8;
+        private const int GoldSparkleFrameCount = 4;
+        private const float GoldPivotY = 2f / 28f;
 
         // 中心街の広場の南の出口を開始位置にする。広場の真ん中は噴水なので、周りの開けた所に立つ。
         private static readonly Vector2 SpawnPosition = new Vector2(60f, 47f);
@@ -247,6 +251,7 @@ namespace FantasyRoyale.Editor.Playtest
                 ShopSpots);
             bootstrap.ConfigureInventory(shield, magics);
             bootstrap.ConfigureHud(LoadOrCreateHudSkin());
+            bootstrap.ConfigureGold(LoadGoldFrames(), LoadGoldShadow(), LoadGoldSparkles());
             bootstrap.ConfigureShops(LoadOrCreateShopArt(), ShopKeeperIds);
 
             if (!EditorSceneManager.SaveScene(scene, ScenePath, false))
@@ -318,8 +323,8 @@ namespace FantasyRoyale.Editor.Playtest
 
             return new[]
             {
-                LoadOrCreateMagic("Fire", "fire", "炎の弾", 12, 22, 9f),
-                LoadOrCreateMagic("Ice", "ice", "氷のつぶて", 8, 14, 14f)
+                LoadOrCreateMagic("Fire", "fire", "炎の弾", 12, 22, 9f, 0.5f),
+                LoadOrCreateMagic("Ice", "ice", "氷のつぶて", 8, 14, 14f, 0.2f)
             };
         }
 
@@ -329,14 +334,15 @@ namespace FantasyRoyale.Editor.Playtest
             string displayName,
             int manaCost,
             int damage,
-            float projectileSpeed)
+            float projectileSpeed,
+            float knockback)
         {
             var actionPath = $"{MagicDataFolder}/{fileName}Action.asset";
             var action = AssetDatabase.LoadAssetAtPath<CharacterActionDefinition>(actionPath);
             if (action == null)
             {
                 action = ScriptableObject.CreateInstance<CharacterActionDefinition>();
-                action.ConfigureProjectile($"magic-{id}", damage, new CharacterActionTiming(0.2f, 0f, 0.3f), 6f, projectileSpeed);
+                action.ConfigureProjectile($"magic-{id}", damage, new CharacterActionTiming(0.2f, 0f, 0.3f), 6f, projectileSpeed, knockback);
                 AssetDatabase.CreateAsset(action, actionPath);
             }
 
@@ -358,8 +364,8 @@ namespace FantasyRoyale.Editor.Playtest
         private static void LinkSwordCombo()
         {
             var first = AssetDatabase.LoadAssetAtPath<CharacterActionDefinition>(SwordActionPath);
-            var second = LoadOrCreateSwordStep(SwordSecondStepPath, "sword-slash-2", 20, new CharacterActionTiming(0.1f, 0.1f, 0.2f), 1f, 180f);
-            var third = LoadOrCreateSwordStep(SwordThirdStepPath, "sword-slash-3", 35, new CharacterActionTiming(0.12f, 0.1f, 0.3f), 1f, 180f);
+            var second = LoadOrCreateSwordStep(SwordSecondStepPath, "sword-slash-2", 20, new CharacterActionTiming(0.1f, 0.1f, 0.2f), 1f, 180f, 0.4f);
+            var third = LoadOrCreateSwordStep(SwordThirdStepPath, "sword-slash-3", 35, new CharacterActionTiming(0.12f, 0.1f, 0.3f), 1f, 180f, 0.9f);
             first.SetNextInCombo(second);
             second.SetNextInCombo(third);
             EditorUtility.SetDirty(first);
@@ -373,13 +379,14 @@ namespace FantasyRoyale.Editor.Playtest
             int damage,
             CharacterActionTiming timing,
             float range,
-            float arcDegrees)
+            float arcDegrees,
+            float knockback)
         {
             var step = AssetDatabase.LoadAssetAtPath<CharacterActionDefinition>(path);
             if (step == null)
             {
                 step = ScriptableObject.CreateInstance<CharacterActionDefinition>();
-                step.ConfigureMelee(actionId, damage, timing, range, arcDegrees);
+                step.ConfigureMelee(actionId, damage, timing, range, arcDegrees, knockback);
                 AssetDatabase.CreateAsset(step, path);
             }
 
@@ -679,6 +686,42 @@ namespace FantasyRoyale.Editor.Playtest
             library.Configure(sprites.ToArray());
             EditorUtility.SetDirty(library);
             return library;
+        }
+
+        /// <summary>
+        /// `Tools/MapAuthoring/build_coin_frames.py`が書き出した、回るゴールドのコマを読み込む。足元が絵の下端に来る。
+        /// </summary>
+        private static Sprite[] LoadGoldFrames()
+        {
+            var frames = new Sprite[GoldFrameCount];
+            for (var frame = 0; frame < GoldFrameCount; frame++)
+            {
+                var path = $"{GameFolder}/coin-{frame}.png";
+                ImportSprite(path, new Vector2(0.5f, GoldPivotY));
+                frames[frame] = AssetDatabase.LoadAssetAtPath<Sprite>(path);
+            }
+
+            return frames;
+        }
+
+        private static Sprite[] LoadGoldSparkles()
+        {
+            var frames = new Sprite[GoldSparkleFrameCount];
+            for (var frame = 0; frame < GoldSparkleFrameCount; frame++)
+            {
+                var path = $"{GameFolder}/coin-sparkle-{frame}.png";
+                ImportSprite(path, new Vector2(0.5f, 0.5f));
+                frames[frame] = AssetDatabase.LoadAssetAtPath<Sprite>(path);
+            }
+
+            return frames;
+        }
+
+        private static Sprite LoadGoldShadow()
+        {
+            var path = $"{GameFolder}/coin-shadow.png";
+            ImportSprite(path, new Vector2(0.5f, 0.5f));
+            return AssetDatabase.LoadAssetAtPath<Sprite>(path);
         }
 
         private static Sprite LoadChestSprite(string name)

@@ -30,7 +30,7 @@ namespace FantasyRoyale.Gameplay.Characters
 
     /// <summary>
     /// 発生、持続、硬直の時間進行と、連撃のつながりを管理する純C#状態。
-    /// 開始後は割り込まれず、撃破時だけCancelで打ち切る。
+    /// 開始後は割り込まれず、撃破時と押し戻されたときだけCancelで打ち切る。
     /// 連撃は振っている間の入力を次の段へ予約し、硬直が終わると続ける。予約がなくても少しの間は続けられる。
     /// </summary>
     public sealed class CharacterActionState
@@ -165,7 +165,7 @@ namespace FantasyRoyale.Gameplay.Characters
         }
 
         /// <summary>
-        /// 撃破などでActionを続けられない場合に、途中でも待機へ戻す。
+        /// 撃破や押し戻しでActionを続けられない場合に、途中でも待機へ戻す。
         /// </summary>
         public void Cancel()
         {

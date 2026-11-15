@@ -48,6 +48,10 @@ Unity確認は、Repositoryではなく検証用Project`C:/Users/umiga/Documents
 
 大通りと広場の石畳は、`forest_layout.py`の`PAVED`の形を、`build_forest_map.py`の`paving`が仮の石の並びで塗る。石畳も後で描き直す。
 
+### 落ちるゴールド
+
+`Tools/MapAuthoring/`で`python build_coin_frames.py [--preview <gif>]`を実行する。`Assets/Art/Generated/ForestLook/Game/`へ回る8コマ`coin-0.png`〜`coin-7.png`、影`coin-shadow.png`、キラッと光る4コマ`coin-sparkle-0.png`〜`coin-sparkle-3.png`を書き出す。粗く見せるため、半分の解像度で描いて2倍に拡大する。画素は計算で決まり、出力は決まった結果になる。大きさや色を変えたら、Builderの`GoldPivotY`（足元の高さ）も絵に合わせ、森の確認用Sceneを作り直す。
+
 ### 騎士に合わせた宝箱
 
 `Tools/MapAuthoring/`で`python build_chest_frames.py [--preview <webp>]`を実行する。`Assets/Art/Generated/ForestLook/`の`prop-chest-01`、`03`、`04`、`05`から、`Chest/`へ55枚を書き出す。数秒で終わり、出力は決まった結果になる。`--preview`を付けると、騎士と並べて開ける動きと光のループを繰り返すWebPも書く。

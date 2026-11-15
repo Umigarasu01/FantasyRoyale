@@ -300,24 +300,125 @@ namespace FantasyRoyale.Playtest.Tests.PlayMode
         }
 
         /// <summary>
-        /// 剣で敵を倒すとコインが増え、敵は消える。
+        /// 剣で敵を倒すと敵は消えてゴールドが何枚も散らばり、近づくと吸い込んで拾い、拾った枚数だけ所持金が増える。
         /// </summary>
         [UnityTest]
-        public IEnumerator ForestMap_SwordDefeatsEnemyForCoin()
+        public IEnumerator ForestMap_SwordDefeatsEnemyAndGoldIsPickedUp()
         {
             yield return LoadForest();
             var enemy = preview.GetEnemyActor(0);
+            // 他のスライムが剣に巻き込まれて落とした分が混ざらないよう、1体だけにする。
+            for (var index = 1; index < preview.EnemyCount; index++)
+            {
+                preview.GetEnemyActor(index).gameObject.SetActive(false);
+            }
+
             var command = new CharacterActionCommand(CharacterActionSlot.Primary, CharacterDirection8.West);
             var timeoutAt = Time.time + 6f;
-            while (preview.Coins == 0 && Time.time < timeoutAt)
+            while (enemy.gameObject.activeSelf && Time.time < timeoutAt)
             {
+                // 押し戻されても届くよう、毎回スライムの東へ立って振る。
                 preview.PlayerActor.Body.position = enemy.Body.position + Vector2.right * 0.9f;
                 preview.PlayerCombat.TryStartAction(command);
                 yield return new WaitForFixedUpdate();
             }
 
-            Assert.That(preview.Coins, Is.EqualTo(1));
             Assert.That(enemy.gameObject.activeSelf, Is.False, "倒した敵は消えます。");
+            var dropped = preview.GoldDropCount;
+            Assert.That(
+                dropped,
+                Is.InRange(ForestMapPreviewDebug.GoldPerEnemyMin, ForestMapPreviewDebug.GoldPerEnemyMax),
+                "倒した敵はゴールドを何枚も落とします。");
+            Assert.That(preview.Coins, Is.Zero, "落ちただけでは所持金は増えません。");
+
+            // 吸い込む距離の外へ離れて待つと、散らばって止まり、拾われずに残る。
+            var center = enemy.Body.position;
+            preview.PlayerActor.Body.position = center + Vector2.right * (ForestMapPreviewDebug.GoldMagnetRadius + 2f);
+            timeoutAt = Time.time + 3f;
+            while (!AllGoldResting() && Time.time < timeoutAt)
+            {
+                yield return null;
+            }
+
+            Assert.That(AllGoldResting(), Is.True, "散らばったゴールドは止まります。");
+            Assert.That(preview.GoldDropCount, Is.EqualTo(dropped), "離れていれば拾いません。");
+            var farthest = 0f;
+            var resting = new Vector2[dropped];
+            for (var index = 0; index < dropped; index++)
+            {
+                resting[index] = preview.GetGoldDropPosition(index);
+                farthest = Mathf.Max(farthest, Vector2.Distance(resting[index], center));
+                Assert.That(Vector2.Distance(resting[index], center), Is.LessThan(ForestMapPreviewDebug.GoldMagnetRadius));
+            }
+
+            Assert.That(farthest, Is.GreaterThan(0.4f), "ゴールドは倒した場所から散らばります。");
+            yield return new WaitForSeconds(0.3f);
+            for (var index = 0; index < dropped; index++)
+            {
+                Assert.That(preview.GetGoldDropPosition(index), Is.EqualTo(resting[index]), "離れていれば吸い込みません。");
+            }
+
+            // 散らばった真ん中へ立つと、全てが吸い込まれ、1枚ごとに所持金が増える。
+            preview.PlayerActor.Body.position = center;
+            timeoutAt = Time.time + 2f;
+            while (preview.GoldDropCount > 0 && Time.time < timeoutAt)
+            {
+                yield return null;
+            }
+
+            Assert.That(preview.GoldDropCount, Is.Zero, "近づくと全て吸い込んで拾います。");
+            Assert.That(preview.Coins, Is.EqualTo(dropped), "拾った枚数だけ所持金が増えます。");
+        }
+
+        private bool AllGoldResting()
+        {
+            for (var index = 0; index < preview.GoldDropCount; index++)
+            {
+                if (!preview.IsGoldDropResting(index))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// スライムは軽いので、剣の一段目で標準の重さより遠くへ、斬った向きへ飛ぶ。
+        /// </summary>
+        [UnityTest]
+        public IEnumerator ForestMap_SlimeIsLightAndFliesFarWhenHit()
+        {
+            yield return LoadForest();
+            var enemy = preview.GetEnemyActor(0);
+            Assert.That(enemy.Knockback.Weight, Is.EqualTo(ForestMapPreviewDebug.SlimeKnockbackWeight));
+            preview.PlayerActor.Body.position = enemy.Body.position + Vector2.right * 0.9f;
+            yield return new WaitForFixedUpdate();
+
+            var swing = preview.PlayerCombat.ActionState;
+            Assert.That(
+                preview.PlayerCombat.TryStartAction(new CharacterActionCommand(CharacterActionSlot.Primary, CharacterDirection8.West)),
+                Is.True);
+            var knockback = swing.CurrentSpec.Knockback;
+            // スライムは振りかぶる間も騎士へ寄ってくるので、斬られる直前の位置から測る。
+            var start = enemy.Body.position;
+            var timeoutAt = Time.time + 2f;
+            while (!enemy.IsKnockedBack && Time.time < timeoutAt)
+            {
+                start = enemy.Body.position;
+                yield return new WaitForFixedUpdate();
+            }
+
+            Assert.That(enemy.IsKnockedBack, Is.True, "斬られたスライムは押し戻されます。");
+            Assert.That(enemy.Knockback.Distance, Is.EqualTo(knockback / ForestMapPreviewDebug.SlimeKnockbackWeight).Within(1e-4f));
+            Assert.That(enemy.Knockback.Distance, Is.GreaterThan(knockback), "軽いので標準の重さより遠くへ飛びます。");
+            while (enemy.IsKnockedBack)
+            {
+                yield return new WaitForFixedUpdate();
+            }
+
+            var moved = enemy.Body.position - start;
+            Assert.That(moved.x, Is.LessThan(-knockback), "斬った向き（西）へ、標準の距離より遠く飛びます。");
         }
 
         /// <summary>
@@ -1356,7 +1457,12 @@ namespace FantasyRoyale.Playtest.Tests.PlayMode
                 Assert.That(preview.GetEnemyActor(index).gameObject.activeSelf, Is.False, "倒した敵は消えます。");
             }
 
-            Assert.That(preview.Coins, Is.EqualTo(preview.EnemyCount));
+            Assert.That(
+                preview.GoldDropCount + preview.Coins,
+                Is.InRange(
+                    preview.EnemyCount * ForestMapPreviewDebug.GoldPerEnemyMin,
+                    preview.EnemyCount * ForestMapPreviewDebug.GoldPerEnemyMax),
+                "1体ごとにゴールドを何枚も落とします。");
             Assert.That(preview.DefeatAllEnemies(), Is.EqualTo(0), "倒した敵はもう一度倒しません。");
         }
 
@@ -1410,7 +1516,10 @@ namespace FantasyRoyale.Playtest.Tests.PlayMode
             yield return Swing(enemy, CharacterDirection8.West, 0.9f);
             Assert.That(health.IsAlive, Is.False, "ワンパンの間は一振りで倒れます。");
             Assert.That(enemy.gameObject.activeSelf, Is.False, "倒した敵は消えます。");
-            Assert.That(preview.Coins, Is.EqualTo(1));
+            Assert.That(
+                preview.GoldDropCount + preview.Coins,
+                Is.InRange(ForestMapPreviewDebug.GoldPerEnemyMin, ForestMapPreviewDebug.GoldPerEnemyMax),
+                "倒した敵はゴールドを何枚も落とします。");
         }
 
         /// <summary>

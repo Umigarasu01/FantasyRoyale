@@ -17,6 +17,11 @@ namespace FantasyRoyale.Gameplay.Characters.Unity
         /// </summary>
         public const int MaxComboLength = 8;
 
+        /// <summary>
+        /// Knockbackを指定せずに作ったActionの押し戻し距離。
+        /// </summary>
+        public const float DefaultKnockback = 0.4f;
+
         [SerializeField] private string actionId = string.Empty;
         [SerializeField] private CharacterActionKind kind = CharacterActionKind.Melee;
         [SerializeField] private CharacterActionMotion motion = CharacterActionMotion.Swing;
@@ -27,6 +32,8 @@ namespace FantasyRoyale.Gameplay.Characters.Unity
         [SerializeField, Min(0.01f)] private float range = 1f;
         [SerializeField, Range(1f, 360f)] private float arcDegrees = 120f;
         [SerializeField, Min(0.01f)] private float projectileSpeed = 12f;
+        [Tooltip("当たった相手を押し戻す距離（Unity単位）。相手のアーマーの分だけ短くなる。0なら押さない。")]
+        [SerializeField, Min(0f)] private float knockback = DefaultKnockback;
         [SerializeField] private CharacterActionDefinition nextInCombo;
 
         public string ActionId => actionId;
@@ -44,7 +51,13 @@ namespace FantasyRoyale.Gameplay.Characters.Unity
         /// <summary>
         /// Editor Builderから近接Actionの値をまとめて設定する。
         /// </summary>
-        public void ConfigureMelee(string newActionId, int newDamage, CharacterActionTiming timing, float newRange, float newArcDegrees)
+        public void ConfigureMelee(
+            string newActionId,
+            int newDamage,
+            CharacterActionTiming timing,
+            float newRange,
+            float newArcDegrees,
+            float newKnockback = DefaultKnockback)
         {
             actionId = newActionId;
             kind = CharacterActionKind.Melee;
@@ -53,12 +66,19 @@ namespace FantasyRoyale.Gameplay.Characters.Unity
             ApplyTiming(timing);
             range = newRange;
             arcDegrees = newArcDegrees;
+            knockback = newKnockback;
         }
 
         /// <summary>
         /// Editor Builderから遠隔Actionの値をまとめて設定する。
         /// </summary>
-        public void ConfigureProjectile(string newActionId, int newDamage, CharacterActionTiming timing, float newRange, float newProjectileSpeed)
+        public void ConfigureProjectile(
+            string newActionId,
+            int newDamage,
+            CharacterActionTiming timing,
+            float newRange,
+            float newProjectileSpeed,
+            float newKnockback = DefaultKnockback)
         {
             actionId = newActionId;
             kind = CharacterActionKind.Projectile;
@@ -67,6 +87,7 @@ namespace FantasyRoyale.Gameplay.Characters.Unity
             ApplyTiming(timing);
             range = newRange;
             projectileSpeed = newProjectileSpeed;
+            knockback = newKnockback;
         }
 
         /// <summary>
@@ -95,8 +116,8 @@ namespace FantasyRoyale.Gameplay.Characters.Unity
             var next = nextInCombo == null ? null : nextInCombo.CreateSpec(step + 1);
             var timing = new CharacterActionTiming(windupSeconds, activeSeconds, recoverySeconds);
             return kind == CharacterActionKind.Projectile
-                ? CharacterActionSpec.CreateProjectile(actionId, damage, timing, range, projectileSpeed, motion)
-                : CharacterActionSpec.CreateMelee(actionId, damage, timing, range, arcDegrees, motion, next);
+                ? CharacterActionSpec.CreateProjectile(actionId, damage, timing, range, projectileSpeed, motion, knockback)
+                : CharacterActionSpec.CreateMelee(actionId, damage, timing, range, arcDegrees, motion, next, knockback);
         }
 
         private void ApplyTiming(CharacterActionTiming timing)

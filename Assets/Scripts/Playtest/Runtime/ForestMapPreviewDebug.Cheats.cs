@@ -73,7 +73,7 @@ namespace FantasyRoyale.Playtest
         }
 
         /// <summary>
-        /// 出ている敵を全て倒し、倒した数を返す。剣で倒したときと同じく、1体ごとにコインが増え、時間が経つと持ち場へ戻る。
+        /// 出ている敵を全て倒し、倒した数を返す。剣で倒したときと同じく、1体ごとにゴールドを落とし、時間が経つと持ち場へ戻る。
         /// </summary>
         public int DefeatAllEnemies()
         {

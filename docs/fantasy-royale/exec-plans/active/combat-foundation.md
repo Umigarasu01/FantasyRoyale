@@ -52,6 +52,7 @@
 - 2026-11-08、所有者の判断で、近接攻撃の判定は斬撃のエフェクトで表す。扇の中心を足元から剣を振る高さ（`CharacterCombat2D.MeleeOrigin`）へ移し、相手は見えている体の大きさの範囲で受ける。Coreの`IsInMeleeArea`は変えていない。攻撃範囲は武器ごとのActionが持つ。下の表の剣の範囲は最初の値で、今は距離1.0、180度である。詳細は[Forest Map Preview Debug Scene](../../design-docs/scenes/forest-map-preview-debug-scene.md#攻撃の判定と斬撃)にある。
 - 矢はRigidbodyを持たず、毎回の移動区間をCircleCastで先に調べる。
 - 近接攻撃は壁を貫通する。壁で止めるかは、戦闘を触ってから判断する。
+- 2026-11-14、所有者の依頼で、攻撃にヒットバックとアーマーを加えた。押す距離は`CharacterActionSpec.Knockback`（定義Assetの`knockback`）で、Actionごとに持つ。押し戻しとアーマーは純C#の`CharacterKnockback`が持ち、`CharacterActor2D`が押されている間だけ移動Commandの代わりに押す向きへ`MovePosition`する。命中時に`CharacterHurtbox2D.TryKnockBack`が親のActorへ渡し、Actorを持たない的は押されない。押されたら`CharacterActor2D.KnockedBack`で`CharacterCombat2D`が攻撃を止める。アーマーは「押す距離からアーマーを引く」形にし、強い攻撃ならボスも少し押せる余地を残した。無限大でスーパーアーマーになる。同日、所有者がスライムを軽くしたいと言ったので、引き算のアーマーでは軽くできないため、押す距離を割る重さ（`CharacterKnockback.Weight`、Actorの`knockbackWeight` / `SetKnockbackWeight`）を別に足し、スライムを0.6にした。挙動は[装備と動きの要件](../../product-specs/equipment-and-motion.md#ヒットバックとアーマー)にある。
 
 ## Decision Gate
 
@@ -96,6 +97,7 @@ Assemblyは既存の`FantasyRoyale.Gameplay.Characters.Core`と`FantasyRoyale.Ga
 - Step 2完了時: C# 12 Projectが0 warning / 0 error、EditMode 83 passed、PlayMode 4 passed。
 - Step 4完了時: EditMode 279 / 279成功。PlayMode 9 / 14成功で、失敗5件は[Build・Test手順](../../development/testing.md)に記録した既存のStudyAのSetUp失敗。
 - PlayModeの攻撃Test5件は、仮想KeyboardからInput Action、Adapter、Combat、Physics、HPまで本番の経路を通す。
+- 2026-11-14、ヒットバックとアーマーを加えた後: EditMode 373 / 373成功。PlayMode 54件中48件成功で、`CharacterKnockbackPlayModeTests`の2件（押されて攻撃が止まる、アーマーで押されず攻撃が続く）を含む。失敗6件は既存のStudyA 5件と、操作キーをEからFへ変えた前のコミットで外れた`ExplorationPreview_HealingFountainUsesAdjustedSocketAndRuntimeState`である。実画面での手触りは未確認。
 - 斬撃、矢、倒れた的の表示は一時的な撮影Testの画像で確認した。2026-11-06に所有者がRepositoryのProjectで実際に操作し、攻撃が動くことを確認した。武器の数値と手触りの調整は未了。
 
 ## 完了結果

@@ -17,6 +17,10 @@ namespace FantasyRoyale.Gameplay.Characters.Unity
         [SerializeField] private Vector2 footColliderOffset = new Vector2(0f, 0.22f);
         [SerializeField, Min(0.01f)] private float jumpHeight = 0.5f;
         [SerializeField, Min(0.05f)] private float jumpSeconds = 0.42f;
+        [Tooltip("攻撃のKnockbackから差し引く値。ボスなどは大きくすると押されにくく、攻撃も止められにくい。")]
+        [SerializeField, Min(0f)] private float knockbackArmor;
+        [Tooltip("攻撃のKnockbackを割る値。1が標準で、小さいほど軽く、遠くへ飛ぶ。")]
+        [SerializeField, Min(0.01f)] private float knockbackWeight = 1f;
 
         // 斜めの2つのキーは同時には離れない。斜めから隣の向きへ変わっても、この間は斜めの向きを保つ。
         // その間に止まれば斜めの向きのまま立つので、止まって斜めへ振れる。
@@ -27,10 +31,22 @@ namespace FantasyRoyale.Gameplay.Characters.Unity
         private CharacterMoveCommand moveCommand;
         private float movementScale = 1f;
         private CharacterJump jump;
+        private CharacterKnockback knockback = new CharacterKnockback();
         private CharacterDirection8? releasedFacing;
         private float releasedAt;
 
         public CharacterHealth Health { get; private set; }
+
+        /// <summary>
+        /// 攻撃で押し戻されたときに発生する。攻撃中のActionはこれを受けて止まる。
+        /// </summary>
+        public event Action KnockedBack;
+
+        /// <summary>
+        /// 押し戻しとアーマーの状態。押されている間は移動入力を受け付けない。
+        /// </summary>
+        public CharacterKnockback Knockback => knockback;
+        public bool IsKnockedBack => knockback.IsActive;
 
         /// <summary>
         /// 跳躍の状態。見た目だけの跳躍なので、足元の位置と当たり判定は変えない。
@@ -66,6 +82,40 @@ namespace FantasyRoyale.Gameplay.Characters.Unity
             moveCommand = CharacterMoveCommand.None;
             movementScale = 1f;
             jump = new CharacterJump(jumpHeight, jumpSeconds);
+            knockback = new CharacterKnockback(knockbackArmor, knockbackWeight);
+        }
+
+        /// <summary>
+        /// アーマーを変える。ボスなどは大きくし、float.PositiveInfinityなら決して押されない（スーパーアーマー）。
+        /// </summary>
+        public void SetKnockbackArmor(float armor)
+        {
+            knockback.SetArmor(armor);
+            knockbackArmor = armor;
+        }
+
+        /// <summary>
+        /// 重さを変える。1が標準で、スライムのような軽い相手は小さくすると遠くへ飛ぶ。
+        /// </summary>
+        public void SetKnockbackWeight(float weight)
+        {
+            knockback.SetWeight(weight);
+            knockbackWeight = weight;
+        }
+
+        /// <summary>
+        /// 生きていれば、攻撃のKnockbackを重さで割ってアーマーを引いた距離だけ指定の向きへ押し戻す。
+        /// 押されたらtrueを返し、KnockedBackを発生させる。アーマーで防いだときは何も起きない。
+        /// </summary>
+        public bool TryKnockBack(Vector2 direction, float power)
+        {
+            if (Health == null || !Health.IsAlive || !knockback.TryStart(power, direction.x, direction.y))
+            {
+                return false;
+            }
+
+            KnockedBack?.Invoke();
+            return true;
         }
 
         /// <summary>
@@ -177,7 +227,16 @@ namespace FantasyRoyale.Gameplay.Characters.Unity
             if (Health == null || !Health.IsAlive)
             {
                 moveCommand = CharacterMoveCommand.None;
+                knockback.Cancel();
                 body.linearVelocity = Vector2.zero;
+                return;
+            }
+
+            // 押し戻されている間は入力で動かず、押される向きへだけ進む。壁はPhysicsが止める。
+            if (knockback.IsActive)
+            {
+                var pushed = new Vector2(knockback.DirectionX, knockback.DirectionY) * knockback.Advance(Time.fixedDeltaTime);
+                body.MovePosition(body.position + pushed);
                 return;
             }
 

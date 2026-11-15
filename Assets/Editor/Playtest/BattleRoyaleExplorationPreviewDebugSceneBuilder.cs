@@ -190,7 +190,7 @@ namespace FantasyRoyale.Editor.Playtest
             if (sword == null)
             {
                 sword = ScriptableObject.CreateInstance<CharacterActionDefinition>();
-                sword.ConfigureMelee("sword-slash", 20, new CharacterActionTiming(0.1f, 0.1f, 0.2f), 1f, 180f);
+                sword.ConfigureMelee("sword-slash", 20, new CharacterActionTiming(0.1f, 0.1f, 0.2f), 1f, 180f, 0.4f);
                 AssetDatabase.CreateAsset(sword, SwordActionPath);
             }
 
@@ -198,7 +198,7 @@ namespace FantasyRoyale.Editor.Playtest
             if (bow == null)
             {
                 bow = ScriptableObject.CreateInstance<CharacterActionDefinition>();
-                bow.ConfigureProjectile("bow-shot", 12, new CharacterActionTiming(0.25f, 0f, 0.3f), 6f, 12f);
+                bow.ConfigureProjectile("bow-shot", 12, new CharacterActionTiming(0.25f, 0f, 0.3f), 6f, 12f, 0.3f);
                 AssetDatabase.CreateAsset(bow, BowActionPath);
             }
 

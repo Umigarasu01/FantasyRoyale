@@ -42,6 +42,9 @@ namespace FantasyRoyale.Playtest
         // 敵と宝箱の仮の数値。遊びながら調整する。
         private const int EnemyHealthPoints = 40;
         private const float EnemySpeed = 3f;
+
+        // スライムは軽く、攻撃で騎士より遠くへ飛ぶ（2026-11-14、所有者）。押す距離は攻撃のKnockbackをこれで割る。
+        public const float SlimeKnockbackWeight = 0.6f;
         private const float EnemyNoticeRange = 6f;
         private const float EnemyLeashRange = 14f;
         private const float EnemyStopRange = 0.6f;
@@ -60,7 +63,6 @@ namespace FantasyRoyale.Playtest
         private const int BowPrice = 20;
         private const int ActiveEnemyCount = 12;
         private const int ActiveChestCount = 4;
-        private const int CoinsPerEnemy = 1;
         private const int CoinsPerChest = 10;
 
         // ハートの数え方は所有者が決める。決まるまでの仮の値で、HP 100でハート5つ、敵の接触10で半分欠ける。
@@ -617,6 +619,7 @@ namespace FantasyRoyale.Playtest
             var actor = enemyObject.AddComponent<CharacterActor2D>();
             var health = new CharacterHealth(EnemyHealthPoints);
             actor.Initialize(health, EnemySpeed);
+            actor.SetKnockbackWeight(SlimeKnockbackWeight);
             enemyObject.AddComponent<CharacterSpriteAnimator2D>().Initialize(enemySprites);
             var hurtbox = enemyObject.AddComponent<CharacterHurtbox2D>();
             hurtbox.Initialize(new OneHitHealth(health, this));
@@ -668,6 +671,7 @@ namespace FantasyRoyale.Playtest
             SkillCooldown.Advance(Time.deltaTime);
             UpdatePlayerDown();
             UpdateEnemies();
+            UpdateGoldDrops();
             combatPresenter.Tick(Time.deltaTime);
         }
 
@@ -802,11 +806,11 @@ namespace FantasyRoyale.Playtest
         }
 
         /// <summary>
-        /// HPが尽きた敵を隠してコインを渡し、時間が経ったら持ち場へ戻す。
+        /// HPが尽きた敵を隠して足元からゴールドを何枚も散らばらせ、時間が経ったら持ち場へ戻す。ゴールドは拾うと所持金になる。
         /// </summary>
         private void DefeatEnemy(Enemy enemy)
         {
-            Coins += CoinsPerEnemy;
+            DropGold(enemy.Actor.Body.position);
             enemy.Defeat(Time.time + EnemyRespawnSeconds);
         }
 
@@ -826,6 +830,8 @@ namespace FantasyRoyale.Playtest
             {
                 SortByFeet(enemies[index].Renderer, enemies[index].Object.transform.position.y);
             }
+
+            SortGoldDrops();
 
             // Play中にInspectorで高さを変えて見比べられるよう、毎Frame反映する。
             gameplayCamera.orthographicSize = cameraHeight * 0.5f;
@@ -874,6 +880,7 @@ namespace FantasyRoyale.Playtest
 
         private void OnDestroy()
         {
+            DestroyGoldDrops();
             if (PlayerCombat != null)
             {
                 PlayerCombat.HitApplied -= OnHitApplied;

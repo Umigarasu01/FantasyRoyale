@@ -11,6 +11,8 @@ namespace FantasyRoyale.Gameplay.Characters.Unity
     [DisallowMultipleComponent]
     public sealed class CharacterHurtbox2D : MonoBehaviour
     {
+        private CharacterActor2D actor;
+
         public ICharacterHealthTarget Target { get; private set; }
 
         /// <summary>
@@ -19,6 +21,19 @@ namespace FantasyRoyale.Gameplay.Characters.Unity
         public void Initialize(ICharacterHealthTarget target)
         {
             Target = target ?? throw new ArgumentNullException(nameof(target));
+        }
+
+        /// <summary>
+        /// 同じGameObjectか親のActorを押し戻す。Actorを持たない的は押されない。押されたらtrueを返す。
+        /// </summary>
+        public bool TryKnockBack(Vector2 direction, float power)
+        {
+            if (actor == null)
+            {
+                actor = GetComponentInParent<CharacterActor2D>();
+            }
+
+            return actor != null && actor.TryKnockBack(direction, power);
         }
     }
 }

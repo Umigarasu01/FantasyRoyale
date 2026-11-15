@@ -1,5 +1,27 @@
 # GeneratedAssets
 
+## 2026-11-15 落ちるゴールド
+
+状態: **仮で採用**。森の確認用Sceneで、倒した敵が落とすゴールドに使う。
+
+所有者が、HUDのコインは引きの画面でコインに見えづらいと言ったので描いた。続けて「もっと粗めでキラキラしてる感じ」と言われ、半分の解像度で描いて2倍に拡大する粗いドットにし、キラッと光る十字の4コマを足した。画像生成APIは使っていない。`Tools/MapAuthoring/build_coin_frames.py`が画素を計算で決めるので、実行すると毎回同じ画素になる。1ドット2 pxで、28 pxの正方形に直径11ドット（22 px、約0.34単位、騎士の高さの約3分の1）の面を、焦げ茶の縁取り、明るい金、左上の白い光り、右下だけ暗い縁で描く。回る8コマで、横を向くコマは厚みを見せる。影は20×8 pxの暗い楕円。光りは14 pxの正方形で、芯から十字が伸びて縮む。
+
+| 保存先 | SHA-256 |
+| --- | --- |
+| `Assets/Art/Generated/ForestLook/Game/coin-0.png` | 7cb63cd4325bef665ab15c18e40dff0d267a2986ce18653526b07b11e786d8d1 |
+| `Assets/Art/Generated/ForestLook/Game/coin-1.png` | 66630fe2c6a5608f3b95c12a333b311a48645498ffb8cd1d67523ef7e00e4c02 |
+| `Assets/Art/Generated/ForestLook/Game/coin-2.png` | d62d349f308704cae1c09b572da14c5ff41412c879ffb607cddf0ab33b482452 |
+| `Assets/Art/Generated/ForestLook/Game/coin-3.png` | b89477fe63ef323542f9c6eaacca9b4caa4528f3d6715481c5b27aa324281294 |
+| `Assets/Art/Generated/ForestLook/Game/coin-4.png` | 274e191f062c5ec89a0b662bb320ce6327b6c858a404c5c039204752c0628a48 |
+| `Assets/Art/Generated/ForestLook/Game/coin-5.png` | b89477fe63ef323542f9c6eaacca9b4caa4528f3d6715481c5b27aa324281294 |
+| `Assets/Art/Generated/ForestLook/Game/coin-6.png` | d62d349f308704cae1c09b572da14c5ff41412c879ffb607cddf0ab33b482452 |
+| `Assets/Art/Generated/ForestLook/Game/coin-7.png` | 66630fe2c6a5608f3b95c12a333b311a48645498ffb8cd1d67523ef7e00e4c02 |
+| `Assets/Art/Generated/ForestLook/Game/coin-shadow.png` | 84c06286b7ff9beec069b3ac5e4a1238f02ce17b15a43ec40f460606027e0ab1 |
+| `Assets/Art/Generated/ForestLook/Game/coin-sparkle-0.png` | 61e741ada1538ca396c59d9f58206946a0c092693e40d8e8e19a063dc2df2153 |
+| `Assets/Art/Generated/ForestLook/Game/coin-sparkle-1.png` | c2e0f1905489d6911b9b412ab91da6b881aaf9f73e47d1d7f905297ce0c3ad37 |
+| `Assets/Art/Generated/ForestLook/Game/coin-sparkle-2.png` | 3d5e972327b254691c75e5e6cbc4db9a11021de02310a2637feb86f1bdffb1eb |
+| `Assets/Art/Generated/ForestLook/Game/coin-sparkle-3.png` | 61e741ada1538ca396c59d9f58206946a0c092693e40d8e8e19a063dc2df2153 |
+
 ## 2026-11-08 騎士に合わせた宝箱
 
 状態: **候補**。ゲームの宝箱`Game/chest-*.png`は置き換えていない。

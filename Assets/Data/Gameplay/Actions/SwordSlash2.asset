@@ -22,4 +22,5 @@ MonoBehaviour:
   range: 1
   arcDegrees: 180
   projectileSpeed: 12
+  knockback: 0.4
   nextInCombo: {fileID: 11400000, guid: 924e5015b16fa0340b2c0d633e9dca50, type: 2}

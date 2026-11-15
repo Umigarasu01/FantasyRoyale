@@ -13,16 +13,23 @@ namespace FantasyRoyale.Gameplay.Characters.Unity
         public CharacterHitEvent(
             CharacterActionSpec spec,
             CharacterHurtbox2D hurtbox,
-            CharacterHealthChangeResult result)
+            CharacterHealthChangeResult result,
+            bool knockedBack = false)
         {
             Spec = spec;
             Hurtbox = hurtbox;
             Result = result;
+            KnockedBack = knockedBack;
         }
 
         public CharacterActionSpec Spec { get; }
         public CharacterHurtbox2D Hurtbox { get; }
         public CharacterHealthChangeResult Result { get; }
+
+        /// <summary>
+        /// 相手が押し戻されたか。アーマーで防がれた、倒れた、Actorを持たない的ではfalseである。
+        /// </summary>
+        public bool KnockedBack { get; }
     }
 
     /// <summary>
@@ -94,7 +101,7 @@ namespace FantasyRoyale.Gameplay.Characters.Unity
         /// </summary>
         public bool TryStartAction(CharacterActionCommand command)
         {
-            if (Loadout == null || actor.Health == null || !actor.Health.IsAlive)
+            if (Loadout == null || actor.Health == null || !actor.Health.IsAlive || actor.IsKnockedBack)
             {
                 return false;
             }
@@ -112,6 +119,29 @@ namespace FantasyRoyale.Gameplay.Characters.Unity
         {
             actor = GetComponent<CharacterActor2D>();
             overlapFilter = new ContactFilter2D().NoFilter();
+            actor.KnockedBack += OnKnockedBack;
+        }
+
+        private void OnDestroy()
+        {
+            if (actor != null)
+            {
+                actor.KnockedBack -= OnKnockedBack;
+            }
+        }
+
+        /// <summary>
+        /// 押し戻されたら、攻撃は途中でも止まる。アーマーで防いだときはこれが呼ばれず、攻撃を続ける。
+        /// </summary>
+        private void OnKnockedBack()
+        {
+            if (!actionState.IsBusy)
+            {
+                return;
+            }
+
+            actionState.Cancel();
+            actor.SetMovementScale(1f);
         }
 
         /// <summary>
@@ -187,9 +217,25 @@ namespace FantasyRoyale.Gameplay.Characters.Unity
                 if (spec.IsInMeleeArea(offset.x, offset.y, direction)
                     && hitTracker.TryHit(hurtbox.Target, out var result))
                 {
-                    HitApplied?.Invoke(new CharacterHitEvent(spec, hurtbox, result));
+                    var knockedBack = hurtbox.TryKnockBack(MeleePushDirection(hurtbox, direction), spec.Knockback);
+                    HitApplied?.Invoke(new CharacterHitEvent(spec, hurtbox, result, knockedBack));
                 }
             }
+        }
+
+        /// <summary>
+        /// 近接攻撃で相手を押す向き。攻撃者の足元から相手の足元への向きで、重なっていれば振った向きにする。
+        /// </summary>
+        private Vector2 MeleePushDirection(CharacterHurtbox2D hurtbox, CharacterDirection8 direction)
+        {
+            var away = (Vector2)hurtbox.transform.position - actor.Body.position;
+            if (away.sqrMagnitude > 1e-6f)
+            {
+                return away;
+            }
+
+            CharacterDirections.ToUnitVector(direction, out var x, out var y);
+            return new Vector2(x, y);
         }
 
         /// <summary>
