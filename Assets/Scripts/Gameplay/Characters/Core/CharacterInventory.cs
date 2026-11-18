@@ -202,6 +202,93 @@ namespace FantasyRoyale.Gameplay.Characters
         }
 
         /// <summary>
+        /// 番号の空いた使用枠へ入れる。使う物でないか、枠が空いていなければ何も変えずにfalseを返す。
+        /// 店で品物を枠へ運んで買うときに使う。
+        /// </summary>
+        public bool TryPutInQuick(CharacterItem item, int index)
+        {
+            if (item == null || item.Kind != CharacterItemKind.Consumable || Contains(item)
+                || index < 0 || index >= quick.Length || quick[index] != null)
+            {
+                return false;
+            }
+
+            quick[index] = item;
+            if (quick[selectedQuickIndex] == null)
+            {
+                selectedQuickIndex = index;
+            }
+
+            Changed?.Invoke();
+            return true;
+        }
+
+        /// <summary>
+        /// 番号の空いたカバンの枠へ入れる。枠が空いていなければ何も変えずにfalseを返す。
+        /// </summary>
+        public bool TryPutInBag(CharacterItem item, int index)
+        {
+            if (item == null || Contains(item) || index < 0 || index >= bag.Length || bag[index] != null)
+            {
+                return false;
+            }
+
+            bag[index] = item;
+            Changed?.Invoke();
+            return true;
+        }
+
+        /// <summary>
+        /// カバンか使用枠の物を、カバンか使用枠の別の枠へ動かす。埋まっていれば入れ替える。
+        /// 使用枠に使う物でない物が入ることになるか、元が空なら何も変えずにfalseを返す。
+        /// </summary>
+        public bool TryMoveStored(bool fromQuick, int from, bool toQuick, int to)
+        {
+            var source = fromQuick ? quick : bag;
+            var target = toQuick ? quick : bag;
+            if (from < 0 || from >= source.Length || to < 0 || to >= target.Length || source[from] == null)
+            {
+                return false;
+            }
+
+            if (source == target && from == to)
+            {
+                return false;
+            }
+
+            var moving = source[from];
+            var other = target[to];
+            if ((toQuick && moving.Kind != CharacterItemKind.Consumable)
+                || (fromQuick && other != null && other.Kind != CharacterItemKind.Consumable))
+            {
+                return false;
+            }
+
+            target[to] = moving;
+            source[from] = other;
+            SelectNextFilledIfEmpty();
+            Changed?.Invoke();
+            return true;
+        }
+
+        /// <summary>
+        /// 着けている装備を外して、番号の空いたカバンの枠へ入れる。枠が埋まっていれば何も変えずにfalseを返す。
+        /// </summary>
+        public bool TryUnequipTo(CharacterEquipSlot slot, int bagIndex)
+        {
+            var item = equipped[(int)slot];
+            if (item == null || bagIndex < 0 || bagIndex >= bag.Length || bag[bagIndex] != null)
+            {
+                return false;
+            }
+
+            Release(item);
+            bag[bagIndex] = item;
+            Changed?.Invoke();
+            return true;
+        }
+
+        /// <summary>
         /// カバンの枠から物を取り出して返す。捨てるときに使う。
         /// </summary>
         public CharacterItem RemoveFromBag(int index)

@@ -14,7 +14,17 @@ namespace FantasyRoyale.Gameplay.Hud
         None,
         Item,
         Buy,
-        Close
+        Close,
+        /// <summary>カバンの枠。番号は枠の番号。</summary>
+        Bag,
+        /// <summary>使用枠。番号は枠の番号。</summary>
+        Quick,
+        /// <summary>装備の枠。番号は頭、胴、足、メイン武器、オフハンドの順の0から4。</summary>
+        Equipment,
+        /// <summary>店の枠の、行やキーでない所。</summary>
+        ShopArea,
+        /// <summary>持ち物の枠の、カバンや使用枠でない所。</summary>
+        InventoryArea
     }
 
     /// <summary>画面の位置が、店の画面のどこに当たるか。</summary>
@@ -27,7 +37,7 @@ namespace FantasyRoyale.Gameplay.Hud
         }
 
         public ShopHitKind Kind { get; }
-        /// <summary>品物の行に当たったときの、品物の番号。ほかは-1。</summary>
+        /// <summary>品物の行に当たったときの品物の番号、カバン、使用枠、装備の枠に当たったときの枠の番号。ほかは-1。</summary>
         public int ItemIndex { get; }
     }
 
@@ -65,6 +75,9 @@ namespace FantasyRoyale.Gameplay.Hud
         private static readonly Color BetterColour = new Color(0.45f, 0.9f, 0.4f, 1f);
         private static readonly Color WorseColour = new Color(0.95f, 0.42f, 0.36f, 1f);
         private static readonly Color MessageColour = new Color(0.98f, 0.62f, 0.52f, 1f);
+        // 掴んだ物は、カバンの枠と同じ大きさの正方形になる。
+        private static readonly Vector2 DragFrameSize = new Vector2(70f, 70f);
+        private const string DefaultGuide = "ドラッグか右クリックで売り買い";
         private static readonly Color KeyLetterColour = new Color(0.07f, 0.07f, 0.08f, 1f);
         // 乗ったキーは白のまま少し大きくする。金にすると、金の矢印のカーソルと見分けにくい。
         private const float KeyHoverScale = 1.12f;
@@ -97,6 +110,12 @@ namespace FantasyRoyale.Gameplay.Hud
         private readonly Image[] bag = new Image[BagSlots];
         private readonly Key closeKey;
         private readonly Key buyKey;
+        private readonly RectTransform shopPanel;
+        private readonly RectTransform inventoryPanel;
+        private readonly Text guide;
+        private readonly HudDragVisual drag;
+        private readonly Image[] equipmentIcons;
+        private ShopScreenModel model;
         private int firstRow;
         private ShopHitKind hovered;
 
@@ -117,6 +136,8 @@ namespace FantasyRoyale.Gameplay.Hud
             container.anchoredPosition = new Vector2(0f, ContainerOffsetY);
             var shop = HudLayout.NewPanel("ShopPanel", container, skin.Panel, ShopPanelSize, HudLayout.TopLeft).rectTransform;
             var inventory = HudLayout.NewPanel("InventoryPanel", container, skin.Panel, InventoryPanelSize, HudLayout.TopRight).rectTransform;
+            shopPanel = shop;
+            inventoryPanel = inventory;
 
             var frame = HudLayout.NewPanel("PortraitFrame", shop, skin.Panel, new Vector2(152f, 152f), HudLayout.TopLeft).rectTransform;
             frame.anchoredPosition = new Vector2(Margin, -Margin);
@@ -178,7 +199,7 @@ namespace FantasyRoyale.Gameplay.Hud
             legs = NewSlot("Legs", inventory, new Vector2(crossLeft + crossStep, -72f - crossStep * 2f), 80f, 64f);
 
             // 空の装備の枠には、何を着ける枠かを影の絵で薄く出す。並びは頭、胴、足、メイン武器、オフハンド。
-            var equipmentIcons = new[] { head, torso, legs, weapon, offHand };
+            equipmentIcons = new[] { head, torso, legs, weapon, offHand };
             for (var index = 0; index < equipmentIcons.Length; index++)
             {
                 var placeholder = HudLayout.NewImage("Placeholder", (RectTransform)equipmentIcons[index].transform.parent, null, new Vector2(64f, 64f), HudLayout.Centre);
@@ -202,6 +223,13 @@ namespace FantasyRoyale.Gameplay.Hud
                 bag[index] = NewSlot($"Bag{index}", inventory, new Vector2(Margin + index % 5 * 78f, -536f - index / 5 * 78f), 70f, 56f);
             }
 
+            // 売り買いのしかたを1行だけ出す。カバンや使用枠の物に乗ると、売る値に替わる。
+            guide = NewText("Guide", inventory, new Vector2(InventoryPanelSize.x - 2f * Margin, 32f), new Vector2(Margin, -730f), false, TextAnchor.UpperLeft, MutedText);
+            guide.text = DefaultGuide;
+
+            // 掴んだ品物は枠ごと持っていく。枠は名前や値段を描かず、絵だけの正方形になる。
+            drag = new HudDragVisual(hud, root, skin, DragFrameSize, RowColour);
+
             root.gameObject.SetActive(false);
         }
 
@@ -218,6 +246,25 @@ namespace FantasyRoyale.Gameplay.Hud
         public Sprite KeeperPortrait => portrait.sprite;
         public string SelectedNameText => detailName.text;
         public string MessageText => message.text;
+        /// <summary>持ち物の枠の下の、売り買いのしかたか売る値の1行。</summary>
+        public string GuideText => guide.text;
+        /// <summary>品物を掴んで運んでいるか。</summary>
+        public bool IsDragging => drag.IsActive;
+
+        /// <summary>掴んで運んでいる枠の大きさ。掴んだ直後は元の枠の形で、すぐに正方形へ縮む。</summary>
+        public Vector2 DragFrameSizeNow => drag.FrameSize;
+
+        /// <summary>運んでいる品物を落とせる枠として光らせている数。</summary>
+        public int DropTargetCount => drag.TargetCount;
+
+        /// <summary>その枠を、落とせる枠として光らせているか。</summary>
+        public bool IsDropTarget(ShopHit hit)
+        {
+            var frame = GetFrame(hit);
+            return frame != null && drag.IsTarget(frame);
+        }
+
+        public Sprite DragIcon => drag.Sprite;
         public Sprite WeaponIcon => weapon.sprite;
         public Sprite HeadIcon => head.sprite;
         public Sprite TorsoIcon => torso.sprite;
@@ -240,6 +287,7 @@ namespace FantasyRoyale.Gameplay.Hud
         /// <summary>店の画面を、渡された値で出す。開いている間に値が変わったら、もう一度呼ぶ。</summary>
         public void Show(ShopScreenModel model)
         {
+            this.model = model;
             portrait.sprite = model.KeeperPortrait;
             portrait.enabled = model.KeeperPortrait != null;
             if (model.KeeperPortrait != null)
@@ -261,7 +309,73 @@ namespace FantasyRoyale.Gameplay.Hud
         public void Hide()
         {
             root.gameObject.SetActive(false);
+            EndDrag();
             SetHover(new ShopHit(ShopHitKind.None, -1));
+        }
+
+        /// <summary>行か、カバンか使用枠の物を枠ごと掴み、targetsの枠を落とせる枠として光らせる。</summary>
+        public void BeginDrag(ShopHit source, System.Collections.Generic.IReadOnlyList<ShopHit> targets = null)
+        {
+            Sprite sprite = null;
+            RectTransform sourceRect = null;
+            if (source.Kind == ShopHitKind.Item && model != null && source.ItemIndex >= 0 && source.ItemIndex < model.Items.Count)
+            {
+                sprite = model.Items[source.ItemIndex].Icon;
+                var row = source.ItemIndex - firstRow;
+                sourceRect = row >= 0 && row < VisibleRows ? rows[row].Rect : null;
+            }
+            else if (source.Kind == ShopHitKind.Bag || source.Kind == ShopHitKind.Quick)
+            {
+                var frame = GetFrame(source);
+                sprite = frame == null ? null : frame.transform.Find("Icon").GetComponent<Image>().sprite;
+                sourceRect = frame == null ? null : frame.rectTransform;
+            }
+
+            var frames = new System.Collections.Generic.List<Image>();
+            if (targets != null)
+            {
+                foreach (var target in targets)
+                {
+                    frames.Add(GetFrame(target));
+                }
+            }
+
+            drag.Begin(sourceRect, sprite, frames);
+        }
+
+        /// <summary>掴んでいる枠をマウスの位置へ動かし、カーソルの下の落とせる枠を強く光らせる。</summary>
+        public void MoveDrag(Vector2 screenPosition)
+        {
+            drag.Move(screenPosition, GetFrame(HitTest(screenPosition)));
+        }
+
+        public void EndDrag()
+        {
+            drag.End();
+        }
+
+        /// <summary>落とせる枠として光らせる枠の絵。店の側は店の枠そのものを光らせる。</summary>
+        private Image GetFrame(ShopHit hit)
+        {
+            Image icon;
+            switch (hit.Kind)
+            {
+                case ShopHitKind.Bag:
+                    icon = hit.ItemIndex >= 0 && hit.ItemIndex < BagSlots ? bag[hit.ItemIndex] : null;
+                    break;
+                case ShopHitKind.Quick:
+                    icon = hit.ItemIndex >= 0 && hit.ItemIndex < QuickSlots ? quick[hit.ItemIndex] : null;
+                    break;
+                case ShopHitKind.Equipment:
+                    icon = hit.ItemIndex >= 0 && hit.ItemIndex < equipmentIcons.Length ? equipmentIcons[hit.ItemIndex] : null;
+                    break;
+                case ShopHitKind.ShopArea:
+                    return shopPanel.GetComponent<Image>();
+                default:
+                    return null;
+            }
+
+            return icon == null || !icon.transform.parent.gameObject.activeInHierarchy ? null : icon.transform.parent.GetComponent<Image>();
         }
 
         /// <summary>
@@ -293,6 +407,40 @@ namespace FantasyRoyale.Gameplay.Hud
                 }
             }
 
+            for (var index = 0; index < BagSlots; index++)
+            {
+                if (ContainsSlot(bag[index], screenPosition, camera))
+                {
+                    return new ShopHit(ShopHitKind.Bag, index);
+                }
+            }
+
+            for (var index = 0; index < QuickSlots; index++)
+            {
+                if (ContainsSlot(quick[index], screenPosition, camera))
+                {
+                    return new ShopHit(ShopHitKind.Quick, index);
+                }
+            }
+
+            for (var index = 0; index < equipmentIcons.Length; index++)
+            {
+                if (ContainsSlot(equipmentIcons[index], screenPosition, camera))
+                {
+                    return new ShopHit(ShopHitKind.Equipment, index);
+                }
+            }
+
+            if (RectTransformUtility.RectangleContainsScreenPoint(shopPanel, screenPosition, camera))
+            {
+                return new ShopHit(ShopHitKind.ShopArea, -1);
+            }
+
+            if (RectTransformUtility.RectangleContainsScreenPoint(inventoryPanel, screenPosition, camera))
+            {
+                return new ShopHit(ShopHitKind.InventoryArea, -1);
+            }
+
             return new ShopHit(ShopHitKind.None, -1);
         }
 
@@ -302,7 +450,43 @@ namespace FantasyRoyale.Gameplay.Hud
             hovered = hit.Kind;
             buyKey.SetHover(hit.Kind == ShopHitKind.Buy);
             closeKey.SetHover(hit.Kind == ShopHitKind.Close);
+            var sellPrice = GetSellPrice(hit);
+            guide.text = sellPrice > 0 ? $"売ると{sellPrice}コイン" : DefaultGuide;
         }
+
+        private int GetSellPrice(ShopHit hit)
+        {
+            if (model == null || hit.ItemIndex < 0)
+            {
+                return 0;
+            }
+
+            var prices = hit.Kind == ShopHitKind.Bag ? model.Inventory.BagSellPrices
+                : hit.Kind == ShopHitKind.Quick ? model.Inventory.QuickSellPrices
+                : null;
+            return prices != null && hit.ItemIndex < prices.Count ? prices[hit.ItemIndex] : 0;
+        }
+
+        private static bool ContainsSlot(Image icon, Vector2 screenPosition, Camera camera)
+        {
+            var slot = (RectTransform)icon.transform.parent;
+            return slot.gameObject.activeInHierarchy && RectTransformUtility.RectangleContainsScreenPoint(slot, screenPosition, camera);
+        }
+
+        /// <summary>カバンの枠の中央の、画面の位置。</summary>
+        public Vector2 GetBagScreenCentre(int index) => ScreenCentre((RectTransform)bag[index].transform.parent);
+
+        /// <summary>装備の枠の中央の、画面の位置。番号は頭、胴、足、メイン武器、オフハンドの順。</summary>
+        public Vector2 GetEquipmentScreenCentre(int index) => ScreenCentre((RectTransform)equipmentIcons[index].transform.parent);
+
+        /// <summary>使用枠の中央の、画面の位置。</summary>
+        public Vector2 GetQuickScreenCentre(int index) => ScreenCentre((RectTransform)quick[index].transform.parent);
+
+        /// <summary>持ち物の枠の、見出しの下の空いた所の画面の位置。</summary>
+        public Vector2 InventoryAreaScreenCentre => ScreenCentre(guide.rectTransform);
+
+        /// <summary>店の枠の、店主の台詞の所の画面の位置。</summary>
+        public Vector2 ShopAreaScreenCentre => ScreenCentre(dialogue.rectTransform);
 
         /// <summary>見えている行の中央の、画面の位置。Testがマウスの位置を作るのに使う。</summary>
         public Vector2 GetRowScreenCentre(int visibleIndex) => ScreenCentre(rows[visibleIndex].Rect);

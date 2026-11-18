@@ -148,6 +148,7 @@ namespace FantasyRoyale.Gameplay.Hud
         private readonly RectTransform actionKey;
         private readonly Text actionLabel;
         private readonly Text message;
+        private readonly HudDragVisual drag;
         private int magicCount = -1;
         private int quickCount = -1;
         private int bagCount = -1;
@@ -229,6 +230,9 @@ namespace FantasyRoyale.Gameplay.Hud
             actionKey.anchoredPosition = new Vector2(Margin, -570f);
             actionLabel = NewText("ActionLabel", detailRect, new Vector2(300f, 44f), new Vector2(Margin + 60f, -570f), false, TextAnchor.MiddleLeft, Color.white);
             message = NewText("Message", detailRect, new Vector2(DetailSize.x - 2f * Margin, 32f), new Vector2(Margin, -626f), false, TextAnchor.UpperLeft, WarningColour);
+
+            // 掴んだ物は枠ごと持ち上がり、絵だけの正方形になって運ばれる。
+            drag = new HudDragVisual(hud, root, skin, Vector2.one * CellSize, SlotColour);
 
             root.gameObject.SetActive(false);
         }
@@ -326,7 +330,51 @@ namespace FantasyRoyale.Gameplay.Hud
 
         public void Hide()
         {
+            drag.End();
             root.gameObject.SetActive(false);
+        }
+
+        /// <summary>物を掴んで運んでいるか。</summary>
+        public bool IsDragging => drag.IsActive;
+
+        public Sprite DragIcon => drag.Sprite;
+
+        /// <summary>落とせる枠として光らせている数。</summary>
+        public int DropTargetCount => drag.TargetCount;
+
+        /// <summary>その枠を、落とせる枠として光らせているか。</summary>
+        public bool IsDropTarget(int index) => index >= 0 && index < cells.Count && drag.IsTarget(cells[index].Frame);
+
+        /// <summary>枠の物を枠ごと掴み、targetsの枠を落とせる枠として光らせる。枠が空なら掴まない。</summary>
+        public void BeginDrag(int index, IReadOnlyList<int> targets)
+        {
+            if (index < 0 || index >= cells.Count)
+            {
+                return;
+            }
+
+            var frames = new List<Image>();
+            foreach (var target in targets)
+            {
+                if (target >= 0 && target < cells.Count)
+                {
+                    frames.Add(cells[target].Frame);
+                }
+            }
+
+            drag.Begin(cells[index].Root, GetCellIcon(index), frames);
+        }
+
+        /// <summary>掴んでいる枠をマウスの位置へ動かし、カーソルの下の落とせる枠を強く光らせる。</summary>
+        public void MoveDrag(Vector2 screenPosition)
+        {
+            var hit = HitTest(screenPosition);
+            drag.Move(screenPosition, hit >= 0 ? cells[hit].Frame : null);
+        }
+
+        public void EndDrag()
+        {
+            drag.End();
         }
 
         /// <summary>

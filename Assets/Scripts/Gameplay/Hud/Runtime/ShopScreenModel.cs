@@ -75,8 +75,12 @@ namespace FantasyRoyale.Gameplay.Hud
             Sprite offHand = null,
             IReadOnlyList<Sprite> quick = null,
             bool twoHanded = false,
-            IReadOnlyList<Sprite> equipmentPlaceholders = null)
+            IReadOnlyList<Sprite> equipmentPlaceholders = null,
+            IReadOnlyList<int> bagSellPrices = null,
+            IReadOnlyList<int> quickSellPrices = null)
         {
+            BagSellPrices = bagSellPrices ?? Array.Empty<int>();
+            QuickSellPrices = quickSellPrices ?? Array.Empty<int>();
             Head = head;
             Torso = torso;
             Legs = legs;
@@ -106,6 +110,12 @@ namespace FantasyRoyale.Gameplay.Hud
 
         /// <summary>空の装備の枠の背景に薄く出す影の絵。頭、胴、足、メイン武器、オフハンドの順。</summary>
         public IReadOnlyList<Sprite> EquipmentPlaceholders { get; }
+
+        /// <summary>カバンの枠ごとの売る値。空の枠や売れない物は0である。</summary>
+        public IReadOnlyList<int> BagSellPrices { get; }
+
+        /// <summary>使用枠ごとの売る値。空の枠や売れない物は0である。</summary>
+        public IReadOnlyList<int> QuickSellPrices { get; }
     }
 
     /// <summary>店の画面に出す全て。</summary>

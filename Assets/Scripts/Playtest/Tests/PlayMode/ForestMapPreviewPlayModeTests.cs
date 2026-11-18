@@ -656,8 +656,10 @@ namespace FantasyRoyale.Playtest.Tests.PlayMode
             Assert.That(shop.IsVisible, Is.True);
             Assert.That(shop.KeeperNameText, Is.EqualTo("武器屋"));
             Assert.That(shop.KeeperPortrait, Is.Not.Null, "武器屋の店主の顔が出ます。");
-            Assert.That(shop.RowCount, Is.EqualTo(Mathf.Min(ShopScreen.VisibleRows, preview.ShopItemCount)));
-            Assert.That(shop.GetRowName(0), Is.EqualTo("回復薬"));
+            Assert.That(preview.ShopItemCount, Is.EqualTo(2), "武器屋は剣と弓だけを売ります。");
+            Assert.That(shop.RowCount, Is.EqualTo(2));
+            Assert.That(shop.GetRowName(0), Is.EqualTo("剣"));
+            Assert.That(shop.GetRowName(1), Is.EqualTo("弓"));
             Assert.That(shop.WeaponIcon.name, Is.EqualTo("icon-weapon-sword"), "持ち物の武器の枠に剣が出ます。");
 
             var start = preview.PlayerObject.transform.position;
@@ -691,6 +693,16 @@ namespace FantasyRoyale.Playtest.Tests.PlayMode
             Assert.That(preview.Inventory.GetBagItem(1).Id, Is.EqualTo("shield"), "両手の弓なので、盾もカバンに入ります。");
             Assert.That(shop.GetRowStatus(preview.ShopSelectedIndex - shop.FirstRow), Is.EqualTo("装備中"));
 
+            preview.CloseShop();
+            preview.PlayerActor.Body.position = preview.GetShopPosition(1);
+            preview.PlayerObject.transform.position = preview.GetShopPosition(1);
+            yield return new WaitForFixedUpdate();
+            Assert.That(preview.TryOpenShop(), Is.True);
+            yield return null;
+            Assert.That(shop.KeeperNameText, Is.EqualTo("防具屋"));
+            Assert.That(preview.ShopItemCount, Is.EqualTo(2), "防具屋は革の頭と胴だけを売ります。");
+            Assert.That(shop.GetRowName(0), Is.EqualTo("革（頭）"));
+            Assert.That(shop.GetRowName(1), Is.EqualTo("革（胴）"));
             yield return SelectShopItem("革（頭）");
             preview.AddCoins(10);
             Assert.That(preview.TryBuySelected(), Is.True);
@@ -712,7 +724,36 @@ namespace FantasyRoyale.Playtest.Tests.PlayMode
             Assert.That(preview.TryOpenShop(), Is.True);
             yield return null;
             Assert.That(shop.KeeperNameText, Is.EqualTo("魔法屋"), "店ごとに店主が替わります。");
+            Assert.That(preview.ShopItemCount, Is.EqualTo(2), "魔法屋は炎と氷の魔法だけを売ります。");
+            Assert.That(shop.GetRowName(0), Is.EqualTo("炎の弾"));
+            Assert.That(shop.GetRowName(1), Is.EqualTo("氷のつぶて"));
             preview.CloseShop();
+
+            var expected = new[]
+            {
+                new[] { "剣", "弓" },
+                new[] { "革（頭）", "革（胴）" },
+                new[] { "布巻きサンダル（足）" },
+                new[] { "鉄の重靴（足）" },
+                new[] { "炎の弾", "氷のつぶて" },
+                new[] { "回復薬" },
+            };
+            for (var index = 0; index < expected.Length; index++)
+            {
+                preview.PlayerActor.Body.position = preview.GetShopPosition(index);
+                preview.PlayerObject.transform.position = preview.GetShopPosition(index);
+                yield return new WaitForFixedUpdate();
+                Assert.That(preview.TryOpenShop(), Is.True);
+                Assert.That(preview.OpenShopIndex, Is.EqualTo(index));
+                yield return null;
+                Assert.That(preview.ShopItemCount, Is.EqualTo(expected[index].Length), $"店{index}の品物の数です。");
+                for (var row = 0; row < expected[index].Length; row++)
+                {
+                    Assert.That(shop.GetRowName(row), Is.EqualTo(expected[index][row]), $"店{index}の{row}番目の品物です。");
+                }
+
+                preview.CloseShop();
+            }
         }
 
         /// <summary>
@@ -736,15 +777,15 @@ namespace FantasyRoyale.Playtest.Tests.PlayMode
             Assert.That(preview.TryOpenShop(), Is.True);
             yield return null;
 
-            preview.HandleShopPointer(shop.GetRowScreenCentre(3), false, 0f);
+            preview.HandleShopPointer(shop.GetRowScreenCentre(1), false, 0f);
             yield return null;
-            Assert.That(preview.ShopSelectedIndex, Is.EqualTo(shop.FirstRow + 3), "行の上でマウスを動かすと選びます。");
-            Assert.That(shop.SelectedNameText, Is.EqualTo(shop.GetRowName(3)));
+            Assert.That(preview.ShopSelectedIndex, Is.EqualTo(shop.FirstRow + 1), "行の上でマウスを動かすと選びます。");
+            Assert.That(shop.SelectedNameText, Is.EqualTo(shop.GetRowName(1)));
 
-            preview.HandleShopPointer(shop.GetRowScreenCentre(3), false, 0f);
+            preview.HandleShopPointer(shop.GetRowScreenCentre(1), false, 0f);
             preview.SelectShopItem(1);
-            preview.HandleShopPointer(shop.GetRowScreenCentre(3), false, 0f);
-            Assert.That(preview.ShopSelectedIndex, Is.EqualTo(shop.FirstRow + 4), "止まったマウスはキーボードで選んだ品物を取り返しません。");
+            preview.HandleShopPointer(shop.GetRowScreenCentre(1), false, 0f);
+            Assert.That(preview.ShopSelectedIndex, Is.EqualTo(shop.FirstRow), "止まったマウスはキーボードで選んだ品物を取り返しません。");
 
             preview.HandleShopPointer(shop.BuyScreenCentre, false, 0f);
             Assert.That(shop.Hovered, Is.EqualTo(ShopHitKind.Buy), "買うキーに乗ると光ります。");
@@ -776,6 +817,155 @@ namespace FantasyRoyale.Playtest.Tests.PlayMode
             yield return null;
             Assert.That(preview.IsShopOpen, Is.False, "閉じるキーを押すと閉じます。");
             Assert.That(shop.IsVisible, Is.False);
+        }
+
+        /// <summary>
+        /// 品物の行を持ち物の枠へ運ぶと買い、使用枠やカバンの物を店の枠へ運ぶと買う値の半分で売る。
+        /// 右クリックとダブルクリックでも売り買いする。持ち物の枠の下に、しかたか売る値を1行だけ出す。
+        /// </summary>
+        [UnityTest]
+        public IEnumerator ForestMap_ShopTradesByDragAndShortcuts()
+        {
+            yield return LoadForest();
+            yield return null;
+            var shop = preview.Hud.Shop;
+            preview.SetMouseIgnoredForTests(true);
+            preview.PlayerActor.Body.position = preview.GetShopPosition(5);
+            preview.PlayerObject.transform.position = preview.GetShopPosition(5);
+            yield return new WaitForFixedUpdate();
+            Assert.That(preview.TryOpenShop(), Is.True);
+            yield return null;
+            Assert.That(shop.GetRowName(0), Is.EqualTo("回復薬"));
+            Assert.That(shop.GuideText, Is.EqualTo("ドラッグか右クリックで売り買い"));
+            preview.AddCoins(20);
+
+            var row = shop.GetRowScreenCentre(0);
+            preview.HandleShopPointer(row, false, false, false, true, 0f);
+            yield return null;
+            Assert.That(preview.Coins, Is.EqualTo(15), "右クリックで買います。");
+            Assert.That(preview.Inventory.GetQuickItem(0).Id, Is.EqualTo("potion"));
+
+            preview.HandleShopPointer(row, true, true, false, false, 0f);
+            preview.HandleShopPointer(shop.ShopAreaScreenCentre, false, true, false, false, 0f);
+            Assert.That(shop.IsDragging, Is.True, "押したまま動かすと品物を掴みます。");
+            Assert.That(shop.DragIcon.name, Is.EqualTo("icon-potion"));
+            Assert.That(shop.DragFrameSizeNow.x, Is.GreaterThan(shop.DragFrameSizeNow.y * 2f), "掴んだ直後は行の枠ごと持ちます。");
+            yield return new WaitForSecondsRealtime(0.2f);
+            preview.HandleShopPointer(shop.ShopAreaScreenCentre, false, true, false, false, 0f);
+            Assert.That(shop.DragFrameSizeNow.x, Is.EqualTo(shop.DragFrameSizeNow.y).Within(0.01f), "すぐに絵だけの正方形になります。");
+            preview.HandleShopPointer(shop.ShopAreaScreenCentre, false, false, true, false, 0f);
+            Assert.That(shop.IsDragging, Is.False);
+            Assert.That(preview.Coins, Is.EqualTo(15), "店の枠へ落としても買いません。");
+
+            preview.HandleShopPointer(row, true, true, false, false, 0f);
+            preview.HandleShopPointer(shop.InventoryAreaScreenCentre, false, true, false, false, 0f);
+            Assert.That(shop.IsDropTarget(new ShopHit(ShopHitKind.Quick, 3)), Is.True, "空いた使用枠が光ります。");
+            Assert.That(shop.IsDropTarget(new ShopHit(ShopHitKind.Quick, 0)), Is.False, "埋まった使用枠は光りません。");
+            Assert.That(shop.IsDropTarget(new ShopHit(ShopHitKind.Bag, 0)), Is.True, "空いたカバンの枠も光ります。");
+            Assert.That(shop.IsDropTarget(new ShopHit(ShopHitKind.Equipment, 0)), Is.False, "回復薬は装備の枠に入りません。");
+            preview.HandleShopPointer(shop.InventoryAreaScreenCentre, false, false, true, false, 0f);
+            Assert.That(preview.Coins, Is.EqualTo(15), "枠でない所へ落としても買いません。");
+            Assert.That(shop.DropTargetCount, Is.Zero, "落とすと光は消えます。");
+
+            preview.HandleShopPointer(row, true, true, false, false, 0f);
+            preview.HandleShopPointer(shop.GetQuickScreenCentre(3), false, true, false, false, 0f);
+            preview.HandleShopPointer(shop.GetQuickScreenCentre(3), false, false, true, false, 0f);
+            yield return null;
+            Assert.That(preview.Coins, Is.EqualTo(10), "使用枠へ運ぶと買います。");
+            Assert.That(preview.Inventory.GetQuickItem(3).Id, Is.EqualTo("potion"), "落とした枠へ直に入ります。");
+
+            preview.HandleShopPointer(row, true, true, false, false, 0f);
+            preview.HandleShopPointer(shop.GetBagScreenCentre(4), false, true, false, false, 0f);
+            preview.HandleShopPointer(shop.GetBagScreenCentre(4), false, false, true, false, 0f);
+            yield return null;
+            Assert.That(preview.Coins, Is.EqualTo(5));
+            Assert.That(preview.Inventory.GetBagItem(4).Id, Is.EqualTo("potion"), "カバンの枠へも直に買えます。");
+            preview.AddCoins(5);
+            Assert.That(preview.TrySellBagItem(4), Is.True);
+            Assert.That(preview.TrySellQuickItem(3), Is.True);
+            Assert.That(preview.Coins, Is.EqualTo(14));
+            preview.AddCoins(-4);
+            Assert.That(preview.Inventory.TryPutInQuick(new CharacterItem("potion", CharacterItemKind.Consumable), 1), Is.True);
+            yield return null;
+
+            preview.HandleShopPointer(shop.GetQuickScreenCentre(0), false, 0f);
+            Assert.That(shop.GuideText, Is.EqualTo("売ると2コイン"), "持ち物に乗ると売る値を出します。");
+            preview.HandleShopPointer(shop.GetQuickScreenCentre(0), true, true, false, false, 0f);
+            preview.HandleShopPointer(shop.ShopAreaScreenCentre, false, true, false, false, 0f);
+            preview.HandleShopPointer(shop.ShopAreaScreenCentre, false, false, true, false, 0f);
+            yield return null;
+            Assert.That(preview.Coins, Is.EqualTo(12), "使用枠の物を店の枠へ運ぶと売ります。");
+            Assert.That(preview.Inventory.GetQuickItem(0), Is.Null);
+            Assert.That(shop.MessageText, Is.EqualTo("回復薬を2コインで売った"));
+
+            preview.HandleShopPointer(shop.GetQuickScreenCentre(1), false, false, false, true, 0f);
+            yield return null;
+            Assert.That(preview.Coins, Is.EqualTo(14), "右クリックで売ります。");
+            Assert.That(preview.Inventory.GetQuickItem(1), Is.Null);
+
+            preview.HandleShopPointer(row, true, 0f);
+            Assert.That(preview.Coins, Is.EqualTo(14), "1回押しただけでは買いません。");
+            preview.HandleShopPointer(row, true, 0f);
+            yield return null;
+            Assert.That(preview.Coins, Is.EqualTo(9), "ダブルクリックで買います。");
+
+            Assert.That(preview.Inventory.TryUnequip(CharacterEquipSlot.OffHand), Is.True);
+            yield return null;
+            var shieldSlot = preview.Inventory.FindInBag("shield");
+            preview.HandleShopPointer(shop.GetBagScreenCentre(shieldSlot), false, false, false, true, 0f);
+            yield return null;
+            Assert.That(preview.Inventory.FindInBag("shield"), Is.EqualTo(-1), "カバンの物も売れます。");
+            Assert.That(preview.Coins, Is.EqualTo(13));
+            preview.CloseShop();
+
+            // 武器屋で弓を運ぶと、メイン武器とオフハンドの枠と空いたカバンが光り、頭は光らない。メイン武器の枠へ落とすと持ち替える。
+            preview.PlayerActor.Body.position = preview.GetShopPosition(0);
+            preview.PlayerObject.transform.position = preview.GetShopPosition(0);
+            yield return new WaitForFixedUpdate();
+            Assert.That(preview.TryOpenShop(), Is.True);
+            yield return null;
+            preview.AddCoins(20);
+            var bowRow = shop.GetRowScreenCentre(1);
+            Assert.That(shop.GetRowName(1), Is.EqualTo("弓"));
+            preview.HandleShopPointer(bowRow, true, true, false, false, 0f);
+            preview.HandleShopPointer(shop.GetEquipmentScreenCentre(0), false, true, false, false, 0f);
+            Assert.That(shop.IsDropTarget(new ShopHit(ShopHitKind.Equipment, 3)), Is.True, "メイン武器の枠が光ります。");
+            Assert.That(shop.IsDropTarget(new ShopHit(ShopHitKind.Equipment, 4)), Is.True, "両手の弓はオフハンドの枠も光らせます。");
+            Assert.That(shop.IsDropTarget(new ShopHit(ShopHitKind.Equipment, 0)), Is.False, "頭の枠は光りません。");
+            Assert.That(shop.IsDropTarget(new ShopHit(ShopHitKind.Bag, 1)), Is.True);
+            preview.HandleShopPointer(shop.GetEquipmentScreenCentre(0), false, false, true, false, 0f);
+            Assert.That(preview.CurrentEquipmentName, Is.EqualTo("剣"), "光っていない枠へ落としても買いません。");
+
+            preview.HandleShopPointer(bowRow, true, true, false, false, 0f);
+            preview.HandleShopPointer(shop.GetEquipmentScreenCentre(3), false, true, false, false, 0f);
+            preview.HandleShopPointer(shop.GetEquipmentScreenCentre(3), false, false, true, false, 0f);
+            yield return null;
+            Assert.That(preview.CurrentEquipmentName, Is.EqualTo("弓"), "メイン武器の枠へ落とすと持ち替えます。");
+            Assert.That(preview.Coins, Is.EqualTo(13));
+
+            preview.HandleShopPointer(bowRow, true, true, false, false, 0f);
+            preview.HandleShopPointer(shop.GetBagScreenCentre(5), false, true, false, false, 0f);
+            Assert.That(shop.DropTargetCount, Is.Zero, "着けている物はどの枠も光りません。");
+            preview.HandleShopPointer(shop.GetBagScreenCentre(5), false, false, true, false, 0f);
+            preview.CloseShop();
+
+            // 魔法屋で氷の魔法を、空いた魔法の枠のある剣へ持ち替えてから、メイン武器の枠へ落とすと剣にはまる。
+            Assert.That(preview.TryUseBagItem(preview.Inventory.FindInBag("sword")), Is.True);
+            preview.PlayerActor.Body.position = preview.GetShopPosition(4);
+            preview.PlayerObject.transform.position = preview.GetShopPosition(4);
+            yield return new WaitForFixedUpdate();
+            Assert.That(preview.TryOpenShop(), Is.True);
+            yield return null;
+            Assert.That(shop.GetRowName(1), Is.EqualTo("氷のつぶて"));
+            preview.HandleShopPointer(shop.GetRowScreenCentre(1), true, true, false, false, 0f);
+            preview.HandleShopPointer(shop.GetEquipmentScreenCentre(3), false, true, false, false, 0f);
+            Assert.That(shop.IsDropTarget(new ShopHit(ShopHitKind.Equipment, 3)), Is.True, "空いた魔法の枠のある武器が光ります。");
+            preview.HandleShopPointer(shop.GetEquipmentScreenCentre(3), false, false, true, false, 0f);
+            yield return null;
+            Assert.That(preview.Coins, Is.EqualTo(1));
+            Assert.That(preview.Inventory.MainWeapon.GetMagic(1).Id, Is.EqualTo("ice"), "魔法は剣の空いた枠へはまります。");
+            preview.CloseShop();
+            preview.SetMouseIgnoredForTests(false);
         }
 
         /// <summary>
@@ -1450,6 +1640,93 @@ namespace FantasyRoyale.Playtest.Tests.PlayMode
             {
                 Assert.That(Vector2.Distance(bar.GetBigSlotScreenCentre(index), centres[index]), Is.LessThan(0.5f), "枠の数が変わっても大きな枠は動きません。");
             }
+        }
+
+        /// <summary>
+        /// 持ち物の画面で物を押したまま動かすと枠ごと掴み、落とせる枠が光る。光った枠へ落とすとそこへ動き、
+        /// 装備は着け外し、魔法ははめ外しされる。左クリックは選ぶだけで、右クリックで決める。
+        /// </summary>
+        [UnityTest]
+        public IEnumerator ForestMap_InventoryMovesByDragAndRightClick()
+        {
+            yield return LoadForest();
+            yield return null;
+            preview.SetMouseIgnoredForTests(true);
+            var screen = preview.Hud.Inventory;
+            preview.OpenInventory();
+            yield return null;
+            int Cell(InventoryCellKind kind, int slot) => screen.FindCell(kind, slot);
+            void Drag(int from, int to)
+            {
+                preview.HandleInventoryPointer(screen.GetCellScreenCentre(from), true, true, false, false);
+                preview.HandleInventoryPointer(screen.GetCellScreenCentre(to), false, true, false, false);
+                preview.HandleInventoryPointer(screen.GetCellScreenCentre(to), false, false, true, false);
+            }
+
+            // 頭を掴むと、カバンが光り、ほかの装備の枠と使用枠は光らない。カバンへ落とすとその枠へ外れる。
+            var head = Cell(InventoryCellKind.Equipment, 0);
+            preview.HandleInventoryPointer(screen.GetCellScreenCentre(head), true, true, false, false);
+            preview.HandleInventoryPointer(screen.GetCellScreenCentre(Cell(InventoryCellKind.Bag, 3)), false, true, false, false);
+            Assert.That(screen.IsDragging, Is.True, "押したまま動かすと枠ごと掴みます。");
+            Assert.That(screen.DragIcon.name, Is.EqualTo("icon-knight-head"));
+            Assert.That(screen.IsDropTarget(Cell(InventoryCellKind.Bag, 3)), Is.True, "空いたカバンが光ります。");
+            Assert.That(screen.IsDropTarget(Cell(InventoryCellKind.Equipment, 1)), Is.False, "胴の枠は光りません。");
+            Assert.That(screen.IsDropTarget(Cell(InventoryCellKind.Quick, 0)), Is.False, "使用枠は光りません。");
+            preview.HandleInventoryPointer(screen.GetCellScreenCentre(Cell(InventoryCellKind.Bag, 3)), false, false, true, false);
+            yield return null;
+            Assert.That(screen.IsDragging, Is.False);
+            Assert.That(preview.Inventory.GetEquipped(CharacterEquipSlot.Head), Is.Null);
+            Assert.That(preview.Inventory.GetBagItem(3).Id, Is.EqualTo("knight:Head"), "落としたカバンの枠へ外れます。");
+
+            // カバンの頭は頭の枠にだけ着けられる。
+            preview.HandleInventoryPointer(screen.GetCellScreenCentre(Cell(InventoryCellKind.Bag, 3)), true, true, false, false);
+            preview.HandleInventoryPointer(screen.GetCellScreenCentre(head), false, true, false, false);
+            Assert.That(screen.IsDropTarget(head), Is.True);
+            Assert.That(screen.IsDropTarget(Cell(InventoryCellKind.Equipment, 1)), Is.False);
+            Assert.That(screen.IsDropTarget(Cell(InventoryCellKind.Bag, 0)), Is.True, "カバンの中でも動かせます。");
+            preview.HandleInventoryPointer(screen.GetCellScreenCentre(head), false, false, true, false);
+            yield return null;
+            Assert.That(preview.Inventory.GetEquipped(CharacterEquipSlot.Head).Id, Is.EqualTo("knight:Head"), "頭の枠へ落とすと着けます。");
+
+            // 魔法は魔法の枠同士で入れ替わり、カバンへ外せて、カバンから枠へはめられる。
+            var sword = preview.Inventory.MainWeapon;
+            Drag(Cell(InventoryCellKind.Magic, 0), Cell(InventoryCellKind.Magic, 1));
+            yield return null;
+            Assert.That(sword.GetMagic(1).Id, Is.EqualTo("fire"), "魔法の枠の間で動きます。");
+            Assert.That(sword.SelectedMagic.Id, Is.EqualTo("fire"), "唱える魔法は同じです。");
+            Drag(Cell(InventoryCellKind.Magic, 1), Cell(InventoryCellKind.Bag, 0));
+            yield return null;
+            Assert.That(sword.GetMagic(1), Is.Null);
+            Assert.That(preview.Inventory.GetBagItem(0).Id, Is.EqualTo("fire"), "カバンへ外せます。");
+            Drag(Cell(InventoryCellKind.Bag, 0), Cell(InventoryCellKind.Magic, 0));
+            yield return null;
+            Assert.That(sword.GetMagic(0).Id, Is.EqualTo("fire"), "カバンから決めた枠へはめられます。");
+
+            // 回復薬はカバンから使用枠へ動く。装備の枠へは落とせない。
+            Assert.That(preview.Inventory.TryPutInBag(new CharacterItem("potion", CharacterItemKind.Consumable), 2), Is.True);
+            yield return null;
+            preview.HandleInventoryPointer(screen.GetCellScreenCentre(Cell(InventoryCellKind.Bag, 2)), true, true, false, false);
+            preview.HandleInventoryPointer(screen.GetCellScreenCentre(Cell(InventoryCellKind.Quick, 4)), false, true, false, false);
+            Assert.That(screen.IsDropTarget(Cell(InventoryCellKind.Quick, 4)), Is.True);
+            Assert.That(screen.IsDropTarget(head), Is.False);
+            preview.HandleInventoryPointer(screen.GetCellScreenCentre(Cell(InventoryCellKind.Quick, 4)), false, false, true, false);
+            yield return null;
+            Assert.That(preview.Inventory.GetQuickItem(4).Id, Is.EqualTo("potion"), "使用枠へ動きます。");
+
+            // 左クリックは選ぶだけで、右クリックで決める。
+            var offHand = Cell(InventoryCellKind.Equipment, 4);
+            preview.HandleInventoryPointer(screen.GetCellScreenCentre(offHand), true, true, true, false);
+            Assert.That(preview.Inventory.GetEquipped(CharacterEquipSlot.OffHand).Id, Is.EqualTo("shield"), "左クリックでは外しません。");
+            Assert.That(preview.InventoryCursor, Is.EqualTo(offHand), "左クリックで選びます。");
+            preview.HandleInventoryPointer(screen.GetCellScreenCentre(offHand), false, false, false, true);
+            yield return null;
+            Assert.That(preview.Inventory.GetEquipped(CharacterEquipSlot.OffHand), Is.Null, "右クリックで外します。");
+            var shield = preview.Inventory.FindInBag("shield");
+            preview.HandleInventoryPointer(screen.GetCellScreenCentre(Cell(InventoryCellKind.Bag, shield)), false, false, false, true);
+            yield return null;
+            Assert.That(preview.Inventory.GetEquipped(CharacterEquipSlot.OffHand).Id, Is.EqualTo("shield"), "カバンの物は右クリックで着けます。");
+            preview.CloseInventory();
+            preview.SetMouseIgnoredForTests(false);
         }
 
         /// <summary>

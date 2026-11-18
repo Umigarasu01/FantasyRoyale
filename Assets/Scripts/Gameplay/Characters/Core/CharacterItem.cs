@@ -141,6 +141,42 @@ namespace FantasyRoyale.Gameplay.Characters
         }
 
         /// <summary>
+        /// 番号の空いた魔法の枠へ魔法を入れる。魔法でないか、枠が埋まっていればfalseを返す。
+        /// 選んでいる枠が空だったときは、入れた魔法を選ぶ。
+        /// </summary>
+        public bool TryPutMagic(CharacterItem magic, int index)
+        {
+            if (magic == null || magic.Kind != CharacterItemKind.Magic || index < 0 || index >= magicSlots.Length || magicSlots[index] != null)
+            {
+                return false;
+            }
+
+            magicSlots[index] = magic;
+            if (magicSlots[selectedMagicIndex] == null)
+            {
+                selectedMagicIndex = index;
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// 2つの魔法の枠の中身を入れ替える。唱える魔法は、入れ替えた後も同じ魔法を選ぶ。
+        /// </summary>
+        public void SwapMagic(int a, int b)
+        {
+            (magicSlots[a], magicSlots[b]) = (magicSlots[b], magicSlots[a]);
+            if (selectedMagicIndex == a)
+            {
+                selectedMagicIndex = b;
+            }
+            else if (selectedMagicIndex == b)
+            {
+                selectedMagicIndex = a;
+            }
+        }
+
+        /// <summary>
         /// 指定の枠の魔法を外して返す。空ならnullを返す。
         /// </summary>
         public CharacterItem RemoveMagic(int index)

@@ -268,5 +268,76 @@ namespace FantasyRoyale.Gameplay.Characters.Tests.Editor
             Assert.That(inventory.GetQuickItem(1), Is.Null);
             Assert.That(inventory.UseQuickItem(1).Outcome, Is.EqualTo(CharacterItemUseOutcome.EmptySlot));
         }
+
+        /// <summary>
+        /// 番号を決めて入れられるのは空いた枠だけで、使用枠には使う物だけが入る。
+        /// </summary>
+        [Test]
+        public void PutInSlot_FillsOnlyTheChosenEmptySlot()
+        {
+            var inventory = new CharacterInventory(3, 3);
+            var potion = Potion();
+            Assert.That(inventory.TryPutInQuick(potion, 2), Is.True);
+            Assert.That(inventory.GetQuickItem(2), Is.SameAs(potion));
+            Assert.That(inventory.SelectedQuickItem, Is.SameAs(potion), "選んでいた枠が空なら、入れた物を選びます。");
+            Assert.That(inventory.TryPutInQuick(Potion(), 2), Is.False, "埋まった枠には入りません。");
+            Assert.That(inventory.TryPutInQuick(Sword(), 0), Is.False, "使用枠には使う物だけが入ります。");
+            Assert.That(inventory.TryPutInQuick(Potion(), 3), Is.False);
+
+            var sword = Sword();
+            Assert.That(inventory.TryPutInBag(sword, 1), Is.True);
+            Assert.That(inventory.GetBagItem(0), Is.Null);
+            Assert.That(inventory.GetBagItem(1), Is.SameAs(sword));
+            Assert.That(inventory.TryPutInBag(Shield(), 1), Is.False);
+            Assert.That(inventory.TryPutInBag(sword, 2), Is.False, "同じ物は2か所に入りません。");
+        }
+
+        /// <summary>
+        /// カバンと使用枠の物は空いた枠へ動き、埋まった枠とは入れ替わる。使用枠には使う物しか入らない。
+        /// </summary>
+        [Test]
+        public void MoveStored_MovesOrSwapsAndKeepsQuickSlotsForConsumables()
+        {
+            var inventory = new CharacterInventory(3, 2);
+            var potion = Potion();
+            var sword = Sword();
+            inventory.TryPutInBag(potion, 0);
+            inventory.TryPutInBag(sword, 1);
+            Assert.That(inventory.TryMoveStored(false, 0, false, 2), Is.True);
+            Assert.That(inventory.GetBagItem(2), Is.SameAs(potion));
+            Assert.That(inventory.TryMoveStored(false, 1, false, 2), Is.True, "埋まった枠とは入れ替わります。");
+            Assert.That(inventory.GetBagItem(1), Is.SameAs(potion));
+            Assert.That(inventory.GetBagItem(2), Is.SameAs(sword));
+            Assert.That(inventory.TryMoveStored(false, 2, true, 0), Is.False, "装備は使用枠へ入りません。");
+            Assert.That(inventory.TryMoveStored(false, 1, true, 1), Is.True);
+            Assert.That(inventory.GetQuickItem(1), Is.SameAs(potion));
+            Assert.That(inventory.TryMoveStored(true, 1, false, 2), Is.False, "入れ替えで装備が使用枠へ入るときは動きません。");
+            Assert.That(inventory.TryMoveStored(true, 1, false, 0), Is.True);
+            Assert.That(inventory.GetBagItem(0), Is.SameAs(potion));
+        }
+
+        /// <summary>
+        /// 装備は決めたカバンの枠へ外せる。魔法は決めた空いた枠へ入り、入れ替えても唱える魔法は同じ物を選ぶ。
+        /// </summary>
+        [Test]
+        public void UnequipToAndMagicSlots_UseTheChosenSlot()
+        {
+            var inventory = new CharacterInventory(3);
+            var sword = Sword(2);
+            inventory.TryEquipNew(sword);
+            Assert.That(inventory.TryUnequipTo(CharacterEquipSlot.MainHand, 2), Is.True);
+            Assert.That(inventory.GetBagItem(2), Is.SameAs(sword));
+            Assert.That(inventory.MainWeapon, Is.Null);
+
+            var fire = new CharacterItem("fire", CharacterItemKind.Magic);
+            var ice = new CharacterItem("ice", CharacterItemKind.Magic);
+            Assert.That(sword.TryPutMagic(fire, 1), Is.True);
+            Assert.That(sword.SelectedMagic, Is.SameAs(fire));
+            Assert.That(sword.TryPutMagic(ice, 1), Is.False, "埋まった枠には入りません。");
+            Assert.That(sword.TryPutMagic(ice, 0), Is.True);
+            sword.SwapMagic(0, 1);
+            Assert.That(sword.GetMagic(0), Is.SameAs(fire));
+            Assert.That(sword.SelectedMagic, Is.SameAs(fire), "入れ替えても唱える魔法は同じです。");
+        }
     }
 }

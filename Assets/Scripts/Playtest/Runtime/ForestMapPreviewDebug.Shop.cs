@@ -8,7 +8,7 @@ using UnityEngine.InputSystem;
 namespace FantasyRoyale.Playtest
 {
     /// <summary>
-    /// 森の確認用Sceneの店。品揃え、値段、レア度、店主の名前と台詞は仮置きで、
+    /// 森の確認用Sceneの店。店ごとに1つか2つの品物を売る。値段、レア度、店主の名前と台詞は仮置きで、
     /// `docs/fantasy-royale/exec-plans/active/shop-screen.md`の「仮置きの決め」にある。
     /// 画面は`ShopScreen`が描き、ここは渡す値を作って、選ぶ、買う、閉じるを受ける。
     /// </summary>
@@ -29,14 +29,42 @@ namespace FantasyRoyale.Playtest
             { "item-shop", ("道具屋", "旅のお供にどうぞ。") },
         };
 
+        // 店ごとの品揃え。どの店も1つか2つで、店の種類に合う物を売る。同じ物を2つの店では売らない。
+        // 「potion」「weapon:<id>」「magic:<id>」「armour:<組のid>:<部位>」で書く。騎士の装備は初めから着ているので売らない。
+        private static readonly Dictionary<string, string[]> Stocks = new Dictionary<string, string[]>
+        {
+            { "weapon-shop", new[] { "weapon:sword", "weapon:bow" } },
+            { "armour-shop", new[] { "armour:leather:Head", "armour:leather:Torso" } },
+            { "town-stall", new[] { "armour:sandals:Legs" } },
+            { "town-rug", new[] { "armour:iron-boots:Legs" } },
+            { "magic-shop", new[] { "magic:fire", "magic:ice" } },
+            { "item-shop", new[] { "potion" } },
+        };
+
         // 仮の防具の値段とレア度。部位を問わず組（Set）ごとに決める。
         private static readonly Dictionary<string, (int Price, ShopRarity Rarity)> ArmourPrices = new Dictionary<string, (int, ShopRarity)>
         {
             { "leather", (10, ShopRarity.Common) },
             { "sandals", (6, ShopRarity.Common) },
             { "iron-boots", (15, ShopRarity.Rare) },
+            // 騎士の防具は売らないが、売るときの値の元にする。
             { "knight", (20, ShopRarity.Epic) },
         };
+
+        // 盾はどの店も売らないが、売るときの値の元にする。
+        private const int ShieldPrice = 8;
+
+        // 店の画面の装備の枠の並び（`ShopHitKind.Equipment`の番号）。
+        private static readonly CharacterEquipSlot[] EquipmentDropSlots =
+        {
+            CharacterEquipSlot.Head, CharacterEquipSlot.Torso, CharacterEquipSlot.Legs, CharacterEquipSlot.MainHand, CharacterEquipSlot.OffHand
+        };
+
+        // マウスを押してからこれだけ動かすと、品物を掴んで運ぶ。
+        private const float DragStartDistance = 10f;
+
+        // 同じ所をこの秒数の内に2回押すと、ダブルクリックとする。
+        private const float DoubleClickSeconds = 0.35f;
 
         private static readonly CharacterArmourSlot[] ArmourSlots = { CharacterArmourSlot.Head, CharacterArmourSlot.Torso, CharacterArmourSlot.Legs };
 
@@ -52,6 +80,11 @@ namespace FantasyRoyale.Playtest
         private bool shopMessageIsWarning;
         private bool shopDirty;
         private int shopShownCoins = -1;
+        private ShopHit pressedHit = new ShopHit(ShopHitKind.None, -1);
+        private Vector2 pressedPosition;
+        private bool isDragging;
+        private ShopHit lastClickHit = new ShopHit(ShopHitKind.None, -1);
+        private float lastClickTime = float.NegativeInfinity;
 
         /// <summary>今開いている店の番号。閉じているときは-1。</summary>
         public int OpenShopIndex => IsShopOpen ? openShopIndex : -1;
@@ -96,6 +129,7 @@ namespace FantasyRoyale.Playtest
 
             IsShopOpen = true;
             openShopIndex = nearest;
+            BuildShopStock(OpenKeeperId);
             shopSelected = 0;
             shopMessage = string.Empty;
             // 開いたときのマウスの位置を覚え、動かすまでは乗っている行を選ばない。
@@ -108,6 +142,7 @@ namespace FantasyRoyale.Playtest
         {
             IsShopOpen = false;
             openShopIndex = -1;
+            CancelShopDrag();
             if (Hud != null)
             {
                 Hud.Shop.Hide();
@@ -159,6 +194,86 @@ namespace FantasyRoyale.Playtest
             shopMessageIsWarning = !bought;
             shopDirty = true;
             return bought;
+        }
+
+        /// <summary>カバンの物を売る。どの店でも何でも買い取る。</summary>
+        public bool TrySellBagItem(int index)
+        {
+            return TrySell(index >= 0 && index < Inventory.BagCapacity ? Inventory.GetBagItem(index) : null, () => Inventory.RemoveFromBag(index));
+        }
+
+        /// <summary>使用枠の物を売る。</summary>
+        public bool TrySellQuickItem(int index)
+        {
+            return TrySell(index >= 0 && index < Inventory.QuickCapacity ? Inventory.GetQuickItem(index) : null, () => Inventory.UseQuickItem(index));
+        }
+
+        /// <summary>
+        /// 売るときの値。仮に買う値の半分（1以上）とする。値の分からない物は0で、売れない。
+        /// </summary>
+        public int GetSellPrice(CharacterItem item)
+        {
+            var price = GetBasePrice(item);
+            return price <= 0 ? 0 : Mathf.Max(1, price / 2);
+        }
+
+        private bool TrySell(CharacterItem item, System.Action remove)
+        {
+            var sellPrice = GetSellPrice(item);
+            if (item == null)
+            {
+                LastMessage = string.Empty;
+                return false;
+            }
+
+            if (!IsShopOpen || sellPrice <= 0)
+            {
+                LastMessage = "これは売れない";
+                shopMessage = LastMessage;
+                shopMessageIsWarning = true;
+                shopDirty = true;
+                return false;
+            }
+
+            remove();
+            Coins += sellPrice;
+            LastMessage = $"{GetItemName(item)}を{sellPrice}コインで売った";
+            shopMessage = LastMessage;
+            shopMessageIsWarning = false;
+            shopDirty = true;
+            return true;
+        }
+
+        private int GetBasePrice(CharacterItem item)
+        {
+            if (item == null)
+            {
+                return 0;
+            }
+
+            if (item.Id == PotionItemId)
+            {
+                return PotionPrice;
+            }
+
+            if (item.Kind == CharacterItemKind.Magic)
+            {
+                return FindMagic(item) == null ? 0 : MagicPrice;
+            }
+
+            if (item.Kind != CharacterItemKind.Equipment)
+            {
+                return 0;
+            }
+
+            var weapon = FindEquipmentDefinition(item.Id);
+            if (weapon != null)
+            {
+                var isOffHand = weapon == offHandEquipment || (catalog != null && catalog.FindOffHand(item.Id) != null);
+                return isOffHand ? ShieldPrice : weapon.WeaponKind == CharacterActionMotion.Shoot ? BowPrice : SwordPrice;
+            }
+
+            return ArmourPrices.TryGetValue(ArmourPartId(item.Id), out var armour) ? armour.Price : 0;
         }
 
         private bool TryBuyWeapon(ShopEntry entry)
@@ -253,70 +368,92 @@ namespace FantasyRoyale.Playtest
             return false;
         }
 
-        /// <summary>品揃えを作る。今着ている防具は持っている物とする。</summary>
-        private void BuildShopStock()
+        private string OpenKeeperId => openShopIndex >= 0 && openShopIndex < shopKeeperIds.Length ? shopKeeperIds[openShopIndex] : string.Empty;
+
+        /// <summary>
+        /// 店主の店の品揃えを`Stocks`から作る。定義や絵が見つからない品物は並べない。
+        /// </summary>
+        private void BuildShopStock(string keeperId)
         {
             shopStock.Clear();
-            shopStock.Add(new ShopEntry(ShopEntryKind.Potion, "回復薬", $"空いた使用枠に入り、なければカバンに入る。使うとHPが{PotionHealing}回復する。", PotionPrice, ShopRarity.Common, "icon-potion"));
-            for (var index = 0; index < equipment.Length; index++)
-            {
-                var weapon = equipment[index];
-                var isBow = weapon.WeaponKind == CharacterActionMotion.Shoot;
-                shopStock.Add(new ShopEntry(
-                    ShopEntryKind.Weapon,
-                    weapon.DisplayName,
-                    (isBow ? "遠くの敵を射る両手の弓。矢筒を背負う。" : "片手剣。三段まで続けて振れる。") + $"魔法の枠{weapon.MagicSlotCount}つ。",
-                    isBow ? BowPrice : SwordPrice,
-                    isBow ? ShopRarity.Rare : ShopRarity.Common,
-                    $"icon-weapon-{weapon.Id}") { WeaponIndex = index });
-            }
-
-            for (var index = 0; index < magicDefinitions.Length; index++)
-            {
-                var magic = magicDefinitions[index];
-                if (magic == null)
-                {
-                    continue;
-                }
-
-                shopStock.Add(new ShopEntry(
-                    ShopEntryKind.Magic,
-                    magic.DisplayName,
-                    $"カバンに入る。使うとメイン武器の空いた魔法の枠へはまる。MP{magic.ManaCost}で唱える。",
-                    MagicPrice,
-                    ShopRarity.Rare,
-                    $"icon-magic-{magic.Id}") { MagicIndex = index });
-            }
-
-            if (catalog == null)
+            if (!Stocks.TryGetValue(keeperId, out var keys))
             {
                 return;
             }
 
-            foreach (var part in catalog.Armour)
+            foreach (var key in keys)
             {
-                if (!ArmourPrices.TryGetValue(part.Id, out var price))
+                var parts = key.Split(':');
+                switch (parts[0])
                 {
-                    continue;
-                }
-
-                foreach (var slot in ArmourSlots)
-                {
-                    if (!part.Covers(slot))
-                    {
-                        continue;
-                    }
-
-                    var name = $"{part.DisplayName}（{SlotName(slot)}）";
-                    shopStock.Add(new ShopEntry(
-                        ShopEntryKind.Armour,
-                        name,
-                        $"{part.DisplayName}の{SlotName(slot)}。今は見た目だけで、強さはまだない。",
-                        price.Price,
-                        price.Rarity,
-                        ArmourIconName(part, slot)) { Armour = part, Slot = slot });
+                    case "potion":
+                        shopStock.Add(new ShopEntry(ShopEntryKind.Potion, "回復薬", $"空いた使用枠に入り、なければカバンに入る。使うとHPが{PotionHealing}回復する。", PotionPrice, ShopRarity.Common, "icon-potion"));
+                        break;
+                    case "weapon":
+                        AddWeaponStock(parts[1]);
+                        break;
+                    case "magic":
+                        AddMagicStock(parts[1]);
+                        break;
+                    case "armour":
+                        AddArmourStock(parts[1], (CharacterArmourSlot)System.Enum.Parse(typeof(CharacterArmourSlot), parts[2]));
+                        break;
                 }
             }
+        }
+
+        private void AddWeaponStock(string id)
+        {
+            var index = System.Array.FindIndex(equipment, weapon => weapon != null && weapon.Id == id);
+            if (index < 0)
+            {
+                return;
+            }
+
+            var found = equipment[index];
+            var isBow = found.WeaponKind == CharacterActionMotion.Shoot;
+            shopStock.Add(new ShopEntry(
+                ShopEntryKind.Weapon,
+                found.DisplayName,
+                (isBow ? "遠くの敵を射る両手の弓。矢筒を背負う。" : "片手剣。三段まで続けて振れる。") + $"魔法の枠{found.MagicSlotCount}つ。",
+                isBow ? BowPrice : SwordPrice,
+                isBow ? ShopRarity.Rare : ShopRarity.Common,
+                $"icon-weapon-{found.Id}") { WeaponIndex = index });
+        }
+
+        private void AddMagicStock(string id)
+        {
+            var index = System.Array.FindIndex(magicDefinitions, magic => magic != null && magic.Id == id);
+            if (index < 0)
+            {
+                return;
+            }
+
+            var found = magicDefinitions[index];
+            shopStock.Add(new ShopEntry(
+                ShopEntryKind.Magic,
+                found.DisplayName,
+                $"カバンに入る。使うとメイン武器の空いた魔法の枠へはまる。MP{found.ManaCost}で唱える。",
+                MagicPrice,
+                ShopRarity.Rare,
+                $"icon-magic-{found.Id}") { MagicIndex = index });
+        }
+
+        private void AddArmourStock(string id, CharacterArmourSlot slot)
+        {
+            var part = catalog == null ? null : catalog.FindArmour(id);
+            if (part == null || !part.Covers(slot) || !ArmourPrices.TryGetValue(id, out var price))
+            {
+                return;
+            }
+
+            shopStock.Add(new ShopEntry(
+                ShopEntryKind.Armour,
+                $"{part.DisplayName}（{SlotName(slot)}）",
+                $"{part.DisplayName}の{SlotName(slot)}。今は見た目だけで、強さはまだない。",
+                price.Price,
+                price.Rarity,
+                ArmourIconName(part, slot)) { Armour = part, Slot = slot });
         }
 
         /// <summary>
@@ -329,11 +466,20 @@ namespace FantasyRoyale.Playtest
         }
 
         /// <summary>
-        /// 店の画面でのマウスの操作。行の上でマウスを動かすか押すとその品物を選び、買うキーか言葉を押すと買い、
-        /// 閉じるキーか言葉を押すと閉じる。ホイールで選ぶ品物を上下に送る。乗っているキーは少し大きくなり、言葉が金になる。
-        /// マウスを動かしていない間は、乗っている行を選ばない。キーボードで選んだ品物を、止まったマウスが取り返さないためである。
+        /// 左ボタンを押した瞬間だけを渡す、短い形。Testと、掴んで運ばない操作に使う。
         /// </summary>
         public void HandleShopPointer(Vector2 screenPosition, bool clicked, float scroll)
+        {
+            HandleShopPointer(screenPosition, clicked, clicked, clicked, false, scroll);
+        }
+
+        /// <summary>
+        /// 店の画面でのマウスの操作。行の上でマウスを動かすか押すとその品物を選び、買うキーか言葉を押すと買い、
+        /// 閉じるキーか言葉を押すと閉じる。ホイールで選ぶ品物を上下に送る。乗っているキーは少し大きくなり、言葉が金になる。
+        /// 品物の行を持ち物の枠へ運ぶと買い、カバンか使用枠の物を店の枠へ運ぶと売る。右クリックかダブルクリックでも同じく売り買いする。
+        /// マウスを動かしていない間は、乗っている行を選ばない。キーボードで選んだ品物を、止まったマウスが取り返さないためである。
+        /// </summary>
+        public void HandleShopPointer(Vector2 screenPosition, bool pressed, bool held, bool released, bool rightClicked, float scroll)
         {
             if (!IsShopOpen || Hud == null)
             {
@@ -343,7 +489,7 @@ namespace FantasyRoyale.Playtest
             var hit = Hud.Shop.HitTest(screenPosition);
             var moved = screenPosition != lastPointer;
             lastPointer = screenPosition;
-            if (hit.Kind == ShopHitKind.Item && (moved || clicked) && hit.ItemIndex != shopSelected)
+            if (hit.Kind == ShopHitKind.Item && (moved || pressed || rightClicked) && hit.ItemIndex != shopSelected && !isDragging)
             {
                 shopSelected = hit.ItemIndex;
                 shopMessage = string.Empty;
@@ -351,18 +497,332 @@ namespace FantasyRoyale.Playtest
             }
 
             Hud.Shop.SetHover(hit);
-            if (clicked && hit.Kind == ShopHitKind.Buy)
+            if (rightClicked)
+            {
+                TradeAt(hit);
+            }
+            else if (pressed && hit.Kind == ShopHitKind.Buy)
             {
                 TryBuySelected();
             }
-            else if (clicked && hit.Kind == ShopHitKind.Close)
+            else if (pressed && hit.Kind == ShopHitKind.Close)
             {
                 CloseShop();
+                return;
             }
-            else if (scroll != 0f)
+            else if (pressed && IsTradeable(hit))
+            {
+                var isDoubleClick = SameHit(hit, lastClickHit) && Time.unscaledTime - lastClickTime <= DoubleClickSeconds;
+                lastClickHit = isDoubleClick ? new ShopHit(ShopHitKind.None, -1) : hit;
+                lastClickTime = Time.unscaledTime;
+                if (isDoubleClick)
+                {
+                    TradeAt(hit);
+                }
+                else
+                {
+                    pressedHit = hit;
+                    pressedPosition = screenPosition;
+                }
+            }
+            else if (scroll != 0f && !isDragging)
             {
                 SelectShopItem(scroll > 0f ? -1 : 1);
             }
+
+            if (held && !isDragging && pressedHit.Kind != ShopHitKind.None
+                && Vector2.Distance(screenPosition, pressedPosition) >= DragStartDistance)
+            {
+                isDragging = true;
+                // 運んだ押しはクリックに数えず、続けて押してもダブルクリックにしない。
+                lastClickHit = new ShopHit(ShopHitKind.None, -1);
+                Hud.Shop.BeginDrag(pressedHit, GetDropTargets(pressedHit));
+            }
+
+            if (isDragging)
+            {
+                Hud.Shop.MoveDrag(screenPosition);
+            }
+
+            if (released)
+            {
+                if (isDragging)
+                {
+                    DropAt(pressedHit, hit);
+                }
+
+                CancelShopDrag();
+            }
+        }
+
+        /// <summary>品物の行なら買い、カバンか使用枠の物なら売る。</summary>
+        private void TradeAt(ShopHit hit)
+        {
+            switch (hit.Kind)
+            {
+                case ShopHitKind.Item:
+                    shopSelected = hit.ItemIndex;
+                    TryBuySelected();
+                    break;
+                case ShopHitKind.Bag:
+                    TrySellBagItem(hit.ItemIndex);
+                    break;
+                case ShopHitKind.Quick:
+                    TrySellQuickItem(hit.ItemIndex);
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// 品物の行を落とせる枠へ落とすと、その枠へ直に買う。持ち物を店の側へ落とすと売る。落とせない所では何もしない。
+        /// </summary>
+        private void DropAt(ShopHit source, ShopHit target)
+        {
+            if (source.Kind == ShopHitKind.Item)
+            {
+                if (source.ItemIndex >= 0 && source.ItemIndex < shopStock.Count && CanBuyInto(shopStock[source.ItemIndex], target))
+                {
+                    shopSelected = source.ItemIndex;
+                    var bought = TryBuyInto(shopStock[source.ItemIndex], target);
+                    shopMessage = LastMessage;
+                    shopMessageIsWarning = !bought;
+                    shopDirty = true;
+                }
+
+                return;
+            }
+
+            var onShop = target.Kind == ShopHitKind.ShopArea || target.Kind == ShopHitKind.Item || target.Kind == ShopHitKind.Buy || target.Kind == ShopHitKind.Close;
+            if (onShop)
+            {
+                TradeAt(source);
+            }
+        }
+
+        /// <summary>
+        /// 運んでいる物を落とせる枠。品物なら入る持ち物の枠、持ち物なら売れるときの店の枠である。
+        /// </summary>
+        private List<ShopHit> GetDropTargets(ShopHit source)
+        {
+            var targets = new List<ShopHit>();
+            if (source.Kind == ShopHitKind.Item)
+            {
+                if (source.ItemIndex < 0 || source.ItemIndex >= shopStock.Count)
+                {
+                    return targets;
+                }
+
+                var entry = shopStock[source.ItemIndex];
+                for (var index = 0; index < EquipmentDropSlots.Length; index++)
+                {
+                    AddIfValid(targets, entry, new ShopHit(ShopHitKind.Equipment, index));
+                }
+
+                for (var index = 0; index < Inventory.QuickCapacity; index++)
+                {
+                    AddIfValid(targets, entry, new ShopHit(ShopHitKind.Quick, index));
+                }
+
+                for (var index = 0; index < Inventory.BagCapacity; index++)
+                {
+                    AddIfValid(targets, entry, new ShopHit(ShopHitKind.Bag, index));
+                }
+            }
+            else
+            {
+                var item = source.Kind == ShopHitKind.Bag ? Inventory.GetBagItem(source.ItemIndex)
+                    : source.Kind == ShopHitKind.Quick ? Inventory.GetQuickItem(source.ItemIndex)
+                    : null;
+                if (GetSellPrice(item) > 0)
+                {
+                    targets.Add(new ShopHit(ShopHitKind.ShopArea, -1));
+                }
+            }
+
+            return targets;
+        }
+
+        private void AddIfValid(List<ShopHit> targets, ShopEntry entry, ShopHit target)
+        {
+            if (CanBuyInto(entry, target))
+            {
+                targets.Add(target);
+            }
+        }
+
+        /// <summary>
+        /// 品物をその枠へ直に買えるか。使う物は空いた使用枠とカバンへ、装備は合う装備の枠と空いたカバンへ、
+        /// 魔法は空いたカバンと、空いた魔法の枠のあるメイン武器へ入る。着けている装備はどこへも買えない。
+        /// カバンに持っている装備は、装備の枠へ落とすと代金なしで着け替える。
+        /// </summary>
+        private bool CanBuyInto(ShopEntry entry, ShopHit target)
+        {
+            var emptyBag = target.Kind == ShopHitKind.Bag && target.ItemIndex >= 0 && target.ItemIndex < Inventory.BagCapacity
+                && Inventory.GetBagItem(target.ItemIndex) == null;
+            switch (entry.Kind)
+            {
+                case ShopEntryKind.Potion:
+                    return emptyBag || (target.Kind == ShopHitKind.Quick && target.ItemIndex >= 0 && target.ItemIndex < Inventory.QuickCapacity
+                                        && Inventory.GetQuickItem(target.ItemIndex) == null);
+                case ShopEntryKind.Magic:
+                    return emptyBag || (target.Kind == ShopHitKind.Equipment && EquipmentDropSlot(target) == CharacterEquipSlot.MainHand && HasFreeMagicSlot(Inventory.MainWeapon));
+                default:
+                    var itemId = EntryItemId(entry);
+                    if (IsWearing(itemId))
+                    {
+                        return false;
+                    }
+
+                    if (emptyBag)
+                    {
+                        return Inventory.FindInBag(itemId) < 0;
+                    }
+
+                    var slot = EquipmentDropSlot(target);
+                    return slot.HasValue && EntrySlots(entry).Contains(slot.Value);
+            }
+        }
+
+        /// <summary>品物をその枠へ買う。CanBuyIntoで落とせる枠と分かっている物に呼ぶ。</summary>
+        private bool TryBuyInto(ShopEntry entry, ShopHit target)
+        {
+            if (target.Kind == ShopHitKind.Equipment)
+            {
+                if (entry.Kind == ShopEntryKind.Magic)
+                {
+                    return TryBuyMagicIntoWeapon(entry);
+                }
+
+                return entry.Kind == ShopEntryKind.Weapon ? TryBuyWeapon(entry) : TryBuyArmour(entry);
+            }
+
+            if (Coins < entry.Price)
+            {
+                LastMessage = "コインが足りない";
+                return false;
+            }
+
+            var item = CreateEntryItem(entry);
+            var placed = target.Kind == ShopHitKind.Quick
+                ? Inventory.TryPutInQuick(item, target.ItemIndex)
+                : Inventory.TryPutInBag(item, target.ItemIndex);
+            if (!placed)
+            {
+                LastMessage = "その枠には入らない";
+                return false;
+            }
+
+            Coins -= entry.Price;
+            LastMessage = target.Kind == ShopHitKind.Quick ? $"{entry.Name}を買った" : $"{entry.Name}を買ってカバンに入れた";
+            return true;
+        }
+
+        private bool TryBuyMagicIntoWeapon(ShopEntry entry)
+        {
+            var weapon = Inventory.MainWeapon;
+            if (Coins < entry.Price)
+            {
+                LastMessage = "コインが足りない";
+                return false;
+            }
+
+            if (weapon == null || weapon.TryInsertMagic(CreateEntryItem(entry)) < 0)
+            {
+                LastMessage = "武器に空いた魔法の枠がない";
+                return false;
+            }
+
+            Coins -= entry.Price;
+            Inventory.NotifyChanged();
+            LastMessage = $"{entry.Name}を{GetItemName(weapon)}にはめた";
+            return true;
+        }
+
+        private static bool HasFreeMagicSlot(CharacterItem weapon)
+        {
+            if (weapon == null)
+            {
+                return false;
+            }
+
+            for (var index = 0; index < weapon.MagicSlotCount; index++)
+            {
+                if (weapon.GetMagic(index) == null)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private CharacterItem CreateEntryItem(ShopEntry entry)
+        {
+            switch (entry.Kind)
+            {
+                case ShopEntryKind.Potion:
+                    return new CharacterItem(PotionItemId, CharacterItemKind.Consumable);
+                case ShopEntryKind.Weapon:
+                    return equipment[entry.WeaponIndex].CreateItem();
+                case ShopEntryKind.Magic:
+                    return magicDefinitions[entry.MagicIndex].CreateItem();
+                default:
+                    return CreateArmourItem(entry.Armour, entry.Slot);
+            }
+        }
+
+        private string EntryItemId(ShopEntry entry)
+        {
+            return entry.Kind == ShopEntryKind.Weapon ? equipment[entry.WeaponIndex].Id : ArmourKey(entry.Armour, entry.Slot);
+        }
+
+        /// <summary>装備の品物が埋める装備の枠。弓のような両手の武器は、メイン武器とオフハンドの両方である。</summary>
+        private List<CharacterEquipSlot> EntrySlots(ShopEntry entry)
+        {
+            if (entry.Kind == ShopEntryKind.Armour)
+            {
+                return new List<CharacterEquipSlot> { ToEquipSlot(entry.Slot) };
+            }
+
+            return new List<CharacterEquipSlot>(equipment[entry.WeaponIndex].CreateItem().Slots);
+        }
+
+        private static CharacterEquipSlot? EquipmentDropSlot(ShopHit target)
+        {
+            return target.Kind == ShopHitKind.Equipment && target.ItemIndex >= 0 && target.ItemIndex < EquipmentDropSlots.Length
+                ? EquipmentDropSlots[target.ItemIndex]
+                : (CharacterEquipSlot?)null;
+        }
+
+        private bool IsTradeable(ShopHit hit)
+        {
+            switch (hit.Kind)
+            {
+                case ShopHitKind.Item:
+                    return true;
+                case ShopHitKind.Bag:
+                    return Inventory.GetBagItem(hit.ItemIndex) != null;
+                case ShopHitKind.Quick:
+                    return Inventory.GetQuickItem(hit.ItemIndex) != null;
+                default:
+                    return false;
+            }
+        }
+
+        private static bool SameHit(ShopHit a, ShopHit b)
+        {
+            return a.Kind == b.Kind && a.ItemIndex == b.ItemIndex;
+        }
+
+        private void CancelShopDrag()
+        {
+            pressedHit = new ShopHit(ShopHitKind.None, -1);
+            if (isDragging && Hud != null)
+            {
+                Hud.Shop.EndDrag();
+            }
+
+            isDragging = false;
         }
 
         /// <summary>
@@ -419,7 +879,13 @@ namespace FantasyRoyale.Playtest
             var mouse = Mouse.current;
             if (mouse != null && !mouseIgnoredForTests)
             {
-                HandleShopPointer(mouse.position.ReadValue(), mouse.leftButton.wasPressedThisFrame, mouse.scroll.ReadValue().y);
+                HandleShopPointer(
+                    mouse.position.ReadValue(),
+                    mouse.leftButton.wasPressedThisFrame,
+                    mouse.leftButton.isPressed,
+                    mouse.leftButton.wasReleasedThisFrame,
+                    mouse.rightButton.wasPressedThisFrame,
+                    mouse.scroll.ReadValue().y);
             }
         }
 
@@ -438,7 +904,7 @@ namespace FantasyRoyale.Playtest
 
         private ShopScreenModel BuildShopModel()
         {
-            var keeperId = openShopIndex >= 0 && openShopIndex < shopKeeperIds.Length ? shopKeeperIds[openShopIndex] : string.Empty;
+            var keeperId = OpenKeeperId;
             var keeper = Keepers.TryGetValue(keeperId, out var found) ? found : ("お店", "いらっしゃい。");
             var items = new List<ShopItemView>(shopStock.Count);
             foreach (var entry in shopStock)
@@ -486,15 +952,19 @@ namespace FantasyRoyale.Playtest
         private ShopInventoryView BuildInventory()
         {
             var quick = new List<Sprite>();
+            var quickPrices = new List<int>();
             for (var index = 0; index < Inventory.QuickCapacity; index++)
             {
                 quick.Add(Icon(GetItemIconName(Inventory.GetQuickItem(index))));
+                quickPrices.Add(GetSellPrice(Inventory.GetQuickItem(index)));
             }
 
             var bag = new List<Sprite>();
+            var bagPrices = new List<int>();
             for (var index = 0; index < Inventory.BagCapacity; index++)
             {
                 bag.Add(Icon(GetItemIconName(Inventory.GetBagItem(index))));
+                bagPrices.Add(GetSellPrice(Inventory.GetBagItem(index)));
             }
 
             var weapon = Inventory.MainWeapon;
@@ -508,7 +978,9 @@ namespace FantasyRoyale.Playtest
                 offHand == null || offHand == weapon ? null : Icon(GetItemIconName(offHand)),
                 quick,
                 weapon != null && offHand == weapon,
-                EquipmentPlaceholderSprites());
+                EquipmentPlaceholderSprites(),
+                bagPrices,
+                quickPrices);
         }
 
         /// <summary>

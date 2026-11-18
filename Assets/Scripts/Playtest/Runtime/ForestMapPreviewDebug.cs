@@ -423,14 +423,15 @@ namespace FantasyRoyale.Playtest
 
         /// <summary>
         /// 弓を買って持ち替える。騎士の手の部品も弓に替わり、剣と盾はカバンへ入る。
+        /// 確認用の近道で、どの店を開いているかに関わらず武器屋の値段で買う。
         /// </summary>
         public bool TryBuyBow()
         {
-            foreach (var entry in shopStock)
+            foreach (var weapon in equipment)
             {
-                if (entry.Kind == ShopEntryKind.Weapon && equipment[entry.WeaponIndex].WeaponKind == CharacterActionMotion.Shoot)
+                if (weapon != null && weapon.WeaponKind == CharacterActionMotion.Shoot)
                 {
-                    return TryBuyWeapon(entry);
+                    return TryBuyEquipment(weapon.Id, weapon.DisplayName, BowPrice, weapon.CreateItem);
                 }
             }
 
@@ -563,7 +564,6 @@ namespace FantasyRoyale.Playtest
             gameplayCamera.orthographic = true;
             gameplayCamera.orthographicSize = cameraHeight * 0.5f;
             FollowWithCamera(spawnPosition);
-            BuildShopStock();
             if (hudSkin != null)
             {
                 Hud = GameHud.Create(hudSkin);
