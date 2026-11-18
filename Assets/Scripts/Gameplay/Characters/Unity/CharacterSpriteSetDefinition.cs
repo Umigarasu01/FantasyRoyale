@@ -176,6 +176,10 @@ namespace FantasyRoyale.Gameplay.Characters.Unity
         [SerializeField] private CharacterMotionFrames[] motions = new CharacterMotionFrames[0];
         [SerializeField] private Sprite head;
         [SerializeField] private CharacterRunFrames[] weaponRuns = new CharacterRunFrames[0];
+        [SerializeField] private Sprite runHead;
+        [SerializeField] private Sprite[] jump = new Sprite[0];
+        [SerializeField] private CharacterSpriteAnchors[] jumpAnchors = new CharacterSpriteAnchors[0];
+        [SerializeField] private Sprite[] jumpLegs = new Sprite[0];
 
         public CharacterSpriteView(Sprite idle, Sprite[] run)
             : this(idle, run, default, new CharacterSpriteAnchors[0])
@@ -191,9 +195,17 @@ namespace FantasyRoyale.Gameplay.Characters.Unity
             Sprite[] runLegs,
             CharacterMotionFrames[] motions,
             Sprite head = null,
-            CharacterRunFrames[] weaponRuns = null)
+            CharacterRunFrames[] weaponRuns = null,
+            Sprite runHead = null,
+            Sprite[] jump = null,
+            CharacterSpriteAnchors[] jumpAnchors = null,
+            Sprite[] jumpLegs = null)
             : this(idle, run, idleAnchors, runAnchors)
         {
+            this.runHead = runHead;
+            this.jump = jump ?? new Sprite[0];
+            this.jumpAnchors = jumpAnchors ?? new CharacterSpriteAnchors[0];
+            this.jumpLegs = jumpLegs ?? new Sprite[0];
             this.idleLegs = idleLegs;
             this.runLegs = runLegs;
             this.motions = motions;
@@ -228,6 +240,27 @@ namespace FantasyRoyale.Gameplay.Characters.Unity
         /// 頭の部位の絵。兜の位置へ付くので、全ての姿勢で同じ絵を使う。
         /// </summary>
         public Sprite Head => head;
+
+        /// <summary>
+        /// 走っている間の頭の絵。上半身を前へ傾けて走る向きでは、頭も同じだけ傾けた絵を持つ。持たなければ<see cref="Head"/>である。
+        /// </summary>
+        public Sprite RunHead => runHead != null ? runHead : head;
+
+        /// <summary>
+        /// 胴の部位の、止まって跳ぶときのコマ。<see cref="JumpCrouch"/>が膝を深く曲げたしゃがみ、<see cref="JumpAir"/>が空中である。
+        /// 今の表示は空中のコマだけを使い、踏み切りと着地は立ち姿を沈めて見せる。しゃがみのコマは描いてあるが使わない。
+        /// 持たない胴は空で、立ち姿のまま跳ぶ。
+        /// </summary>
+        public Sprite[] Jump => jump;
+        public CharacterSpriteAnchors[] JumpAnchors => jumpAnchors;
+
+        /// <summary>
+        /// 足の部位の、止まって跳ぶときのコマ。並びは<see cref="Jump"/>と同じである。
+        /// </summary>
+        public Sprite[] JumpLegs => jumpLegs;
+
+        public const int JumpCrouch = 0;
+        public const int JumpAir = 1;
 
         /// <summary>
         /// 動きの型のコマを返す。持っていなければnullを返し、攻撃中も通常の絵を使う。

@@ -779,6 +779,47 @@ namespace FantasyRoyale.Playtest.Tests.PlayMode
         }
 
         /// <summary>
+        /// 振っている途中で向きを変えると、体はすぐ新しい向きになり、斬撃と判定は振り始めた向きに残る。
+        /// </summary>
+        [UnityTest]
+        public IEnumerator ForestMap_TurningMidSwingLeavesTheSlash()
+        {
+            yield return LoadForest();
+            yield return null;
+            var actor = preview.PlayerActor;
+            var animator = preview.PlayerAnimator;
+            var command = new CharacterActionCommand(CharacterActionSlot.Primary, CharacterDirection8.East);
+            Assert.That(preview.PlayerCombat.TryStartAction(command), Is.True);
+            yield return null;
+            Assert.That(animator.GetUpperSprite().name, Does.StartWith("hero-torso-swing"), "振り始めは振る絵です。");
+
+            actor.SetMoveCommand(new CharacterMoveCommand(0f, 1f));
+            var slashSeen = false;
+            var timeoutAt = Time.time + 2f;
+            while (preview.PlayerCombat.ActionState.IsBusy && Time.time < timeoutAt)
+            {
+                yield return null;
+                if (!preview.PlayerCombat.ActionState.IsBusy)
+                {
+                    break;
+                }
+
+                Assert.That(actor.Facing, Is.EqualTo(CharacterDirection8.North));
+                Assert.That(animator.GetUpperSprite().name, Does.Not.StartWith("hero-torso-swing"), "向きを変えると体はすぐ新しい向きになります。");
+                Assert.That(animator.GetUpperSprite().name, Does.Match("-up(-[0-9]+)?$"), "体は奥を向きます。");
+                Assert.That(preview.PlayerCombat.ActionState.Direction, Is.EqualTo(CharacterDirection8.East), "判定は振り始めた向きのままです。");
+                if (animator.GetSlashSprite() != null)
+                {
+                    slashSeen = true;
+                    Assert.That(Mathf.DeltaAngle(animator.GetSlashAngle(), 0f), Is.EqualTo(0f).Within(0.01f), "斬撃は振り始めた東に残ります。");
+                }
+            }
+
+            actor.SetMoveCommand(CharacterMoveCommand.None);
+            Assert.That(slashSeen, Is.True, "向きを変えても斬撃は出ます。");
+        }
+
+        /// <summary>
         /// 剣を振ると上半身のコマが重なり、剣はコマごとの角度で腕と一緒に動き、盾は動かず、終わると元の絵へ戻る。
         /// 判定のある間は、判定の距離を外側の縁とする斬撃が、判定の起点の真上に出る。
         /// </summary>
@@ -851,6 +892,64 @@ namespace FantasyRoyale.Playtest.Tests.PlayMode
             Assert.That(playerRenderer.sprite.name, Does.StartWith("hero-legs"));
             Assert.That(animator.GetUpperSprite().name, Does.StartWith("hero-torso"));
             Assert.That(animator.GetHeadSprite().name, Does.StartWith("hero-head"));
+        }
+
+        /// <summary>
+        /// 止まって跳ぶと、踏み切りで胴を沈めてから空中で足をたたんだポーズになり、着地すると胴を沈めてから立ち姿へ戻る。
+        /// 足は立ち姿のまま沈まない。剣は空中でも拳に付く。
+        /// </summary>
+        [UnityTest]
+        public IEnumerator ForestMap_StandingJumpSinksAndTucksTheLegs()
+        {
+            yield return LoadForest();
+            yield return null;
+            var actor = preview.PlayerActor;
+            var animator = preview.PlayerAnimator;
+            var playerRenderer = preview.PlayerObject.GetComponent<SpriteRenderer>();
+            var sink = -3f / animator.GetUpperSprite().pixelsPerUnit;
+            Assert.That(animator.GetUpperSprite().name, Does.StartWith("hero-torso-idle"));
+            Assert.That(actor.TryJump(), Is.True);
+
+            var airPoses = 0;
+            var timeoutAt = Time.time + 2f;
+            while (actor.Jump.IsAirborne && Time.time < timeoutAt)
+            {
+                yield return null;
+                if (!actor.Jump.IsAirborne)
+                {
+                    break;
+                }
+
+                var torso = animator.GetUpperSprite().name;
+                Assert.That(animator.GetGearSprite(CharacterGearSlot.MainHand), Is.Not.Null, "剣は拳に付いたままです。");
+                if (torso.StartsWith("hero-torso-jump-"))
+                {
+                    Assert.That(torso, Does.EndWith("-1"), "空中ではしゃがみの絵を使いません。");
+                    Assert.That(playerRenderer.sprite.name, Is.EqualTo(torso.Replace("hero-torso-", "hero-legs-")), "足も空中のポーズです。");
+                    airPoses++;
+                }
+                else
+                {
+                    Assert.That(torso, Does.StartWith("hero-torso-idle"), "踏み切りは立ち姿のまま沈みます。");
+                    Assert.That(animator.GetUpperPosition().y, Is.EqualTo(sink).Within(0.0001f));
+                }
+            }
+
+            Assert.That(actor.Jump.IsAirborne, Is.False);
+            Assert.That(airPoses, Is.GreaterThan(0), "足をたたんだ空中のポーズを見せます。");
+            // 着地したFrameの表示は、このFrameの最後に替わる。
+            yield return null;
+            Assert.That(animator.GetUpperSprite().name, Does.StartWith("hero-torso-idle"));
+            Assert.That(playerRenderer.sprite.name, Does.StartWith("hero-legs-idle"), "足は立ち姿のまま沈みません。");
+            Assert.That(animator.GetUpperPosition().y, Is.EqualTo(sink).Within(0.0001f), "着地すると胴を3 pixel沈めます。");
+
+            var standAt = Time.time + 1f;
+            while (animator.GetUpperPosition().y < -0.0001f && Time.time < standAt)
+            {
+                yield return null;
+            }
+
+            Assert.That(animator.GetUpperPosition().y, Is.EqualTo(0f).Within(0.0001f), "ためた後は元の高さへ戻ります。");
         }
 
         /// <summary>

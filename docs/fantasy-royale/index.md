@@ -48,6 +48,7 @@
 - 進行中: [防具の足、胴、頭への分割](exec-plans/active/armor-parts-head-torso-legs.md)
 - 進行中: [片手剣の三段コンボと走りながらの攻撃](exec-plans/active/sword-combo-and-running-attack.md)
 - 進行中: [地面を蹴る走りへの描き直し](exec-plans/active/bounding-run-cycle.md)
+- 進行中: [止まって跳ぶときの跳躍のポーズ](exec-plans/active/standing-jump-pose.md)
 - 進行中: [片手剣の型の走りと剣の付け方の組み込み](exec-plans/active/sword-type-pose.md)
 - 進行中: [森林マップの空間構成改善](exec-plans/active/forest-composition-improvement.md)
 - 進行中: [中心街](exec-plans/active/central-town.md)

@@ -15,8 +15,8 @@ body and torso sheets are the common run redrawn, so its frames sit where the co
 common legs fit.
 
 Reads from Assets/Art/Generated/ForestLook:
-    the whole hero: hero-body-* and the same poses with the sword in hand, hero-run-*, hero-idle-* and
-    hero-upper-swing-*. These are never shown. They say where the hands, the helmet and the blade are.
+    the whole hero: hero-body-* and the same poses with the sword in hand, hero-run-*, hero-idle-*,
+    hero-jump-* and hero-upper-swing-*. These are never shown. They say where the hands, the helmet and the blade are.
     the parts: hero-head, hero-torso-*, hero-legs-* and hero-set-<id>-head, hero-set-<id>-torso-*,
     hero-set-<id>-legs-*.
     the sword type's run: hero-body-run-sword-*, hero-run-sword-* and the torso parts hero-torso-run-sword-*,
@@ -26,7 +26,8 @@ Reads from Assets/Art/Generated/ForestLook:
 Writes, for the hero in Hero/ and for every other part in Sets/<id>/:
     hero-head-<view>.png, hero-torso-idle-<view>.png, hero-torso-<view>-<index>.png,
     hero-torso-sword-<view>-<index>.png, hero-torso-swing-<view>-<index>.png, hero-legs-idle-<view>.png,
-    hero-legs-<view>-<index>.png, hero-legs-lunge-<view>-<index>.png
+    hero-legs-<view>-<index>.png, hero-legs-lunge-<view>-<index>.png, hero-torso-jump-<view>-<pose>.png,
+    hero-legs-jump-<view>-<pose>.png (pose 0 crouches, pose 1 is in the air)
 and hero-part-template-01.png, Hero/anchors.json, Hand/<frame>-main.png, Hand/<frame>-off.png,
 Gear/<item>-<view>.png, Gear/<item>-rot-<index>.png, Gear/sword-pommel-rot-<index>.png, Gear/gear.json
 
@@ -49,15 +50,34 @@ fist instead of lying on top of it. The main fist comes from the sheets with the
 Every frame on the body cell shares one size, so the sprite pivot stays at the same foot position.
 Output is deterministic.
 """
+import itertools
 import json
 import math
 import os
 import re
 import statistics
 import sys
+import time
 from collections import deque
 
 from PIL import Image, ImageDraw
+
+# A file just written can be held for a moment by a virus scan or the Editor's watcher, and opening it again
+# fails with "Invalid argument". Saving waits a little and tries again.
+_save = Image.Image.save
+
+
+def _save_patiently(self, fp, *args, **kwargs):
+    for attempt in range(20):
+        try:
+            return _save(self, fp, *args, **kwargs)
+        except OSError as error:
+            if attempt == 19 or error.errno not in (13, 22):
+                raise
+            time.sleep(0.25)
+
+
+Image.Image.save = _save_patiently
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 FOREST = os.path.join(ROOT, "Assets", "Art", "Generated", "ForestLook")
@@ -83,19 +103,49 @@ SWORD_RUN_SHEETS = {
 }
 # How far a frame with both feet off the ground is lifted, in map pixels. Every frame is cut with its feet
 # on the line, so a leap would otherwise land; a fixed height also keeps the leaps alike between rows.
-FLIGHT_RISE = 3
+FLIGHT_RISE = 6
 # How many pixels a leap drawn too high for the cell may be lowered.
 MAX_LEAP_TRIM = 3
 # Seen from the front or the back the legs are alike, and the drawn run kept the same leg ahead in both steps.
 # There the legs of the second step are the first step's, mirrored, so the feet take turns. Only the legs are
 # mirrored: the arms hold the sword and the shield on their own sides.
 MIRRORED_STEP_VIEWS = ("down", "up")
+# Running toward or away from the viewer the fists swing at the sides. A brown cluster nearer the middle than
+# this, in map pixels, is a boot kicked up behind and not a fist.
+HANDS_AT_SIDES = ("down", "up")
+MIN_SIDE_HAND_OFFSET = 8
+# Runs whose upper body leans forward, by the drawn pose (the body sheet without "hero-body-"): the row and the
+# degrees, turning toward the way the knight runs. Running away to the upper right the drawn upper body stood
+# straight over the kicking legs, so the torso, the arms and what they hold turn around the hips before cutting.
+# The legs do not turn. The turn is done on the big sheet, so the outline stays as clean as a turned weapon.
+LEAN_DEGREES = {"upside": -14.0}
+LEANING_RUNS = {"run-diagonal-01.png": (1, LEAN_DEGREES["upside"]), "run-sword-diagonal-01.png": (1, LEAN_DEGREES["upside"])}
+# The head of a leaning run turns with the upper body, around the neck, and is written as hero-head-run-<view>.
+# How far below the tunic's lower edge the upper body still turns on a whole-body sheet, in sheet pixels.
+LEAN_SPLIT_BELOW_HEM = 6
+# The views of the leaning runs, and where their arm band starts, as a share of the height: the hand on the side
+# away from the run rises with the turn.
+LEANING_VIEWS = ("upside",)
+LEAN_ARM_BAND_TOP = 0.30
 # Islands smaller than this, in sheet pixels, are left over from the background and are cleared.
 MAX_SPECK = 1000
 IDLE_SHEETS = (
     ("hero-body-idle-01.png", ("down", "side", "up"), 0.135),
     ("hero-body-idle-diagonal-01.png", ("downside", "upside"), 0.135),
 )
+# The jump from a standing start: one column for each view, and a row for each pose. Row 0 crouches, for the
+# take-off and the landing, and row 1 is in the air with the feet tucked up. Every frame is cut with its feet on
+# the line; the game lifts the air pose by the jump's height. The knight is drawn smaller on these sheets than on
+# the idle's, so the scale makes the helmets as wide as the idle's (185 against 207 sheet pixels).
+JUMP_SHEETS = (
+    ("hero-body-jump-01.png", ("down", "side", "up"), 0.151),
+    ("hero-body-jump-diagonal-01.png", ("downside", "upside"), 0.151),
+)
+JUMP_POSES = 2
+# In the air the drawn shoulders rise round the helmet, so the head sinks 3 to 5 pixels deeper into the collar than
+# when standing and the knight shrugs. The head of the air pose is raised by this share of the difference.
+JUMP_AIR_POSE = 1
+JUMP_HEAD_RAISE_SHARE = 0.5
 # The sword slash, as an upper body only: front, side and back, then the diagonals.
 SWING_SHEETS = (
     ("hero-body-upper-swing-01.png", ("down", "side", "up"), 0.22),
@@ -354,7 +404,8 @@ def cut(keyed, rows, columns, row, column, clean=True):
 
 def place(item, scale, name, rise=0):
     """Shrink a sprite onto the shared cell, with its helmet centred and its feet on the baseline, or rise above it."""
-    centre = helmet_centre(item) * scale
+    # A leaning run is centred where its helmet stood before the lean, so the feet stay over the shadow.
+    centre = (helmet_centre(item) - LEAN_SHIFT.get(name, 0)) * scale
     small = shrink(item, scale)
     canvas = Image.new("RGBA", (CELL_WIDTH, CELL_HEIGHT), (0, 0, 0, 0))
     left = round(CELL_WIDTH / 2 - centre)
@@ -510,12 +561,12 @@ def fist_sprite(frame, centre):
     return result
 
 
-def gloves(frame):
+def gloves(frame, band_top=0.38):
     """Brown clusters in the arm band, largest first, as (size, centre x, centre y)."""
     pixels = frame.load()
     _, top, _, bottom = frame.getchannel("A").getbbox()
     height = bottom - top
-    first, last = top + int(height * 0.38), top + int(height * 0.74)
+    first, last = top + int(height * band_top), top + int(height * 0.74)
     seen = set()
     clusters = []
     for y in range(first, last):
@@ -554,9 +605,13 @@ def anchor_data(frame, view, main, off, angle):
     }
 
 
-def find_hands(frame, view, name):
+def find_hands(frame, view, name, run=False):
     """Find the two fists of one frame, returning the main hand and then the off hand."""
-    found = gloves(frame)
+    found = gloves(frame, LEAN_ARM_BAND_TOP) if run and view in LEANING_VIEWS else gloves(frame)
+    if run and view in HANDS_AT_SIDES:
+        # Running toward or away from the viewer, a boot kicked up behind is brown like a glove and sits
+        # under the middle of the body, where the swinging fists never come.
+        found = [item for item in found if abs(item[1] - CELL_WIDTH / 2) >= MIN_SIDE_HAND_OFFSET]
     # A forearm can break into two clusters, so the second hand must be clearly apart from the first.
     apart = [item for item in found[1:] if abs(item[1] - found[0][1]) >= MIN_HAND_GAP] if found else []
     if not apart:
@@ -741,6 +796,17 @@ def load_with_held(file):
     held = key_magenta(Image.open(os.path.join(FOREST, held_file)))
     if held.size != body.size:
         raise ValueError(f"{held_file} is not the size of {file}")
+    lean = LEANING_RUNS.get(file.replace("hero-body-", ""))
+    if lean:
+        row, degrees = lean
+        views = views_of(file)
+        for column in range(RUN_COLUMNS):
+            box = cell_box(body, len(views), RUN_COLUMNS, row, column)
+            pivot = hip_of_whole(body.crop(box))
+            before = helmet_x(body.crop(box))
+            for sheet in (body, held):
+                lean_cell(sheet, box, pivot, degrees, pivot[1] + LEAN_SPLIT_BELOW_HEM)
+            LEAN_SHIFT[f"hero-{views[row]}-{shown_at(views[row], column)}"] = helmet_x(body.crop(box)) - before
     return body, held
 
 
@@ -748,7 +814,84 @@ def load_part(file, kind, part="hero"):
     """The sheet of a part for the pose of a hero-body sheet."""
     pose = file.replace("hero-body-upper-swing", "swing").replace("hero-body-", "")
     name = f"hero-{kind}-{pose}" if part == "hero" else f"hero-set-{part}-{kind}-{pose}"
-    return key_part(Image.open(os.path.join(FOREST, name)))
+    sheet = key_part(Image.open(os.path.join(FOREST, name)))
+    lean = LEANING_RUNS.get(pose) if kind == "torso" else None
+    if lean:
+        row, degrees = lean
+        for column in range(RUN_COLUMNS):
+            box = cell_box(sheet, len(views_of(file)), RUN_COLUMNS, row, column)
+            lean_cell(sheet, box, hip_of_torso(sheet.crop(box)), degrees, None)
+    return sheet
+
+
+RUN_COLUMNS = 6
+# The frame each sheet column is shown at, where the drawn order slides. The back diagonal run was drawn
+# striding, gathering, then leaping, so the boot on the shadow moved forward while it stood on the ground.
+# Gathering first, then pushing off the back foot, then leaping moves it backward. A swap, so it is its own inverse.
+RUN_ORDER = {"upside": (1, 0, 2, 4, 3, 5)}
+
+
+def shown_at(view, column):
+    """The run frame a sheet column is shown at."""
+    order = RUN_ORDER.get(view)
+    return order[column] if order else column
+# How far the lean moved each leaning frame's helmet sideways on its sheet, by frame name, in sheet pixels.
+LEAN_SHIFT = {}
+
+
+def helmet_x(cell):
+    """Where the helmet's middle is across a cell."""
+    box = cell.getchannel("A").getbbox()
+    return box[0] + helmet_centre(cell.crop(box))
+
+
+def views_of(file):
+    """The rows of a run sheet, by its body sheet."""
+    for sheet, views, *_ in RUN_SHEETS:
+        if file in (sheet, SWORD_RUN_SHEETS[sheet]):
+            return views
+    raise ValueError(f"{file} is not a run sheet")
+
+
+def hip_of_whole(cell):
+    """The middle of the tunic's lower edge on a whole-body cell: the lowest row of blue near the middle."""
+    pixels = cell.load()
+    box = cell.getchannel("A").getbbox()
+    middle = (box[0] + box[2]) / 2
+    reach = (box[2] - box[0]) * 0.3
+    blue = [(x, y) for y in range(box[1], box[3]) for x in range(int(middle - reach), int(middle + reach))
+            if pixels[x, y][3] and pixels[x, y][2] > pixels[x, y][0] + 50 and pixels[x, y][2] > pixels[x, y][1] + 25
+            and pixels[x, y][2] > 110]
+    hem = max(y for _, y in blue)
+    edge = [x for x, y in blue if y >= hem - 10]
+    return (sum(edge) / len(edge), hem)
+
+
+def hip_of_torso(cell):
+    """The middle of a torso's lower edge."""
+    alpha = cell.getchannel("A")
+    box = alpha.getbbox()
+    pixels = alpha.load()
+    edge = [x for y in range(box[3] - 10, box[3]) for x in range(box[0], box[2]) if pixels[x, y]]
+    return (sum(edge) / len(edge), box[3])
+
+
+def lean_cell(sheet, box, pivot, degrees, split):
+    """Turn the part of one cell above split, or all of it, around the pivot, in place on the sheet."""
+    cell = sheet.crop(box)
+    upper = cell.copy()
+    if split is not None:
+        cut_row = max(0, min(cell.height, round(split)))
+        ImageDraw.Draw(upper).rectangle((0, cut_row, cell.width, cell.height), fill=(0, 0, 0, 0))
+        cell = cell.copy()
+        ImageDraw.Draw(cell).rectangle((0, 0, cell.width, cut_row - 1), fill=(0, 0, 0, 0))
+    else:
+        cell = Image.new("RGBA", cell.size, (0, 0, 0, 0))
+    turned = upper.rotate(degrees, resample=Image.BICUBIC, center=pivot)
+    alpha = turned.getchannel("A").point(lambda value: 255 if value >= 128 else 0)
+    turned.putalpha(alpha)
+    cell.alpha_composite(turned)
+    sheet.paste(cell, box[:2])
 
 
 def upper_point(point):
@@ -803,7 +946,7 @@ def build_body():
         body, held = load_with_held(file)
         sword_body, sword_held = load_with_held(SWORD_RUN_SHEETS[file])
         for row, view in enumerate(views):
-            names = [f"hero-{view}-{column}" for column in range(columns)]
+            names = [f"hero-{view}-{shown_at(view, column)}" for column in range(columns)]
             # Every frame is cut with its feet on the line, so a leap is lifted to leave the ground.
             rises = [FLIGHT_RISE if column in flights else 0 for column in range(columns)]
             read = [
@@ -812,14 +955,14 @@ def build_body():
             # One angle for the whole run: the weapon moves with the hand and never swings on its own.
             angle = round(statistics.median(item["angle"] for item in read), 1)
             for name, item in zip(names, read):
-                add(name, item, view, find_hands(item["frame"], view, name), angle, "run")
+                add(name, item, view, find_hands(item["frame"], view, name, run=True), angle, "run")
             # The sword type's run sits where the common run sits, and keeps its head.
             sword = [read_like(sword_body, sword_held, item["placement"], name) for name, item in zip(names, read)]
             sword_angle = round(statistics.median(item["angle"] for item in sword), 1)
             for column, (item, common) in enumerate(zip(sword, read)):
-                name = f"hero-sword-{view}-{column}"
+                name = f"hero-sword-{view}-{shown_at(view, column)}"
                 item["head"] = common["head"]
-                add(name, item, view, find_hands(item["frame"], view, name), sword_angle, "run")
+                add(name, item, view, find_hands(item["frame"], view, name, run=True), sword_angle, "run")
     for file, views, scale in IDLE_SHEETS:
         body, held = load_with_held(file)
         for column, view in enumerate(views):
@@ -827,6 +970,12 @@ def build_body():
             item = read_held(body, held, 1, len(views), 0, column, scale, name)
             add(name, item, view, find_hands(item["frame"], view, name), round(item["angle"], 1), "idle")
             idles[view] = item
+    for file, views, scale in JUMP_SHEETS:
+        body, held = load_with_held(file)
+        for row, (column, view) in itertools.product(range(JUMP_POSES), enumerate(views)):
+            name = f"hero-jump-{view}-{row}"
+            item = read_held(body, held, JUMP_POSES, len(views), row, column, scale, name)
+            add(name, item, view, find_hands(item["frame"], view, name), round(item["angle"], 1), "jump")
     for view in RUNS_HELD_AS_IDLE:
         angle = round(idles[view]["angle"], 1)
         for entry in data["frames"]:
@@ -934,7 +1083,29 @@ def build_heads(part, folder, knight):
         moved = Image.new("RGBA", HEAD_SIZE, (0, 0, 0, 0))
         moved.paste(frame, (0, drop))
         moved.save(os.path.join(folder, f"hero-head-{view}.png"))
+    # The head of a leaning run: turned on the big sheet around the neck, so the neck stays on the collar.
+    for view, degrees in LEAN_DEGREES.items():
+        box = knight[view][0]
+        turned = sheet.copy()
+        lean_cell(turned, box, neck_of(turned.crop(box)), degrees, None)
+        frame = same_place(turned, *knight[view], HEAD_SCALE, HEAD_SIZE)
+        moved = Image.new("RGBA", HEAD_SIZE, (0, 0, 0, 0))
+        moved.paste(frame, (0, drop))
+        moved.save(os.path.join(folder, f"hero-head-run-{view}.png"))
     return knight
+
+
+def neck_of(cell):
+    """Where the neck leaves a head on its sheet cell, as head_neck finds it on the head's canvas."""
+    alpha = cell.getchannel("A")
+    bottom = alpha.getbbox()[3]
+    pixels = alpha.load()
+    middles = []
+    for y in range(bottom - 12, bottom):
+        xs = [x for x in range(cell.width) if pixels[x, y]]
+        if xs:
+            middles.append((min(xs) + max(xs)) / 2)
+    return statistics.mean(middles), bottom
 
 
 def each_pose():
@@ -942,10 +1113,13 @@ def each_pose():
     for file, views, scale, columns, flights in RUN_SHEETS:
         for row, view in enumerate(views):
             for column in range(columns):
-                yield file, len(views), columns, row, column, f"hero-{view}-{column}", f"{view}-{column}"
+                yield file, len(views), columns, row, column, f"hero-{view}-{shown_at(view, column)}", f"{view}-{shown_at(view, column)}"
     for file, views, scale in IDLE_SHEETS:
         for column, view in enumerate(views):
             yield file, 1, len(views), 0, column, f"hero-idle-{view}", f"idle-{view}"
+    for file, views, scale in JUMP_SHEETS:
+        for row, (column, view) in itertools.product(range(JUMP_POSES), enumerate(views)):
+            yield file, JUMP_POSES, len(views), row, column, f"hero-jump-{view}-{row}", f"jump-{view}-{row}"
 
 
 def each_swing():
@@ -1084,7 +1258,16 @@ def head_neck(head):
     return statistics.mean(middles), bottom
 
 
-def seat_heads(torso):
+def torso_top(torso):
+    """The middle of a torso's top rows, and its top row."""
+    alpha = torso.getchannel("A")
+    box = alpha.getbbox()
+    pixels = alpha.load()
+    xs = [x for y in range(box[1], box[1] + 6) for x in range(box[0], box[2]) if pixels[x, y]]
+    return (min(xs) + max(xs)) / 2, box[1]
+
+
+def seat_heads(torso, sword=None):
     """Put the head of each run in NECK_SEATED_RUNS on the collar's opening of the knight's torso, and
     rewrite those head points in anchors.json. The head sits on the opening as it does in the model run."""
     path = os.path.join(HERO, "anchors.json")
@@ -1112,6 +1295,46 @@ def seat_heads(torso):
             point = (opening[0] + gap[0] - neck[0] + HEAD_POINT[0], opening[1] + gap[1] - neck[1] + HEAD_POINT[1])
             entries[name]["head"] = {"x": round(point[0] - foot_x, 1), "y": round(foot_y - point[1], 1)}
         print(f"head {view}: seated on the collar like {model}, gap ({gap[0]:.1f}, {gap[1]:.1f})")
+    # On a leaning torso the collar's opening is found unevenly from frame to frame, and the head shook. There
+    # the head keeps its height against the top of the torso, the median of where the collar put it.
+    for view in LEAN_DEGREES:
+        names = [name for name in entries if re.fullmatch(rf"hero-{view}-\d+", name)]
+        # Both the common torso and the sword type's carry this head, so its height follows the middle of their tops.
+        def top_of(name):
+            sword_name = name.replace("hero-", "hero-sword-", 1)
+            found = [torso_top(torso[name])] + ([torso_top(sword[sword_name])] if sword and sword_name in sword else [])
+            return statistics.mean(x for x, _ in found), statistics.mean(y for _, y in found)
+        tops = {name: top_of(name) for name in names}
+        dx = statistics.median(foot_x + entries[name]["head"]["x"] - tops[name][0] for name in names)
+        dy = statistics.median(foot_y - entries[name]["head"]["y"] - tops[name][1] for name in names)
+        # The top's middle swings with the shoulders, so across the head keeps one place for the whole run.
+        across = statistics.median(entries[name]["head"]["x"] for name in names)
+        for name in names:
+            entries[name]["head"] = {"x": round(across, 1), "y": round(foot_y - tops[name][1] - dy, 1)}
+        print(f"head {view}: kept at ({dx:.1f}, {dy:.1f}) from the top of the leaning torso")
+    with open(path, "w", encoding="utf-8", newline="\n") as file:
+        json.dump(data, file, indent=1)
+        file.write("\n")
+
+
+def raise_jump_heads(torso):
+    """Raise the head of each view's air pose toward the height it keeps over the torso when standing, and rewrite
+    those head points in anchors.json. The height is measured from the top of the knight's torso, in whole pixels."""
+    path = os.path.join(HERO, "anchors.json")
+    with open(path, encoding="utf-8") as file:
+        data = json.load(file)
+    entries = {entry["name"]: entry for entry in data["frames"]}
+    foot_y = CELL_HEIGHT - FOOT_MARGIN
+
+    def gap(name):
+        return torso_top(torso[name])[1] - (foot_y - entries[name]["head"]["y"])
+
+    for file, views, scale in JUMP_SHEETS:
+        for view in views:
+            name = f"hero-jump-{view}-{JUMP_AIR_POSE}"
+            raise_by = round(JUMP_HEAD_RAISE_SHARE * (gap(f"hero-idle-{view}") - gap(name)))
+            entries[name]["head"]["y"] = round(entries[name]["head"]["y"] + raise_by, 1)
+            print(f"head jump {view}: raised {raise_by} pixels in the air")
     with open(path, "w", encoding="utf-8", newline="\n") as file:
         json.dump(data, file, indent=1)
         file.write("\n")
@@ -1164,11 +1387,11 @@ def build_sword_torso(part, folder, frames, placements, knight):
         sheet = load_part(SWORD_RUN_SHEETS[file], "torso", part)
         for row, view in enumerate(views):
             for column in range(columns):
-                whole = f"hero-sword-{view}-{column}"
+                whole = f"hero-sword-{view}-{shown_at(view, column)}"
                 target = frames[whole] if knight is None else knight[whole]
                 frame = place_part(sheet, len(views), columns, row, column, placements[whole], target, knight is None)
                 placed[whole] = frame
-                frame.save(os.path.join(folder, f"hero-torso-sword-{view}-{column}.png"))
+                frame.save(os.path.join(folder, f"hero-torso-sword-{view}-{shown_at(view, column)}.png"))
                 if knight is not None:
                     lowest = min(lowest, outline_overlap(knight[whole], frame))
     if knight is not None:
@@ -1185,7 +1408,8 @@ def build_parts(frames, placements):
     knight_sword = build_sword_torso("hero", HERO, frames, placements, None)
     if knight_sword is None:
         raise ValueError("the knight has no sword type's run torso")
-    seat_heads(knight_torso)
+    seat_heads(knight_torso, knight_sword)
+    raise_jump_heads(knight_torso)
     knight_legs = build_legs("hero", HERO, frames, placements, knight_torso, None)
     for part, layers in find_parts().items():
         folder = os.path.join(SETS, part)

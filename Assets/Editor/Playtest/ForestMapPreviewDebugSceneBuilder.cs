@@ -61,6 +61,8 @@ namespace FantasyRoyale.Editor.Playtest
         // 走りの1周のコマ数は絵によって違う。この数までの続いた番号のコマを読む。
         private const int HeroMaxRunFrames = 12;
         private const int HeroSwingFrameCount = 4;
+        // 止まって跳ぶときのコマ。0がしゃがみ、1が空中である。
+        private const int HeroJumpFrameCount = 2;
         // 体のコマは96 pixelの高さで、足元は下から4 pixelにある。build_hero_frames.pyのCELL_HEIGHTとFOOT_MARGINに合わせる。
         private const float HeroPivotY = 4f / 96f;
 
@@ -505,6 +507,7 @@ namespace FantasyRoyale.Editor.Playtest
                 foreach (var view in views)
                 {
                     ImportIfPresent($"{folder}/hero-head-{view}.png", HeadPivot);
+                    ImportIfPresent($"{folder}/hero-head-run-{view}.png", HeadPivot);
                     ImportIfPresent($"{folder}/hero-torso-idle-{view}.png", new Vector2(0.5f, HeroPivotY));
                     ImportIfPresent($"{folder}/hero-legs-idle-{view}.png", new Vector2(0.5f, HeroPivotY));
                     for (var frame = 0; frame < HeroMaxRunFrames; frame++)
@@ -518,6 +521,12 @@ namespace FantasyRoyale.Editor.Playtest
                     {
                         ImportIfPresent($"{folder}/hero-torso-swing-{view}-{frame}.png", UpperPivot);
                         ImportIfPresent($"{folder}/hero-legs-lunge-{view}-{frame}.png", LungePivot);
+                    }
+
+                    for (var frame = 0; frame < HeroJumpFrameCount; frame++)
+                    {
+                        ImportIfPresent($"{folder}/hero-torso-jump-{view}-{frame}.png", new Vector2(0.5f, HeroPivotY));
+                        ImportIfPresent($"{folder}/hero-legs-jump-{view}-{frame}.png", new Vector2(0.5f, HeroPivotY));
                     }
                 }
             }
@@ -756,6 +765,7 @@ namespace FantasyRoyale.Editor.Playtest
             var idle = AssetDatabase.LoadAssetAtPath<Sprite>($"{folder}/hero-torso-idle-{view}.png");
             var idleLegs = AssetDatabase.LoadAssetAtPath<Sprite>($"{folder}/hero-legs-idle-{view}.png");
             var head = AssetDatabase.LoadAssetAtPath<Sprite>($"{folder}/hero-head-{view}.png");
+            var runHead = AssetDatabase.LoadAssetAtPath<Sprite>($"{folder}/hero-head-run-{view}.png");
             var motions = swing.Length > 0 || standLegs.Length > 0
                 ? new[] { new CharacterMotionFrames(CharacterActionMotion.Swing, swing, swingAnchors, standLegs, standHeads) }
                 : new CharacterMotionFrames[0];
@@ -771,7 +781,19 @@ namespace FantasyRoyale.Editor.Playtest
             var weaponRuns = swordRun.Length > 0
                 ? new[] { new CharacterRunFrames(CharacterActionMotion.Swing, swordRun, swordAnchors) }
                 : new CharacterRunFrames[0];
-            return new CharacterSpriteView(idle, frames, anchors[$"hero-idle-{view}"], frameAnchors, idleLegs, legs, motions, head, weaponRuns);
+
+            // 止まって跳ぶときのしゃがみと空中のコマ。手の位置は共有の値である。
+            var jump = LoadFrames(folder, $"hero-torso-jump-{view}", HeroJumpFrameCount);
+            var jumpLegs = LoadFrames(folder, $"hero-legs-jump-{view}", HeroJumpFrameCount);
+            var jumpAnchors = new CharacterSpriteAnchors[jump.Length];
+            for (var frame = 0; frame < jump.Length; frame++)
+            {
+                jumpAnchors[frame] = anchors[$"hero-jump-{view}-{frame}"];
+            }
+
+            return new CharacterSpriteView(
+                idle, frames, anchors[$"hero-idle-{view}"], frameAnchors, idleLegs, legs, motions, head, weaponRuns, runHead,
+                jump, jumpAnchors, jumpLegs);
         }
 
         /// <summary>

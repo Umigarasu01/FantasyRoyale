@@ -28,6 +28,22 @@ namespace FantasyRoyale.Gameplay.Characters.Unity
         // 立ち止まっている間の呼吸。1周の後半だけ、足を残して胴、頭、持ち物を1 pixel下げる。
         private const float BreathSeconds = 1.2f;
 
+        // 走りの上下の揺れ。1歩は着地、体重を乗せる、両足が浮くの3コマで、頭を2歩の着地の高さの平均に揃え、
+        // 体重を乗せるコマで1 pixel沈め、浮くコマで1 pixel上げる。足の絵ごとに描かれた頭の高さがばらつくので、
+        // 足を残して胴、頭、持ち物をずらして揃える。
+        private const int RunStepFrames = 3;
+        private static readonly int[] RunBobPixels = { 0, -1, 1 };
+        // 斜め後ろの走りは上下の揺れが弱く見えたので、倍に揺らす。
+        private static readonly int[] StrongRunBobPixels = { 0, -2, 2 };
+        private const int RunSwayPixels = 1;
+
+        // 止まって跳ぶときのポーズ。跳んだ直後と着地の後は、立ち姿の足のまま胴、頭、持ち物を沈めてためを見せ、
+        // その間は空中のポーズを見せる。跳躍は0.42秒なので、ためは踏み切りで約50ミリ秒、着地で0.1秒になる。
+        // 膝を深く曲げたしゃがみの絵もあるが、所有者が2026-11-17に、かがみ過ぎに見えるので沈めるだけにすると決めた。
+        private const float JumpTakeoffShare = 0.12f;
+        private const float LandingCrouchSeconds = 0.1f;
+        private const int JumpCrouchPixels = 3;
+
         // 被弾の赤。持ち主の色へ掛けて、体と部品の全ての層へ同じ色を付ける。前半は赤いまま、後半で元の色へ戻る。
         private const float HitFlashSeconds = 0.2f;
         private static readonly Color HitFlashColour = new Color(1f, 0.3f, 0.3f);
@@ -89,6 +105,12 @@ namespace FantasyRoyale.Gameplay.Characters.Unity
         private CharacterDirection8 shownPartFacing = CharacterDirection8.South;
         private float runSeconds;
         private float idleSeconds;
+        private float landingCrouchRemaining;
+        private bool wasAirborne;
+        // 振り始めた時の体の向き。振っている間にここから向きを変えると、体だけが新しい向きになる。
+        private CharacterDirection8 swingStartFacing;
+        private CharacterActionSpec swingSpec;
+        private CharacterActionPhase swingPhase;
         private CharacterActionMotion? weaponKind;
         private readonly Dictionary<CharacterGearSlot, GearPart> parts = new Dictionary<CharacterGearSlot, GearPart>();
         private CharacterHealth watchedHealth;
@@ -279,6 +301,14 @@ namespace FantasyRoyale.Gameplay.Characters.Unity
         public Sprite GetSlashSprite()
         {
             return slashRenderer != null && slashRenderer.enabled ? slashRenderer.sprite : null;
+        }
+
+        /// <summary>
+        /// 斬撃の扇が向く角度を、東を0度とする反時計回りの度で返す。
+        /// </summary>
+        public float GetSlashAngle()
+        {
+            return slashRenderer != null ? slashRenderer.transform.localEulerAngles.z : 0f;
         }
 
         /// <summary>
@@ -637,6 +667,13 @@ namespace FantasyRoyale.Gameplay.Characters.Unity
                         && actor.Health != null
                         && actor.Health.IsAlive;
 
+            // 着地したFrameから、しゃがみを見せる時間を数える。表示より先に数え、着地のFrameに立ち姿が挟まらないようにする。
+            landingCrouchRemaining = wasAirborne && !IsAirborne
+                ? LandingCrouchSeconds
+                : Mathf.Max(0f, landingCrouchRemaining - deltaSeconds);
+            wasAirborne = IsAirborne;
+
+            NoteSwingStart();
             if (TryShowAttack(deltaSeconds))
             {
                 idleSeconds = 0f;
@@ -644,7 +681,6 @@ namespace FantasyRoyale.Gameplay.Characters.Unity
             }
 
             isAttacking = false;
-            slashRenderer.enabled = false;
             var facing = UpdateShownFacing();
             spriteRenderer.flipX = IsLeftFacing(facing);
 
@@ -656,17 +692,112 @@ namespace FantasyRoyale.Gameplay.Characters.Unity
                 NoteRunFrame(frame, view.Run.Length);
                 var (runFrames, runAnchors) = GetRun(view);
                 var anchors = frame < runAnchors.Length ? runAnchors[frame] : view.IdleAnchors;
-                ShowBody(facing, runFrames[frame], frame < legs.RunLegs.Length ? legs.RunLegs[frame] : null, anchors);
-                ApplyParts(facing, anchors, HeldAngle(anchors));
+                var runLegs = frame < legs.RunLegs.Length ? legs.RunLegs[frame] : null;
+                var bob = runLegs != null ? RunBob(facing, runAnchors, frame, runFrames[frame]) + RunSway(facing, frame, runFrames[frame]) : Vector2.zero;
+                ShowBody(facing, runFrames[frame], runLegs, anchors, bob, true);
+                ApplyParts(facing, anchors, HeldAngle(anchors), bob);
+                ShowLingeringSlash();
                 idleSeconds = 0f;
+                landingCrouchRemaining = 0f;
                 return;
             }
 
             runSeconds = 0f;
             lastRunFrame = -1;
+            if (IsInTheAir(view, legs))
+            {
+                var air = view.JumpAnchors[CharacterSpriteView.JumpAir];
+                ShowBody(facing, view.Jump[CharacterSpriteView.JumpAir], legs.JumpLegs[CharacterSpriteView.JumpAir], air);
+                ApplyParts(facing, air, HeldAngle(air));
+                ShowLingeringSlash();
+                idleSeconds = 0f;
+                return;
+            }
+
+            if (legs.IdleLegs != null && view.Idle != null && IsCrouching())
+            {
+                var sink = new Vector2(0f, -JumpCrouchPixels / view.Idle.pixelsPerUnit);
+                ShowBody(facing, view.Idle, legs.IdleLegs, view.IdleAnchors, sink);
+                ApplyParts(facing, view.IdleAnchors, HeldAngle(view.IdleAnchors), sink);
+                ShowLingeringSlash();
+                idleSeconds = 0f;
+                return;
+            }
+
             var breath = legs.IdleLegs != null ? Breathe(view.Idle, deltaSeconds) : Vector2.zero;
             ShowBody(facing, view.Idle, legs.IdleLegs, view.IdleAnchors, breath);
             ApplyParts(facing, view.IdleAnchors, HeldAngle(view.IdleAnchors), breath);
+            ShowLingeringSlash();
+        }
+
+        /// <summary>
+        /// 新しい段を振り始めたら、その時の体の向きを控える。連撃の次の段も、その段の始まりで控え直す。
+        /// </summary>
+        private void NoteSwingStart()
+        {
+            var state = combat != null ? combat.ActionState : null;
+            if (state == null || !state.IsBusy)
+            {
+                swingSpec = null;
+                return;
+            }
+
+            var begins = swingSpec == null
+                         || !ReferenceEquals(state.CurrentSpec, swingSpec)
+                         || (state.Phase == CharacterActionPhase.Windup && swingPhase != CharacterActionPhase.Windup);
+            if (begins)
+            {
+                swingStartFacing = actor.Facing;
+            }
+
+            swingSpec = state.CurrentSpec;
+            swingPhase = state.Phase;
+        }
+
+        /// <summary>
+        /// 振っている途中で向きを変えると、体は新しい向きの走りか立ち姿になり、斬撃だけが振った向きに残る。
+        /// 判定も斬撃と同じく振った向きのままである。振っていなければ斬撃を消す。
+        /// 斬撃の前後は体の向きでなく振った向きで決め、背を向けた向きへ振った斬撃は体の向こうへ描く。
+        /// </summary>
+        private void ShowLingeringSlash()
+        {
+            // 振る絵を持たない体（体全体の絵を1枚で見せる敵）は、今までどおり斬撃を出さない。
+            var motion = combat != null && combat.ActionState.IsBusy
+                ? sprites.GetView(combat.ActionState.Direction).GetMotion(combat.ActionState.CurrentSpec.Motion)
+                : null;
+            if (motion == null || motion.Frames.Length < AttackFrameCount)
+            {
+                slashRenderer.enabled = false;
+                return;
+            }
+
+            var state = combat.ActionState;
+            ShowSlash(state);
+            var away = state.Direction == CharacterDirection8.North
+                       || state.Direction == CharacterDirection8.NorthEast
+                       || state.Direction == CharacterDirection8.NorthWest;
+            slashRenderer.sortingOrder = spriteRenderer.sortingOrder + (away ? -1 : SlashOrder);
+        }
+
+        /// <summary>
+        /// 止まって跳び、踏み切りのためを過ぎて空中のポーズを見せる間か。胴か足の部位が空中のコマを持たなければ、
+        /// 立ち姿のまま跳ぶ。
+        /// </summary>
+        private bool IsInTheAir(CharacterSpriteView view, CharacterSpriteView legs)
+        {
+            return IsAirborne
+                   && actor.Jump.Progress >= JumpTakeoffShare
+                   && view.Jump.Length > CharacterSpriteView.JumpAir
+                   && view.JumpAnchors.Length > CharacterSpriteView.JumpAir
+                   && legs.JumpLegs.Length > CharacterSpriteView.JumpAir;
+        }
+
+        /// <summary>
+        /// 跳んだ直後か着地の直後で、胴、頭、持ち物を沈めてためを見せる間か。
+        /// </summary>
+        private bool IsCrouching()
+        {
+            return IsAirborne ? actor.Jump.Progress < JumpTakeoffShare : landingCrouchRemaining > 0f;
         }
 
         /// <summary>
@@ -686,10 +817,50 @@ namespace FantasyRoyale.Gameplay.Characters.Unity
         }
 
         /// <summary>
+        /// 走りのコマで、足に対して胴、頭、持ち物をずらす量を返す。頭の高さを2歩の着地のコマの平均に揃え、
+        /// 1歩の中の位置ごとに<see cref="RunBobPixels"/>だけ上下させる。斜め後ろの向きは<see cref="StrongRunBobPixels"/>を使う。
+        /// ずらす量は整数のpixelにする。
+        /// </summary>
+        private static Vector2 RunBob(CharacterDirection8 facing, CharacterSpriteAnchors[] anchors, int frame, Sprite torso)
+        {
+            if (torso == null || anchors.Length < RunStepFrames || anchors.Length % RunStepFrames != 0 || frame >= anchors.Length)
+            {
+                return Vector2.zero;
+            }
+
+            var landing = 0f;
+            for (var index = 0; index < anchors.Length; index += RunStepFrames)
+            {
+                landing += anchors[index].Head.y;
+            }
+
+            landing /= anchors.Length / RunStepFrames;
+            var pixel = 1f / torso.pixelsPerUnit;
+            var strong = facing == CharacterDirection8.NorthEast || facing == CharacterDirection8.NorthWest;
+            var target = landing + (strong ? StrongRunBobPixels : RunBobPixels)[frame % RunStepFrames] * pixel;
+            return new Vector2(0f, Mathf.Round((target - anchors[frame].Head.y) / pixel) * pixel);
+        }
+
+        /// <summary>
+        /// 走りのコマで、上半身を1歩ごとに左右へ交互に揺らす量を返す。真横の向きでは前後に揺れて見えるので揺らさない。
+        /// 左向きは絵を裏返して見せるので、ここでは向きを考えず、置くときに裏返す。
+        /// </summary>
+        private static Vector2 RunSway(CharacterDirection8 facing, int frame, Sprite torso)
+        {
+            if (torso == null || facing == CharacterDirection8.East || facing == CharacterDirection8.West)
+            {
+                return Vector2.zero;
+            }
+
+            var side = frame / RunStepFrames % 2 == 0 ? 1 : -1;
+            return new Vector2(side * RunSwayPixels / torso.pixelsPerUnit, 0f);
+        }
+
+        /// <summary>
         /// 足のコマがあれば足、胴、頭の3層で見せ、なければ体全体の絵を1枚で見せる。
         /// upperOffsetは足に対して胴と頭をずらす量である。
         /// </summary>
-        private void ShowBody(CharacterDirection8 facing, Sprite torso, Sprite legs, CharacterSpriteAnchors anchors, Vector2 upperOffset = default)
+        private void ShowBody(CharacterDirection8 facing, Sprite torso, Sprite legs, CharacterSpriteAnchors anchors, Vector2 upperOffset = default, bool running = false)
         {
             if (legs == null)
             {
@@ -700,13 +871,17 @@ namespace FantasyRoyale.Gameplay.Characters.Unity
             }
 
             spriteRenderer.sprite = legs;
-            ShowLayer(upperRenderer, torso, upperOffset);
-            ShowHead(facing, anchors.Head + upperOffset);
+            ShowLayer(upperRenderer, torso, new Vector3(spriteRenderer.flipX ? -upperOffset.x : upperOffset.x, upperOffset.y, 0f));
+            ShowHead(facing, anchors.Head + upperOffset, running);
         }
 
-        private void ShowHead(CharacterDirection8 facing, Vector2 position)
+        /// <summary>
+        /// 頭を兜の位置へ置く。走っている間は、上半身と同じだけ傾けた頭の絵があればそれを使う。
+        /// </summary>
+        private void ShowHead(CharacterDirection8 facing, Vector2 position, bool running = false)
         {
-            var head = headSprites.GetView(facing).Head;
+            var view = headSprites.GetView(facing);
+            var head = running ? view.RunHead : view.Head;
             headRenderer.enabled = head != null;
             if (head != null)
             {
@@ -715,7 +890,8 @@ namespace FantasyRoyale.Gameplay.Characters.Unity
         }
 
         /// <summary>
-        /// Actionの動きの型のコマを体が持っていれば、脚の上へ上半身を重ねる。攻撃の向きは入力が変わっても固定である。
+        /// Actionの動きの型のコマを体が持っていれば、脚の上へ上半身を重ねる。攻撃の向きと判定は振り始めの向きのままで、
+        /// 体がその向きを向いている間だけ振る絵を見せる。向きを変えると振る絵をやめ、斬撃だけを残す。
         /// </summary>
         private bool TryShowAttack(float deltaSeconds)
         {
@@ -725,6 +901,11 @@ namespace FantasyRoyale.Gameplay.Characters.Unity
             }
 
             var state = combat.ActionState;
+            if (actor.Facing != swingStartFacing)
+            {
+                return false;
+            }
+
             var view = sprites.GetView(state.Direction);
             var motion = view.GetMotion(state.CurrentSpec.Motion);
             if (motion == null || motion.Frames.Length < AttackFrameCount)
@@ -755,7 +936,8 @@ namespace FantasyRoyale.Gameplay.Characters.Unity
                 var frame = AdvanceRun(IsAirborne ? 0f : deltaSeconds, view);
                 NoteRunFrame(frame, view.Run.Length);
                 spriteRenderer.sprite = legs.RunLegs[frame];
-                return GetRun(view).anchors[frame].Head;
+                var (runFrames, runAnchors) = GetRun(view);
+                return runAnchors[frame].Head + RunBob(state.Direction, runAnchors, frame, runFrames[frame]) + RunSway(state.Direction, frame, runFrames[frame]);
             }
 
             runSeconds = 0f;

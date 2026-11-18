@@ -1,0 +1,7 @@
+Create a looping pixel-art animation of a small chibi knight for a top-down 2D fantasy action game, running straight away from the viewer, seen from directly behind: the back of the helmet and the back of the armour are visible, and the face is not visible.
+
+It is a lively, springy run with strong kicks, in six frames, two steps, one with each leg, with this rhythm: in frames 1 and 4 one foot is planted under the body and the other leg kicks back hard, its knee bent and its boot flung up behind toward the tunic so that the sole of the boot faces the viewer; in frames 2 and 5 the kicking leg swings forward and the legs come close together; in frames 3 and 6 both feet are off the ground, the body at its highest, one boot tucked up behind. The left and right legs take turns: frame 1 kicks with the left leg, frame 4 with the right leg. The kicks are big and clearly visible, as in a fast sprint. The arms swing slightly, holding the sword and the shield.
+
+Use Image 1 only to see what the knight looks like: the silver helmet, the silver armour, the blue tunic with gold trim, the brown boots, the sword in the right hand, the blue shield in the left hand, the palette, the dark outline, the chunky pixel-art style and the size. Do not copy its pose: Image 1 stands still, and this animation runs.
+
+Draw the knight at the same size in every frame, running on the spot in the middle of the frame. Flat solid pure magenta background, RGB 255,0,255, in every frame. No ground, no shadow, no dust, no text, no border.

@@ -1,0 +1,13 @@
+{
+  "status": "adopted for the standing jump",
+  "file": "hero-jump-diagonal-01.png",
+  "sha256": "703c4ddc02eea74d37541dc81b4bacf2dda5f41148583cc32c66302aeea02546",
+  "bytes": 1480875,
+  "tool": "openai-image skill, edit",
+  "model": "gpt-image-2.5-sunburst",
+  "size": "1536x1024",
+  "quality": "medium",
+  "n": 1,
+  "reference": "hero-idle-diagonal-01.png, hero-jump-01.png",
+  "prompt": "Image 1 is a pixel-art sprite sheet of a small chibi knight for a top-down 2D game, standing still in 2 diagonal views: column 1 is turned three-quarters toward the viewer, column 2 is turned three-quarters away from the viewer. Image 2 is a jump sheet of the same knight in front, side and back views: row 1 is the crouch before a jump and after landing, row 2 is in the air at the top of the jump.\n\nCreate ONE NEW pixel-art jump sprite sheet of exactly the same knight in the two diagonal views of Image 1. Keep exactly the same character, helmet, armour, sword, blue shield, proportions, palette, dark outline, pixel size and pixel-art style as Image 1, on the same completely flat solid pure magenta background, RGB 255,0,255.\n\nLayout: exactly 2 rows and 2 columns. Every character is the same size as in Image 2, each centred in an evenly spaced cell, with clear magenta space between all four characters. Column 1 is turned three-quarters toward the viewer and column 2 three-quarters away from the viewer, exactly as in Image 1. The sword and the shield stay in the same hands and on the same sides as in Image 1.\n\nRow 1: the same crouch as row 1 of Image 2. Both feet are planted flat on the ground under the body, side by side. Both knees are deeply bent, the hips drop low and the body is compact and squashed down, upright, not leaning. The sword points down beside the body and the shield stays at the side.\n\nRow 2: the same pose in the air as row 2 of Image 2, jumping straight up on the spot. Both feet are off the ground, tucked up under the body: both knees are bent and pulled up, the lower legs fold back and the toes point down. The body is upright and does not lean. The arms are lifted a little up and out to the sides for balance, the sword still in its hand pointing down and out, the shield lifted at the side.\n\nDo not include: text, labels, numbers, grid lines, ground, shadows, dust, motion lines, effects, borders, watermark, or any other object. No soft gradients, blur or painterly rendering."
+}

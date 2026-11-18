@@ -34,6 +34,10 @@ MonoBehaviour:
     motions: []
     head: {fileID: 21300000, guid: da9f3852268039848945a7ffe898670c, type: 3}
     weaponRuns: []
+    runHead: {fileID: 0}
+    jump: []
+    jumpAnchors: []
+    jumpLegs: []
   downSide:
     idle: {fileID: 0}
     run: []
@@ -53,6 +57,10 @@ MonoBehaviour:
     motions: []
     head: {fileID: 21300000, guid: edf5baac950e30e4c80975f16950d093, type: 3}
     weaponRuns: []
+    runHead: {fileID: 0}
+    jump: []
+    jumpAnchors: []
+    jumpLegs: []
   side:
     idle: {fileID: 0}
     run: []
@@ -72,6 +80,10 @@ MonoBehaviour:
     motions: []
     head: {fileID: 21300000, guid: 0ef7a24b0f5f1d7458585680e960a2a9, type: 3}
     weaponRuns: []
+    runHead: {fileID: 0}
+    jump: []
+    jumpAnchors: []
+    jumpLegs: []
   upSide:
     idle: {fileID: 0}
     run: []
@@ -91,6 +103,10 @@ MonoBehaviour:
     motions: []
     head: {fileID: 21300000, guid: e80d3a672951a324886aa6639e70939b, type: 3}
     weaponRuns: []
+    runHead: {fileID: 21300000, guid: 34e841f933fa2bb448a2702c7ce78cca, type: 3}
+    jump: []
+    jumpAnchors: []
+    jumpLegs: []
   up:
     idle: {fileID: 0}
     run: []
@@ -110,3 +126,7 @@ MonoBehaviour:
     motions: []
     head: {fileID: 21300000, guid: f84d20ad40c28464b82c994f6cf2fdd7, type: 3}
     weaponRuns: []
+    runHead: {fileID: 0}
+    jump: []
+    jumpAnchors: []
+    jumpLegs: []

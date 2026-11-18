@@ -48,20 +48,20 @@
    "name": "hero-down-2",
    "mainHand": {
     "x": -20.3,
-    "y": 42.5
+    "y": 45.5
    },
    "offHand": {
     "x": 16.1,
-    "y": 38.8
+    "y": 41.8
    },
    "back": {
     "x": 0.0,
-    "y": 42.4
+    "y": 45.4
    },
    "mainHandAngle": 241.4,
    "head": {
     "x": -0.1,
-    "y": 63.6
+    "y": 66.6
    },
    "mainHandFront": 3.2,
    "mainHandBack": -2.3
@@ -114,20 +114,20 @@
    "name": "hero-down-5",
    "mainHand": {
     "x": -20.3,
-    "y": 42.5
+    "y": 45.5
    },
    "offHand": {
     "x": 16.3,
-    "y": 38.5
+    "y": 41.5
    },
    "back": {
     "x": 0.0,
-    "y": 42.4
+    "y": 45.4
    },
    "mainHandAngle": 241.4,
    "head": {
     "x": -0.1,
-    "y": 63.6
+    "y": 66.6
    },
    "mainHandFront": 3.2,
    "mainHandBack": -2.3
@@ -180,20 +180,20 @@
    "name": "hero-sword-down-2",
    "mainHand": {
     "x": -20.1,
-    "y": 37.3
+    "y": 40.3
    },
    "offHand": {
     "x": 12.5,
-    "y": 38.7
+    "y": 41.7
    },
    "back": {
     "x": 0.0,
-    "y": 42.4
+    "y": 45.4
    },
    "mainHandAngle": 240.0,
    "head": {
     "x": -0.1,
-    "y": 63.6
+    "y": 66.6
    },
    "mainHandFront": 3.1,
    "mainHandBack": -3.4
@@ -246,20 +246,20 @@
    "name": "hero-sword-down-5",
    "mainHand": {
     "x": -20.0,
-    "y": 37.3
+    "y": 40.3
    },
    "offHand": {
     "x": 12.4,
-    "y": 38.7
+    "y": 41.7
    },
    "back": {
     "x": 0.0,
-    "y": 42.4
+    "y": 45.4
    },
    "mainHandAngle": 240.0,
    "head": {
     "x": -0.1,
-    "y": 63.6
+    "y": 66.6
    },
    "mainHandFront": 3.2,
    "mainHandBack": -3.4
@@ -312,20 +312,20 @@
    "name": "hero-side-2",
    "mainHand": {
     "x": -23.2,
-    "y": 25.5
+    "y": 28.5
    },
    "offHand": {
     "x": 9.0,
-    "y": 28.7
+    "y": 31.7
    },
    "back": {
     "x": -8.0,
-    "y": 38.4
+    "y": 41.4
    },
    "mainHandAngle": 244.7,
    "head": {
     "x": 1.0,
-    "y": 57.9
+    "y": 60.9
    },
    "mainHandFront": 3.1,
    "mainHandBack": -3.3
@@ -378,20 +378,20 @@
    "name": "hero-side-5",
    "mainHand": {
     "x": -24.1,
-    "y": 25.1
+    "y": 28.1
    },
    "offHand": {
     "x": -11.7,
-    "y": 26.1
+    "y": 29.1
    },
    "back": {
     "x": -8.0,
-    "y": 38.4
+    "y": 41.4
    },
    "mainHandAngle": 244.7,
    "head": {
     "x": 1.0,
-    "y": 57.9
+    "y": 60.9
    },
    "mainHandFront": 3.3,
    "mainHandBack": -3.3
@@ -444,20 +444,20 @@
    "name": "hero-sword-side-2",
    "mainHand": {
     "x": -22.3,
-    "y": 23.0
+    "y": 26.0
    },
    "offHand": {
     "x": 9.4,
-    "y": 32.9
+    "y": 35.9
    },
    "back": {
     "x": -8.0,
-    "y": 38.4
+    "y": 41.4
    },
    "mainHandAngle": 304.6,
    "head": {
     "x": 1.0,
-    "y": 57.9
+    "y": 60.9
    },
    "mainHandFront": 3.4,
    "mainHandBack": -3.2
@@ -510,20 +510,20 @@
    "name": "hero-sword-side-5",
    "mainHand": {
     "x": -22.6,
-    "y": 22.4
+    "y": 25.4
    },
    "offHand": {
     "x": 9.4,
-    "y": 32.9
+    "y": 35.9
    },
    "back": {
     "x": -8.0,
-    "y": 38.4
+    "y": 41.4
    },
    "mainHandAngle": 304.6,
    "head": {
     "x": 1.0,
-    "y": 57.9
+    "y": 60.9
    },
    "mainHandFront": 3.4,
    "mainHandBack": -3.1
@@ -535,8 +535,8 @@
     "y": 36.7
    },
    "offHand": {
-    "x": -21.3,
-    "y": 35.2
+    "x": -21.2,
+    "y": 35.4
    },
    "back": {
     "x": 0.0,
@@ -554,20 +554,20 @@
    "name": "hero-up-1",
    "mainHand": {
     "x": 18.7,
-    "y": 35.2
+    "y": 31.2
    },
    "offHand": {
-    "x": -21.3,
-    "y": 34.2
+    "x": -21.2,
+    "y": 30.2
    },
    "back": {
     "x": 0.0,
-    "y": 40.0
+    "y": 37.7
    },
    "mainHandAngle": 299.2,
    "head": {
     "x": -0.5,
-    "y": 62.1
+    "y": 58.1
    },
    "mainHandFront": 6.6,
    "mainHandBack": 0.2
@@ -584,7 +584,7 @@
    },
    "back": {
     "x": 0.0,
-    "y": 39.5
+    "y": 40.8
    },
    "mainHandAngle": 299.2,
    "head": {
@@ -598,20 +598,20 @@
    "name": "hero-up-3",
    "mainHand": {
     "x": 19.8,
-    "y": 36.4
+    "y": 35.4
    },
    "offHand": {
     "x": -20.2,
-    "y": 35.2
+    "y": 34.6
    },
    "back": {
     "x": 0.0,
-    "y": 41.2
+    "y": 40.6
    },
    "mainHandAngle": 299.2,
    "head": {
     "x": 0.3,
-    "y": 64.1
+    "y": 63.1
    },
    "mainHandFront": 6.8,
    "mainHandBack": 0.3
@@ -620,20 +620,20 @@
    "name": "hero-up-4",
    "mainHand": {
     "x": 18.2,
-    "y": 36.0
+    "y": 32.0
    },
    "offHand": {
-    "x": -21.4,
-    "y": 34.8
+    "x": -21.5,
+    "y": 30.5
    },
    "back": {
     "x": 0.0,
-    "y": 40.6
+    "y": 38.3
    },
    "mainHandAngle": 299.2,
    "head": {
     "x": -0.5,
-    "y": 63.1
+    "y": 59.1
    },
    "mainHandFront": 6.7,
    "mainHandBack": 0.1
@@ -641,16 +641,16 @@
   {
    "name": "hero-up-5",
    "mainHand": {
-    "x": 18.6,
-    "y": 35.6
+    "x": 18.8,
+    "y": 36.2
    },
    "offHand": {
-    "x": -20.5,
-    "y": 35.6
+    "x": -20.4,
+    "y": 35.9
    },
    "back": {
     "x": 0.0,
-    "y": 39.5
+    "y": 40.8
    },
    "mainHandAngle": 299.2,
    "head": {
@@ -686,20 +686,20 @@
    "name": "hero-sword-up-1",
    "mainHand": {
     "x": 18.6,
-    "y": 33.2
+    "y": 29.2
    },
    "offHand": {
     "x": -19.5,
-    "y": 34.0
+    "y": 30.0
    },
    "back": {
     "x": 0.0,
-    "y": 39.6
+    "y": 37.3
    },
    "mainHandAngle": 300.0,
    "head": {
     "x": -0.5,
-    "y": 62.1
+    "y": 58.1
    },
    "mainHandFront": 6.7,
    "mainHandBack": 0.1
@@ -716,7 +716,7 @@
    },
    "back": {
     "x": 0.0,
-    "y": 39.5
+    "y": 40.8
    },
    "mainHandAngle": 300.0,
    "head": {
@@ -730,20 +730,20 @@
    "name": "hero-sword-up-3",
    "mainHand": {
     "x": 18.5,
-    "y": 34.2
+    "y": 33.2
    },
    "offHand": {
     "x": -20.3,
-    "y": 34.7
+    "y": 33.7
    },
    "back": {
     "x": 0.0,
-    "y": 41.2
+    "y": 40.2
    },
    "mainHandAngle": 300.0,
    "head": {
     "x": 0.3,
-    "y": 64.1
+    "y": 63.1
    },
    "mainHandFront": 6.7,
    "mainHandBack": 0.3
@@ -752,20 +752,20 @@
    "name": "hero-sword-up-4",
    "mainHand": {
     "x": 18.5,
-    "y": 34.2
+    "y": 30.2
    },
    "offHand": {
     "x": -19.4,
-    "y": 34.9
+    "y": 30.9
    },
    "back": {
     "x": 0.0,
-    "y": 40.6
+    "y": 38.3
    },
    "mainHandAngle": 300.0,
    "head": {
     "x": -0.5,
-    "y": 63.1
+    "y": 59.1
    },
    "mainHandFront": 6.7,
    "mainHandBack": 0.1
@@ -782,7 +782,7 @@
    },
    "back": {
     "x": 0.0,
-    "y": 39.5
+    "y": 40.8
    },
    "mainHandAngle": 300.0,
    "head": {
@@ -840,20 +840,20 @@
    "name": "hero-downside-2",
    "mainHand": {
     "x": -19.1,
-    "y": 34.4
+    "y": 37.4
    },
    "offHand": {
     "x": 15.7,
-    "y": 31.4
+    "y": 34.4
    },
    "back": {
     "x": -4.0,
-    "y": 39.5
+    "y": 42.5
    },
    "mainHandAngle": 241.3,
    "head": {
     "x": 0.2,
-    "y": 58.4
+    "y": 61.4
    },
    "mainHandFront": 3.2,
    "mainHandBack": -3.0
@@ -906,20 +906,20 @@
    "name": "hero-downside-5",
    "mainHand": {
     "x": -19.5,
-    "y": 33.3
+    "y": 36.3
    },
    "offHand": {
     "x": 15.4,
-    "y": 29.0
+    "y": 32.0
    },
    "back": {
     "x": -4.0,
-    "y": 38.4
+    "y": 41.4
    },
    "mainHandAngle": 241.3,
    "head": {
     "x": 0.2,
-    "y": 56.7
+    "y": 59.7
    },
    "mainHandFront": 2.6,
    "mainHandBack": -3.1
@@ -972,20 +972,20 @@
    "name": "hero-sword-downside-2",
    "mainHand": {
     "x": -21.5,
-    "y": 27.9
+    "y": 30.9
    },
    "offHand": {
     "x": 12.5,
-    "y": 33.7
+    "y": 36.7
    },
    "back": {
     "x": -4.0,
-    "y": 40.0
+    "y": 43.0
    },
    "mainHandAngle": 232.4,
    "head": {
     "x": 0.2,
-    "y": 58.4
+    "y": 61.4
    },
    "mainHandFront": 2.8,
    "mainHandBack": -3.0
@@ -1038,55 +1038,33 @@
    "name": "hero-sword-downside-5",
    "mainHand": {
     "x": -19.9,
-    "y": 28.4
+    "y": 31.4
    },
    "offHand": {
     "x": 13.4,
-    "y": 31.2
+    "y": 34.2
    },
    "back": {
     "x": -4.0,
-    "y": 38.4
+    "y": 41.4
    },
    "mainHandAngle": 232.4,
    "head": {
     "x": 0.2,
-    "y": 56.7
+    "y": 59.7
    },
    "mainHandFront": 2.9,
    "mainHandBack": -2.9
   },
   {
-   "name": "hero-upside-0",
-   "mainHand": {
-    "x": 11.2,
-    "y": 26.9
-   },
-   "offHand": {
-    "x": -22.9,
-    "y": 35.2
-   },
-   "back": {
-    "x": -3.0,
-    "y": 38.3
-   },
-   "mainHandAngle": 299.2,
-   "head": {
-    "x": -5.4,
-    "y": 59.2
-   },
-   "mainHandFront": 3.1,
-   "mainHandBack": -3.4
-  },
-  {
    "name": "hero-upside-1",
    "mainHand": {
-    "x": 11.3,
-    "y": 28.8
+    "x": 13.2,
+    "y": 27.2
    },
    "offHand": {
-    "x": -21.1,
-    "y": 36.9
+    "x": -17.8,
+    "y": 43.4
    },
    "back": {
     "x": -3.0,
@@ -1094,184 +1072,184 @@
    },
    "mainHandAngle": 299.2,
    "head": {
-    "x": -3.9,
-    "y": 60.2
+    "x": 2.4,
+    "y": 64.1
+   },
+   "mainHandFront": 3.4,
+   "mainHandBack": -3.0
+  },
+  {
+   "name": "hero-upside-0",
+   "mainHand": {
+    "x": 13.3,
+    "y": 26.7
+   },
+   "offHand": {
+    "x": -17.5,
+    "y": 41.7
+   },
+   "back": {
+    "x": -3.0,
+    "y": 37.7
+   },
+   "mainHandAngle": 299.2,
+   "head": {
+    "x": 2.4,
+    "y": 62.1
    },
    "mainHandFront": 3.2,
-   "mainHandBack": -3.3
+   "mainHandBack": -3.0
   },
   {
    "name": "hero-upside-2",
    "mainHand": {
-    "x": 11.2,
-    "y": 31.0
+    "x": 12.2,
+    "y": 25.7
    },
    "offHand": {
-    "x": -22.0,
-    "y": 37.0
+    "x": -19.4,
+    "y": 39.9
    },
    "back": {
     "x": -3.0,
-    "y": 39.5
+    "y": 38.5
    },
    "mainHandAngle": 299.2,
    "head": {
-    "x": -5.4,
-    "y": 63.2
+    "x": 2.4,
+    "y": 62.1
    },
-   "mainHandFront": 3.1,
-   "mainHandBack": -3.4
-  },
-  {
-   "name": "hero-upside-3",
-   "mainHand": {
-    "x": 12.4,
-    "y": 30.7
-   },
-   "offHand": {
-    "x": -22.7,
-    "y": 38.7
-   },
-   "back": {
-    "x": -3.0,
-    "y": 40.6
-   },
-   "mainHandAngle": 299.2,
-   "head": {
-    "x": -4.4,
-    "y": 63.2
-   },
-   "mainHandFront": 3.2,
+   "mainHandFront": 3.3,
    "mainHandBack": -3.3
   },
   {
    "name": "hero-upside-4",
    "mainHand": {
-    "x": 10.9,
-    "y": 28.0
+    "x": 14.6,
+    "y": 26.6
    },
    "offHand": {
-    "x": -21.2,
-    "y": 37.0
-   },
-   "back": {
-    "x": -3.0,
-    "y": 39.4
-   },
-   "mainHandAngle": 299.2,
-   "head": {
-    "x": -4.4,
-    "y": 60.2
-   },
-   "mainHandFront": 3.3,
-   "mainHandBack": -3.1
-  },
-  {
-   "name": "hero-upside-5",
-   "mainHand": {
-    "x": 11.2,
-    "y": 32.1
-   },
-   "offHand": {
-    "x": -22.2,
-    "y": 38.2
-   },
-   "back": {
-    "x": -3.0,
-    "y": 40.7
-   },
-   "mainHandAngle": 299.2,
-   "head": {
-    "x": -3.4,
-    "y": 64.2
-   },
-   "mainHandFront": 3.0,
-   "mainHandBack": -2.7
-  },
-  {
-   "name": "hero-sword-upside-0",
-   "mainHand": {
-    "x": 9.5,
-    "y": 25.8
-   },
-   "offHand": {
-    "x": -21.5,
-    "y": 37.0
-   },
-   "back": {
-    "x": -3.0,
-    "y": 38.3
-   },
-   "mainHandAngle": 325.5,
-   "head": {
-    "x": -5.4,
-    "y": 59.2
-   },
-   "mainHandFront": 3.2,
-   "mainHandBack": -3.4
-  },
-  {
-   "name": "hero-sword-upside-1",
-   "mainHand": {
-    "x": 10.6,
-    "y": 27.0
-   },
-   "offHand": {
-    "x": -19.0,
-    "y": 38.5
+    "x": -17.4,
+    "y": 42.6
    },
    "back": {
     "x": -3.0,
     "y": 38.9
    },
-   "mainHandAngle": 325.5,
+   "mainHandAngle": 299.2,
    "head": {
-    "x": -3.9,
-    "y": 60.2
+    "x": 2.4,
+    "y": 64.1
    },
-   "mainHandFront": 3.2,
+   "mainHandFront": 3.3,
+   "mainHandBack": -3.3
+  },
+  {
+   "name": "hero-upside-3",
+   "mainHand": {
+    "x": 10.8,
+    "y": 25.9
+   },
+   "offHand": {
+    "x": -18.3,
+    "y": 42.3
+   },
+   "back": {
+    "x": -3.0,
+    "y": 38.9
+   },
+   "mainHandAngle": 299.2,
+   "head": {
+    "x": 2.4,
+    "y": 62.1
+   },
+   "mainHandFront": 3.1,
+   "mainHandBack": -3.4
+  },
+  {
+   "name": "hero-upside-5",
+   "mainHand": {
+    "x": 13.0,
+    "y": 25.2
+   },
+   "offHand": {
+    "x": -18.5,
+    "y": 39.3
+   },
+   "back": {
+    "x": -3.0,
+    "y": 38.5
+   },
+   "mainHandAngle": 299.2,
+   "head": {
+    "x": 2.4,
+    "y": 61.1
+   },
+   "mainHandFront": 2.8,
+   "mainHandBack": -2.7
+  },
+  {
+   "name": "hero-sword-upside-1",
+   "mainHand": {
+    "x": 11.7,
+    "y": 26.1
+   },
+   "offHand": {
+    "x": -15.5,
+    "y": 44.8
+   },
+   "back": {
+    "x": -3.0,
+    "y": 39.3
+   },
+   "mainHandAngle": 323.1,
+   "head": {
+    "x": 2.4,
+    "y": 64.1
+   },
+   "mainHandFront": 3.1,
+   "mainHandBack": -3.3
+  },
+  {
+   "name": "hero-sword-upside-0",
+   "mainHand": {
+    "x": 11.0,
+    "y": 23.0
+   },
+   "offHand": {
+    "x": -15.5,
+    "y": 43.2
+   },
+   "back": {
+    "x": -3.0,
+    "y": 37.7
+   },
+   "mainHandAngle": 323.1,
+   "head": {
+    "x": 2.4,
+    "y": 62.1
+   },
+   "mainHandFront": 3.3,
    "mainHandBack": -3.3
   },
   {
    "name": "hero-sword-upside-2",
    "mainHand": {
     "x": 10.2,
-    "y": 27.0
+    "y": 25.1
    },
    "offHand": {
-    "x": -19.8,
-    "y": 39.5
+    "x": -15.6,
+    "y": 42.5
    },
    "back": {
     "x": -3.0,
-    "y": 39.0
+    "y": 38.9
    },
-   "mainHandAngle": 325.5,
+   "mainHandAngle": 323.1,
    "head": {
-    "x": -5.4,
-    "y": 63.2
-   },
-   "mainHandFront": 3.1,
-   "mainHandBack": -3.1
-  },
-  {
-   "name": "hero-sword-upside-3",
-   "mainHand": {
-    "x": 9.7,
-    "y": 29.0
-   },
-   "offHand": {
-    "x": -20.9,
-    "y": 40.6
-   },
-   "back": {
-    "x": -3.0,
-    "y": 41.0
-   },
-   "mainHandAngle": 325.5,
-   "head": {
-    "x": -4.4,
-    "y": 63.2
+    "x": 2.4,
+    "y": 62.1
    },
    "mainHandFront": 3.2,
    "mainHandBack": -3.4
@@ -1279,46 +1257,68 @@
   {
    "name": "hero-sword-upside-4",
    "mainHand": {
-    "x": 9.8,
-    "y": 26.2
+    "x": 11.9,
+    "y": 25.2
    },
    "offHand": {
-    "x": -19.1,
-    "y": 38.6
+    "x": -15.2,
+    "y": 44.2
+   },
+   "back": {
+    "x": -3.0,
+    "y": 39.3
+   },
+   "mainHandAngle": 323.1,
+   "head": {
+    "x": 2.4,
+    "y": 64.1
+   },
+   "mainHandFront": 3.0,
+   "mainHandBack": -3.1
+  },
+  {
+   "name": "hero-sword-upside-3",
+   "mainHand": {
+    "x": 10.1,
+    "y": 24.7
+   },
+   "offHand": {
+    "x": -15.4,
+    "y": 44.3
    },
    "back": {
     "x": -3.0,
     "y": 38.9
    },
-   "mainHandAngle": 325.5,
+   "mainHandAngle": 323.1,
    "head": {
-    "x": -4.4,
-    "y": 60.2
+    "x": 2.4,
+    "y": 62.1
    },
-   "mainHandFront": 3.1,
-   "mainHandBack": -3.4
+   "mainHandFront": 3.0,
+   "mainHandBack": -3.0
   },
   {
    "name": "hero-sword-upside-5",
    "mainHand": {
-    "x": 10.5,
-    "y": 28.6
+    "x": 11.1,
+    "y": 22.7
    },
    "offHand": {
-    "x": -20.1,
-    "y": 41.1
+    "x": -15.9,
+    "y": 41.8
    },
    "back": {
     "x": -3.0,
-    "y": 40.7
+    "y": 38.5
    },
-   "mainHandAngle": 325.5,
+   "mainHandAngle": 323.1,
    "head": {
-    "x": -3.4,
-    "y": 64.2
+    "x": 2.4,
+    "y": 61.1
    },
    "mainHandFront": 3.1,
-   "mainHandBack": -3.4
+   "mainHandBack": -3.0
   },
   {
    "name": "hero-idle-down",
@@ -1429,6 +1429,226 @@
    },
    "mainHandFront": 3.4,
    "mainHandBack": -3.2
+  },
+  {
+   "name": "hero-jump-down-0",
+   "mainHand": {
+    "x": -16.8,
+    "y": 19.2
+   },
+   "offHand": {
+    "x": 7.3,
+    "y": 29.4
+   },
+   "back": {
+    "x": 0.0,
+    "y": 30.2
+   },
+   "mainHandAngle": 231.0,
+   "head": {
+    "x": 0.3,
+    "y": 44.6
+   },
+   "mainHandFront": 2.1,
+   "mainHandBack": -3.0
+  },
+  {
+   "name": "hero-jump-side-0",
+   "mainHand": {
+    "x": -12.1,
+    "y": 15.8
+   },
+   "offHand": {
+    "x": 11.6,
+    "y": 15.6
+   },
+   "back": {
+    "x": -8.0,
+    "y": 30.2
+   },
+   "mainHandAngle": 229.9,
+   "head": {
+    "x": 1.0,
+    "y": 46.4
+   },
+   "mainHandFront": 3.0,
+   "mainHandBack": -3.4
+  },
+  {
+   "name": "hero-jump-up-0",
+   "mainHand": {
+    "x": 18.7,
+    "y": 18.6
+   },
+   "offHand": {
+    "x": -22.4,
+    "y": 15.5
+   },
+   "back": {
+    "x": 0.0,
+    "y": 30.2
+   },
+   "mainHandAngle": 309.5,
+   "head": {
+    "x": 0.4,
+    "y": 44.5
+   },
+   "mainHandFront": 6.7,
+   "mainHandBack": 0.2
+  },
+  {
+   "name": "hero-jump-down-1",
+   "mainHand": {
+    "x": -20.6,
+    "y": 26.0
+   },
+   "offHand": {
+    "x": 22.2,
+    "y": 21.1
+   },
+   "back": {
+    "x": 0.0,
+    "y": 33.1
+   },
+   "mainHandAngle": 229.7,
+   "head": {
+    "x": -0.1,
+    "y": 51.8
+   },
+   "mainHandFront": 2.8,
+   "mainHandBack": -2.9
+  },
+  {
+   "name": "hero-jump-side-1",
+   "mainHand": {
+    "x": -12.5,
+    "y": 22.8
+   },
+   "offHand": {
+    "x": -2.0,
+    "y": 21.7
+   },
+   "back": {
+    "x": -8.0,
+    "y": 33.1
+   },
+   "mainHandAngle": 228.3,
+   "head": {
+    "x": 1.2,
+    "y": 52.9
+   },
+   "mainHandFront": 3.4,
+   "mainHandBack": -3.1
+  },
+  {
+   "name": "hero-jump-up-1",
+   "mainHand": {
+    "x": 20.0,
+    "y": 26.0
+   },
+   "offHand": {
+    "x": -23.0,
+    "y": 22.1
+   },
+   "back": {
+    "x": 0.0,
+    "y": 33.6
+   },
+   "mainHandAngle": 311.0,
+   "head": {
+    "x": 0.4,
+    "y": 52.6
+   },
+   "mainHandFront": 6.7,
+   "mainHandBack": 0.2
+  },
+  {
+   "name": "hero-jump-downside-0",
+   "mainHand": {
+    "x": -17.8,
+    "y": 18.3
+   },
+   "offHand": {
+    "x": 16.0,
+    "y": 18.6
+   },
+   "back": {
+    "x": -4.0,
+    "y": 30.2
+   },
+   "mainHandAngle": 233.6,
+   "head": {
+    "x": -0.1,
+    "y": 45.7
+   },
+   "mainHandFront": 3.1,
+   "mainHandBack": -3.3
+  },
+  {
+   "name": "hero-jump-upside-0",
+   "mainHand": {
+    "x": 15.9,
+    "y": 17.5
+   },
+   "offHand": {
+    "x": -18.8,
+    "y": 18.8
+   },
+   "back": {
+    "x": -3.0,
+    "y": 30.2
+   },
+   "mainHandAngle": 309.0,
+   "head": {
+    "x": -0.5,
+    "y": 45.5
+   },
+   "mainHandFront": 3.0,
+   "mainHandBack": -2.8
+  },
+  {
+   "name": "hero-jump-downside-1",
+   "mainHand": {
+    "x": -19.7,
+    "y": 25.3
+   },
+   "offHand": {
+    "x": 21.6,
+    "y": 19.8
+   },
+   "back": {
+    "x": -4.0,
+    "y": 32.5
+   },
+   "mainHandAngle": 231.7,
+   "head": {
+    "x": 0.1,
+    "y": 51.2
+   },
+   "mainHandFront": 2.9,
+   "mainHandBack": -2.8
+  },
+  {
+   "name": "hero-jump-upside-1",
+   "mainHand": {
+    "x": 19.1,
+    "y": 25.2
+   },
+   "offHand": {
+    "x": -19.6,
+    "y": 25.9
+   },
+   "back": {
+    "x": -3.0,
+    "y": 32.5
+   },
+   "mainHandAngle": 309.7,
+   "head": {
+    "x": -0.3,
+    "y": 51.2
+   },
+   "mainHandFront": 3.4,
+   "mainHandBack": -3.1
   },
   {
    "name": "hero-upper-swing-down-0",

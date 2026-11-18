@@ -53,6 +53,12 @@ MonoBehaviour:
       - {x: 0, y: 0.93125}
     head: {fileID: 0}
     weaponRuns: []
+    runHead: {fileID: 0}
+    jump: []
+    jumpAnchors: []
+    jumpLegs:
+    - {fileID: 21300000, guid: 11f1c20a331dfe44981326146600b6de, type: 3}
+    - {fileID: 21300000, guid: 2b459eb67b3708144b134e90331b78ec, type: 3}
   downSide:
     idle: {fileID: 0}
     run: []
@@ -91,6 +97,12 @@ MonoBehaviour:
       - {x: 0.0765625, y: 0.90625}
     head: {fileID: 0}
     weaponRuns: []
+    runHead: {fileID: 0}
+    jump: []
+    jumpAnchors: []
+    jumpLegs:
+    - {fileID: 21300000, guid: 23f6d811a7d01884ca79e10f8bc7ec52, type: 3}
+    - {fileID: 21300000, guid: 541d89a48f9b44c40a50feff9cda815f, type: 3}
   side:
     idle: {fileID: 0}
     run: []
@@ -129,6 +141,12 @@ MonoBehaviour:
       - {x: 0.109375, y: 0.953125}
     head: {fileID: 0}
     weaponRuns: []
+    runHead: {fileID: 0}
+    jump: []
+    jumpAnchors: []
+    jumpLegs:
+    - {fileID: 21300000, guid: 0b27e2bceb603ac439c060a5d2382314, type: 3}
+    - {fileID: 21300000, guid: a2222ccf75a49e04483d31d1176a37d5, type: 3}
   upSide:
     idle: {fileID: 0}
     run: []
@@ -167,6 +185,12 @@ MonoBehaviour:
       - {x: 0.0765625, y: 1.0625}
     head: {fileID: 0}
     weaponRuns: []
+    runHead: {fileID: 0}
+    jump: []
+    jumpAnchors: []
+    jumpLegs:
+    - {fileID: 21300000, guid: b39ae24dbe4f4874fa4d1c62ff58dc50, type: 3}
+    - {fileID: 21300000, guid: 3107fd3d899b7fb4b9dc6e9d001063b7, type: 3}
   up:
     idle: {fileID: 0}
     run: []
@@ -205,3 +229,9 @@ MonoBehaviour:
       - {x: 0, y: 1.1}
     head: {fileID: 0}
     weaponRuns: []
+    runHead: {fileID: 0}
+    jump: []
+    jumpAnchors: []
+    jumpLegs:
+    - {fileID: 21300000, guid: bb9ec496e8394404781f9121a4f364aa, type: 3}
+    - {fileID: 21300000, guid: ab1f95c314848d447b0f9cfddd264968, type: 3}
